@@ -1,0 +1,1 @@
+"src/*.js" : "cat src/FGUtils.js src/DontDillyDally.js | uglifyjs > build/application.js"

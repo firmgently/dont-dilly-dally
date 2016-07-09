@@ -1,0 +1,130 @@
+TIMESHEET PAGE
+---------------------------------------
+
+
+MAIN FUNCTIONS
+  
+  [ ] add money in
+  [ ] add money out
+  
+  [ ] clock in (recent job or choose)
+  [ ] clock out (recent job or choose)
+  
+  [ ] export data
+  [ ] import data
+  
+  [ ] edit existing entries
+      dd/mm/yy    hh:mm   [client]    [job]     [job notes]     [MONEY IN]    [MONEY OUT]   [MONEY NOTES]
+      
+      
+SHOW TOTALS
+  [ ] hrs/week
+  [ ] hrs/month
+  [ ] money/week
+  [ ] money/month
+  [ ] money/net
+  
+  
+  
+  
+  
+  
+      
+JOBS AND CLIENTS PAGE
+---------------------------------------
+
+  [ ] create new job
+  [ ] create new client
+      for each of above, choose random (contrasting) colours but allow editing of colours during creation process
+      
+  [ ] show hour totals by job
+      ()weekly ()monthly ()all-time
+  [ ] show hour totals by client
+      ()weekly ()monthly ()all-time
+      
+  
+
+
+  
+  
+CONFIGURATION
+---------------------------------------
+
+  [ ] show/hide money columns
+  [ ] time format ()mm/dd/yy ()dd/mm/yy
+  [ ] first day of week
+  [ ] first day of month
+  [ ] show totals
+      ()weekly ()monthly ()both
+
+
+
+
+
+
+
+
+// web storage
+
+if(typeof(Storage) !== "undefined") {
+    // Code for localStorage/sessionStorage.
+} else {
+    // Sorry! No Web Storage support..
+}
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////
+
+
+// Store
+localStorage.setItem("lastname", "Smith");
+// Retrieve
+document.getElementById("result").innerHTML = localStorage.getItem("lastname"); 
+
+
+///////////////////////////////////////
+
+
+// Store
+localStorage.lastname = "Smith";
+// Retrieve
+document.getElementById("result").innerHTML = localStorage.lastname;
+
+
+///////////////////////////////////////
+
+
+ localStorage.removeItem("lastname");
+
+
+
+
+https://www.owasp.org/index.php/HTML5_Security_Cheat_Sheet
+
+
+https://www.whitehatsec.com/blog/web-storage-security/
+
+
+The Always and Never of Web Storage
+ALWAYS:
+
+Always  validate, encode, and escape user input before placing into localStorage or sessionStorage
+
+Always  validate, encode, and escape data read from localStorage or sessionStorage before writing onto the page (DOM).
+
+Always  treat all data read from localStorage or sessionStorage as untrusted user input.
+NEVER:
+
+Never store sensitive data using Web Storage: Web Storage is not secure storage. It is not “more secure” than cookies because it isn’t transmitted over the wire. It is not encrypted. There is no Secure or HTTP only flag so this is not a place to keep session or other security tokens.
+
+Never use Web Storage data for access control decisions or trust the serialized objects you store here for other critical business logic. A malicious user is free to modify their localStorage and sessionStorage values at any time, treat all Web Storage data as untrusted.
+
+Never write stored data to the page (DOM) with a vulnerable JavaScript or library sink.  Here is the best list of JavaScript sinks that I am aware of on the web right now.  While it is true that a perfect storm of tainted data flow must exist for a remote exploit that relies 100% on Web Storage you must consider two alternate scenarios. First, consider the evil roommate, unlocked, unattended, or public computer scenario in which a malicious user has temporary physical access to your user’s web browser. The computer’s owner may have disallowed a low privileged user from installing malicious add-on but I’ve never seen a user prevented from making a bookmark. Second, don’t ignore the possibility of improper Web Storage usage allowing escalation of another vulnerability such as reflective cross-site scripting into persistent cross-site scripting.
