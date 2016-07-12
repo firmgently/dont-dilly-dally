@@ -1,1 +1,5 @@
-"src/*.js" : "cat src/FGUtils.js src/DontDillyDally.js | uglifyjs > build/application.js"
+"src/*.js" : "uglifyjs \
+  src/FGUtils.js \
+  src/DDDConsts.js \
+  src/DontDillyDally.js \
+  -o js/application.js --source-map js/application.js.map"

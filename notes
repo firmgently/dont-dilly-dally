@@ -56,6 +56,10 @@ CONFIGURATION
   [ ] first day of month
   [ ] show totals
       ()weekly ()monthly ()both
+  [ ] period to show on timesheets page
+      ()week ()month ()year
+  [ ] start of accounting period
+      (eg. 06/04)
 
 
 
@@ -101,11 +105,17 @@ document.getElementById("result").innerHTML = localStorage.lastname;
 
 ///////////////////////////////////////
 
-
  localStorage.removeItem("lastname");
 
+///////////////////////////////////////
 
+document.getElementById("whereItGoes").appendChild(document.createTextNode(unsafe_str));
 
+NOT
+
+document.getElementById("whereItGoes").innerHTML += unsafe_str;
+
+///////////////////////////////////////
 
 https://www.owasp.org/index.php/HTML5_Security_Cheat_Sheet
 

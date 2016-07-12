@@ -17,7 +17,28 @@ uk.co.firmgently.FGUtils = (function() {
 	registerEventHandler, unregisterEventHandler, stopPropagation,
 	hexOpacityToRGBA, createElementWithId,
 	removeClassname, addClassname,
+  treatAsUTC, daysBetween,
 	logMsg;
+
+
+  /* -------------------------------------------------------------------------------
+  	extend Storage (including localStorage) object
+  ---------------------------------------------------------------------------------- */
+
+  Storage.prototype.setObject = function(key, value) {
+    this.setItem(key, JSON.stringify(value));
+  };
+
+
+/*
+  http://stackoverflow.com/questions/2010892/storing-objects-in-html5-localstorage
+  Because of short-circuit evaluation, getObject() will immediately return null
+  if key is not in Storage. It also will not throw a SyntaxError exception if
+  value is "" (the empty string; JSON.parse() cannot handle that). */
+  Storage.prototype.getObject = function(key) {
+      var value = this.getItem(key);
+      return value && JSON.parse(value);
+  };
 
 
 	/* -------------------------------------------------------------------------------
@@ -108,6 +129,18 @@ uk.co.firmgently.FGUtils = (function() {
   };
 
 
+  // http://stackoverflow.com/questions/542938/how-do-i-get-the-number-of-days-between-two-dates-in-javascript
+  treatAsUTC = function(date) {
+    var result = new Date(date);
+    result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+    return result;
+  };
+  daysBetween = function(startDate, endDate) {
+      var millisecondsPerDay = 24 * 60 * 60 * 1000;
+      return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
+  };
+
+
 
 
 	return {
@@ -124,6 +157,8 @@ uk.co.firmgently.FGUtils = (function() {
 		addCSSRule: addCSSRule,
 		hexOpacityToRGBA: hexOpacityToRGBA,
 		createElementWithId: createElementWithId,
+		treatAsUTC: treatAsUTC,
+		daysBetween: daysBetween,
 		logMsg: logMsg
 	};
 

@@ -11,37 +11,277 @@ uk.co = (uk.co !== undefined) ? uk.co : {};
 uk.co.firmgently = (uk.co.firmgently !== undefined) ? uk.co.firmgently : {};
 //
 uk.co.firmgently.DontDillyDally = (function() {
-	"use strict";
+  "use strict";
 
-	/* -------------------------------------------------------------------------------
+  /* ---------------------------------------------------------------------------
 		declare / init vars
-	---------------------------------------------------------------------------------- */
+	--------------------------------------------------------------------------- */
 
-	// var
-	// constants
-
-	// variables
-
+	var
+  // variables
+  prop, dateDisplayStart, dateDisplaySelected, dateToday, timespanDisplay,
 
 	// methods
+  doSetup, selectPage, drawPage, fillHTMLFromOb, drawGUIFromAr,
+  createButtonFromOb, createFormFromOb, createTextInputFromOb, callMethodFromOb,
+  createSelectFromOb, drawTimesheets, drawConfigGUI
+	;
 
-	// ;
+  // create local references to public vars (fake constants) from DDDConsts
+  for (prop in uk.co.firmgently.DDDConsts) {
+    this[prop] = uk.co.firmgently.DDDConsts[prop];
+  }
 
+
+/* -----------------------------------------------------------------------------
+  set up methods
+----------------------------------------------------------------------------- */
+
+  doSetup = function() {
+    dateDisplayStart = new Date();
+    dateDisplaySelected = new Date();
+    dateToday = new Date();
+    timespanDisplay = TIMESPAN_DEFAULT;
+
+    localStorage.clear();
+    if(typeof(Storage) !== "undefined") {
+      if (!localStorage.getObject(APP_ID)) {
+        localStorage.setObject(APP_ID, {
+          pagetypeCurrent: PAGETYPE_DEFAULT
+        });
+      }
+      selectPage(localStorage.getObject(APP_ID).pagetypeCurrent);
+    } else {
+      logMsg(TXT_STORAGE_UNSUPPORTED);
+    }
+  };
+
+
+  selectPage = function(pageType) {
+    localStorage.getObject(APP_ID).pagetypeCurrent = pageType;
+    drawPage();
+  };
+
+
+  drawPage = function() {
+    switch (localStorage.getObject(APP_ID).pagetypeCurrent) {
+      case PAGETYPE_TIMESHEETS:
+        fillHTMLFromOb(PAGEDATA_TIMESHEETS);
+        drawGUIFromAr(GUIDATA_TIMESHEETS);
+        break;
+      case PAGETYPE_CONFIG:
+        fillHTMLFromOb(PAGEDATA_CONFIG);
+        drawGUIFromAr(GUIDATA_CONFIG);
+        break;
+      case PAGETYPE_JOBSANDCLIENTS:
+        fillHTMLFromOb(PAGEDATA_JOBSANDCLIENTS);
+        drawGUIFromAr(GUIDATA_JOBSANDCLIENTS);
+        break;
+      default:
+        break;
+    }
+  };
+
+
+  fillHTMLFromOb = function(ob) {
+    for (var prop in ob) {
+      document.getElementById(prop).innerHTML = ob[prop];
+    }
+  };
+
+
+  drawGUIFromAr = function(ar) {
+    var i, ob;
+    for (i = 0; i < ar.length; i++) {
+      ob = ar[i];
+      switch (ob.type) {
+        case GUITYPE_BTN:
+          createButtonFromOb(ob);
+          break;
+        case GUITYPE_FORM:
+          createFormFromOb(ob);
+          break;
+        case GUITYPE_TEXTINPUT:
+          createTextInputFromOb(ob);
+          break;
+        case GUITYPE_SELECT:
+          createSelectFromOb(ob);
+          break;
+        case GUITYPE_METHODCALL:
+          callMethodFromOb(ob);
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
+
+  createButtonFromOb = function(ob) {
+    var
+    button_el,
+    parent_el = document.getElementById(ob.parentID);
+
+    if (ob.id) {
+      button_el = createElementWithId("button", ob.id);
+    } else {
+      button_el = document.createElement("button");
+    }
+    parent_el.appendChild(button_el);
+
+    if (ob.class) { addClassname(button_el, ob.class); }
+    button_el.innerHTML = ob.label;
+    registerEventHandler(button_el, "mousedown", ob.method);
+
+    if (ob.disabled) { button_el.disabled = ob.disabled; }
+  };
+
+
+  createTextInputFromOb = function(ob) {
+    var
+    input_el, label_el,
+    parent_el = document.getElementById(ob.parentID);
+
+    if (ob.label) {
+      label_el = document.createElement("label");
+      label_el.innerHTML = ob.label;
+      parent_el.appendChild(label_el);
+      label_el.htmlFor = ob.id;
+    }
+    if (ob.id) {
+      input_el = createElementWithId("input", ob.id);
+      input_el.name = ob.id;
+    } else {
+      input_el = document.createElement("input");
+    }
+    parent_el.appendChild(input_el);
+
+    if (ob.class) { addClassname(input_el, ob.class); }
+  };
+
+
+  createSelectFromOb = function(ob) {
+    var
+    prop, select_el, label_el,
+    parent_el = document.getElementById(ob.parentID);
+
+    if (ob.label) {
+      label_el = document.createElement("label");
+      label_el.innerHTML = ob.label;
+      parent_el.appendChild(label_el);
+      label_el.htmlFor = ob.id;
+    }
+    if (ob.id) {
+      select_el = createElementWithId("select", ob.id);
+      select_el.name = ob.id;
+    } else {
+      select_el = document.createElement("select");
+    }
+    parent_el.appendChild(select_el);
+
+    for (prop in ob.options) {
+      select_el.options[select_el.options.length] = new Option(ob.options[prop], prop);
+    }
+
+    if (ob.class) { addClassname(select_el, ob.class); }
+
+    registerEventHandler(select_el, "change", ob.method);
+  };
+
+
+  createFormFromOb = function(ob) {
+    var
+    i, form_el,
+    parent_el = document.getElementById(ob.parentID);
+
+    if (ob.id) {
+      form_el = createElementWithId("form", ob.id);
+    } else {
+      form_el = document.createElement("form");
+    }
+    parent_el.appendChild(form_el);
+
+    if (ob.class) { addClassname(form_el, ob.class); }
+    // form_el.innerHTML = ob.label;
+    // registerEventHandler(form_el, "mousedown", ob.method);
+
+    if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
+
+    if (ob.hidden) { form_el.style.display = "none"; }
+  };
+
+
+  callMethodFromOb = function(ob) {
+      /*
+      eval usage has been carefully considered and is the best solution
+      for calling one of many methods whose names have been stored in the constants file
+
+      ob.method contains a hard-coded string from DDDConsts.js
+
+      ! NO USER INPUT CAN MAKE IT INTO THIS LOCATION UNLESS THE SOURCE CODE
+      ! HAS BEEN COMPROMISED. IF THAT HAPPENS WE'RE BUGGERED ANYWAY !!
+      */
+      eval(ob.method).call(ob.scope);
+  };
 
 
 	// create local references to public methods from FGUtils
 	// (saves typing/less verbosity)
-	for (var prop in uk.co.firmgently.FGUtils) {
+	for (prop in uk.co.firmgently.FGUtils) {
 		this[prop] = uk.co.firmgently.FGUtils[prop];
 	}
 
 
-	/* -------------------------------------------------------------------------------
-		general helpers
-	---------------------------------------------------------------------------------- */
+  /* ---------------------------------------------------------------------------
+		page drawing methods
+	--------------------------------------------------------------------------- */
 
-	logMsg("HELLOh");
+  drawTimesheets = function() {
+    var i, daysToDraw, isOddDay, weekdayCur, isToday,
+    startDay = new Date();
 
+    switch(timespanDisplay) {
+      case TIMESPAN_WEEK:
+        weekdayCur = startDay.getDay(); // 0 = Sunday, 1 = Monday etc
+        startDay.setDate(startDay.getDate() - weekdayCur); // gets first day of week
+        daysToDraw = DAYSINWEEK;
+        break;
+      case TIMESPAN_MONTH:
+        startDay.setDate(1);
+        daysToDraw = DAYSINMONTH;
+        break;
+      case TIMESPAN_YEAR:
+        startDay.setMonth(0);
+        startDay.setDate(1);
+        daysToDraw = DAYSINYEAR;
+        break;
+      default:
+        break;
+    }
+    for (i = 0; i < daysToDraw; i++) {
+      // logMsg(Math.round(daysBetween(startDay, dateToday)));
+      isToday = !Math.round(daysBetween(startDay, dateToday));
+      // logMsg(isToday);
+      if (isToday) {
+        logMsg("> " + startDay);
+      } else {
+        logMsg("  " + startDay);
+      }
+      startDay.setDate(startDay.getDate() + 1);
+    }
+  };
+
+
+  drawConfigGUI = function() {
+    logMsg("DRAWING CONFIG GUI");
+  };
+
+
+	/* ---------------------------------------------------------------------------
+		begin...
+	--------------------------------------------------------------------------- */
+
+  doSetup();
 
 	return;
 
