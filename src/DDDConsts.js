@@ -35,10 +35,13 @@ uk.co.firmgently.DDDConsts = (function() {
   GUITYPE_TEXTINPUT = "GUITypeTextInput",
   GUITYPE_SELECT = "GUITypeSelect",
   GUITYPE_FORM = "GUITypeForm",
+  GUITYPE_SECTION = "GUITypeSection",
   GUITYPE_METHODCALL = "GUITypeMethodCall",
 
   CLASS_BTNMAIN = "btnMain",
   CLASS_FORMMAIN = "formMain",
+
+  TIMESHEETCONTAINER_ID = "timesheetContainer",
 
   PAGEDATA_JOBSANDCLIENTS = {
     pageTitle: "Jobs and Clients",
@@ -61,14 +64,14 @@ uk.co.firmgently.DDDConsts = (function() {
       parentID: "main",
       disabled: true
     }, {
-      type: GUITYPE_BTN,
-      id: "createJobBtn",
-      class: CLASS_BTNMAIN,
-      label: "Create new job",
-      method: "createJob",
-      parentID: "main",
-      disabled: true
-    }, {
+    //   type: GUITYPE_BTN,
+    //   id: "createJobBtn",
+    //   class: CLASS_BTNMAIN,
+    //   label: "Create new job",
+    //   method: "createJob",
+    //   parentID: "main",
+    //   disabled: true
+    // }, {
       type: GUITYPE_FORM,
       id: "createClientForm",
       class: CLASS_FORMMAIN,
@@ -111,6 +114,10 @@ uk.co.firmgently.DDDConsts = (function() {
   },
   GUIDATA_TIMESHEETS = [
     {
+      type: GUITYPE_SECTION,
+      id: TIMESHEETCONTAINER_ID,
+      parentID: "main"
+    }, {
       type: GUITYPE_METHODCALL,
       method: "drawTimesheets",
       scope: "main"
@@ -143,7 +150,7 @@ uk.co.firmgently.DDDConsts = (function() {
   TIMESPAN_WEEK = "timespanWeek",
   TIMESPAN_MONTH = "timespanMonth",
   TIMESPAN_YEAR = "timespanYear",
-  TIMESPAN_DEFAULT = TIMESPAN_YEAR,
+  TIMESPAN_DEFAULT = TIMESPAN_MONTH,
   DAYSINWEEK = 7,
   DAYSINMONTH = 31, // set to maxiumum possible (only used for display purposes)
   DAYSINYEAR = 365,
@@ -166,7 +173,9 @@ uk.co.firmgently.DDDConsts = (function() {
     GUITYPE_FORM: GUITYPE_FORM,
     GUITYPE_SELECT: GUITYPE_SELECT,
     GUITYPE_TEXTINPUT: GUITYPE_TEXTINPUT,
+    GUITYPE_SECTION: GUITYPE_SECTION,
     GUITYPE_METHODCALL: GUITYPE_METHODCALL,
+    TIMESHEETCONTAINER_ID: TIMESHEETCONTAINER_ID,
     PAGEDATA_JOBSANDCLIENTS: PAGEDATA_JOBSANDCLIENTS,
     GUIDATA_JOBSANDCLIENTS: GUIDATA_JOBSANDCLIENTS,
     PAGEDATA_TIMESHEETS: PAGEDATA_TIMESHEETS,

@@ -3,13 +3,17 @@
 	Frantic Fish Search Scrape
 ================================================== */
 
+@bold-font-family: "FG_Bold", Tahoma, Arial, Helvetica;
+@normal-font-family: "FG_Medium", Tahoma, Arial, Helvetica;
+
 @red: #f00;
 @blue: #00f;
 @white: #fff;
 @black: #000;
-@panelBgColour1: #9999aa;
-@panelBgColour2: mix(@panelBgColour1, @white, 40%);
-@panelBgColour3: mix(@panelBgColour1, @white, 90%);
+@panelBgColour: #008800;
+@panelBgColour1: mix(@panelBgColour, @white, 25%);
+@panelBgColour2: mix(@panelBgColour, @white, 15%);
+@panelBgColour3: mix(@panelBgColour, @white, 10%);
 @panelBgColourImportant: mix(@panelBgColour2, @red, 80%);
 @panelBgColourAltered: mix(@panelBgColour1, @red, 95%);
 @panelBgColourTrans: fade(@panelBgColour1, 80%);
@@ -41,35 +45,59 @@
 
 
 /* RESET */
-#FFSSSearchScrapePanel, #FFSSFilterPanel, #FFSSDataPanel,
-.FFSSPanelHeading, .FFSSGroupHeading,
-#FFSSDataPanelHeading, #FFSSFilterPanelHeading, #FFSSRuleConfigger h2,
-#FFSSRuleConfigger>label, #FFSSSaveLoadContainer>label,
-.FFSSButtonSelected, .FFSSButtonDeselected,
-.FFSSFilterSpan, .FFSSLabel, .FFSSCheckbox,
-.FFSSItem, .FFSSItemAlt, #FFSSSaveLoadContainer, #FFSSDisablePanel,
-#FFSSDataPanel ul, #FFSSFilterPanel ul, #FFSSFilterPanel label,
-#FFSSDataPanel a, #FFSSRuleHolder label, #FFSSRuleHolder, #FFSSRuleConfigger,
-#FFSSRulesHeader, #FFSSRulesetNameTextInput, #FFSSRulesetNameSelect,
-#FFSSRuleConfigger input, #FFSSSearchScrapePanel input {
+#DDDSearchScrapePanel, #DDDFilterPanel, #DDDDataPanel,
+.DDDPanelHeading, .DDDGroupHeading,
+#DDDDataPanelHeading, #DDDFilterPanelHeading, #DDDRuleConfigger h2,
+#DDDRuleConfigger>label, #DDDSaveLoadContainer>label,
+.DDDButtonSelected, .DDDButtonDeselected,
+.DDDFilterSpan, .DDDLabel, .DDDCheckbox,
+.DDDItem, .DDDItemAlt, #DDDSaveLoadContainer, #DDDDisablePanel,
+#DDDDataPanel ul, #DDDFilterPanel ul, #DDDFilterPanel label,
+#DDDDataPanel a, #DDDRuleHolder label, #DDDRuleHolder, #DDDRuleConfigger,
+#DDDRulesHeader, #DDDRulesetNameTextInput, #DDDRulesetNameSelect,
+#DDDRuleConfigger input, #DDDSearchScrapePanel input {
 	margin: 0; padding: 0; border: 0;
 	font-size: 100%; font: inherit; font-family: Verdana,Arial,Helvetica;
 	letter-spacing: normal; text-transform: none;
 	vertical-align: baseline; background: none;
 	text-align: left; line-height: 1em;
-	
+
 	-moz-box-shadow: none !important;
 	-webkit-box-shadow: none !important;
 	box-shadow: none !important;
-	
+
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;
+
+}
+
+body {
+	font-family: @normal-font-family;
+}
+
+// Timesheets
+
+#timesheetContainer {
+	display: block;
+	span {
+		&.day {
+			cursor: pointer;
+			display: block;
+			padding: @tinyPadding;
+			color: @panelBgColour; background-color: @panelBgColour3;
+			border-style: solid; border-width: @tinyPadding; border-color: @panelBgColour3;
+		}
+		&.odd { background-color: @panelBgColour2; border-color: @panelBgColour2; }
+		&.today { font-family: @bold-font-family; background-color: @panelBgColour1; border-color: @panelBgColour1; }
+		&.week-start { margin-top: @smallPadding; }
+		&.month-start { border-top-color: @panelBgColour; }
+	}
 }
 
 
 /* PANELS */
-#FFSSSearchScrapePanel {
+#DDDSearchScrapePanel {
 	position: fixed; overflow: auto;
 	top: 0; right: 0; width: @leftPanelWidth; height: 100%;
 	color: #111; background-color: @panelBgColour1; /* background-color: #f00; */
@@ -81,26 +109,26 @@
 	-webkit-box-shadow: 3px 0 @smallPadding 2px #000 !important;
 	box-shadow:         3px 0 @smallPadding 2px #000 !important;
 }
-#FFSSFilterPanel {
+#DDDFilterPanel {
 	position: absolute; overflow: auto;
 	background-color: @panelBgColour2;
 	padding: 3px 1px 3px 3px;
 	bottom: @bottomPadding; left: @smallPadding; top: @topPadding; right :67%;
 	font-size: @fontSizeSmall; word-wrap: break-word;
 }
-#FFSSDataPanel {
+#DDDDataPanel {
 	position: absolute; overflow: auto; background-color: @panelBgColour2;
 	padding: 3px 1px 3px 3px;
 	bottom: 37px; left: 34%; top: @topPadding; right: @smallPadding;
 	font-size: @fontSizeSmall; word-wrap: break-word;
 }
-#FFSSSelectPanel {
+#DDDSelectPanel {
 	position: absolute; background-color: @panelBgColour2;
 	padding: 3px 0px 3px 3px;
 	text-align: right;
 	top: 27px; left: @smallPadding; right: @smallPadding;
 }
-#FFSSRuleConfigger {
+#DDDRuleConfigger {
 	position: fixed; background-color: @panelBgColour1;
 	padding: @smallPadding 3px @smallPadding 0;
 	text-align: right;
@@ -110,19 +138,19 @@
 	-webkit-box-shadow: 1px 2px 8px -2px #000000 !important;
 	box-shadow:         1px 2px 8px -2px #000000 !important;
 }
-#FFSSRuleConfigger.altered {
+#DDDRuleConfigger.altered {
 	background-color: @panelBgColourAltered;
 }
-#FFSSDataPanel ul {
+#DDDDataPanel ul {
 	margin-bottom: 10px;
 }
-#FFSSSaveLoadContainer {
+#DDDSaveLoadContainer {
 	position: absolute; display: inline-block;
 	left: @smallPadding;
 }
 
 /* TEXT */
-.FFSSPanelHeading {
+.DDDPanelHeading {
 	background-color:@darkHeadingBgColour; color: @darkHeadingColour;
 	display: block;
 	position:absolute; padding: 2px 0 2px @smallPadding; top: @smallPadding; left: 25px; right: 25px;
@@ -130,225 +158,225 @@
 	line-height: 1.2em !important;
 	text-align: center; text-transform: uppercase;
 }
-#FFSSRulesHeader {
+#DDDRulesHeader {
 	width: 100%; text-align: right; margin-top: 10px;
 	padding-left: 9px;
 }
-#FFSSRulesHeader h2 {
+#DDDRulesHeader h2 {
 	width: 20%;
 }
-h3.FFSSGroupHeading {
+h3.DDDGroupHeading {
 	background-color:@midHeadingBgColour !important; color: #fff !important; text-transform: uppercase;
 	font-weight: bold !important; font-size: @fontSizeSmall !important; word-break: break-all;
 	display:block; padding: 1px 3px 3px 3px; line-height: 1.3em;
 }
-#FFSSSelectPanel label, #FFSSRuleHolder label {
+#DDDSelectPanel label, #DDDRuleHolder label {
 	font-size: @fontSizeNormal;
 	padding: 0; margin: 0 3px 0 0;
 	display: inline-block; color: #555;
 	text-transform: uppercase;
 }
-#FFSSDataPanelHeading, #FFSSFilterPanelHeading, #FFSSRuleConfigger h2,
-#FFSSRuleConfigger>label, #FFSSSaveLoadContainer>label {
+#DDDDataPanelHeading, #DDDFilterPanelHeading, #DDDRuleConfigger h2,
+#DDDRuleConfigger>label, #DDDSaveLoadContainer>label {
 	position: absolute; font-size: @fontSizeNormal !important; /* font-weight: bold !important; */ color: #fff !important;
 	top: 52px; display: inline-block;
 	text-align: center; text-transform: uppercase !important;
 }
-#FFSSSaveLoadContainer>label {
+#DDDSaveLoadContainer>label {
 	top: -2px; position: relative; margin-right: @smallPadding;
 }
-#FFSSDataPanelHeading {
+#DDDDataPanelHeading {
 	left: @leftPanelWidth; width: @rightPanelWidth;
 }
-#FFSSFilterPanelHeading {
+#DDDFilterPanelHeading {
 	left: 3px; width: @leftPanelWidth;
 }
-#FFSSRuleConfigger h2 {
+#DDDRuleConfigger h2 {
 	top: -1px;
 	position: relative; margin-right: @smallPadding;
 }
-#FFSSRuleConfigger>label, #FFSSRuleConfigger>label {
+#DDDRuleConfigger>label, #DDDRuleConfigger>label {
 	position: relative; margin-right: @smallPadding;
 	top: -1px;
 }
-#FFSSAddBtnLabel {
+#DDDAddBtnLabel {
 	left: auto; right: @smallPadding;
 }
-.FFSSItem, .FFSSItemAlt {
+.DDDItem, .DDDItemAlt {
 	display: block; padding: 3px;
 	background-color: #f6f6f6;
 	border: 1px solid #858585; border-top: none;
 	word-break: break-all;
 }
-.FFSSItemAlt {
+.DDDItemAlt {
 	background-color: #e8e8e8;
 }
-.FFSSItem hr, .FFSSItemAlt hr {
+.DDDItem hr, .DDDItemAlt hr {
 	border: none; background: none; font-size: 3px;
 	height: @smallPadding; margin: 0; padding: 0;
 }
 
 
 /* FORM CONTROLS */
-input.FFSSButtonSelected, input.FFSSButtonDeselected,
-a.FFSSButtonDeselected, .FFSSButtonDelete,
-#FFSSAddBtn, #FFSSButtonSave, #FFSSButtonLoad {
+input.DDDButtonSelected, input.DDDButtonDeselected,
+a.DDDButtonDeselected, .DDDButtonDelete,
+#DDDAddBtn, #DDDButtonSave, #DDDButtonLoad {
 	position: absolute !important; top: 26px; padding: 2px 4px 2px 4px;
 	font-size: @fontSizeNormal; font-weight: bold; color: @buttonColourOut; background-color: @buttonBgColourOut !important;
 	border: none !important; width: 31%; text-transform: uppercase;
 	cursor: pointer; text-align: center;
-	-webkit-border-radius: 3px; 
-	-moz-border-radius: 3px; 
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
-a.FFSSButtonDeselected, .FFSSButtonDelete, #FFSSAddBtn, #FFSSButtonSave, #FFSSButtonLoad {
+a.DDDButtonDeselected, .DDDButtonDelete, #DDDAddBtn, #DDDButtonSave, #DDDButtonLoad {
 	text-decoration: none; text-align: center; padding: 3px 2px 3px 4px;
 	top: auto; bottom: @bottomPadding; right: 6px; width: 64%;
 }
-input.FFSSButtonDelete, input#FFSSAddBtn, input#FFSSButtonSave, input#FFSSButtonLoad {
+input.DDDButtonDelete, input#DDDAddBtn, input#DDDButtonSave, input#DDDButtonLoad {
 	top: 2px; bottom: auto;
 	width: 16px; height: 16px;
-	background-image: url(../images/FFSSSprites.png) !important;
+	background-image: url(../images/DDDSprites.png) !important;
 	background-position: -16px 0 !important;
 	position: relative !important;
 }
-.FFSSButtonDelete {
+.DDDButtonDelete {
 	margin: 0 0 0 -14px !important; position: absolute;
 }
-input#FFSSAddBtn {
+input#DDDAddBtn {
 	background-position: -32px 0 !important;
 	left: auto; right: 5px;
 }
-input#FFSSAddBtn:hover {
+input#DDDAddBtn:hover {
 	background-position: -32px -16px !important;
 }
-input#FFSSButtonSave {
+input#DDDButtonSave {
 	background-position: -48px 0 !important;
 	right: auto;
 	margin-right: @smallPadding;
 	margin-left: 6px;
 }
-input#FFSSButtonSave:hover {
+input#DDDButtonSave:hover {
 	background-position: -48px -16px !important;
 }
-input#FFSSButtonLoad {
+input#DDDButtonLoad {
 	background-position: -64px 0 !important;
 	right: auto;
 	margin-right: @smallPadding;
 	margin-left: @smallPadding;
 }
-input#FFSSButtonLoad:hover {
+input#DDDButtonLoad:hover {
 	background-position: -64px -16px !important;
 }
-.FFSSButtonDelete:hover {
+.DDDButtonDelete:hover {
 	background-position: -16px -16px !important;
 }
-input.FFSSButtonSelected:hover, input.FFSSButtonDeselected:hover,
-a.FFSSButtonDeselected:hover, .FFSSButtonDelete:hover {
+input.DDDButtonSelected:hover, input.DDDButtonDeselected:hover,
+a.DDDButtonDeselected:hover, .DDDButtonDelete:hover {
 	background-color: @buttonBgColourOver; color: @buttonColourOver;
 }
-input.FFSSButtonSelected {
+input.DDDButtonSelected {
 	background-color: #222;
 	color: #fff;
 }
-#FFSSDataPanel a:link, #FFSSDataPanel a:visited,
-#FFSSDataPanel a:hover, #FFSSDataPanel a:active {
+#DDDDataPanel a:link, #DDDDataPanel a:visited,
+#DDDDataPanel a:hover, #DDDDataPanel a:active {
 	color: #008; text-decoration: none;
 }
-#FFSSDataPanel a:visited {
+#DDDDataPanel a:visited {
 	color: #603;
 }
-#FFSSDataPanel a:hover {
+#DDDDataPanel a:hover {
 	text-decoration: underline;
 }
-#FFSSFilterPanel li {
+#DDDFilterPanel li {
 	display: inline-block;
 	background-color: @buttonBgColourOut;
 	padding: 2px 2px 4px 2px; margin-bottom: 1px;
 	width: 96%;
 }
-#FFSSFilterPanel li:hover {
+#DDDFilterPanel li:hover {
 	background-color: #000008;
 }
-#FFSSFilterPanel label {
+#DDDFilterPanel label {
 	word-break: break-all; color: #eee;
 	float: left; margin-left: 2px;
 	display: inline-block;
 	width: 80%; cursor: pointer;
 }
-#FFSSFilterPanel input[type=checkbox] {
+#DDDFilterPanel input[type=checkbox] {
 	float: left; clear: left;
 	display: inline-block;
 	margin: 0 !important; padding: 0 !important; border: 0 !important;
 }
-#FFSSAttrSelect {
+#DDDAttrSelect {
 	width: @rightPanelWidth; font-size: @fontSizeSmall; text-transform: uppercase;
 	text-align: left;
 	border: none;
 }
-#FFSSBtnClose {
+#DDDBtnClose {
 	top: @smallPadding; right: @smallPadding;
 	width: 16px; height: 16px; padding-top: 0;
-	background-image: url(../images/FFSSSprites.png) !important;
+	background-image: url(../images/DDDSprites.png) !important;
 	background-position: 0 0 !important;
 }
-#FFSSBtnClose:hover {
+#DDDBtnClose:hover {
 	background-position: 0 -16px !important;
 }
-#FFSSBtnConfig {
+#DDDBtnConfig {
 	top: @smallPadding; left: @smallPadding;
 	width: 16px; height: 16px; padding-top: 0;
-	background-image: url(../images/FFSSSprites.png) !important;
+	background-image: url(../images/DDDSprites.png) !important;
 	background-position: -80px 0 !important;
 }
-#FFSSBtnConfig:hover {
+#DDDBtnConfig:hover {
 	background-position: -80px -16px !important;
 }
-.FFSSRule, .FFSSRuleOver {
+.DDDRule, .DDDRuleOver {
 	background-color: @panelBgColour2; margin-bottom: @tinyPadding; margin-left: 20px;
 	padding: 0 0 @tinyPadding 0;
 	text-align: left;
 }
-.FFSSRuleOver {
+.DDDRuleOver {
 	background-color: @panelBgColourImportant;
 }
-#FFSSRuleHolder {
+#DDDRuleHolder {
 	margin-bottom: @smallPadding;
 	margin-left: @smallPadding;
 	border: solid 1px @panelBgColour3;
 }
-#FFSSRuleHolder select {
+#DDDRuleHolder select {
 	font-size: @fontSizeSmall; border: none;
 	margin-right: 6px;
 	position: relative;
 	top: -1px;
 }
-#FFSSRuleHolder input[type=text], input#FFSSRulesetNameTextInput, #FFSSRulesetNameSelect {
+#DDDRuleHolder input[type=text], input#DDDRulesetNameTextInput, #DDDRulesetNameSelect {
 	font-size: @fontSizeSmall; border: none;
 	margin: 0 6px 0 0 !important;
 	position: relative;
 	top: -1px; padding: 0 1px 1px 1px;
 	background-color: #FFFFFF;
 }
-input#FFSSRulesetNameTextInput, #FFSSRulesetNameSelect {
+input#DDDRulesetNameTextInput, #DDDRulesetNameSelect {
 	display: block;
 	font-weight: bold;
 	background-color:@darkHeadingBgColour; color: @darkHeadingColour;
 	position: absolute;
 }
-#FFSSRulesetNameSelect {
+#DDDRulesetNameSelect {
 	z-index: @aboveBaseZ;
 	width: 100%;
 	top: 2px;
 }
-input#FFSSRulesetNameTextInput {
+input#DDDRulesetNameTextInput {
 	width: 90%;
 	padding-top: 1px;
 	padding-left: 4px;
 	background-color: @darkerHeadingBgColour;
 	top: 2px;
 }
-#FFSSRulesetInputHolder {
+#DDDRulesetInputHolder {
 	position: absolute; display: block;
 	top: @smallPadding; right: @smallPadding;
 	width: 40%; height: 1em;
@@ -360,31 +388,31 @@ input#FFSSRulesetNameTextInput {
 .selectOrTextBottom {
 	z-index: @aboveBaseZ;
 }
-.FFSSInput {
+.DDDInput {
 	width: 23%;
 }
-.FFSSSelectElement {
+.DDDSelectElement {
 	width: 17%;
 }
-.FFSSSelectAttName {
+.DDDSelectAttName {
 	width: 17%;
 }
-.FFSSSelectAttVal {
+.DDDSelectAttVal {
 	width: 35%;
 }
-h2#FFSSRuleIDHeading {
+h2#DDDRuleIDHeading {
 	width: 23%;
 }
-h2#FFSSElementHeading {
+h2#DDDElementHeading {
 	width: 17%;
 }
-h2#FFSSAttrNameHeading {
+h2#DDDAttrNameHeading {
 	width: 17%;
 }
-h2#FFSSAttrValHeading {
+h2#DDDAttrValHeading {
 	width: 30%;
 }
-#FFSSDisablePanel {
+#DDDDisablePanel {
 	position: absolute; z-index: @aboveBaseZ;
 	top: 0; left: 0; right: 0; bottom: 0;
 	background-color: @panelBgColourTrans;
@@ -392,6 +420,25 @@ h2#FFSSAttrValHeading {
 	padding-top: 2em;
 	text-align: center;
 }
-h2#FFSSRulesetNameLabel {
+h2#DDDRulesetNameLabel {
 	margin-right: 43%; top: -1px;
+}
+
+
+
+@font-face {
+  font-family: 'FG_Bold';
+  src: 	url('/fonts/NotoSans-Bold-webfont.eot?') format('eot'),
+        url('/fonts/NotoSans-Bold-webfont.woff2') format('woff2'),
+        url('/fonts/NotoSans-Bold-webfont.woff') format('woff'),
+        // url('/fonts/NotoSans-Bold-webfont.svg#NotoSansRegular') format('svg'),
+        url('/fonts/NotoSans-Bold-webfont.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'FG_Medium';
+  src: 	url('/fonts/NotoSans-Regular-webfont.eot?') format('eot'),
+        url('/fonts/NotoSans-Regular-webfont.woff2') format('woff2'),
+        url('/fonts/NotoSans-Regular-webfont.woff') format('woff'),
+        // url('/fonts/NotoSans-Regular-webfont.svg#NotoSansRegular') format('svg'),
+        url('/fonts/NotoSans-Regular-webfont.ttf') format('truetype');
 }

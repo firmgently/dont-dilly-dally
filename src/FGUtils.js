@@ -136,8 +136,8 @@ uk.co.firmgently.FGUtils = (function() {
     return result;
   };
   daysBetween = function(startDate, endDate) {
-      var millisecondsPerDay = 24 * 60 * 60 * 1000;
-      return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
+      var msPerDay = 24 * 60 * 60 * 1000;
+      return (treatAsUTC(endDate) - treatAsUTC(startDate)) / msPerDay;
   };
 
 

@@ -24,7 +24,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 	// methods
   doSetup, selectPage, drawPage, fillHTMLFromOb, drawGUIFromAr,
   createButtonFromOb, createFormFromOb, createTextInputFromOb, callMethodFromOb,
-  createSelectFromOb, drawTimesheets, drawConfigGUI
+  createSelectFromOb, createSectionFromOb, drawTimesheets, drawConfigGUI
 	;
 
   // create local references to public vars (fake constants) from DDDConsts
@@ -106,6 +106,9 @@ uk.co.firmgently.DontDillyDally = (function() {
           break;
         case GUITYPE_SELECT:
           createSelectFromOb(ob);
+          break;
+        case GUITYPE_SECTION:
+          createSectionFromOb(ob);
           break;
         case GUITYPE_METHODCALL:
           callMethodFromOb(ob);
@@ -189,6 +192,20 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  createSectionFromOb = function(ob) {
+    var
+    el,
+    parent_el = document.getElementById(ob.parentID);
+    if (ob.id) {
+      el = createElementWithId("section", ob.id);
+    } else {
+      el = document.createElement("section");
+    }
+    parent_el.appendChild(el);
+    if (ob.class) { addClassname(el, ob.class); }
+  };
+
+
   createFormFromOb = function(ob) {
     var
     i, form_el,
@@ -237,37 +254,47 @@ uk.co.firmgently.DontDillyDally = (function() {
 	--------------------------------------------------------------------------- */
 
   drawTimesheets = function() {
-    var i, daysToDraw, isOddDay, weekdayCur, isToday,
-    startDay = new Date();
+    var
+    i, daysToDraw, isOddDay, weekdayCur,
+    isToday, rowClassname,
+    day_el,
+    weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
+    parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
+    dayCur = new Date();
 
     switch(timespanDisplay) {
       case TIMESPAN_WEEK:
-        weekdayCur = startDay.getDay(); // 0 = Sunday, 1 = Monday etc
-        startDay.setDate(startDay.getDate() - weekdayCur); // gets first day of week
+        weekdayCur = dayCur.getDay(); // 0 = Sunday, 1 = Monday etc
+        dayCur.setDate(dayCur.getDate() - weekdayCur + weekStartDay); // gets first day of week
         daysToDraw = DAYSINWEEK;
         break;
       case TIMESPAN_MONTH:
-        startDay.setDate(1);
+        dayCur.setDate(1);
         daysToDraw = DAYSINMONTH;
         break;
       case TIMESPAN_YEAR:
-        startDay.setMonth(0);
-        startDay.setDate(1);
+        dayCur.setMonth(0);
+        dayCur.setDate(1);
         daysToDraw = DAYSINYEAR;
         break;
       default:
         break;
     }
+
+    isOddDay = false;
     for (i = 0; i < daysToDraw; i++) {
-      // logMsg(Math.round(daysBetween(startDay, dateToday)));
-      isToday = !Math.round(daysBetween(startDay, dateToday));
-      // logMsg(isToday);
-      if (isToday) {
-        logMsg("> " + startDay);
-      } else {
-        logMsg("  " + startDay);
-      }
-      startDay.setDate(startDay.getDate() + 1);
+      rowClassname = "day ";
+      isToday = !Math.round(daysBetween(dayCur, dateToday));
+      if (isToday) { rowClassname += "today "; }
+      if (isOddDay) { rowClassname += "odd "; }
+      if (dayCur.getDay() === weekStartDay) { rowClassname += "week-start "; }
+      if (dayCur.getDate() === 1) { rowClassname += "month-start "; }
+      day_el = document.createElement("span");
+      parent_el.appendChild(day_el);
+      addClassname(day_el, rowClassname);
+      day_el.innerHTML = dayCur;
+      dayCur.setDate(dayCur.getDate() + 1);
+      isOddDay = !isOddDay; // flip state
     }
   };
 
