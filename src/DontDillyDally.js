@@ -51,6 +51,9 @@ uk.co.firmgently.DontDillyDally = (function() {
         });
       }
       selectPage(localStorage.getObject(APP_ID).pagetypeCurrent);
+
+      drawGUIFromAr(GUIDATA_NAVMAIN);
+
     } else {
       logMsg(TXT_STORAGE_UNSUPPORTED);
     }
@@ -58,6 +61,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   selectPage = function(pageType) {
+    logMsg("selectPage: " + pageType);
     localStorage.getObject(APP_ID).pagetypeCurrent = pageType;
     drawPage();
   };
@@ -66,14 +70,17 @@ uk.co.firmgently.DontDillyDally = (function() {
   drawPage = function() {
     switch (localStorage.getObject(APP_ID).pagetypeCurrent) {
       case PAGETYPE_TIMESHEETS:
+        document.body.id = BODYID_TIMESHEETS;
         fillHTMLFromOb(PAGEDATA_TIMESHEETS);
         drawGUIFromAr(GUIDATA_TIMESHEETS);
         break;
       case PAGETYPE_CONFIG:
+        document.body.id = BODYID_CONFIG;
         fillHTMLFromOb(PAGEDATA_CONFIG);
         drawGUIFromAr(GUIDATA_CONFIG);
         break;
       case PAGETYPE_JOBSANDCLIENTS:
+        document.body.id = BODYID_JOBSANDCLIENTS;
         fillHTMLFromOb(PAGEDATA_JOBSANDCLIENTS);
         drawGUIFromAr(GUIDATA_JOBSANDCLIENTS);
         break;
@@ -157,6 +164,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     } else {
       input_el = document.createElement("input");
     }
+    input_el.setAttribute("type", "text");
     parent_el.appendChild(input_el);
 
     if (ob.class) { addClassname(input_el, ob.class); }
@@ -229,16 +237,21 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   callMethodFromOb = function(ob) {
-      /*
-      eval usage has been carefully considered and is the best solution
-      for calling one of many methods whose names have been stored in the constants file
+    logMsg("callMethodFromOb: " + JSON.stringify(ob));
+    /*
+    eval usage has been carefully considered and is the best solution
+    for calling one of many methods whose names have been stored in the constants file
 
-      ob.method contains a hard-coded string from DDDConsts.js
+    ob.method contains a hard-coded string from DDDConsts.js
 
-      ! NO USER INPUT CAN MAKE IT INTO THIS LOCATION UNLESS THE SOURCE CODE
-      ! HAS BEEN COMPROMISED. IF THAT HAPPENS WE'RE BUGGERED ANYWAY !!
-      */
-      eval(ob.method).call(ob.scope);
+    ! NO USER INPUT CAN MAKE IT INTO THIS LOCATION UNLESS THE SOURCE CODE
+    ! HAS BEEN COMPROMISED. IF THAT HAPPENS WE'RE BUGGERED ANYWAY !!
+    */
+
+    /* jshint ignore:start */
+    // eval(ob.method).call(ob.scope);
+    eval(ob.method).apply(ob.scope, ob.args);
+    /* jshint ignore:end */
   };
 
 
@@ -257,7 +270,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     var
     i, daysToDraw, isOddDay, weekdayCur,
     isToday, rowClassname,
-    day_el,
+    day_el, date_el, hrs_el, client_el, job_el, jobnotes_el,
     weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
     parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
     dayCur = new Date();
@@ -270,12 +283,13 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
       case TIMESPAN_MONTH:
         dayCur.setDate(1);
-        daysToDraw = DAYSINMONTH;
+        daysToDraw = dayCur.monthDays();
         break;
       case TIMESPAN_YEAR:
         dayCur.setMonth(0);
         dayCur.setDate(1);
         daysToDraw = DAYSINYEAR;
+        if (dayCur.isLeapYear()) { daysToDraw += 1; }
         break;
       default:
         break;
@@ -287,14 +301,35 @@ uk.co.firmgently.DontDillyDally = (function() {
       isToday = !Math.round(daysBetween(dayCur, dateToday));
       if (isToday) { rowClassname += "today "; }
       if (isOddDay) { rowClassname += "odd "; }
+      isOddDay = !isOddDay; // flip state
       if (dayCur.getDay() === weekStartDay) { rowClassname += "week-start "; }
       if (dayCur.getDate() === 1) { rowClassname += "month-start "; }
-      day_el = document.createElement("span");
+      day_el = createElementWithId("span", "day_el" + i);
       parent_el.appendChild(day_el);
       addClassname(day_el, rowClassname);
-      day_el.innerHTML = dayCur;
+      // date
+      date_el = document.createElement("span");
+      addClassname(date_el, "date");
+      day_el.appendChild(date_el);
+      date_el.innerHTML = getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
       dayCur.setDate(dayCur.getDate() + 1);
-      isOddDay = !isOddDay; // flip state
+      // hours
+      hrs_el = document.createElement("span");
+      day_el.appendChild(hrs_el);
+      hrs_el.innerHTML = "HRS RPLCE";
+      // client
+      client_el = document.createElement("span");
+      day_el.appendChild(client_el);
+      client_el.innerHTML = "CLIENT RPLCE";
+      // job
+      job_el = document.createElement("span");
+      day_el.appendChild(job_el);
+      job_el.innerHTML = "JOB RPLCE";
+      // job  notes
+      jobnotes_el = createTextInputFromOb({
+        class: "jobNotes",
+        parentID: ("day_el" + i)
+      });
     }
   };
 

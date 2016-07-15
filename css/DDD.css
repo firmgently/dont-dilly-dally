@@ -67,9 +67,12 @@ body {
   padding: 2px;
   color: #008800;
   background-color: #e6f3e6;
-  border-style: solid;
-  border-width: 2px;
+  border-style: dotted;
+  border-width: 5px;
   border-color: #e6f3e6;
+}
+#timesheetContainer span.day:hover {
+  color: #002200;
 }
 #timesheetContainer span.odd {
   background-color: #d9edd9;

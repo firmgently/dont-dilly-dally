@@ -86,7 +86,8 @@ body {
 			display: block;
 			padding: @tinyPadding;
 			color: @panelBgColour; background-color: @panelBgColour3;
-			border-style: solid; border-width: @tinyPadding; border-color: @panelBgColour3;
+			border-style: dotted; border-width: @smallPadding; border-color: @panelBgColour3;
+			&:hover { color: mix(@panelBgColour, @black, 25%); }
 		}
 		&.odd { background-color: @panelBgColour2; border-color: @panelBgColour2; }
 		&.today { font-family: @bold-font-family; background-color: @panelBgColour1; border-color: @panelBgColour1; }

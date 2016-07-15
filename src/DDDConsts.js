@@ -30,6 +30,9 @@ uk.co.firmgently.DDDConsts = (function() {
   PAGETYPE_CONFIG = "pagetypeConfig",
   PAGETYPE_JOBSANDCLIENTS = "pagetypeJobsAndClients",
   PAGETYPE_DEFAULT = PAGETYPE_TIMESHEETS,
+  BODYID_TIMESHEETS = "timesheets",
+  BODYID_CONFIG = "config",
+  BODYID_JOBSANDCLIENTS = "jobsClients",
 
   GUITYPE_BTN = "GUITypeBtn",
   GUITYPE_TEXTINPUT = "GUITypeTextInput",
@@ -38,10 +41,36 @@ uk.co.firmgently.DDDConsts = (function() {
   GUITYPE_SECTION = "GUITypeSection",
   GUITYPE_METHODCALL = "GUITypeMethodCall",
 
+  CLASS_BTNNAV = "btnNav",
   CLASS_BTNMAIN = "btnMain",
   CLASS_FORMMAIN = "formMain",
 
   TIMESHEETCONTAINER_ID = "timesheetContainer",
+
+  GUIDATA_NAVMAIN = [
+    {
+      type: GUITYPE_BTN,
+      class: CLASS_BTNNAV,
+      label: "Jobs & Clients",
+      method: "selectPage",
+      args: [PAGETYPE_JOBSANDCLIENTS],
+      parentID: "navMain"
+    }, {
+      type: GUITYPE_BTN,
+      class: CLASS_BTNNAV,
+      label: "Timesheets",
+      method: "selectPage",
+      args: [PAGETYPE_TIMESHEETS],
+      parentID: "navMain"
+    }, {
+      type: GUITYPE_BTN,
+      class: CLASS_BTNNAV,
+      label: "Config",
+      method: "selectPage",
+      args: [PAGETYPE_CONFIG],
+      parentID: "navMain"
+    }
+  ],
 
   PAGEDATA_JOBSANDCLIENTS = {
     pageTitle: "Jobs and Clients",
@@ -150,7 +179,7 @@ uk.co.firmgently.DDDConsts = (function() {
   TIMESPAN_WEEK = "timespanWeek",
   TIMESPAN_MONTH = "timespanMonth",
   TIMESPAN_YEAR = "timespanYear",
-  TIMESPAN_DEFAULT = TIMESPAN_MONTH,
+  TIMESPAN_DEFAULT = TIMESPAN_YEAR,
   DAYSINWEEK = 7,
   DAYSINMONTH = 31, // set to maxiumum possible (only used for display purposes)
   DAYSINYEAR = 365,
@@ -165,10 +194,14 @@ uk.co.firmgently.DDDConsts = (function() {
 	--------------------------------------------------------------------------- */
 	return {
     APP_ID: APP_ID,
+    GUIDATA_NAVMAIN: GUIDATA_NAVMAIN,
     PAGETYPE_TIMESHEETS: PAGETYPE_TIMESHEETS,
     PAGETYPE_CONFIG: PAGETYPE_CONFIG,
     PAGETYPE_JOBSANDCLIENTS: PAGETYPE_JOBSANDCLIENTS,
     PAGETYPE_DEFAULT: PAGETYPE_DEFAULT,
+    BODYID_TIMESHEETS: BODYID_TIMESHEETS,
+    BODYID_CONFIG: BODYID_CONFIG,
+    BODYID_JOBSANDCLIENTS: BODYID_JOBSANDCLIENTS,
     GUITYPE_BTN: GUITYPE_BTN,
     GUITYPE_FORM: GUITYPE_FORM,
     GUITYPE_SELECT: GUITYPE_SELECT,

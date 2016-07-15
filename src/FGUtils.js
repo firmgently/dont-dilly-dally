@@ -17,12 +17,12 @@ uk.co.firmgently.FGUtils = (function() {
 	registerEventHandler, unregisterEventHandler, stopPropagation,
 	hexOpacityToRGBA, createElementWithId,
 	removeClassname, addClassname,
-  treatAsUTC, daysBetween,
+  treatAsUTC, daysBetween, getFormattedDate,
 	logMsg;
 
 
   /* -------------------------------------------------------------------------------
-  	extend Storage (including localStorage) object
+  	extend some global objects
   ---------------------------------------------------------------------------------- */
 
   Storage.prototype.setObject = function(key, value) {
@@ -39,6 +39,23 @@ uk.co.firmgently.FGUtils = (function() {
       var value = this.getItem(key);
       return value && JSON.parse(value);
   };
+
+
+
+	// http://stackoverflow.com/questions/1184334/get-number-days-in-a-specified-month-using-javascript
+	Date.prototype.monthDays= function() {
+	    var d = new Date(this.getFullYear(), this.getMonth() + 1, 0);
+	    return d.getDate();
+	};
+
+
+	// http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
+	Date.prototype.isLeapYear = function() {
+	    var year = this.getFullYear();
+	    if ((year & 3) !== 0) { return false; }
+	    return ((year % 100) !== 0 || (year % 400) === 0);
+	};
+
 
 
 	/* -------------------------------------------------------------------------------
@@ -124,6 +141,19 @@ uk.co.firmgently.FGUtils = (function() {
 	};
 
 
+	getFormattedDate = function(date, format) {
+		var dateString;
+		format = format.replace("yy", date.getUTCFullYear());
+		format = format.replace("dd", ("0" + (date.getUTCDate())).slice(-2));
+		format = format.replace("mm", ("0" + (date.getUTCMonth()+1)).slice(-2));
+		return format;
+		// =
+		//   date.getUTCFullYear() +"/"+
+		//   ("0" + (date.getUTCMonth()+1)).slice(-2) +"/"+
+		//   ("0" + date.getUTCDate()).slice(-2);
+	};
+
+
 	logMsg = function(msg) {
     console.log(msg);
   };
@@ -157,6 +187,7 @@ uk.co.firmgently.FGUtils = (function() {
 		addCSSRule: addCSSRule,
 		hexOpacityToRGBA: hexOpacityToRGBA,
 		createElementWithId: createElementWithId,
+		getFormattedDate: getFormattedDate,
 		treatAsUTC: treatAsUTC,
 		daysBetween: daysBetween,
 		logMsg: logMsg
