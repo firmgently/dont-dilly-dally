@@ -25,9 +25,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 	// methods
   doSetup, selectPage, drawPage, fillHTMLFromOb, drawGUIFromAr,
   createButtonFromOb, createFormFromOb, createTextInputFromOb,
-  callMethodFromObOnElement, callMethodFromOb,
+  callMethodFromObOnElement, callMethodFromOb, onFormMouseDown,
   createSelectFromOb, createRadioFromOb, createSectionFromOb, drawTimesheets,
-  drawConfigGUI, navClick, submitConfigForm,
+  drawConfigGUI, navClick,
   dataStoragePossible, initDataObject, dataStoreObject, dataRetrieveObject,
   dataUpdateObject
 	;
@@ -53,7 +53,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   initDataObject = function() {
-    if (!localStorage.getObject(APP_ID)) {
+    // if no preferences are stored create some defaults
+    if (!dataRetrieveObject("prefs")) {
       dataStoreObject("prefs", { pagetype: PAGETYPE_DEFAULT, timespan: TIMESPAN_DEFAULT });
       dataStoreObject("timesheets", {});
     }
@@ -62,6 +63,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   dataStoreObject = function(category, ob) {
     localStorage.setItem(APP_ID + "_" + category, JSON.stringify(ob));
+    // logMsg(category + ": " + JSON.stringify(dataRetrieveObject(category)));
   };
 
 
@@ -79,7 +81,6 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
       }
     }
-    // ob.pagetype = pageType;
     dataStoreObject(category, ob);
   };
 
@@ -94,13 +95,11 @@ uk.co.firmgently.DontDillyDally = (function() {
     dateDisplaySelected = new Date();
     dateToday = new Date();
 
-    localStorage.clear();
+    // localStorage.clear();
     if(dataStoragePossible()) {
       initDataObject();
       selectPage(dataRetrieveObject("prefs").pagetype);
       drawGUIFromAr(GUIDATA_NAVMAIN);
-    } else {
-      logMsg(TXT_STORAGE_UNSUPPORTED);
     }
   };
 
@@ -255,26 +254,20 @@ uk.co.firmgently.DontDillyDally = (function() {
     prop, radio_el, label_el,
     parent_el = document.getElementById(ob.parentID);
 
-    if (ob.label) {
-      label_el = document.createElement("label");
-      label_el.innerHTML = ob.label;
-      parent_el.appendChild(label_el);
-      label_el.htmlFor = ob.id;
-    }
-
     for (prop in ob.options) {
+      label_el = document.createElement("label");
+      label_el.innerHTML = ob.options[prop];
+      parent_el.appendChild(label_el);
+
       radio_el = document.createElement("input");
       radio_el.setAttribute("type", "radio");
+      parent_el.appendChild(radio_el);
+      radio_el.id = ob.id;
       radio_el.name = ob.id;
       radio_el.value = prop;
-      radio_el.innerHTML = ob.options[prop];
-      parent_el.appendChild(radio_el);
+      label_el.htmlFor = ob.id;
+      if (ob.class) { addClassname(radio_el, ob.class); }
     }
-
-    if (ob.class) { addClassname(radio_el, ob.class); }
-
-    logMsg("ob.method:" + ob.method);
-    registerEventHandler(radio_el, "mousedown", ob.method);
   };
 
 
@@ -292,29 +285,8 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  createFormFromOb = function(ob) {
-    var
-    i, form_el,
-    parent_el = document.getElementById(ob.parentID);
-
-    if (ob.id) {
-      form_el = createElementWithId("form", ob.id);
-    } else {
-      form_el = document.createElement("form");
-    }
-    parent_el.appendChild(form_el);
-
-    if (ob.class) { addClassname(form_el, ob.class); }
-    // form_el.innerHTML = ob.label;
-    // registerEventHandler(form_el, "mousedown", ob.method);
-
-    if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
-
-    if (ob.hidden) { form_el.style.display = "none"; }
-  };
-
-
   callMethodFromObOnElement = function(e) {
+    logMsg("callMethodFromObOnElement: " + JSON.stringify(e.target.ob));
     callMethodFromOb(e.target.ob);
   };
 
@@ -338,11 +310,16 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-	// create local references to public methods from FGUtils
-	// (saves typing/less verbosity)
+
+  /* ---------------------------------------------------------------------------
+    create local references to public methods from FGUtils
+    (saves typing/less verbosity)
+	--------------------------------------------------------------------------- */
+
 	for (prop in uk.co.firmgently.FGUtils) {
 		this[prop] = uk.co.firmgently.FGUtils[prop];
 	}
+
 
 
   /* ---------------------------------------------------------------------------
@@ -417,19 +394,54 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+
   /* ---------------------------------------------------------------------------
-		form submissions
+		FORMS
 	--------------------------------------------------------------------------- */
 
-  submitConfigForm = function(e) {
-    logMsg("KJHKJHKJ");
-    logMsg(e.target);
-    logMsg(e.target.form);
+  createFormFromOb = function(ob) {
+    var
+    i, form_el,
+    parent_el = document.getElementById(ob.parentID);
+
+    if (ob.id) {
+      form_el = createElementWithId("form", ob.id);
+    } else {
+      form_el = document.createElement("form");
+    }
+    parent_el.appendChild(form_el);
+
+    if (ob.class) { addClassname(form_el, ob.class); }
+    // form_el.innerHTML = ob.label;
+
+    if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
+
+    if (ob.hidden) { form_el.style.display = "none"; }
+
+    form_el.ob = ob;
+    registerEventHandler(form_el, "click", onFormMouseDown);
   };
 
 
+  onFormMouseDown = function(e) {
+    var form = e.target.form;
+    if (form && form.id) {
+      switch (form.id) {
+        case "createClientForm":
+          break;
+        case "configForm":
+          dataUpdateObject("prefs", "timespan", form.timesheetRange.value);
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
+
+
   /* ---------------------------------------------------------------------------
-		form submissions
+
 	--------------------------------------------------------------------------- */
 
   drawConfigGUI = function() {
@@ -437,13 +449,14 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  navClick = function() {
-    // logMsg("navClick");
+  navClick = function(e) {
     selectPage(arguments[0]);
   };
 
+
+
 	/* ---------------------------------------------------------------------------
-		begin...
+		BEGIN...
 	--------------------------------------------------------------------------- */
 
   doSetup();

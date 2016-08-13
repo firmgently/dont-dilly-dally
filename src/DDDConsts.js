@@ -120,6 +120,8 @@ uk.co.firmgently.DDDConsts = (function() {
           type: GUITYPE_SELECT,
           label: "Existing clients",
           method: "selectClient",
+          args: [],
+          scope: "main",
           parentID: "createClientForm",
           id: "selectClient",
           options: {
@@ -164,6 +166,9 @@ uk.co.firmgently.DDDConsts = (function() {
       class: CLASS_FORMMAIN,
       title: "Set your preferences here",
       parentID: "main",
+      // method: "callMethodFromFormElement",
+      // args: [],
+      // scope: "main",
       hidden: false,
       el_ar: [
          {
@@ -172,11 +177,10 @@ uk.co.firmgently.DDDConsts = (function() {
            label: "Choose how many days you want to show on the timesheet page",
            parentID: "configForm",
            options: {
-             TIMESPAN_WEEK: "A week",
-             TIMESPAN_MONTH: "A month",
-             TIMESPAN_YEAR: "A year"
+             timespanWeek: "A week",
+             timespanMonth: "A month",
+             timespanYear: "A year"
            },
-           method: "submitConfigForm",
            disabled: true
          }
       ]
@@ -197,7 +201,7 @@ uk.co.firmgently.DDDConsts = (function() {
   TIMESPAN_WEEK = "timespanWeek",
   TIMESPAN_MONTH = "timespanMonth",
   TIMESPAN_YEAR = "timespanYear",
-  TIMESPAN_DEFAULT = TIMESPAN_YEAR,
+  TIMESPAN_DEFAULT = TIMESPAN_MONTH,
   DAYSINWEEK = 7,
   DAYSINMONTH = 31, // set to maxiumum possible (only used for display purposes)
   DAYSINYEAR = 365,

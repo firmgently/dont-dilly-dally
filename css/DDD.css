@@ -165,6 +165,10 @@ body {
   display: inline-block;
   left: 5px;
 }
+/* FORMS */
+#configForm input[type=radio] {
+  display: block;
+}
 /* TEXT */
 .DDDPanelHeading {
   background-color: #555555;
@@ -432,7 +436,7 @@ input.DDDButtonSelected {
   height: 16px;
   padding-top: 0;
   background-image: url(../images/DDDSprites.png) !important;
-  background-position: -80px 0 !important;
+  background-position: -79.99999999px 0 !important;
 }
 #DDDBtnConfig:hover {
   background-position: -80px -16px !important;
