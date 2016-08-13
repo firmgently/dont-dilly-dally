@@ -198,6 +198,7 @@ uk.co.firmgently.DDDConsts = (function() {
   },
   DATETYPE_DEFAULT = DATETYPE_DDMMYY,
 
+  // these string values have to match those used in the GUIDATA_CONFIG options
   TIMESPAN_WEEK = "timespanWeek",
   TIMESPAN_MONTH = "timespanMonth",
   TIMESPAN_YEAR = "timespanYear",

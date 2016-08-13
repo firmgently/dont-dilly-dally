@@ -16,11 +16,9 @@ uk.co.firmgently.DontDillyDally = (function() {
   /* ---------------------------------------------------------------------------
 		declare / init vars
 	--------------------------------------------------------------------------- */
-
 	var
   // variables
   prop, dateDisplayStart, dateDisplaySelected, dateToday, //timespanDisplay,
-
 
 	// methods
   doSetup, selectPage, drawPage, fillHTMLFromOb, drawGUIFromAr,
@@ -32,11 +30,21 @@ uk.co.firmgently.DontDillyDally = (function() {
   dataUpdateObject
 	;
 
-  // create local references to public vars (fake constants) from DDDConsts
+  /* ---------------------------------------------------------------------------
+    create local references to public vars (fake constants) from DDDConsts
+	--------------------------------------------------------------------------- */
   for (prop in uk.co.firmgently.DDDConsts) {
     this[prop] = uk.co.firmgently.DDDConsts[prop];
   }
 
+  /* ---------------------------------------------------------------------------
+    create local references to public methods from FGUtils
+    (saves typing/less verbosity)
+	--------------------------------------------------------------------------- */
+
+	for (prop in uk.co.firmgently.FGUtils) {
+		this[prop] = uk.co.firmgently.FGUtils[prop];
+	}
 
 
   /* -----------------------------------------------------------------------------
@@ -265,6 +273,9 @@ uk.co.firmgently.DontDillyDally = (function() {
       radio_el.id = ob.id;
       radio_el.name = ob.id;
       radio_el.value = prop;
+      if (prop === dataRetrieveObject("prefs").timespan) {
+        radio_el.checked = true;
+      }
       label_el.htmlFor = ob.id;
       if (ob.class) { addClassname(radio_el, ob.class); }
     }
@@ -312,17 +323,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   /* ---------------------------------------------------------------------------
-    create local references to public methods from FGUtils
-    (saves typing/less verbosity)
-	--------------------------------------------------------------------------- */
-
-	for (prop in uk.co.firmgently.FGUtils) {
-		this[prop] = uk.co.firmgently.FGUtils[prop];
-	}
-
-
-
-  /* ---------------------------------------------------------------------------
 		page drawing methods
 	--------------------------------------------------------------------------- */
 
@@ -330,7 +330,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     var
     i, daysToDraw, isOddDay, weekdayCur,
     isToday, rowClassname,
-    day_el, date_el, hrs_el, client_el, job_el, jobnotes_el,
+    day_el, date_el, holder_el, hrs_el, client_el, job_el, jobnotes_el,
     weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
     parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
     dayCur = new Date();
@@ -357,7 +357,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     isOddDay = false;
     for (i = 0; i < daysToDraw; i++) {
-      rowClassname = "day ";
+      rowClassname = "day row ";
       isToday = !Math.round(daysBetween(dayCur, dateToday));
       if (isToday) { rowClassname += "today "; }
       if (isOddDay) { rowClassname += "odd "; }
@@ -370,25 +370,33 @@ uk.co.firmgently.DontDillyDally = (function() {
       // date
       date_el = document.createElement("span");
       addClassname(date_el, "date");
+      addClassname(date_el, "col");
       day_el.appendChild(date_el);
       date_el.innerHTML = getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
       dayCur.setDate(dayCur.getDate() + 1);
+
+      holder_el = createElementWithId("span", "holder_el" + i);
+      // holder_el = document.createElement("span");
+      addClassname(holder_el, "day-data");
+      addClassname(holder_el, "col");
+      day_el.appendChild(holder_el);
+
       // hours
       hrs_el = document.createElement("span");
-      day_el.appendChild(hrs_el);
+      holder_el.appendChild(hrs_el);
       hrs_el.innerHTML = "HRS RPLCE";
       // client
       client_el = document.createElement("span");
-      day_el.appendChild(client_el);
+      holder_el.appendChild(client_el);
       client_el.innerHTML = "CLIENT RPLCE";
       // job
       job_el = document.createElement("span");
-      day_el.appendChild(job_el);
+      holder_el.appendChild(job_el);
       job_el.innerHTML = "JOB RPLCE";
       // job  notes
       jobnotes_el = createTextInputFromOb({
         class: "jobNotes",
-        parentID: ("day_el" + i)
+        parentID: ("holder_el" + i)
       });
     }
   };

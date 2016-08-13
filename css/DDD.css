@@ -1,65 +1,174 @@
 @charset "UTF-8";
 /* ===============================================
-	Frantic Fish Search Scrape
+		Dead Simple Grid (c) 2015 Vladimir Agafonkin
 ================================================== */
-/* RESET */
-#DDDSearchScrapePanel,
-#DDDFilterPanel,
-#DDDDataPanel,
-.DDDPanelHeading,
-.DDDGroupHeading,
-#DDDDataPanelHeading,
-#DDDFilterPanelHeading,
-#DDDRuleConfigger h2,
-#DDDRuleConfigger > label,
-#DDDSaveLoadContainer > label,
-.DDDButtonSelected,
-.DDDButtonDeselected,
-.DDDFilterSpan,
-.DDDLabel,
-.DDDCheckbox,
-.DDDItem,
-.DDDItemAlt,
-#DDDSaveLoadContainer,
-#DDDDisablePanel,
-#DDDDataPanel ul,
-#DDDFilterPanel ul,
-#DDDFilterPanel label,
-#DDDDataPanel a,
-#DDDRuleHolder label,
-#DDDRuleHolder,
-#DDDRuleConfigger,
-#DDDRulesHeader,
-#DDDRulesetNameTextInput,
-#DDDRulesetNameSelect,
-#DDDRuleConfigger input,
-#DDDSearchScrapePanel input {
+.row .row {
+  margin: 0 0;
+}
+.col {
+  padding: 0 0;
+}
+.row:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+@media only screen {
+  .col {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+/* ===============================================
+		http://meyerweb.com/eric/tools/css/reset/
+		v2.0b1 | 201101
+		NOTE: WORK IN PROGRESS
+		USE WITH CAUTION AND TEST WITH ABANDON
+================================================== */
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary,
+time,
+mark,
+audio,
+video {
   margin: 0;
   padding: 0;
   border: 0;
+  outline: 0;
   font-size: 100%;
   font: inherit;
-  font-family: Verdana,Arial,Helvetica;
-  letter-spacing: normal;
-  text-transform: none;
   vertical-align: baseline;
-  background: none;
-  text-align: left;
-  line-height: 1em;
-  -moz-box-shadow: none !important;
-  -webkit-box-shadow: none !important;
-  box-shadow: none !important;
-  -webkit-box-sizing: border-box;
-  /* Safari/Chrome, other WebKit */
-  -moz-box-sizing: border-box;
-  /* Firefox, other Gecko */
-  box-sizing: border-box;
 }
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+/* remember to highlight inserts somehow! */
+ins {
+  text-decoration: none;
+}
+del {
+  text-decoration: line-through;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+/* ===============================================
+	Don't Dilly Dally
+================================================== */
 body {
   font-family: "FG_Medium", Tahoma, Arial, Helvetica;
 }
 #timesheetContainer {
   display: block;
+}
+#timesheetContainer span.date.col {
+  width: 8em;
+}
+#timesheetContainer span.day-data.col {
+  padding-left: 8em;
 }
 #timesheetContainer span.day {
   cursor: pointer;
@@ -89,468 +198,11 @@ body {
 #timesheetContainer span.month-start {
   border-top-color: #008800;
 }
-/* PANELS */
-#DDDSearchScrapePanel {
-  position: fixed;
-  overflow: auto;
-  top: 0;
-  right: 0;
-  width: 33%;
-  height: 100%;
-  color: #111;
-  background-color: #bfe1bf;
-  /* background-color: #f00; */
-  padding: 5px;
-  z-index: 99999990;
-  text-align: left;
-  font-size: 12px;
-  -moz-box-shadow: 3px 0 5px 2px #000000 !important;
-  -webkit-box-shadow: 3px 0 5px 2px #000000 !important;
-  box-shadow: 3px 0 5px 2px #000000 !important;
-}
-#DDDFilterPanel {
-  position: absolute;
-  overflow: auto;
-  background-color: #d9edd9;
-  padding: 3px 1px 3px 3px;
-  bottom: 15px;
-  left: 5px;
-  top: 65px;
-  right: 67%;
-  font-size: 9px;
-  word-wrap: break-word;
-}
-#DDDDataPanel {
-  position: absolute;
-  overflow: auto;
-  background-color: #d9edd9;
-  padding: 3px 1px 3px 3px;
-  bottom: 37px;
-  left: 34%;
-  top: 65px;
-  right: 5px;
-  font-size: 9px;
-  word-wrap: break-word;
-}
-#DDDSelectPanel {
-  position: absolute;
-  background-color: #d9edd9;
-  padding: 3px 0px 3px 3px;
-  text-align: right;
-  top: 27px;
-  left: 5px;
-  right: 5px;
-}
-#DDDRuleConfigger {
-  position: fixed;
-  background-color: #bfe1bf;
-  padding: 5px 3px 5px 0;
-  text-align: right;
-  top: 23px;
-  left: 33%;
-  right: 33%;
-  z-index: 99999990;
-  -moz-box-shadow: 1px 2px 8px -2px #000000 !important;
-  -webkit-box-shadow: 1px 2px 8px -2px #000000 !important;
-  box-shadow: 1px 2px 8px -2px #000000 !important;
-}
-#DDDRuleConfigger.altered {
-  background-color: #c2d6b6;
-}
-#DDDDataPanel ul {
-  margin-bottom: 10px;
-}
-#DDDSaveLoadContainer {
-  position: absolute;
-  display: inline-block;
-  left: 5px;
-}
 /* FORMS */
 #configForm input[type=radio] {
   display: block;
 }
 /* TEXT */
-.DDDPanelHeading {
-  background-color: #555555;
-  color: #ffffff;
-  display: block;
-  position: absolute;
-  padding: 2px 0 2px 5px;
-  top: 5px;
-  left: 25px;
-  right: 25px;
-  font-size: 11px !important;
-  font-weight: bold !important;
-  line-height: 1.2em !important;
-  text-align: center;
-  text-transform: uppercase;
-}
-#DDDRulesHeader {
-  width: 100%;
-  text-align: right;
-  margin-top: 10px;
-  padding-left: 9px;
-}
-#DDDRulesHeader h2 {
-  width: 20%;
-}
-h3.DDDGroupHeading {
-  background-color: #888888 !important;
-  color: #fff !important;
-  text-transform: uppercase;
-  font-weight: bold !important;
-  font-size: 9px !important;
-  word-break: break-all;
-  display: block;
-  padding: 1px 3px 3px 3px;
-  line-height: 1.3em;
-}
-#DDDSelectPanel label,
-#DDDRuleHolder label {
-  font-size: 10px;
-  padding: 0;
-  margin: 0 3px 0 0;
-  display: inline-block;
-  color: #555;
-  text-transform: uppercase;
-}
-#DDDDataPanelHeading,
-#DDDFilterPanelHeading,
-#DDDRuleConfigger h2,
-#DDDRuleConfigger > label,
-#DDDSaveLoadContainer > label {
-  position: absolute;
-  font-size: 10px !important;
-  /* font-weight: bold !important; */
-  color: #fff !important;
-  top: 52px;
-  display: inline-block;
-  text-align: center;
-  text-transform: uppercase !important;
-}
-#DDDSaveLoadContainer > label {
-  top: -2px;
-  position: relative;
-  margin-right: 5px;
-}
-#DDDDataPanelHeading {
-  left: 33%;
-  width: 66%;
-}
-#DDDFilterPanelHeading {
-  left: 3px;
-  width: 33%;
-}
-#DDDRuleConfigger h2 {
-  top: -1px;
-  position: relative;
-  margin-right: 5px;
-}
-#DDDRuleConfigger > label,
-#DDDRuleConfigger > label {
-  position: relative;
-  margin-right: 5px;
-  top: -1px;
-}
-#DDDAddBtnLabel {
-  left: auto;
-  right: 5px;
-}
-.DDDItem,
-.DDDItemAlt {
-  display: block;
-  padding: 3px;
-  background-color: #f6f6f6;
-  border: 1px solid #858585;
-  border-top: none;
-  word-break: break-all;
-}
-.DDDItemAlt {
-  background-color: #e8e8e8;
-}
-.DDDItem hr,
-.DDDItemAlt hr {
-  border: none;
-  background: none;
-  font-size: 3px;
-  height: 5px;
-  margin: 0;
-  padding: 0;
-}
-/* FORM CONTROLS */
-input.DDDButtonSelected,
-input.DDDButtonDeselected,
-a.DDDButtonDeselected,
-.DDDButtonDelete,
-#DDDAddBtn,
-#DDDButtonSave,
-#DDDButtonLoad {
-  position: absolute !important;
-  top: 26px;
-  padding: 2px 4px 2px 4px;
-  font-size: 10px;
-  font-weight: bold;
-  color: #bbbbbb;
-  background-color: #000258 !important;
-  border: none !important;
-  width: 31%;
-  text-transform: uppercase;
-  cursor: pointer;
-  text-align: center;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-}
-a.DDDButtonDeselected,
-.DDDButtonDelete,
-#DDDAddBtn,
-#DDDButtonSave,
-#DDDButtonLoad {
-  text-decoration: none;
-  text-align: center;
-  padding: 3px 2px 3px 4px;
-  top: auto;
-  bottom: 15px;
-  right: 6px;
-  width: 64%;
-}
-input.DDDButtonDelete,
-input#DDDAddBtn,
-input#DDDButtonSave,
-input#DDDButtonLoad {
-  top: 2px;
-  bottom: auto;
-  width: 16px;
-  height: 16px;
-  background-image: url(../images/DDDSprites.png) !important;
-  background-position: -16px 0 !important;
-  position: relative !important;
-}
-.DDDButtonDelete {
-  margin: 0 0 0 -14px !important;
-  position: absolute;
-}
-input#DDDAddBtn {
-  background-position: -32px 0 !important;
-  left: auto;
-  right: 5px;
-}
-input#DDDAddBtn:hover {
-  background-position: -32px -16px !important;
-}
-input#DDDButtonSave {
-  background-position: -48px 0 !important;
-  right: auto;
-  margin-right: 5px;
-  margin-left: 6px;
-}
-input#DDDButtonSave:hover {
-  background-position: -48px -16px !important;
-}
-input#DDDButtonLoad {
-  background-position: -64px 0 !important;
-  right: auto;
-  margin-right: 5px;
-  margin-left: 5px;
-}
-input#DDDButtonLoad:hover {
-  background-position: -64px -16px !important;
-}
-.DDDButtonDelete:hover {
-  background-position: -16px -16px !important;
-}
-input.DDDButtonSelected:hover,
-input.DDDButtonDeselected:hover,
-a.DDDButtonDeselected:hover,
-.DDDButtonDelete:hover {
-  background-color: #000000;
-  color: #dddddd;
-}
-input.DDDButtonSelected {
-  background-color: #222;
-  color: #fff;
-}
-#DDDDataPanel a:link,
-#DDDDataPanel a:visited,
-#DDDDataPanel a:hover,
-#DDDDataPanel a:active {
-  color: #008;
-  text-decoration: none;
-}
-#DDDDataPanel a:visited {
-  color: #603;
-}
-#DDDDataPanel a:hover {
-  text-decoration: underline;
-}
-#DDDFilterPanel li {
-  display: inline-block;
-  background-color: #000258;
-  padding: 2px 2px 4px 2px;
-  margin-bottom: 1px;
-  width: 96%;
-}
-#DDDFilterPanel li:hover {
-  background-color: #000008;
-}
-#DDDFilterPanel label {
-  word-break: break-all;
-  color: #eee;
-  float: left;
-  margin-left: 2px;
-  display: inline-block;
-  width: 80%;
-  cursor: pointer;
-}
-#DDDFilterPanel input[type=checkbox] {
-  float: left;
-  clear: left;
-  display: inline-block;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-}
-#DDDAttrSelect {
-  width: 66%;
-  font-size: 9px;
-  text-transform: uppercase;
-  text-align: left;
-  border: none;
-}
-#DDDBtnClose {
-  top: 5px;
-  right: 5px;
-  width: 16px;
-  height: 16px;
-  padding-top: 0;
-  background-image: url(../images/DDDSprites.png) !important;
-  background-position: 0 0 !important;
-}
-#DDDBtnClose:hover {
-  background-position: 0 -16px !important;
-}
-#DDDBtnConfig {
-  top: 5px;
-  left: 5px;
-  width: 16px;
-  height: 16px;
-  padding-top: 0;
-  background-image: url(../images/DDDSprites.png) !important;
-  background-position: -79.99999999px 0 !important;
-}
-#DDDBtnConfig:hover {
-  background-position: -80px -16px !important;
-}
-.DDDRule,
-.DDDRuleOver {
-  background-color: #d9edd9;
-  margin-bottom: 2px;
-  margin-left: 20px;
-  padding: 0 0 2px 0;
-  text-align: left;
-}
-.DDDRuleOver {
-  background-color: #e0bead;
-}
-#DDDRuleHolder {
-  margin-bottom: 5px;
-  margin-left: 5px;
-  border: solid 1px #e6f3e6;
-}
-#DDDRuleHolder select {
-  font-size: 9px;
-  border: none;
-  margin-right: 6px;
-  position: relative;
-  top: -1px;
-}
-#DDDRuleHolder input[type=text],
-input#DDDRulesetNameTextInput,
-#DDDRulesetNameSelect {
-  font-size: 9px;
-  border: none;
-  margin: 0 6px 0 0 !important;
-  position: relative;
-  top: -1px;
-  padding: 0 1px 1px 1px;
-  background-color: #FFFFFF;
-}
-input#DDDRulesetNameTextInput,
-#DDDRulesetNameSelect {
-  display: block;
-  font-weight: bold;
-  background-color: #555555;
-  color: #ffffff;
-  position: absolute;
-}
-#DDDRulesetNameSelect {
-  z-index: 99999991;
-  width: 100%;
-  top: 2px;
-}
-input#DDDRulesetNameTextInput {
-  width: 90%;
-  padding-top: 1px;
-  padding-left: 4px;
-  background-color: #3b3b3b;
-  top: 2px;
-}
-#DDDRulesetInputHolder {
-  position: absolute;
-  display: block;
-  top: 5px;
-  right: 5px;
-  width: 40%;
-  height: 1em;
-  text-align: left;
-}
-.selectOrTextTop {
-  z-index: 99999992;
-}
-.selectOrTextBottom {
-  z-index: 99999991;
-}
-.DDDInput {
-  width: 23%;
-}
-.DDDSelectElement {
-  width: 17%;
-}
-.DDDSelectAttName {
-  width: 17%;
-}
-.DDDSelectAttVal {
-  width: 35%;
-}
-h2#DDDRuleIDHeading {
-  width: 23%;
-}
-h2#DDDElementHeading {
-  width: 17%;
-}
-h2#DDDAttrNameHeading {
-  width: 17%;
-}
-h2#DDDAttrValHeading {
-  width: 30%;
-}
-#DDDDisablePanel {
-  position: absolute;
-  z-index: 99999991;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(191, 225, 191, 0.8);
-  color: #fff;
-  font-weight: bold;
-  padding-top: 2em;
-  text-align: center;
-}
-h2#DDDRulesetNameLabel {
-  margin-right: 43%;
-  top: -1px;
-}
 @font-face {
   font-family: 'FG_Bold';
   src: url('/fonts/NotoSans-Bold-webfont.eot?') format('eot'), url('/fonts/NotoSans-Bold-webfont.woff2') format('woff2'), url('/fonts/NotoSans-Bold-webfont.woff') format('woff'), url('/fonts/NotoSans-Bold-webfont.ttf') format('truetype');

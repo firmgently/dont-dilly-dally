@@ -1,6 +1,71 @@
 @charset "UTF-8";
+
 /* ===============================================
-	Frantic Fish Search Scrape
+		Dead Simple Grid (c) 2015 Vladimir Agafonkin
+================================================== */
+
+.row .row { margin:  0 0; }
+.col      { padding: 0 0; }
+// .row .row { margin:  0 -1.5em; }
+// .col      { padding: 0  1.5em; }
+
+.row:after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+@media only screen { .col {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+}}
+
+
+/* ===============================================
+		http://meyerweb.com/eric/tools/css/reset/
+		v2.0b1 | 201101
+		NOTE: WORK IN PROGRESS
+		USE WITH CAUTION AND TEST WITH ABANDON
+================================================== */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+	margin: 0; padding: 0; border: 0; outline: 0;
+	font-size: 100%; font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body { line-height: 1; }
+ol, ul { list-style: none; }
+blockquote, q { quotes: none; }
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+/* remember to highlight inserts somehow! */
+ins { text-decoration: none; }
+del {	text-decoration: line-through; }
+table {	border-collapse: collapse; border-spacing: 0; }
+
+
+/* ===============================================
+	Don't Dilly Dally
 ================================================== */
 
 @bold-font-family: "FG_Bold", Tahoma, Arial, Helvetica;
@@ -28,9 +93,6 @@
 @darkHeadingColour: #fff;
 @midHeadingBgColour: mix(@darkHeadingBgColour, @white, 70%);
 
-@leftPanelWidth: 33%;
-@rightPanelWidth: 66%;
-
 @tinyPadding: 2px;
 @smallPadding: 5px;
 @bottomPadding: 15px;
@@ -43,34 +105,9 @@
 @aboveBaseZ: 99999991;
 @aboveAboveBaseZ: 99999992;
 
+@date-width-em: 8em;
 
-/* RESET */
-#DDDSearchScrapePanel, #DDDFilterPanel, #DDDDataPanel,
-.DDDPanelHeading, .DDDGroupHeading,
-#DDDDataPanelHeading, #DDDFilterPanelHeading, #DDDRuleConfigger h2,
-#DDDRuleConfigger>label, #DDDSaveLoadContainer>label,
-.DDDButtonSelected, .DDDButtonDeselected,
-.DDDFilterSpan, .DDDLabel, .DDDCheckbox,
-.DDDItem, .DDDItemAlt, #DDDSaveLoadContainer, #DDDDisablePanel,
-#DDDDataPanel ul, #DDDFilterPanel ul, #DDDFilterPanel label,
-#DDDDataPanel a, #DDDRuleHolder label, #DDDRuleHolder, #DDDRuleConfigger,
-#DDDRulesHeader, #DDDRulesetNameTextInput, #DDDRulesetNameSelect,
-#DDDRuleConfigger input, #DDDSearchScrapePanel input {
-	margin: 0; padding: 0; border: 0;
-	font-size: 100%; font: inherit; font-family: Verdana,Arial,Helvetica;
-	letter-spacing: normal; text-transform: none;
-	vertical-align: baseline; background: none;
-	text-align: left; line-height: 1em;
 
-	-moz-box-shadow: none !important;
-	-webkit-box-shadow: none !important;
-	box-shadow: none !important;
-
-	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
-	box-sizing: border-box;
-
-}
 
 body {
 	font-family: @normal-font-family;
@@ -81,6 +118,8 @@ body {
 #timesheetContainer {
 	display: block;
 	span {
+		&.date.col { width: @date-width-em; }
+		&.day-data.col { padding-left: @date-width-em; }
 		&.day {
 			cursor: pointer;
 			display: block;
@@ -97,58 +136,6 @@ body {
 }
 
 
-/* PANELS */
-#DDDSearchScrapePanel {
-	position: fixed; overflow: auto;
-	top: 0; right: 0; width: @leftPanelWidth; height: 100%;
-	color: #111; background-color: @panelBgColour1; /* background-color: #f00; */
-	padding: @smallPadding;
-	z-index: @baseZ;
-	text-align: left;
-	font-size: 12px;
-	-moz-box-shadow:    3px 0 @smallPadding 2px #000 !important;
-	-webkit-box-shadow: 3px 0 @smallPadding 2px #000 !important;
-	box-shadow:         3px 0 @smallPadding 2px #000 !important;
-}
-#DDDFilterPanel {
-	position: absolute; overflow: auto;
-	background-color: @panelBgColour2;
-	padding: 3px 1px 3px 3px;
-	bottom: @bottomPadding; left: @smallPadding; top: @topPadding; right :67%;
-	font-size: @fontSizeSmall; word-wrap: break-word;
-}
-#DDDDataPanel {
-	position: absolute; overflow: auto; background-color: @panelBgColour2;
-	padding: 3px 1px 3px 3px;
-	bottom: 37px; left: 34%; top: @topPadding; right: @smallPadding;
-	font-size: @fontSizeSmall; word-wrap: break-word;
-}
-#DDDSelectPanel {
-	position: absolute; background-color: @panelBgColour2;
-	padding: 3px 0px 3px 3px;
-	text-align: right;
-	top: 27px; left: @smallPadding; right: @smallPadding;
-}
-#DDDRuleConfigger {
-	position: fixed; background-color: @panelBgColour1;
-	padding: @smallPadding 3px @smallPadding 0;
-	text-align: right;
-	top: 23px; left: 33%; right: 33%;
-	z-index: @baseZ;
-	-moz-box-shadow:    1px 2px 8px -2px #000000 !important;
-	-webkit-box-shadow: 1px 2px 8px -2px #000000 !important;
-	box-shadow:         1px 2px 8px -2px #000000 !important;
-}
-#DDDRuleConfigger.altered {
-	background-color: @panelBgColourAltered;
-}
-#DDDDataPanel ul {
-	margin-bottom: 10px;
-}
-#DDDSaveLoadContainer {
-	position: absolute; display: inline-block;
-	left: @smallPadding;
-}
 
 /* FORMS */
 #configForm {
@@ -157,279 +144,6 @@ body {
 
 
 /* TEXT */
-.DDDPanelHeading {
-	background-color:@darkHeadingBgColour; color: @darkHeadingColour;
-	display: block;
-	position:absolute; padding: 2px 0 2px @smallPadding; top: @smallPadding; left: 25px; right: 25px;
-	font-size: 11px !important; font-weight: bold !important;
-	line-height: 1.2em !important;
-	text-align: center; text-transform: uppercase;
-}
-#DDDRulesHeader {
-	width: 100%; text-align: right; margin-top: 10px;
-	padding-left: 9px;
-}
-#DDDRulesHeader h2 {
-	width: 20%;
-}
-h3.DDDGroupHeading {
-	background-color:@midHeadingBgColour !important; color: #fff !important; text-transform: uppercase;
-	font-weight: bold !important; font-size: @fontSizeSmall !important; word-break: break-all;
-	display:block; padding: 1px 3px 3px 3px; line-height: 1.3em;
-}
-#DDDSelectPanel label, #DDDRuleHolder label {
-	font-size: @fontSizeNormal;
-	padding: 0; margin: 0 3px 0 0;
-	display: inline-block; color: #555;
-	text-transform: uppercase;
-}
-#DDDDataPanelHeading, #DDDFilterPanelHeading, #DDDRuleConfigger h2,
-#DDDRuleConfigger>label, #DDDSaveLoadContainer>label {
-	position: absolute; font-size: @fontSizeNormal !important; /* font-weight: bold !important; */ color: #fff !important;
-	top: 52px; display: inline-block;
-	text-align: center; text-transform: uppercase !important;
-}
-#DDDSaveLoadContainer>label {
-	top: -2px; position: relative; margin-right: @smallPadding;
-}
-#DDDDataPanelHeading {
-	left: @leftPanelWidth; width: @rightPanelWidth;
-}
-#DDDFilterPanelHeading {
-	left: 3px; width: @leftPanelWidth;
-}
-#DDDRuleConfigger h2 {
-	top: -1px;
-	position: relative; margin-right: @smallPadding;
-}
-#DDDRuleConfigger>label, #DDDRuleConfigger>label {
-	position: relative; margin-right: @smallPadding;
-	top: -1px;
-}
-#DDDAddBtnLabel {
-	left: auto; right: @smallPadding;
-}
-.DDDItem, .DDDItemAlt {
-	display: block; padding: 3px;
-	background-color: #f6f6f6;
-	border: 1px solid #858585; border-top: none;
-	word-break: break-all;
-}
-.DDDItemAlt {
-	background-color: #e8e8e8;
-}
-.DDDItem hr, .DDDItemAlt hr {
-	border: none; background: none; font-size: 3px;
-	height: @smallPadding; margin: 0; padding: 0;
-}
-
-
-/* FORM CONTROLS */
-input.DDDButtonSelected, input.DDDButtonDeselected,
-a.DDDButtonDeselected, .DDDButtonDelete,
-#DDDAddBtn, #DDDButtonSave, #DDDButtonLoad {
-	position: absolute !important; top: 26px; padding: 2px 4px 2px 4px;
-	font-size: @fontSizeNormal; font-weight: bold; color: @buttonColourOut; background-color: @buttonBgColourOut !important;
-	border: none !important; width: 31%; text-transform: uppercase;
-	cursor: pointer; text-align: center;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-}
-a.DDDButtonDeselected, .DDDButtonDelete, #DDDAddBtn, #DDDButtonSave, #DDDButtonLoad {
-	text-decoration: none; text-align: center; padding: 3px 2px 3px 4px;
-	top: auto; bottom: @bottomPadding; right: 6px; width: 64%;
-}
-input.DDDButtonDelete, input#DDDAddBtn, input#DDDButtonSave, input#DDDButtonLoad {
-	top: 2px; bottom: auto;
-	width: 16px; height: 16px;
-	background-image: url(../images/DDDSprites.png) !important;
-	background-position: -16px 0 !important;
-	position: relative !important;
-}
-.DDDButtonDelete {
-	margin: 0 0 0 -14px !important; position: absolute;
-}
-input#DDDAddBtn {
-	background-position: -32px 0 !important;
-	left: auto; right: 5px;
-}
-input#DDDAddBtn:hover {
-	background-position: -32px -16px !important;
-}
-input#DDDButtonSave {
-	background-position: -48px 0 !important;
-	right: auto;
-	margin-right: @smallPadding;
-	margin-left: 6px;
-}
-input#DDDButtonSave:hover {
-	background-position: -48px -16px !important;
-}
-input#DDDButtonLoad {
-	background-position: -64px 0 !important;
-	right: auto;
-	margin-right: @smallPadding;
-	margin-left: @smallPadding;
-}
-input#DDDButtonLoad:hover {
-	background-position: -64px -16px !important;
-}
-.DDDButtonDelete:hover {
-	background-position: -16px -16px !important;
-}
-input.DDDButtonSelected:hover, input.DDDButtonDeselected:hover,
-a.DDDButtonDeselected:hover, .DDDButtonDelete:hover {
-	background-color: @buttonBgColourOver; color: @buttonColourOver;
-}
-input.DDDButtonSelected {
-	background-color: #222;
-	color: #fff;
-}
-#DDDDataPanel a:link, #DDDDataPanel a:visited,
-#DDDDataPanel a:hover, #DDDDataPanel a:active {
-	color: #008; text-decoration: none;
-}
-#DDDDataPanel a:visited {
-	color: #603;
-}
-#DDDDataPanel a:hover {
-	text-decoration: underline;
-}
-#DDDFilterPanel li {
-	display: inline-block;
-	background-color: @buttonBgColourOut;
-	padding: 2px 2px 4px 2px; margin-bottom: 1px;
-	width: 96%;
-}
-#DDDFilterPanel li:hover {
-	background-color: #000008;
-}
-#DDDFilterPanel label {
-	word-break: break-all; color: #eee;
-	float: left; margin-left: 2px;
-	display: inline-block;
-	width: 80%; cursor: pointer;
-}
-#DDDFilterPanel input[type=checkbox] {
-	float: left; clear: left;
-	display: inline-block;
-	margin: 0 !important; padding: 0 !important; border: 0 !important;
-}
-#DDDAttrSelect {
-	width: @rightPanelWidth; font-size: @fontSizeSmall; text-transform: uppercase;
-	text-align: left;
-	border: none;
-}
-#DDDBtnClose {
-	top: @smallPadding; right: @smallPadding;
-	width: 16px; height: 16px; padding-top: 0;
-	background-image: url(../images/DDDSprites.png) !important;
-	background-position: 0 0 !important;
-}
-#DDDBtnClose:hover {
-	background-position: 0 -16px !important;
-}
-#DDDBtnConfig {
-	top: @smallPadding; left: @smallPadding;
-	width: 16px; height: 16px; padding-top: 0;
-	background-image: url(../images/DDDSprites.png) !important;
-	background-position: -80px 0 !important;
-}
-#DDDBtnConfig:hover {
-	background-position: -80px -16px !important;
-}
-.DDDRule, .DDDRuleOver {
-	background-color: @panelBgColour2; margin-bottom: @tinyPadding; margin-left: 20px;
-	padding: 0 0 @tinyPadding 0;
-	text-align: left;
-}
-.DDDRuleOver {
-	background-color: @panelBgColourImportant;
-}
-#DDDRuleHolder {
-	margin-bottom: @smallPadding;
-	margin-left: @smallPadding;
-	border: solid 1px @panelBgColour3;
-}
-#DDDRuleHolder select {
-	font-size: @fontSizeSmall; border: none;
-	margin-right: 6px;
-	position: relative;
-	top: -1px;
-}
-#DDDRuleHolder input[type=text], input#DDDRulesetNameTextInput, #DDDRulesetNameSelect {
-	font-size: @fontSizeSmall; border: none;
-	margin: 0 6px 0 0 !important;
-	position: relative;
-	top: -1px; padding: 0 1px 1px 1px;
-	background-color: #FFFFFF;
-}
-input#DDDRulesetNameTextInput, #DDDRulesetNameSelect {
-	display: block;
-	font-weight: bold;
-	background-color:@darkHeadingBgColour; color: @darkHeadingColour;
-	position: absolute;
-}
-#DDDRulesetNameSelect {
-	z-index: @aboveBaseZ;
-	width: 100%;
-	top: 2px;
-}
-input#DDDRulesetNameTextInput {
-	width: 90%;
-	padding-top: 1px;
-	padding-left: 4px;
-	background-color: @darkerHeadingBgColour;
-	top: 2px;
-}
-#DDDRulesetInputHolder {
-	position: absolute; display: block;
-	top: @smallPadding; right: @smallPadding;
-	width: 40%; height: 1em;
-	text-align: left;
-}
-.selectOrTextTop {
-	z-index: @aboveAboveBaseZ;
-}
-.selectOrTextBottom {
-	z-index: @aboveBaseZ;
-}
-.DDDInput {
-	width: 23%;
-}
-.DDDSelectElement {
-	width: 17%;
-}
-.DDDSelectAttName {
-	width: 17%;
-}
-.DDDSelectAttVal {
-	width: 35%;
-}
-h2#DDDRuleIDHeading {
-	width: 23%;
-}
-h2#DDDElementHeading {
-	width: 17%;
-}
-h2#DDDAttrNameHeading {
-	width: 17%;
-}
-h2#DDDAttrValHeading {
-	width: 30%;
-}
-#DDDDisablePanel {
-	position: absolute; z-index: @aboveBaseZ;
-	top: 0; left: 0; right: 0; bottom: 0;
-	background-color: @panelBgColourTrans;
-	color: #fff; font-weight: bold;
-	padding-top: 2em;
-	text-align: center;
-}
-h2#DDDRulesetNameLabel {
-	margin-right: 43%; top: -1px;
-}
 
 
 
