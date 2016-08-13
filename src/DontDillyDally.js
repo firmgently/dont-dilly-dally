@@ -19,12 +19,17 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 	var
   // variables
-  prop, dateDisplayStart, dateDisplaySelected, dateToday, timespanDisplay,
+  prop, dateDisplayStart, dateDisplaySelected, dateToday, //timespanDisplay,
+
 
 	// methods
   doSetup, selectPage, drawPage, fillHTMLFromOb, drawGUIFromAr,
-  createButtonFromOb, createFormFromOb, createTextInputFromOb, callMethodFromOb,
-  createSelectFromOb, createSectionFromOb, drawTimesheets, drawConfigGUI
+  createButtonFromOb, createFormFromOb, createTextInputFromOb,
+  callMethodFromObOnElement, callMethodFromOb,
+  createSelectFromOb, createRadioFromOb, createSectionFromOb, drawTimesheets,
+  drawConfigGUI, navClick, submitConfigForm,
+  dataStoragePossible, initDataObject, dataStoreObject, dataRetrieveObject,
+  dataUpdateObject
 	;
 
   // create local references to public vars (fake constants) from DDDConsts
@@ -33,42 +38,83 @@ uk.co.firmgently.DontDillyDally = (function() {
   }
 
 
-/* -----------------------------------------------------------------------------
-  set up methods
------------------------------------------------------------------------------ */
+
+  /* -----------------------------------------------------------------------------
+    data storage methods
+  ----------------------------------------------------------------------------- */
+
+  dataStoragePossible = function() {
+    if(typeof(Storage) === "undefined") {
+      logMsg(TXT_STORAGE_UNSUPPORTED);
+    } else {
+      return true;
+    }
+  };
+
+
+  initDataObject = function() {
+    if (!localStorage.getObject(APP_ID)) {
+      dataStoreObject("prefs", { pagetype: PAGETYPE_DEFAULT, timespan: TIMESPAN_DEFAULT });
+      dataStoreObject("timesheets", {});
+    }
+  };
+
+
+  dataStoreObject = function(category, ob) {
+    localStorage.setItem(APP_ID + "_" + category, JSON.stringify(ob));
+  };
+
+
+  dataRetrieveObject = function(category) {
+    return JSON.parse(localStorage.getItem(APP_ID + "_" + category));
+  };
+
+
+  dataUpdateObject = function(category, key, value) {
+    var prop,
+    ob = dataRetrieveObject(category);
+    for (prop in ob) {
+      if (prop === key) {
+        ob[prop] = value;
+        break;
+      }
+    }
+    // ob.pagetype = pageType;
+    dataStoreObject(category, ob);
+  };
+
+
+
+  /* -----------------------------------------------------------------------------
+    set up methods
+  ----------------------------------------------------------------------------- */
 
   doSetup = function() {
     dateDisplayStart = new Date();
     dateDisplaySelected = new Date();
     dateToday = new Date();
-    timespanDisplay = TIMESPAN_DEFAULT;
 
     localStorage.clear();
-    if(typeof(Storage) !== "undefined") {
-      if (!localStorage.getObject(APP_ID)) {
-        localStorage.setObject(APP_ID, {
-          pagetypeCurrent: PAGETYPE_DEFAULT
-        });
-      }
-      selectPage(localStorage.getObject(APP_ID).pagetypeCurrent);
-
+    if(dataStoragePossible()) {
+      initDataObject();
+      selectPage(dataRetrieveObject("prefs").pagetype);
       drawGUIFromAr(GUIDATA_NAVMAIN);
-
     } else {
       logMsg(TXT_STORAGE_UNSUPPORTED);
     }
   };
 
 
-  selectPage = function(pageType) {
-    logMsg("selectPage: " + pageType);
-    localStorage.getObject(APP_ID).pagetypeCurrent = pageType;
+  selectPage = function(pagetype) {
+    dataUpdateObject("prefs", "pagetype", pagetype);
     drawPage();
   };
 
 
   drawPage = function() {
-    switch (localStorage.getObject(APP_ID).pagetypeCurrent) {
+    // clear existing content
+    document.getElementById("main").innerHTML = "";
+    switch (dataRetrieveObject("prefs").pagetype) {
       case PAGETYPE_TIMESHEETS:
         document.body.id = BODYID_TIMESHEETS;
         fillHTMLFromOb(PAGEDATA_TIMESHEETS);
@@ -114,6 +160,9 @@ uk.co.firmgently.DontDillyDally = (function() {
         case GUITYPE_SELECT:
           createSelectFromOb(ob);
           break;
+        case GUITYPE_RADIOBTN:
+          createRadioFromOb(ob);
+          break;
         case GUITYPE_SECTION:
           createSectionFromOb(ob);
           break;
@@ -141,7 +190,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     if (ob.class) { addClassname(button_el, ob.class); }
     button_el.innerHTML = ob.label;
-    registerEventHandler(button_el, "mousedown", ob.method);
+    button_el.ob = ob;
+    registerEventHandler(button_el, "mousedown", callMethodFromObOnElement);
 
     if (ob.disabled) { button_el.disabled = ob.disabled; }
   };
@@ -200,6 +250,34 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  createRadioFromOb = function(ob) {
+    var
+    prop, radio_el, label_el,
+    parent_el = document.getElementById(ob.parentID);
+
+    if (ob.label) {
+      label_el = document.createElement("label");
+      label_el.innerHTML = ob.label;
+      parent_el.appendChild(label_el);
+      label_el.htmlFor = ob.id;
+    }
+
+    for (prop in ob.options) {
+      radio_el = document.createElement("input");
+      radio_el.setAttribute("type", "radio");
+      radio_el.name = ob.id;
+      radio_el.value = prop;
+      radio_el.innerHTML = ob.options[prop];
+      parent_el.appendChild(radio_el);
+    }
+
+    if (ob.class) { addClassname(radio_el, ob.class); }
+
+    logMsg("ob.method:" + ob.method);
+    registerEventHandler(radio_el, "mousedown", ob.method);
+  };
+
+
   createSectionFromOb = function(ob) {
     var
     el,
@@ -236,11 +314,17 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  callMethodFromObOnElement = function(e) {
+    callMethodFromOb(e.target.ob);
+  };
+
+
   callMethodFromOb = function(ob) {
     logMsg("callMethodFromOb: " + JSON.stringify(ob));
     /*
     eval usage has been carefully considered and is the best solution
-    for calling one of many methods whose names have been stored in the constants file
+    for calling one of many methods whose names (strings) have been stored in
+    the constants file
 
     ob.method contains a hard-coded string from DDDConsts.js
 
@@ -249,7 +333,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     */
 
     /* jshint ignore:start */
-    // eval(ob.method).call(ob.scope);
     eval(ob.method).apply(ob.scope, ob.args);
     /* jshint ignore:end */
   };
@@ -275,7 +358,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
     dayCur = new Date();
 
-    switch(timespanDisplay) {
+    switch(dataRetrieveObject("prefs").timespan) {
       case TIMESPAN_WEEK:
         weekdayCur = dayCur.getDay(); // 0 = Sunday, 1 = Monday etc
         dayCur.setDate(dayCur.getDate() - weekdayCur + weekStartDay); // gets first day of week
@@ -334,10 +417,30 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  /* ---------------------------------------------------------------------------
+		form submissions
+	--------------------------------------------------------------------------- */
+
+  submitConfigForm = function(e) {
+    logMsg("KJHKJHKJ");
+    logMsg(e.target);
+    logMsg(e.target.form);
+  };
+
+
+  /* ---------------------------------------------------------------------------
+		form submissions
+	--------------------------------------------------------------------------- */
+
   drawConfigGUI = function() {
     logMsg("DRAWING CONFIG GUI");
   };
 
+
+  navClick = function() {
+    // logMsg("navClick");
+    selectPage(arguments[0]);
+  };
 
 	/* ---------------------------------------------------------------------------
 		begin...
@@ -348,6 +451,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 	return;
 
 
-// 'this' is undefined because of "use strict",
+// 'this' would be undefined because of "use strict",
 // calling the function with .call(this) fixes it
 }).call(this);

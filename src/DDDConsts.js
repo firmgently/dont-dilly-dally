@@ -35,6 +35,7 @@ uk.co.firmgently.DDDConsts = (function() {
   BODYID_JOBSANDCLIENTS = "jobsClients",
 
   GUITYPE_BTN = "GUITypeBtn",
+  GUITYPE_RADIOBTN = "GUITypeRadioBtn",
   GUITYPE_TEXTINPUT = "GUITypeTextInput",
   GUITYPE_SELECT = "GUITypeSelect",
   GUITYPE_FORM = "GUITypeForm",
@@ -52,22 +53,25 @@ uk.co.firmgently.DDDConsts = (function() {
       type: GUITYPE_BTN,
       class: CLASS_BTNNAV,
       label: "Jobs & Clients",
-      method: "selectPage",
+      method: "navClick",
       args: [PAGETYPE_JOBSANDCLIENTS],
+      scope: "main",
       parentID: "navMain"
     }, {
       type: GUITYPE_BTN,
       class: CLASS_BTNNAV,
       label: "Timesheets",
-      method: "selectPage",
+      method: "navClick",
       args: [PAGETYPE_TIMESHEETS],
+      scope: "main",
       parentID: "navMain"
     }, {
       type: GUITYPE_BTN,
       class: CLASS_BTNNAV,
       label: "Config",
-      method: "selectPage",
+      method: "navClick",
       args: [PAGETYPE_CONFIG],
+      scope: "main",
       parentID: "navMain"
     }
   ],
@@ -93,14 +97,6 @@ uk.co.firmgently.DDDConsts = (function() {
       parentID: "main",
       disabled: true
     }, {
-    //   type: GUITYPE_BTN,
-    //   id: "createJobBtn",
-    //   class: CLASS_BTNMAIN,
-    //   label: "Create new job",
-    //   method: "createJob",
-    //   parentID: "main",
-    //   disabled: true
-    // }, {
       type: GUITYPE_FORM,
       id: "createClientForm",
       class: CLASS_FORMMAIN,
@@ -162,7 +158,29 @@ uk.co.firmgently.DDDConsts = (function() {
       type: GUITYPE_METHODCALL,
       method: "drawConfigGUI",
       scope: "main"
-    }
+    }, {
+      type: GUITYPE_FORM,
+      id: "configForm",
+      class: CLASS_FORMMAIN,
+      title: "Set your preferences here",
+      parentID: "main",
+      hidden: false,
+      el_ar: [
+         {
+           type: GUITYPE_RADIOBTN,
+           id: "timesheetRange",
+           label: "Choose how many days you want to show on the timesheet page",
+           parentID: "configForm",
+           options: {
+             TIMESPAN_WEEK: "A week",
+             TIMESPAN_MONTH: "A month",
+             TIMESPAN_YEAR: "A year"
+           },
+           method: "submitConfigForm",
+           disabled: true
+         }
+      ]
+    },
   ],
 
   DATETYPE_YYMMDD = {
@@ -203,6 +221,7 @@ uk.co.firmgently.DDDConsts = (function() {
     BODYID_CONFIG: BODYID_CONFIG,
     BODYID_JOBSANDCLIENTS: BODYID_JOBSANDCLIENTS,
     GUITYPE_BTN: GUITYPE_BTN,
+    GUITYPE_RADIOBTN: GUITYPE_RADIOBTN,
     GUITYPE_FORM: GUITYPE_FORM,
     GUITYPE_SELECT: GUITYPE_SELECT,
     GUITYPE_TEXTINPUT: GUITYPE_TEXTINPUT,
