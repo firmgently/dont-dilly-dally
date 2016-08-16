@@ -46,12 +46,16 @@ uk.co.firmgently.DDDConsts = (function() {
   CLASS_BTNMAIN = "btnMain",
   CLASS_FORMMAIN = "formMain",
 
+  CONTENTTYPE_CLIENTS = "contentTypeClients",
+  CONTENTTYPE_JOBS = "contentTypeJobs",
+
   TIMESHEETCONTAINER_ID = "timesheetContainer",
 
   GUIDATA_NAVMAIN = [
     {
       type: GUITYPE_BTN,
       class: CLASS_BTNNAV,
+      id: BODYID_JOBSANDCLIENTS,
       label: "Jobs & Clients",
       method: "navClick",
       args: [PAGETYPE_JOBSANDCLIENTS],
@@ -60,6 +64,7 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: GUITYPE_BTN,
       class: CLASS_BTNNAV,
+      id: BODYID_TIMESHEETS,
       label: "Timesheets",
       method: "navClick",
       args: [PAGETYPE_TIMESHEETS],
@@ -68,6 +73,7 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: GUITYPE_BTN,
       class: CLASS_BTNNAV,
+      id: BODYID_CONFIG,
       label: "Config",
       method: "navClick",
       args: [PAGETYPE_CONFIG],
@@ -83,17 +89,17 @@ uk.co.firmgently.DDDConsts = (function() {
   GUIDATA_JOBSANDCLIENTS = [
     {
       type: GUITYPE_BTN,
-      id: "createCompanyBtn",
-      class: CLASS_BTNMAIN,
-      label: "Create new company",
-      method: "createCompany",
-      parentID: "main"
-    }, {
-      type: GUITYPE_BTN,
       id: "createClientBtn",
       class: CLASS_BTNMAIN,
       label: "Create new client",
       method: "createClient",
+      parentID: "main"
+    }, {
+      type: GUITYPE_BTN,
+      id: "createJobBtn",
+      class: CLASS_BTNMAIN,
+      label: "Create new job",
+      method: "createJob",
       parentID: "main",
       disabled: true
     }, {
@@ -124,11 +130,39 @@ uk.co.firmgently.DDDConsts = (function() {
           scope: "main",
           parentID: "createClientForm",
           id: "selectClient",
-          options: {
-            opt1: "Option 1",
-            opt2: "Option 2",
-            opt3: "Option 3"
-          },
+          contentType: CONTENTTYPE_CLIENTS,
+          disabled: true
+        }
+      ]
+    }, {
+      type: GUITYPE_FORM,
+      id: "createJobForm",
+      class: CLASS_FORMMAIN,
+      title: "Fill in jjob details",
+      method: "submitJobForm",
+      parentID: "main",
+      hidden: false,
+      el_ar: [
+        {
+          type: GUITYPE_TEXTINPUT,
+          id: "jobNameIn",
+          label: "Job name",
+          parentID: "createJobForm"
+        }, {
+          type: GUITYPE_BTN,
+          label: "Create new",
+          method: "submitForm",
+          parentID: "createJobForm",
+          disabled: true
+        }, {
+          type: GUITYPE_SELECT,
+          label: "Existing jobs",
+          method: "selectJobs",
+          args: [],
+          scope: "main",
+          parentID: "createJobForm",
+          id: "selectJob",
+          contentType: CONTENTTYPE_JOBS,
           disabled: true
         }
       ]
@@ -166,9 +200,6 @@ uk.co.firmgently.DDDConsts = (function() {
       class: CLASS_FORMMAIN,
       title: "Set your preferences here",
       parentID: "main",
-      // method: "callMethodFromFormElement",
-      // args: [],
-      // scope: "main",
       hidden: false,
       el_ar: [
          {
@@ -197,6 +228,30 @@ uk.co.firmgently.DDDConsts = (function() {
     label: "mm/dd/yy"
   },
   DATETYPE_DEFAULT = DATETYPE_DDMMYY,
+
+  JOB_DEFAULT_1 = {
+    name: "Fake Job (for testing)",
+    color: "#000",
+    bgcolor: "#0ff"
+  },
+
+  JOB_DEFAULT_2 = {
+    name: "General admin",
+    color: "#0f0",
+    bgcolor: "#123"
+  },
+
+  CLIENT_DEFAULT_1 = {
+    name: "Dummy Client (for testing)",
+    color: "#fff",
+    bgcolor: "#f00"
+  },
+
+  CLIENT_DEFAULT_2 = {
+    name: "I and I",
+    color: "#435",
+    bgcolor: "#821"
+  },
 
   // these string values have to match those used in the GUIDATA_CONFIG options
   TIMESPAN_WEEK = "timespanWeek",
@@ -250,7 +305,13 @@ uk.co.firmgently.DDDConsts = (function() {
     DAYSINWEEK: DAYSINWEEK,
     DAYSINMONTH: DAYSINMONTH,
     DAYSINYEAR: DAYSINYEAR,
-    TXT_STORAGE_UNSUPPORTED: TXT_STORAGE_UNSUPPORTED
+    TXT_STORAGE_UNSUPPORTED: TXT_STORAGE_UNSUPPORTED,
+    JOB_DEFAULT_1: JOB_DEFAULT_1,
+    JOB_DEFAULT_2: JOB_DEFAULT_2,
+    CLIENT_DEFAULT_1: CLIENT_DEFAULT_1,
+    CLIENT_DEFAULT_2: CLIENT_DEFAULT_2,
+    CONTENTTYPE_CLIENTS: CONTENTTYPE_CLIENTS,
+    CONTENTTYPE_JOBS: CONTENTTYPE_JOBS
   };
 
 

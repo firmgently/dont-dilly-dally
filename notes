@@ -1,52 +1,72 @@
+TODO
+---------------------------------------
+
+make all 'hidden = true' / 'disabled = true' options work or remove them
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 TIMESHEET PAGE
 ---------------------------------------
 
 
 MAIN FUNCTIONS
-  
+
   [ ] add money in
   [ ] add money out
-  
+
   [ ] clock in (recent job or choose)
   [ ] clock out (recent job or choose)
-  
+
   [ ] export data
   [ ] import data
-  
+
   [ ] edit existing entries
       dd/mm/yy    hh:mm   [client]    [job]     [job notes]     [MONEY IN]    [MONEY OUT]   [MONEY NOTES]
-      
-      
+
+
 SHOW TOTALS
   [ ] hrs/week
   [ ] hrs/month
   [ ] money/week
   [ ] money/month
   [ ] money/net
-  
-  
-  
-  
-  
-  
-      
+
+
+
+
+
+
+
 JOBS AND CLIENTS PAGE
 ---------------------------------------
 
   [ ] create new job
   [ ] create new client
       for each of above, choose random (contrasting) colours but allow editing of colours during creation process
-      
+
   [ ] show hour totals by job
       ()weekly ()monthly ()all-timeg
   [ ] show hour totals by client
       ()weekly ()monthly ()all-time
-      
-  
 
 
-  
-  
+
+
+
+
 CONFIGURATION
 ---------------------------------------
 
@@ -91,7 +111,7 @@ if(typeof(Storage) !== "undefined") {
 // Store
 localStorage.setItem("lastname", "Smith");
 // Retrieve
-document.getElementById("result").innerHTML = localStorage.getItem("lastname"); 
+document.getElementById("result").innerHTML = localStorage.getItem("lastname");
 
 
 ///////////////////////////////////////

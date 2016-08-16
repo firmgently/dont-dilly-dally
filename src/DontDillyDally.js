@@ -27,7 +27,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   createSelectFromOb, createRadioFromOb, createSectionFromOb, drawTimesheets,
   drawConfigGUI, navClick,
   dataStoragePossible, initDataObject, dataStoreObject, dataRetrieveObject,
-  dataUpdateObject
+  dataUpdateObject, extraStyles
 	;
 
   /* ---------------------------------------------------------------------------
@@ -64,6 +64,8 @@ uk.co.firmgently.DontDillyDally = (function() {
     // if no preferences are stored create some defaults
     if (!dataRetrieveObject("prefs")) {
       dataStoreObject("prefs", { pagetype: PAGETYPE_DEFAULT, timespan: TIMESPAN_DEFAULT });
+      dataStoreObject("clients", { client1: CLIENT_DEFAULT_1, client2: CLIENT_DEFAULT_2});
+      dataStoreObject("jobs", { job1: JOB_DEFAULT_1, job2: JOB_DEFAULT_2});
       dataStoreObject("timesheets", {});
     }
   };
@@ -71,7 +73,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   dataStoreObject = function(category, ob) {
     localStorage.setItem(APP_ID + "_" + category, JSON.stringify(ob));
-    // logMsg(category + ": " + JSON.stringify(dataRetrieveObject(category)));
   };
 
 
@@ -103,7 +104,9 @@ uk.co.firmgently.DontDillyDally = (function() {
     dateDisplaySelected = new Date();
     dateToday = new Date();
 
-    // localStorage.clear();
+    extraStyles = document.createElement("style");
+
+    localStorage.clear();
     if(dataStoragePossible()) {
       initDataObject();
       selectPage(dataRetrieveObject("prefs").pagetype);
@@ -230,7 +233,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   createSelectFromOb = function(ob) {
     var
-    prop, select_el, label_el,
+    prop, select_el, label_el, option_el, style_str,
     parent_el = document.getElementById(ob.parentID);
 
     if (ob.label) {
@@ -245,10 +248,48 @@ uk.co.firmgently.DontDillyDally = (function() {
     } else {
       select_el = document.createElement("select");
     }
+    select_el.setAttribute("size", "2"); // HACK maybe to allow styling of individual options
     parent_el.appendChild(select_el);
 
-    for (prop in ob.options) {
-      select_el.options[select_el.options.length] = new Option(ob.options[prop], prop);
+    if (ob.contentType) {
+      switch (ob.contentType) {
+        case CONTENTTYPE_CLIENTS:
+          ob.options = dataRetrieveObject("clients");
+          break;
+        case CONTENTTYPE_JOBS:
+          ob.options = dataRetrieveObject("jobs");
+          break;
+        default:
+          break;
+      }
+      // logMsg("::::" + JSON.stringify(ob.options));
+      for (prop in ob.options) {
+        option_el = select_el.options[select_el.options.length] = new Option(ob.options[prop].name, prop);
+        addClassname(option_el, prop);
+        // option_el.style = document.createElement("style");
+        style_str = "";
+        style_str += prop + ", " + prop + ":hover { ";
+        style_str += "color: " + ob.options[prop].color + "; ";
+        style_str += "background-color: " + ob.options[prop].bgcolor + "; ";
+        style_str += " }";
+        // extraStyles.styleSheet.cssText = style_str;
+
+        if (extraStyles.styleSheet) {
+            extraStyles.styleSheet.cssText = style_str;
+        } else {
+            extraStyles.appendChild(document.createTextNode(style_str));
+        }
+        document.getElementsByTagName('head')[0].appendChild(extraStyles);
+        logMsg(style_str);
+        // option_el.style.color = ob.options[prop].color;
+        // option_el.style.backgroundColor = ob.options[prop].bgcolor;
+        // option_el.style.color = ob.options[prop].color;
+        // option_el.style.backgroundColor = ob.options[prop].bgcolor;
+      }
+    } else {
+      for (prop in ob.options) {
+        select_el.options[select_el.options.length] = new Option(ob.options[prop], prop);
+      }
     }
 
     if (ob.class) { addClassname(select_el, ob.class); }
@@ -331,6 +372,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     i, daysToDraw, isOddDay, weekdayCur,
     isToday, rowClassname,
     day_el, date_el, holder_el, hrs_el, client_el, job_el, jobnotes_el,
+    ob_temp,
     weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
     parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
     dayCur = new Date();
@@ -386,13 +428,15 @@ uk.co.firmgently.DontDillyDally = (function() {
       holder_el.appendChild(hrs_el);
       hrs_el.innerHTML = "HRS RPLCE";
       // client
-      client_el = document.createElement("span");
-      holder_el.appendChild(client_el);
-      client_el.innerHTML = "CLIENT RPLCE";
+      ob_temp = dataRetrieveObject("clients");
+      ob_temp.contentType = CONTENTTYPE_CLIENTS;
+      ob_temp.parentID = holder_el.id;
+      createSelectFromOb(ob_temp);
       // job
-      job_el = document.createElement("span");
-      holder_el.appendChild(job_el);
-      job_el.innerHTML = "JOB RPLCE";
+      ob_temp = dataRetrieveObject("jobs");
+      ob_temp.contentType = CONTENTTYPE_JOBS;
+      ob_temp.parentID = holder_el.id;
+      createSelectFromOb(ob_temp);
       // job  notes
       jobnotes_el = createTextInputFromOb({
         class: "jobNotes",
