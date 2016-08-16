@@ -46,6 +46,9 @@ uk.co.firmgently.DDDConsts = (function() {
   CLASS_BTNMAIN = "btnMain",
   CLASS_FORMMAIN = "formMain",
 
+  DATATYPE_JOB = "dataTypeJob",
+  DATATYPE_CLIENT = "dataTypeClient",
+
   CONTENTTYPE_CLIENTS = "contentTypeClients",
   CONTENTTYPE_JOBS = "contentTypeJobs",
 
@@ -311,7 +314,9 @@ uk.co.firmgently.DDDConsts = (function() {
     CLIENT_DEFAULT_1: CLIENT_DEFAULT_1,
     CLIENT_DEFAULT_2: CLIENT_DEFAULT_2,
     CONTENTTYPE_CLIENTS: CONTENTTYPE_CLIENTS,
-    CONTENTTYPE_JOBS: CONTENTTYPE_JOBS
+    CONTENTTYPE_JOBS: CONTENTTYPE_JOBS,
+    DATATYPE_JOB: DATATYPE_JOB,
+    DATATYPE_CLIENT: DATATYPE_CLIENT
   };
 
 

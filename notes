@@ -5,7 +5,7 @@ make all 'hidden = true' / 'disabled = true' options work or remove them
 
 
 
-
+weekStartDay is hardcoded - fix
 
 
 
