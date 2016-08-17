@@ -87,7 +87,7 @@ uk.co.firmgently.DDDConsts = (function() {
 
   PAGEDATA_JOBSANDCLIENTS = {
     pageTitle: "Jobs and Clients",
-    intro: "Add, delete or edit jobs and clients on this page."
+    intro: "Add, delete or edit jobs and clients."
   },
   GUIDATA_JOBSANDCLIENTS = [
     {
