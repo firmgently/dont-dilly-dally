@@ -26,15 +26,18 @@ uk.co.firmgently.DDDConsts = (function() {
 	var
   APP_ID = "FGDDD",
 
-  PAGETYPE_TIMESHEETS = "pagetypeTimesheets",
-  PAGETYPE_CONFIG = "pagetypeConfig",
-  PAGETYPE_JOBSANDCLIENTS = "pagetypeJobsAndClients",
+  PAGETYPE_TIMESHEETS = " > timesheets",
+  PAGETYPE_CONFIG = " > settings",
+  PAGETYPE_JOBSANDCLIENTS = " > jobsAndClients",
   PAGETYPE_DEFAULT = PAGETYPE_TIMESHEETS,
   BODYID_TIMESHEETS = "timesheets",
   BODYID_CONFIG = "config",
   BODYID_JOBSANDCLIENTS = "jobsClients",
 
+  GUITYPE_COL = "GUITypeCol",
+  GUITYPE_ROW = "GUITypeRow",
   GUITYPE_BTN = "GUITypeBtn",
+  GUITYPE_COLORPICKER = "GUITypeColorPicker",
   GUITYPE_RADIOBTN = "GUITypeRadioBtn",
   GUITYPE_TEXTINPUT = "GUITypeTextInput",
   GUITYPE_SELECT = "GUITypeSelect",
@@ -43,8 +46,17 @@ uk.co.firmgently.DDDConsts = (function() {
   GUITYPE_METHODCALL = "GUITypeMethodCall",
 
   CLASS_BTNNAV = "btnNav",
-  CLASS_BTNMAIN = "btnMain",
   CLASS_FORMMAIN = "formMain",
+  CLASS_COL = "col",
+  CLASS_ROW = "row",
+
+  EL_ID_JOBNAMEIN = "jobNameIn",
+  EL_ID_CLIENTNAMEIN = "clientNameIn",
+
+  COLPICK_FG_CLIENT = "clientFGPicker",
+  COLPICK_BG_CLIENT = "clientBGPicker",
+  COLPICK_FG_JOB = "jobFGPicker",
+  COLPICK_BG_JOB = "jobBGPicker",
 
   DATATYPE_JOB = "dataTypeJob",
   DATATYPE_CLIENT = "dataTypeClient",
@@ -54,33 +66,37 @@ uk.co.firmgently.DDDConsts = (function() {
 
   TIMESHEETCONTAINER_ID = "timesheetContainer",
 
+/*  COLORPICKER_CONF = {
+    w: "100px", h: "100px"
+  },*/
+
   GUIDATA_NAVMAIN = [
     {
-      type: GUITYPE_BTN,
-      class: CLASS_BTNNAV,
-      id: BODYID_JOBSANDCLIENTS,
-      label: "Jobs & Clients",
-      method: "navClick",
-      args: [PAGETYPE_JOBSANDCLIENTS],
-      scope: "main",
-      parentID: "navMain"
-    }, {
       type: GUITYPE_BTN,
       class: CLASS_BTNNAV,
       id: BODYID_TIMESHEETS,
       label: "Timesheets",
       method: "navClick",
       args: [PAGETYPE_TIMESHEETS],
-      scope: "main",
+      scopeID: "main",
+      parentID: "navMain"
+    }, {
+      type: GUITYPE_BTN,
+      class: CLASS_BTNNAV,
+      id: BODYID_JOBSANDCLIENTS,
+      label: "Jobs & Clients",
+      method: "navClick",
+      args: [PAGETYPE_JOBSANDCLIENTS],
+      scopeID: "main",
       parentID: "navMain"
     }, {
       type: GUITYPE_BTN,
       class: CLASS_BTNNAV,
       id: BODYID_CONFIG,
-      label: "Config",
+      label: "Settings",
       method: "navClick",
       args: [PAGETYPE_CONFIG],
-      scope: "main",
+      scopeID: "main",
       parentID: "navMain"
     }
   ],
@@ -91,82 +107,120 @@ uk.co.firmgently.DDDConsts = (function() {
   },
   GUIDATA_JOBSANDCLIENTS = [
     {
-      type: GUITYPE_BTN,
-      id: "createClientBtn",
-      class: CLASS_BTNMAIN,
-      label: "Create new client",
-      method: "createClient",
-      parentID: "main"
-    }, {
-      type: GUITYPE_BTN,
-      id: "createJobBtn",
-      class: CLASS_BTNMAIN,
-      label: "Create new job",
-      method: "createJob",
+      type: GUITYPE_COL,
+      id: "editClientCol",
+      class: CLASS_COL,
       parentID: "main",
-      disabled: true
     }, {
       type: GUITYPE_FORM,
       id: "createClientForm",
       class: CLASS_FORMMAIN,
       title: "Fill in client details",
-      method: "submitClientForm",
-      parentID: "main",
-      hidden: false,
+      method: null,
+      parentID: "editClientCol",
       el_ar: [
         {
+          type: GUITYPE_ROW,
+          id: "clientNewRow",
+          class: CLASS_ROW,
+          parentID: "createClientForm",
+        }, {
+          type: GUITYPE_ROW,
+          id: "clientsExistingRow",
+          class: CLASS_ROW,
+          parentID: "createClientForm",
+        }, {
           type: GUITYPE_TEXTINPUT,
-          id: "clientNameIn",
+          id: EL_ID_CLIENTNAMEIN,
           label: "Client name",
-          parentID: "createClientForm"
+          parentID: "clientNewRow",
+          method: "onClientTyped",
+          args: [],
+          scopeID: "createClientForm"
         }, {
           type: GUITYPE_BTN,
           label: "Create new",
-          method: "submitForm",
-          parentID: "createClientForm",
-          disabled: true
+          id: "createNewClientBtn",
+          method: "newClientFormSubmit",
+          args: [],
+          scopeID: "createClientForm",
+          parentID: "clientNewRow"
+        }, {
+          type: GUITYPE_COLORPICKER,
+          id: COLPICK_FG_CLIENT,
+          class: "color-picker",
+          parentID: "clientsExistingRow"
+        }, {
+          type: GUITYPE_COLORPICKER,
+          id: COLPICK_BG_CLIENT,
+          class: "color-picker",
+          parentID: "clientsExistingRow"
         }, {
           type: GUITYPE_SELECT,
           label: "Existing clients",
-          method: "selectClient",
           args: [],
-          scope: "main",
-          parentID: "createClientForm",
+          scopeID: "createClientForm",
+          parentID: "clientsExistingRow",
           id: "selectClient",
-          contentType: CONTENTTYPE_CLIENTS,
-          disabled: true
+          contentType: CONTENTTYPE_CLIENTS
         }
       ]
+    }, {
+      type: GUITYPE_COL,
+      id: "editJobCol",
+      class: CLASS_COL,
+      parentID: "main",
     }, {
       type: GUITYPE_FORM,
       id: "createJobForm",
       class: CLASS_FORMMAIN,
-      title: "Fill in jjob details",
-      method: "submitJobForm",
-      parentID: "main",
+      title: "Fill in job details",
+      method: null,
+      parentID: "editJobCol",
       hidden: false,
       el_ar: [
         {
+          type: GUITYPE_ROW,
+          id: "jobNewRow",
+          class: CLASS_ROW,
+          parentID: "createJobForm",
+        }, {
+          type: GUITYPE_ROW,
+          id: "jobsExistingRow",
+          class: CLASS_ROW,
+          parentID: "createJobForm",
+        }, {
           type: GUITYPE_TEXTINPUT,
-          id: "jobNameIn",
+          id: EL_ID_JOBNAMEIN,
           label: "Job name",
-          parentID: "createJobForm"
+          parentID: "jobNewRow"
         }, {
           type: GUITYPE_BTN,
           label: "Create new",
-          method: "submitForm",
-          parentID: "createJobForm",
-          disabled: true
+          id: "createNewJobBtn",
+          method: "newJobFormSubmit",
+          scopeID: "createJobForm",
+          args: [],
+          parentID: "jobNewRow"
+        }, {
+          type: GUITYPE_COLORPICKER,
+          id: COLPICK_FG_JOB,
+          class: "color-picker",
+          parentID: "jobsExistingRow"
+        }, {
+          type: GUITYPE_COLORPICKER,
+          id: COLPICK_BG_JOB,
+          class: "color-picker",
+          parentID: "jobsExistingRow"
         }, {
           type: GUITYPE_SELECT,
           label: "Existing jobs",
           method: "selectJobs",
           args: [],
-          scope: "main",
-          parentID: "createJobForm",
+          scopeID: "createJobForm",
+          parentID: "jobsExistingRow",
           id: "selectJob",
-          contentType: CONTENTTYPE_JOBS,
-          disabled: true
+          contentType: CONTENTTYPE_JOBS
         }
       ]
     }
@@ -184,20 +238,16 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: GUITYPE_METHODCALL,
       method: "drawTimesheets",
-      scope: "main"
+      scopeID: "main"
     }
   ],
 
   PAGEDATA_CONFIG = {
-    pageTitle: "Configuration",
+    pageTitle: "Settings",
     intro: "Show and hide things and customise settings."
   },
   GUIDATA_CONFIG = [
     {
-      type: GUITYPE_METHODCALL,
-      method: "drawConfigGUI",
-      scope: "main"
-    }, {
       type: GUITYPE_FORM,
       id: "configForm",
       class: CLASS_FORMMAIN,
@@ -283,6 +333,8 @@ uk.co.firmgently.DDDConsts = (function() {
     BODYID_TIMESHEETS: BODYID_TIMESHEETS,
     BODYID_CONFIG: BODYID_CONFIG,
     BODYID_JOBSANDCLIENTS: BODYID_JOBSANDCLIENTS,
+    GUITYPE_COL: GUITYPE_COL,
+    GUITYPE_ROW: GUITYPE_ROW,
     GUITYPE_BTN: GUITYPE_BTN,
     GUITYPE_RADIOBTN: GUITYPE_RADIOBTN,
     GUITYPE_FORM: GUITYPE_FORM,
@@ -290,6 +342,7 @@ uk.co.firmgently.DDDConsts = (function() {
     GUITYPE_TEXTINPUT: GUITYPE_TEXTINPUT,
     GUITYPE_SECTION: GUITYPE_SECTION,
     GUITYPE_METHODCALL: GUITYPE_METHODCALL,
+    GUITYPE_COLORPICKER: GUITYPE_COLORPICKER,
     TIMESHEETCONTAINER_ID: TIMESHEETCONTAINER_ID,
     PAGEDATA_JOBSANDCLIENTS: PAGEDATA_JOBSANDCLIENTS,
     GUIDATA_JOBSANDCLIENTS: GUIDATA_JOBSANDCLIENTS,
@@ -308,6 +361,16 @@ uk.co.firmgently.DDDConsts = (function() {
     DAYSINWEEK: DAYSINWEEK,
     DAYSINMONTH: DAYSINMONTH,
     DAYSINYEAR: DAYSINYEAR,
+    CLASS_BTNNAV: CLASS_BTNNAV,
+    CLASS_FORMMAIN: CLASS_FORMMAIN,
+    CLASS_COL: CLASS_COL,
+    CLASS_ROW: CLASS_ROW,
+    EL_ID_JOBNAMEIN: EL_ID_JOBNAMEIN,
+    EL_ID_CLIENTNAMEIN: EL_ID_CLIENTNAMEIN,
+    COLPICK_FG_JOB: COLPICK_FG_JOB,
+    COLPICK_BG_JOB: COLPICK_BG_JOB,
+    COLPICK_FG_CLIENT: COLPICK_FG_CLIENT,
+    COLPICK_BG_CLIENT: COLPICK_BG_CLIENT,
     TXT_STORAGE_UNSUPPORTED: TXT_STORAGE_UNSUPPORTED,
     JOB_DEFAULT_1: JOB_DEFAULT_1,
     JOB_DEFAULT_2: JOB_DEFAULT_2,

@@ -15,7 +15,7 @@ uk.co.firmgently.FGUtils = (function() {
 	var
 	addCSSRule,
 	registerEventHandler, unregisterEventHandler, stopPropagation,
-	hexOpacityToRGBA, createElementWithId,
+	hexOpacityToRGBA, getRandomHexColor, createElementWithId,
 	removeClassname, addClassname,
   treatAsUTC, daysBetween, getFormattedDate,
 	logMsg;
@@ -103,6 +103,20 @@ uk.co.firmgently.FGUtils = (function() {
   };
 
 
+	getRandomHexColor = function(tone) {
+		// Based on http://www.paulirish.com/2009/random-hex-color-code-snippets/
+		var full = 16777215, mid = 8388607, third = 5592405, smalln = 1864135, hexString;
+		if (tone === undefined) {
+			hexString = '#' + Math.floor(Math.random()*full).toString(16);
+		} else if (tone.toUpperCase() === "LIGHT") {
+			hexString = '#' + Math.floor(full - Math.random()*third).toString(16);
+		} else if (tone.toUpperCase() === "DARK") {
+			hexString = '#' + Math.floor(Math.random()*smalln).toString(16);
+		}
+		return hexString;
+	};
+
+
   createElementWithId = function(elType, id) {
     var el = document.createElement(elType);
 		el.id = id;
@@ -186,6 +200,7 @@ uk.co.firmgently.FGUtils = (function() {
 		addClassname: addClassname,
 		addCSSRule: addCSSRule,
 		hexOpacityToRGBA: hexOpacityToRGBA,
+		getRandomHexColor: getRandomHexColor,
 		createElementWithId: createElementWithId,
 		getFormattedDate: getFormattedDate,
 		treatAsUTC: treatAsUTC,

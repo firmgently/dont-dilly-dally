@@ -3,17 +3,26 @@ TODO
 
 make all 'hidden = true' / 'disabled = true' options work or remove them
 
+i
 
 
 weekStartDay is hardcoded - fix
 
 
 
+split header vertically. in right hand side
+
+                                            DAY   WEEK    MONTH   TOTAL
+    Ongoing job: General admin (I and I)   02:30  12:00   19:00   322:00         CLOCK OUT
+                 (dropdown or /NONE/                                             CLOCK IN
 
 
 
 
+GOOD IDEAS FOR CSS STYLING CONTROLS
+----------------------------------------
 
+https://kyusuf.com/post/completely-css-custom-checkbox-radio-buttons-and-select-boxes
 
 
 
@@ -80,10 +89,32 @@ CONFIGURATION
       ()week ()month ()year
   [ ] start of accounting period
       (eg. 06/04)
+  [ ] use seasonal background colours (show demo colours and allow shift +/- to match months)
 
+    J: darker grey on white
+    F: black on white
+    M: light yellow on muted green
+    A: dark yellow on greener green
+    M: yellow on light blue
+    J: yellowy orange on mid blue
+    J: orange on dark blue
+    A: orangey-red on dark blue grey
+    S: red on deepest blue
+    O: brown on bluey grey
+    N: orangey on lighter grey
+    D: dark grey on light grey
 
+  [ ] show week numbers
+  [ ] show month names
 
-
+  [ ] smallest time increment worked
+      (this is the smallest 'shift' you can do on any one job
+    - 1m
+    - 5m
+    - 15m
+    - 30m
+    - 1hr
+    - 4hr
 
 
 

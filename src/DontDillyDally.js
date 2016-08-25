@@ -23,15 +23,17 @@ uk.co.firmgently.DontDillyDally = (function() {
 	// methods
   doSetup, selectPage, drawPage, fillHTMLFromOb, drawGUIFromAr,
   createButtonFromOb, createFormFromOb, createTextInputFromOb,
-  callMethodFromObOnElement, callMethodFromOb, onFormMouseDown,
-  createSelectFromOb, createRadioFromOb, createSectionFromOb, drawTimesheets,
-  drawConfigGUI, navClick,
+  callMethodFromObOnElement, callMethodFromOb, onFormClick,
+  createSelectFromOb, createRadioFromOb, createBasicElementFromOb, createColorPickerFromOb,
+  drawTimesheets,
+  navClick, onClientTyped,
   dataStoragePossible, initDataObject, dataStoreObject, dataRetrieveObject,
-  dataUpdateObject, extraStyles, createClientOrJobFromOb
+  dataUpdateObject, clientAndJobStyleSheet, createClientOrJobFromOb,
+  newClientFormSubmit, newJobFormSubmit, storeCSSRules
 	;
 
   /* ---------------------------------------------------------------------------
-    create local references to public vars (fake constants) from DDDConsts
+    create local references to public vars (unenforced constants) from DDDConsts
 	--------------------------------------------------------------------------- */
   for (prop in uk.co.firmgently.DDDConsts) {
     this[prop] = uk.co.firmgently.DDDConsts[prop];
@@ -67,24 +69,23 @@ uk.co.firmgently.DontDillyDally = (function() {
       dataStoreObject("clientNum", 0);
       dataStoreObject("JobNum", 0);
 
-      // dataStoreObject("clients", { client1: CLIENT_DEFAULT_1, client2: CLIENT_DEFAULT_2});
       dataStoreObject("clients", []);
       createClientOrJobFromOb(CLIENT_DEFAULT_1, DATATYPE_CLIENT);
       createClientOrJobFromOb(CLIENT_DEFAULT_2, DATATYPE_CLIENT);
 
-      // dataStoreObject("jobs", { job1: JOB_DEFAULT_1, job2: JOB_DEFAULT_2});
       dataStoreObject("jobs", []);
       createClientOrJobFromOb(JOB_DEFAULT_1, DATATYPE_JOB);
       createClientOrJobFromOb(JOB_DEFAULT_2, DATATYPE_JOB);
 
       dataStoreObject("timesheets", {});
+
+      dataStoreObject("clientAndJobStyles", "");
     }
   };
 
 
   dataStoreObject = function(category, ob) {
     localStorage.setItem(APP_ID + "_" + category, JSON.stringify(ob));
-    // logMsg(dataRetrieveObject(category));
   };
 
 
@@ -116,22 +117,31 @@ uk.co.firmgently.DontDillyDally = (function() {
     dateDisplaySelected = new Date();
     dateToday = new Date();
 
-    // extraStyles is a dynamic stylesheet used to store
-    // styles for clients and jobs
-    extraStyles = document.createElement("style");
-    document.getElementsByTagName('head')[0].appendChild(extraStyles);
 
-    localStorage.clear();
+  localStorage.clear();
+
+
     if(dataStoragePossible()) {
+
       initDataObject();
+      clientAndJobStyleSheet = document.createElement("style");
+      clientAndJobStyleSheet.innerHTML = dataRetrieveObject("clientAndJobStyles");
+      document.getElementsByTagName('head')[0].appendChild(clientAndJobStyleSheet);
+
       selectPage(dataRetrieveObject("prefs").pagetype);
       drawGUIFromAr(GUIDATA_NAVMAIN);
+      if (location.hash) {
+        selectPage(location.hash.substring(1));
+      }
+      // logMsg("clientAndJobStyles: " + JSON.stringify(dataRetrieveObject("clientAndJobStyles")));
     }
+
   };
 
 
   selectPage = function(pagetype) {
     dataUpdateObject("prefs", "pagetype", pagetype);
+    location.hash = pagetype;
     drawPage();
   };
 
@@ -188,8 +198,14 @@ uk.co.firmgently.DontDillyDally = (function() {
         case GUITYPE_RADIOBTN:
           createRadioFromOb(ob);
           break;
+          // intentional rollthrough as they all do exactly the same thing
         case GUITYPE_SECTION:
-          createSectionFromOb(ob);
+        case GUITYPE_COL:
+        case GUITYPE_ROW:
+          createBasicElementFromOb(ob);
+          break;
+        case GUITYPE_COLORPICKER:
+          createColorPickerFromOb(ob);
           break;
         case GUITYPE_METHODCALL:
           callMethodFromOb(ob);
@@ -200,6 +216,10 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
   };
 
+
+  /* -----------------------------------------------------------------------------
+    create individual specific elements
+  ----------------------------------------------------------------------------- */
 
   createButtonFromOb = function(ob) {
     var
@@ -242,7 +262,16 @@ uk.co.firmgently.DontDillyDally = (function() {
     input_el.setAttribute("type", "text");
     parent_el.appendChild(input_el);
 
+    input_el.ob = ob;
+
     if (ob.class) { addClassname(input_el, ob.class); }
+
+    if (ob.method !== undefined) {
+      registerEventHandler(input_el, "change", callMethodFromObOnElement);
+      registerEventHandler(input_el, "keyup", callMethodFromObOnElement);
+      registerEventHandler(input_el, "paste", callMethodFromObOnElement);
+      registerEventHandler(input_el, "input", callMethodFromObOnElement);
+    }
   };
 
 
@@ -266,16 +295,11 @@ uk.co.firmgently.DontDillyDally = (function() {
     select_el.setAttribute("size", "1.1"); // HACK maybe to allow styling of individual options
     parent_el.appendChild(select_el);
 
-    if (ob.contentType) {
-      switch (ob.contentType) { // clients and jobs options get treated differently
-        case CONTENTTYPE_CLIENTS:
-          ob.options = dataRetrieveObject("clients");
-          break;
-        case CONTENTTYPE_JOBS:
-          ob.options = dataRetrieveObject("jobs");
-          break;
-        default:
-          break;
+    if (ob.contentType) { // clients / jobs options get treated differently to normal options
+      if (ob.contentType === CONTENTTYPE_CLIENTS) {
+        ob.options = dataRetrieveObject("clients");
+      } else if (ob.contentType === CONTENTTYPE_JOBS) {
+        ob.options = dataRetrieveObject("jobs");
       }
       for (i = 0; i < ob.options.length; i++) {
         clientOrJob_ob = ob.options[i];
@@ -287,9 +311,8 @@ uk.co.firmgently.DontDillyDally = (function() {
       for (prop in ob.options) {
         select_el.options[select_el.options.length] = new Option(ob.options[prop], prop);
       }
+      if (ob.class) { addClassname(select_el, ob.class); }
     }
-
-    if (ob.class) { addClassname(select_el, ob.class); }
 
     registerEventHandler(select_el, "change", ob.method);
   };
@@ -311,23 +334,50 @@ uk.co.firmgently.DontDillyDally = (function() {
       radio_el.id = ob.id;
       radio_el.name = ob.id;
       radio_el.value = prop;
-      if (prop === dataRetrieveObject("prefs").timespan) {
-        radio_el.checked = true;
-      }
+      if (prop === dataRetrieveObject("prefs").timespan) { radio_el.checked = true; }
       label_el.htmlFor = ob.id;
       if (ob.class) { addClassname(radio_el, ob.class); }
     }
   };
 
 
-  createSectionFromOb = function(ob) {
+  createBasicElementFromOb = function(ob) {
+    var
+    el, elType,
+    parent_el = document.getElementById(ob.parentID);
+
+    switch (ob.type) {
+      case GUITYPE_COL:
+      case GUITYPE_ROW:
+        elType = "span";
+        break;
+      case GUITYPE_SECTION:
+        elType = "section";
+        break;
+      default:
+        break;
+    }
+
+    if (ob.id) {
+      el = createElementWithId(elType, ob.id);
+      // el = createElementWithId("section", ob.id);
+    } else {
+      el = document.createElement(elType);
+      // el = document.createElement("section");
+    }
+    parent_el.appendChild(el);
+    if (ob.class) { addClassname(el, ob.class); }
+  };
+
+
+  createColorPickerFromOb = function(ob) {
     var
     el,
     parent_el = document.getElementById(ob.parentID);
     if (ob.id) {
-      el = createElementWithId("section", ob.id);
+      el = createElementWithId("span", ob.id);
     } else {
-      el = document.createElement("section");
+      el = document.createElement("span");
     }
     parent_el.appendChild(el);
     if (ob.class) { addClassname(el, ob.class); }
@@ -341,11 +391,13 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   createClientOrJobFromOb = function(ob, dataType) {
     // create unique number to be used in object name/key
-    var id, ar, n, prefix, selector, collectiveName;
+    var id, ar, n, prefix, selector, pluralName, input_el;
 
     if (dataType === DATATYPE_CLIENT) {
       prefix = "client";
+      input_el = document.getElementById(EL_ID_CLIENTNAMEIN);
     } else if (dataType === DATATYPE_JOB) {
+      input_el = document.getElementById(EL_ID_JOBNAMEIN);
       prefix = "job";
     }
     n = 0 + dataRetrieveObject(prefix + "Num") + 1;
@@ -353,15 +405,46 @@ uk.co.firmgently.DontDillyDally = (function() {
     id = prefix + n;
     ob.class = id;
 
-    // get correct array (/client/s or /job/s)
-    collectiveName = prefix + "s";
-    ar = dataRetrieveObject(collectiveName);
+    // get correct array name (client/s or job/s)
+    pluralName = prefix + "s";
+    ar = dataRetrieveObject(pluralName);
     ar.push(ob);
-    dataStoreObject(collectiveName, ar);
+    dataStoreObject(pluralName, ar);
 
-    selector = "." + id + ", " + "." + id + ":hover" + ", " + "." + id + ":active";
+    selector = "." + id + ", " +
+      "." + id + ":hover, " +
+      "." + id + ":active";
     addCSSRule(selector, "color", ob.color);
     addCSSRule(selector, "background-color", ob.bgcolor);
+    storeCSSRules(selector, "color", ob.color, "background-color", ob.bgcolor);
+
+    //
+    if (dataType === DATATYPE_CLIENT) {
+      addCSSRule("#" + COLPICK_FG_CLIENT, "background-color", ob.color);
+      addCSSRule("#" + COLPICK_BG_CLIENT, "background-color", ob.bgcolor);
+      storeCSSRules("#" + COLPICK_FG_CLIENT, "background-color", ob.color);
+      storeCSSRules("#" + COLPICK_BG_CLIENT, "background-color", ob.bgcolor);
+    } else if (dataType === DATATYPE_JOB) {
+      addCSSRule("#" + COLPICK_FG_JOB, "background-color", ob.color);
+      addCSSRule("#" + COLPICK_BG_JOB, "background-color", ob.bgcolor);
+      storeCSSRules("#" + COLPICK_FG_JOB, "background-color", ob.color);
+      storeCSSRules("#" + COLPICK_BG_JOB, "background-color", ob.bgcolor);
+    }
+
+  };
+
+
+  storeCSSRules = function(selector) {
+    var i,
+    pairs = (arguments.length - 1) / 2,
+    rule = selector + " { ";
+    for (i = 1; i < pairs * 2; i+=2) {
+      rule += arguments[i] + ": " + arguments[i+1] + "; ";
+    }
+    rule += "} ";
+    dataStoreObject("clientAndJobStyles", dataRetrieveObject("clientAndJobStyles") + rule);
+    // addCSSRule(selector, property, newValue);
+    // alert(JSON.stringify(dataRetrieveObject("clientAndJobStyles")));
   };
 
 
@@ -372,7 +455,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   callMethodFromOb = function(ob) {
-    logMsg("callMethodFromOb: " + JSON.stringify(ob));
+    var scope = (ob.scopeID !== undefined) ? document.getElementById(ob.scopeID) : undefined;
+    logMsg("\tcallMethodFromOb: " + JSON.stringify(ob));
+
     /*
     eval usage has been carefully considered and is the best solution
     for calling one of many methods whose names (strings) have been stored in
@@ -385,8 +470,40 @@ uk.co.firmgently.DontDillyDally = (function() {
     */
 
     /* jshint ignore:start */
-    eval(ob.method).apply(ob.scope, ob.args);
+    eval(ob.method).apply(scope, ob.args);
     /* jshint ignore:end */
+  };
+
+
+  newClientFormSubmit = function() {
+    // logMsg("getRandomHexColor(): " + getRandomHexColor());
+    // logMsg("getRandomHexColor(\"dark\"): " + getRandomHexColor("dark"));
+    // logMsg("getRandomHexColor(\"light\"): " + getRandomHexColor("light"));
+    logMsg("this: " + this);
+    logMsg("this.id: " + this.id);
+    createClientOrJobFromOb({
+      name: document.getElementById(EL_ID_CLIENTNAMEIN).value,
+      color: getRandomHexColor("dark"),
+      bgcolor: getRandomHexColor("light")
+    }, DATATYPE_CLIENT);
+    drawPage();
+  };
+
+
+  newJobFormSubmit = function() {
+    createClientOrJobFromOb({
+      name: document.getElementById(EL_ID_JOBNAMEIN).value,
+      color: getRandomHexColor("light"),
+      bgcolor: getRandomHexColor("dark")
+
+    }, DATATYPE_JOB);
+    drawPage();
+  };
+
+
+  onClientTyped = function() {
+    // logMsg(JSON.stringify(this));
+    // logMsg(this.clientNameIn);
   };
 
 
@@ -452,9 +569,14 @@ uk.co.firmgently.DontDillyDally = (function() {
       day_el.appendChild(holder_el);
 
       // hours
-      hrs_el = document.createElement("span");
+      hrs_el = document.createElement("input");
+      hrs_el.setAttribute("type", "number");
+      hrs_el.setAttribute("min", "5");
+      hrs_el.setAttribute("max", "59");
+      hrs_el.setAttribute("step", "1");
+      hrs_el.setAttribute("size", "5");
       holder_el.appendChild(hrs_el);
-      hrs_el.innerHTML = "HRS RPLCE";
+      // hrs_el.innerHTML = "HRS RPLCE";
       // client
       ob_temp = dataRetrieveObject("clients");
       ob_temp.contentType = CONTENTTYPE_CLIENTS;
@@ -492,23 +614,21 @@ uk.co.firmgently.DontDillyDally = (function() {
     parent_el.appendChild(form_el);
 
     if (ob.class) { addClassname(form_el, ob.class); }
-    // form_el.innerHTML = ob.label;
+    if (ob.label) { form_el.innerHTML = ob.label; }
 
     if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
 
     if (ob.hidden) { form_el.style.display = "none"; }
 
     form_el.ob = ob;
-    registerEventHandler(form_el, "click", onFormMouseDown);
+    registerEventHandler(form_el, "click", onFormClick);
   };
 
 
-  onFormMouseDown = function(e) {
+  onFormClick = function(e) {
     var form = e.target.form;
     if (form && form.id) {
       switch (form.id) {
-        case "createClientForm":
-          break;
         case "configForm":
           dataUpdateObject("prefs", "timespan", form.timesheetRange.value);
           break;
@@ -523,10 +643,6 @@ uk.co.firmgently.DontDillyDally = (function() {
   /* ---------------------------------------------------------------------------
 
 	--------------------------------------------------------------------------- */
-
-  drawConfigGUI = function() {
-    logMsg("DRAWING CONFIG GUI");
-  };
 
 
   navClick = function(e) {

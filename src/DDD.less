@@ -95,12 +95,14 @@ table {	border-collapse: collapse; border-spacing: 0; }
 @midHeadingBgColour: mix(@darkHeadingBgColour, @white, 70%);
 
 @tinyPadding: 2px;
-@smallPadding: 5px;
+@smallPadding: 4px;
+@mediumPadding: 6px;
+@largePadding: 12px;
 @bottomPadding: 15px;
 @topPadding: 65px;
 
-@fontSizeNormal: 10px;
-@fontSizeSmall: 9px;
+@fontSizeNormal: 1em;
+@fontSizeSmall: 0.9em;
 
 @baseZ: 99999990;
 @aboveBaseZ: 99999991;
@@ -109,30 +111,56 @@ table {	border-collapse: collapse; border-spacing: 0; }
 @date-width: 8em;
 @header-height: 8em;
 
+@tab-fontsize-unselected: 1.15em;
+@tab-fontsize-selected:   1.5em;
+@tab-padding: @tinyPadding;
+@tab-margin: @mediumPadding;
+
+
+.topCurve(@args) {
+  -webkit-border-radius: @args @args 0 0;
+  -moz-border-radius: @args @args 0 0;
+  border-radius: @args @args 0 0;
+  behavior: url(/css/pie.htc);
+}
 
 
 body {
 	font-family: @normal-font-family;
-	button.btnNav { font-size: 1em; }
-	&#jobsClients nav button#jobsClients.btnNav { font-size: 3em; }
-	&#timesheets nav button#timesheets.btnNav { font-size: 3em; }
-	&#config nav button#config.btnNav { font-size: 3em; }
 }
 
 header {
 	position: fixed; display: inline-block; z-index: 1;
 	width: 100%; height: @header-height;
-	background-color: @panelBgColour;
-	nav { position: relative; }
+	color: white; background-color: @panelBgColour;
+	nav {
+    position: relative; background-color: gray;
+    button.btnNav {
+      padding: @tab-padding; margin: @tab-margin @tab-margin 0 0;
+      font-size: @tab-fontsize-unselected; vertical-align: bottom;
+      width: 18%; overflow: hidden; .topCurve(@smallPadding);
+      color: white; background-color: @panelBgColour;
+      border-bottom: none;
+    }
+  }
 }
+body#jobsClients header nav button#jobsClients.btnNav { font-size: @tab-fontsize-selected; .topCurve(@mediumPadding); }
+body#timesheets header nav button#timesheets.btnNav { font-size: @tab-fontsize-selected; .topCurve(@mediumPadding); }
+body#config header nav button#config.btnNav { font-size: @tab-fontsize-selected; .topCurve(@mediumPadding); }
+
 
 #main { position: absolute; width: 100%; top: @header-height; }
+
+
+#editClientCol, #editJobCol { width: 50%; display: inline-block; padding: @largePadding}
+
 
 // Timesheets
 
 #timesheetContainer {
 	display: block;
 	span {
+    input[type=number] { max-width: 5em; display: inline-block; position: relative; }
 		&.date.col { width: @date-width; }
 		&.day-data.col { padding-left: @date-width; }
 		&.day {
@@ -153,9 +181,17 @@ header {
 
 
 /* FORMS */
+select { appearance: none; -webkit-appearance: none; -moz-appearance: none; }
 #configForm {
 	input[type=radio] { display: block; }
 }
+
+
+
+
+/* COLOR PICKER */
+
+.color-picker { display: inline-block; width: 50px; height: 50px; }
 
 
 /* TEXT */

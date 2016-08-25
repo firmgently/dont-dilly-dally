@@ -1,0 +1,35 @@
+﻿/*p.ratingText {
+	zoom:1;
+	display:inline;
+}
+.starEmpty,
+.starHalf,
+.starFull {
+	display: inline;
+}
+td.stars {
+	text-align: right;
+}*/
+li.navItem,li.navSubItem,.formHalf,form,.printItemContainer li,.itemContainer ul li,
+#starHolder li,
+.starEmpty,.starHalf,.starFull,a.starEmpty,a.starHalf,a.starFull,a:hover.starEmpty,a:hover.starHalf,a:hover.starFull,
+#homeImageMain,#itemImageMain,#itemImageMainClickable,.mainArticleHeader,
+#choosePanel,#choosePanel label,.mediaButton input,.contentTypeButton input,.toggleAllBtn input,#choosePrompt,#choosePanelShowBtn,
+#choosePanel:hover #choosePrompt,.contactFormColumn,.captcha
+{zoom:1;display:inline;}
+
+.starEmpty,.starHalf,.starFull,a.starEmpty,a.starHalf,a.starFull,a:hover.starEmpty,a:hover.starHalf,a:hover.starFull,
+#starHolder li,#starHolder{
+	height:25px;display:block;
+}
+
+#starHolder{overflow:visible;width:20px;background-color:red;top:25px;left:-25px;position:absolute;}
+
+/* #mainArticle #itemRating */
+#itemRating{width:auto}
+#highRating{left:0;margin-left:0;}
+#lowRating{right:0;margin-right:15px;}
+#itemRating p{left:15px;text-align:left;width:20em}
+#mainArticle #itemRating{width:18em}
+#mainArticle #starHolder{left:-44px}
+#mainArticle hr{height:0}
