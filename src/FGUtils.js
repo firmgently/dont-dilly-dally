@@ -13,10 +13,10 @@ uk.co.firmgently.FGUtils = (function() {
 	"use strict";
 
 	var
-	addCSSRule,
+	addCSSRule, getIEVersion, isTouchDevice,
 	registerEventHandler, unregisterEventHandler, stopPropagation,
 	hexOpacityToRGBA, getRandomHexColor, createElementWithId,
-	removeClassname, addClassname,
+	removeClassname, addClassname, getStyle,
   treatAsUTC, daysBetween, getFormattedDate,
 	logMsg;
 
@@ -24,6 +24,12 @@ uk.co.firmgently.FGUtils = (function() {
   /* -------------------------------------------------------------------------------
   	extend some global objects
   ---------------------------------------------------------------------------------- */
+
+	String.prototype.isEmpty = function() {
+		return (!this || /^\s*$/.test(this));
+	};
+
+
 
   Storage.prototype.setObject = function(key, value) {
     this.setItem(key, JSON.stringify(value));
@@ -56,6 +62,16 @@ uk.co.firmgently.FGUtils = (function() {
 	    return ((year % 100) !== 0 || (year % 400) === 0);
 	};
 
+	//http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
+	// Get Day of Year
+	Date.prototype.getDOY = function() {
+	    var dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+	    var mn = this.getMonth();
+	    var dn = this.getDate();
+	    var dayOfYear = dayCount[mn] + dn;
+	    if(mn > 1 && this.isLeapYear()) dayOfYear++;
+	    return dayOfYear;
+	};
 
 
 	/* -------------------------------------------------------------------------------
@@ -81,6 +97,9 @@ uk.co.firmgently.FGUtils = (function() {
     } else {
       node.attachEvent("on" + event, handler);
     }
+		// logMsg("node: " + node);
+		// logMsg("event: " + event);
+		// logMsg("handler: " + handler);
   };
 
 
@@ -137,13 +156,15 @@ uk.co.firmgently.FGUtils = (function() {
 
 
 	addCSSRule = function(selector, property, newValue) {
-		logMsg("selector: " + selector);
+		// logMsg("selector: " + selector);
+		// logMsg("property: " + property);
+		// logMsg("newValue: " + newValue);
 		var	i, curStyleSheet,
 			totalStyleSheets = document.styleSheets.length,
 			newStyle = property + ": " + newValue;
 		for (i = 0; i < totalStyleSheets; i++) {
 			curStyleSheet = document.styleSheets[i];
-			logMsg("curStyleSheet: " + curStyleSheet);
+			// logMsg("curStyleSheet: " + curStyleSheet);
 			try {
 				curStyleSheet.insertRule(selector + " {" + newStyle + "}", curStyleSheet.cssRules.length);
 			} catch(err1) {
@@ -168,8 +189,61 @@ uk.co.firmgently.FGUtils = (function() {
 	};
 
 
+	getStyle = function(el, styleProp) {
+		var style;
+		if (el.currentStyle) {
+			style = el.currentStyle[styleProp];
+		} else if (window.getComputedStyle) {
+			style = document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
+		}
+		return style;
+	};
+
+
 	logMsg = function(msg) {
     console.log(msg);
+  };
+
+
+	// ----------------------------------------------------------
+  // A short snippet for detecting versions of IE in JavaScript
+  // without resorting to user-agent sniffing
+  // http://james.padolsey.com/javascript/detect-ie-in-js-using-conditional-comments/
+  // ----------------------------------------------------------
+  // If you're not in IE (or IE version is less than 5) then:
+  //     getIEVersion() === undefined
+  // If you're in IE (>=5) then you can determine which version:
+  //     getIEVersion() === 7; // IE7
+  // Thus, to detect IE:
+  //     if (getIEVersion()) {}
+  // And to detect the version:
+  //     getIEVersion() === 6 // IE6
+  //     getIEVersion() > 7 // IE8, IE9 ...
+  //     getIEVersion() < 9 // Anything less than IE9
+  // ----------------------------------------------------------
+
+  // UPDATE: Now using Live NodeList idea from @jdalton
+  getIEVersion = function(){
+    var undef,
+      v = 3,
+      div = document.createElement('div'),
+      all = div.getElementsByTagName('i');
+
+    while (
+      div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
+      all[0]
+    );
+
+    return v > 4 ? v : undef;
+  };
+
+
+	isTouchDevice = function() {
+    // window.alert("ontouchstart in window: " + ('ontouchstart' in window) );
+    // window.alert("onmsgesturechange in window: " + ('onmsgesturechange' in window) );
+    // return 'ontouchstart' in window || 'onmsgesturechange' in window;
+
+     return (('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
   };
 
 
@@ -205,7 +279,10 @@ uk.co.firmgently.FGUtils = (function() {
 		getFormattedDate: getFormattedDate,
 		treatAsUTC: treatAsUTC,
 		daysBetween: daysBetween,
-		logMsg: logMsg
+		logMsg: logMsg,
+		getIEVersion: getIEVersion,
+		getStyle: getStyle,
+		isTouchDevice: isTouchDevice
 	};
 
 }());

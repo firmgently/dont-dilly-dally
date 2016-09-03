@@ -19,17 +19,22 @@ uk.co.firmgently.DontDillyDally = (function() {
 	var
   // variables
   prop, dateDisplayStart, dateDisplaySelected, dateToday, //timespanDisplay,
+  clientNameInput_el, jobNameInput_el, clientSaveBtn_el, jobSaveBtn_el,
+  colPickClientFG_el, colPickClientBG_el, colPickJobFG_el, colPickJobBG_el,
+  dayOfYear,
 
 	// methods
   doSetup, selectPage, drawPage, fillHTMLFromOb, drawGUIFromAr,
   createButtonFromOb, createFormFromOb, createTextInputFromOb,
   callMethodFromObOnElement, callMethodFromOb, onFormClick,
-  createSelectFromOb, createRadioFromOb, createBasicElementFromOb, createColorPickerFromOb,
-  drawTimesheets,
-  navClick, onClientTyped,
+  createSelectFromOb, createRadioFromOb, addLIsFromOb,
+  createBasicElementFromOb, createColorPickerFromOb,
+  drawTimesheets, getNextName, newClientCreate, newJobCreate,
+  navClick, onClientTyped, onJobTyped, onFormSubmit,
   dataStoragePossible, initDataObject, dataStoreObject, dataRetrieveObject,
   dataUpdateObject, clientAndJobStyleSheet, createClientOrJobFromOb,
-  newClientFormSubmit, newJobFormSubmit, storeCSSRules
+  newClientFormSave, newJobFormSave, clientInputWasLastEmpty,
+  updateRefsToElements, updateSelected, addWorkItem
 	;
 
   /* ---------------------------------------------------------------------------
@@ -67,19 +72,17 @@ uk.co.firmgently.DontDillyDally = (function() {
     if (!dataRetrieveObject("prefs")) {
       dataStoreObject("prefs", { pagetype: PAGETYPE_DEFAULT, timespan: TIMESPAN_DEFAULT });
       dataStoreObject("clientNum", 0);
-      dataStoreObject("JobNum", 0);
+      dataStoreObject("jobNum", 0);
 
-      dataStoreObject("clients", []);
+      dataStoreObject(CLIENT_STR, {});
       createClientOrJobFromOb(CLIENT_DEFAULT_1, DATATYPE_CLIENT);
       createClientOrJobFromOb(CLIENT_DEFAULT_2, DATATYPE_CLIENT);
 
-      dataStoreObject("jobs", []);
+      dataStoreObject(JOB_STR, {});
       createClientOrJobFromOb(JOB_DEFAULT_1, DATATYPE_JOB);
       createClientOrJobFromOb(JOB_DEFAULT_2, DATATYPE_JOB);
 
-      dataStoreObject("timesheets", {});
-
-      dataStoreObject("clientAndJobStyles", "");
+      dataStoreObject("day", {});
     }
   };
 
@@ -118,24 +121,17 @@ uk.co.firmgently.DontDillyDally = (function() {
     dateToday = new Date();
 
 
-  localStorage.clear();
+   localStorage.clear();
 
 
     if(dataStoragePossible()) {
-
       initDataObject();
-      clientAndJobStyleSheet = document.createElement("style");
-      clientAndJobStyleSheet.innerHTML = dataRetrieveObject("clientAndJobStyles");
-      document.getElementsByTagName('head')[0].appendChild(clientAndJobStyleSheet);
-
       selectPage(dataRetrieveObject("prefs").pagetype);
       drawGUIFromAr(GUIDATA_NAVMAIN);
       if (location.hash) {
         selectPage(location.hash.substring(1));
       }
-      // logMsg("clientAndJobStyles: " + JSON.stringify(dataRetrieveObject("clientAndJobStyles")));
     }
-
   };
 
 
@@ -147,8 +143,10 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   drawPage = function() {
-    // clear existing content
+    // var colHeading_el;
+    // clear any pre-created html content
     document.getElementById("main").innerHTML = "";
+
     switch (dataRetrieveObject("prefs").pagetype) {
       case PAGETYPE_TIMESHEETS:
         document.body.id = BODYID_TIMESHEETS;
@@ -168,6 +166,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       default:
         break;
     }
+    updateRefsToElements();
   };
 
 
@@ -198,6 +197,9 @@ uk.co.firmgently.DontDillyDally = (function() {
         case GUITYPE_RADIOBTN:
           createRadioFromOb(ob);
           break;
+        case GUITYPE_UL:
+          addLIsFromOb(ob);
+          break;
           // intentional rollthrough as they all do exactly the same thing
         case GUITYPE_SECTION:
         case GUITYPE_COL:
@@ -215,6 +217,20 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
     }
   };
+
+
+  getNextName = function(type) {
+    var prefix, name, n;
+    if (type === DATATYPE_JOB) {
+      prefix = JOB_STR;
+    } else if (type === DATATYPE_CLIENT) {
+      prefix = CLIENT_STR;
+    }
+    n = 0 + (dataRetrieveObject(prefix + "Num")) + 1;
+    dataStoreObject(prefix + "Num", n);
+    return prefix + n;
+  };
+
 
 
   /* -----------------------------------------------------------------------------
@@ -244,23 +260,28 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   createTextInputFromOb = function(ob) {
     var
-    input_el, label_el,
+    prop, input_el, label_el,
+    innerHTML = "",
     parent_el = document.getElementById(ob.parentID);
 
-    if (ob.label) {
-      label_el = document.createElement("label");
-      label_el.innerHTML = ob.label;
-      parent_el.appendChild(label_el);
-      label_el.htmlFor = ob.id;
-    }
+    if (ob.label) { innerHTML += "<label>" + ob.label; }
     if (ob.id) {
-      input_el = createElementWithId("input", ob.id);
-      input_el.name = ob.id;
+      innerHTML += "<input id='" + ob.id + "'>";
     } else {
-      input_el = document.createElement("input");
+      innerHTML += "<input>";
     }
+    if (ob.label) { innerHTML += "</label>" + ob.label; }
+    parent_el.innerHTML += innerHTML;
+    input_el = document.getElementById(ob.id);
+
+    if (ob.attributes) {
+      for (prop in ob.attributes) {
+        input_el.setAttribute("" + prop, "" + ob.attributes[prop]);
+      }
+    }
+
     input_el.setAttribute("type", "text");
-    parent_el.appendChild(input_el);
+    // parent_el.appendChild(input_el);
 
     input_el.ob = ob;
 
@@ -278,6 +299,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   createSelectFromOb = function(ob) {
     var
     i, prop, select_el, label_el, option_el, clientOrJob_ob,
+    dayPrefix,
     parent_el = document.getElementById(ob.parentID);
 
     if (ob.label) {
@@ -289,32 +311,39 @@ uk.co.firmgently.DontDillyDally = (function() {
     if (ob.id) {
       select_el = createElementWithId("select", ob.id);
       select_el.name = ob.id;
+      select_el.id = ob.id;
     } else {
       select_el = document.createElement("select");
     }
-    select_el.setAttribute("size", "1.1"); // HACK maybe to allow styling of individual options
+    if (ob.class) { addClassname(select_el, ob.class); }
+    select_el.setAttribute("size", "1"); // HACK maybe to allow styling of individual options
     parent_el.appendChild(select_el);
 
     if (ob.contentType) { // clients / jobs options get treated differently to normal options
       if (ob.contentType === CONTENTTYPE_CLIENTS) {
-        ob.options = dataRetrieveObject("clients");
+        ob.options = dataRetrieveObject(CLIENT_STR);
       } else if (ob.contentType === CONTENTTYPE_JOBS) {
-        ob.options = dataRetrieveObject("jobs");
+        ob.options = dataRetrieveObject(JOB_STR);
       }
-      for (i = 0; i < ob.options.length; i++) {
-        clientOrJob_ob = ob.options[i];
+      for (prop in ob.options) {
+        clientOrJob_ob = ob.options[prop];
         option_el = select_el.options[select_el.options.length] = new Option(clientOrJob_ob.name, clientOrJob_ob.class);
         addClassname(option_el, clientOrJob_ob.class);
+        addCSSRule("." + clientOrJob_ob.class, "background-color", clientOrJob_ob.bgcolor);
+        addCSSRule("." + clientOrJob_ob.class, "color", clientOrJob_ob.color);
       }
-
     } else { // normal options
       for (prop in ob.options) {
         select_el.options[select_el.options.length] = new Option(ob.options[prop], prop);
       }
-      if (ob.class) { addClassname(select_el, ob.class); }
+      // if (ob.class) { addClassname(select_el, ob.class); }
     }
 
-    registerEventHandler(select_el, "change", ob.method);
+    select_el.ob = ob;
+    select_el.ob.method = "updateSelected";
+    registerEventHandler(document.getElementById(select_el.id), "change", callMethodFromObOnElement);
+    registerEventHandler(select_el, "change", updateSelected);
+    // logMsg("select_el.onchange: " + select_el.onchange);
   };
 
 
@@ -341,6 +370,24 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  addLIsFromOb = function(ob) {
+    var
+    i, li_el,
+    UL_el = createElementWithId("ul", EL_ID_COLHEADING),
+    parent_el = document.getElementById(ob.parentID);
+    addClassname(UL_el, CLASS_ROW);
+
+    for (i = 0; i < ob.ar.length; i++) {
+      li_el = document.createElement("li");
+      li_el.innerHTML = ob.ar[i];
+      UL_el.appendChild(li_el);
+      if (ob.class) { addClassname(li_el, ob.class); }
+    }
+
+    parent_el.appendChild(UL_el);
+  };
+
+
   createBasicElementFromOb = function(ob) {
     var
     el, elType,
@@ -355,15 +402,14 @@ uk.co.firmgently.DontDillyDally = (function() {
         elType = "section";
         break;
       default:
+        elType = "div";
         break;
     }
 
     if (ob.id) {
       el = createElementWithId(elType, ob.id);
-      // el = createElementWithId("section", ob.id);
     } else {
       el = document.createElement(elType);
-      // el = document.createElement("section");
     }
     parent_el.appendChild(el);
     if (ob.class) { addClassname(el, ob.class); }
@@ -391,72 +437,55 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   createClientOrJobFromOb = function(ob, dataType) {
     // create unique number to be used in object name/key
-    var id, ar, n, prefix, selector, pluralName, input_el;
+    var
+    id, ar, n, prefix, newItemCSS_selector, //pluralName,
+    input_el,
+    colorPickerFGSelector, colorPickerBGSelector;
 
     if (dataType === DATATYPE_CLIENT) {
-      prefix = "client";
       input_el = document.getElementById(EL_ID_CLIENTNAMEIN);
+      prefix = CLIENT_STR;
     } else if (dataType === DATATYPE_JOB) {
       input_el = document.getElementById(EL_ID_JOBNAMEIN);
-      prefix = "job";
+      prefix = JOB_STR;
     }
-    n = 0 + dataRetrieveObject(prefix + "Num") + 1;
-    dataStoreObject(prefix + "Num", n);
-    id = prefix + n;
+    id = getNextName(dataType);
+    ob.id = id;
     ob.class = id;
 
-    // get correct array name (client/s or job/s)
-    pluralName = prefix + "s";
-    ar = dataRetrieveObject(pluralName);
-    ar.push(ob);
-    dataStoreObject(pluralName, ar);
+    ar = dataRetrieveObject(prefix);
+    ar[ob.id] = ob;
+    dataStoreObject(prefix, ar);
 
-    selector = "." + id + ", " +
+    newItemCSS_selector = "." + id + ", " +
       "." + id + ":hover, " +
       "." + id + ":active";
-    addCSSRule(selector, "color", ob.color);
-    addCSSRule(selector, "background-color", ob.bgcolor);
-    storeCSSRules(selector, "color", ob.color, "background-color", ob.bgcolor);
+    addCSSRule(newItemCSS_selector, "color", ob.color);
+    addCSSRule(newItemCSS_selector, "background-color", ob.bgcolor);
 
-    //
     if (dataType === DATATYPE_CLIENT) {
-      addCSSRule("#" + COLPICK_FG_CLIENT, "background-color", ob.color);
-      addCSSRule("#" + COLPICK_BG_CLIENT, "background-color", ob.bgcolor);
-      storeCSSRules("#" + COLPICK_FG_CLIENT, "background-color", ob.color);
-      storeCSSRules("#" + COLPICK_BG_CLIENT, "background-color", ob.bgcolor);
+      colorPickerFGSelector = "#" + CLIENT_FG_COLPICK;
+      colorPickerBGSelector = "#" + CLIENT_BG_COLPICK;
     } else if (dataType === DATATYPE_JOB) {
-      addCSSRule("#" + COLPICK_FG_JOB, "background-color", ob.color);
-      addCSSRule("#" + COLPICK_BG_JOB, "background-color", ob.bgcolor);
-      storeCSSRules("#" + COLPICK_FG_JOB, "background-color", ob.color);
-      storeCSSRules("#" + COLPICK_BG_JOB, "background-color", ob.bgcolor);
+      colorPickerFGSelector = "#" + JOB_FG_COLPICK;
+      colorPickerBGSelector = "#" + JOB_BG_COLPICK;
     }
 
-  };
-
-
-  storeCSSRules = function(selector) {
-    var i,
-    pairs = (arguments.length - 1) / 2,
-    rule = selector + " { ";
-    for (i = 1; i < pairs * 2; i+=2) {
-      rule += arguments[i] + ": " + arguments[i+1] + "; ";
-    }
-    rule += "} ";
-    dataStoreObject("clientAndJobStyles", dataRetrieveObject("clientAndJobStyles") + rule);
-    // addCSSRule(selector, property, newValue);
-    // alert(JSON.stringify(dataRetrieveObject("clientAndJobStyles")));
+    addCSSRule(colorPickerFGSelector, "background-color", ob.color);
+    addCSSRule(colorPickerBGSelector, "background-color", ob.bgcolor);
   };
 
 
   callMethodFromObOnElement = function(e) {
-    logMsg("callMethodFromObOnElement: " + JSON.stringify(e.target.ob));
+    logMsg("callMethodFromObOnElement()");
+    logMsg("\tcallMethodFromObOnElement: " + JSON.stringify(e.target.ob));
     callMethodFromOb(e.target.ob);
   };
 
 
   callMethodFromOb = function(ob) {
-    var scope = (ob.scopeID !== undefined) ? document.getElementById(ob.scopeID) : undefined;
     logMsg("\tcallMethodFromOb: " + JSON.stringify(ob));
+    var scope = (ob.scopeID !== undefined) ? document.getElementById(ob.scopeID) : undefined;
 
     /*
     eval usage has been carefully considered and is the best solution
@@ -475,35 +504,13 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  newClientFormSubmit = function() {
-    // logMsg("getRandomHexColor(): " + getRandomHexColor());
-    // logMsg("getRandomHexColor(\"dark\"): " + getRandomHexColor("dark"));
-    // logMsg("getRandomHexColor(\"light\"): " + getRandomHexColor("light"));
-    logMsg("this: " + this);
-    logMsg("this.id: " + this.id);
-    createClientOrJobFromOb({
-      name: document.getElementById(EL_ID_CLIENTNAMEIN).value,
-      color: getRandomHexColor("dark"),
-      bgcolor: getRandomHexColor("light")
-    }, DATATYPE_CLIENT);
-    drawPage();
-  };
-
-
-  newJobFormSubmit = function() {
-    createClientOrJobFromOb({
-      name: document.getElementById(EL_ID_JOBNAMEIN).value,
-      color: getRandomHexColor("light"),
-      bgcolor: getRandomHexColor("dark")
-
-    }, DATATYPE_JOB);
-    drawPage();
-  };
-
-
   onClientTyped = function() {
-    // logMsg(JSON.stringify(this));
-    // logMsg(this.clientNameIn);
+    clientSaveBtn_el.disabled = clientNameInput_el.value.isEmpty();
+  };
+
+
+  onJobTyped = function() {
+      jobSaveBtn_el.disabled = jobNameInput_el.value.isEmpty();
   };
 
 
@@ -516,7 +523,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     var
     i, daysToDraw, isOddDay, weekdayCur,
     isToday, rowClassname,
-    day_el, date_el, holder_el, hrs_el, client_el, job_el, jobnotes_el,
+    day_el, date_el, workItem_el, hrs_el, client_el, job_el, jobnotes_el,
     ob_temp,
     weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
     parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
@@ -544,6 +551,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     isOddDay = false;
     for (i = 0; i < daysToDraw; i++) {
+      dayOfYear = dayCur.getDOY();
       rowClassname = "day row ";
       isToday = !Math.round(daysBetween(dayCur, dateToday));
       if (isToday) { rowClassname += "today "; }
@@ -551,9 +559,10 @@ uk.co.firmgently.DontDillyDally = (function() {
       isOddDay = !isOddDay; // flip state
       if (dayCur.getDay() === weekStartDay) { rowClassname += "week-start "; }
       if (dayCur.getDate() === 1) { rowClassname += "month-start "; }
-      day_el = createElementWithId("span", "day_el" + i);
+      day_el = createElementWithId("span", "day" + dayOfYear);
       parent_el.appendChild(day_el);
       addClassname(day_el, rowClassname);
+
       // date
       date_el = document.createElement("span");
       addClassname(date_el, "date");
@@ -561,40 +570,94 @@ uk.co.firmgently.DontDillyDally = (function() {
       day_el.appendChild(date_el);
       date_el.innerHTML = getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
       dayCur.setDate(dayCur.getDate() + 1);
+      day_el.dayNum = dayOfYear;
 
-      holder_el = createElementWithId("span", "holder_el" + i);
-      // holder_el = document.createElement("span");
-      addClassname(holder_el, "day-data");
-      addClassname(holder_el, "col");
-      day_el.appendChild(holder_el);
-
-      // hours
-      hrs_el = document.createElement("input");
-      hrs_el.setAttribute("type", "number");
-      hrs_el.setAttribute("min", "5");
-      hrs_el.setAttribute("max", "59");
-      hrs_el.setAttribute("step", "1");
-      hrs_el.setAttribute("size", "5");
-      holder_el.appendChild(hrs_el);
-      // hrs_el.innerHTML = "HRS RPLCE";
-      // client
-      ob_temp = dataRetrieveObject("clients");
-      ob_temp.contentType = CONTENTTYPE_CLIENTS;
-      ob_temp.parentID = holder_el.id;
-      createSelectFromOb(ob_temp);
-      // job
-      ob_temp = dataRetrieveObject("jobs");
-      ob_temp.contentType = CONTENTTYPE_JOBS;
-      ob_temp.parentID = holder_el.id;
-      createSelectFromOb(ob_temp);
-      // job  notes
-      jobnotes_el = createTextInputFromOb({
-        class: "jobNotes",
-        parentID: ("holder_el" + i)
-      });
+      //
+      addWorkItem(day_el, dayOfYear);
     }
   };
 
+
+  addWorkItem = function(parent_el, suffix) {
+    var
+    hrs_el, money_el, ob_temp,
+    itemID = "workItem" + suffix,
+    workItem_el = createElementWithId("span", itemID);
+
+    addClassname(workItem_el, "day-data");
+    addClassname(workItem_el, "col");
+    parent_el.appendChild(workItem_el);
+
+    // hours
+    createTextInputFromOb({
+      class: "hrs",
+      parentID: itemID,
+      id: "hrs" + suffix,
+      attributes: {
+        "type": "number",
+        "min":  "0", "max":  "59",
+        "step": "15", "size": "5"
+      }
+    });
+    // client select/dropdown
+    createSelectFromOb({
+      contentType: CONTENTTYPE_CLIENTS,
+      id: CLIENT_STR + suffix,
+      parentID: itemID,
+      args: [],
+      scopeID: parent_el.id
+    });
+    // job select/dropdown
+    createSelectFromOb({
+      contentType: CONTENTTYPE_JOBS,
+      id: JOB_STR + suffix,
+      parentID: itemID,
+      scopeID: parent_el.id
+    });
+    // job  notes
+    createTextInputFromOb({
+      class: "jobNotes",
+      id: "jobNotes" + suffix,
+      parentID: itemID
+    });
+    // money
+    createTextInputFromOb({
+      class: "money",
+      parentID: itemID,
+      id: "money" + suffix,
+      attributes: {
+        "type": "number",
+        "min":  "0", "max":  "59",
+        "step": "15", "size": "5"
+      }
+    });
+    // money notes
+    createTextInputFromOb({
+      class: "moneyNotes",
+      parentID: itemID,
+      id: "moneyNotes" + suffix,
+    });
+
+    // return workItem_el;
+  };
+
+
+/*  updateColoursFromPickers = function(type, fgCol, bgCol) {
+
+  };
+
+*/
+
+  updateRefsToElements = function() {
+    clientNameInput_el = document.getElementById(EL_ID_CLIENTNAMEIN);
+    clientSaveBtn_el = document.getElementById(EL_ID_CLIENTSAVEBTN);
+    colPickClientFG_el = document.getElementById(CLIENT_FG_COLPICK);
+    colPickClientBG_el = document.getElementById(CLIENT_BG_COLPICK);
+    jobNameInput_el = document.getElementById(EL_ID_JOBNAMEIN);
+    jobSaveBtn_el = document.getElementById(EL_ID_JOBSAVEBTN);
+    colPickJobFG_el = document.getElementById(JOB_FG_COLPICK);
+    colPickJobBG_el = document.getElementById(JOB_BG_COLPICK);
+  };
 
 
   /* ---------------------------------------------------------------------------
@@ -621,6 +684,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     if (ob.hidden) { form_el.style.display = "none"; }
 
     form_el.ob = ob;
+    registerEventHandler(form_el, "submit", onFormSubmit);
     registerEventHandler(form_el, "click", onFormClick);
   };
 
@@ -639,6 +703,63 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  onFormSubmit = function(e) {
+    logMsg("FORM SUBMITTED");
+    stopPropagation(e);
+  };
+
+
+  newClientCreate = function() {
+    var
+    fgCol = getRandomHexColor("dark"),
+    bgCol = getRandomHexColor("light");
+
+    document.getElementById(EL_ID_CLIENTNAMEIN).value = getNextName(DATATYPE_CLIENT);
+    addCSSRule("#" + CLIENT_FG_COLPICK, "background-color", fgCol);
+    addCSSRule("#" + CLIENT_BG_COLPICK, "background-color", bgCol);
+    addCSSRule("#" + EL_ID_CLIENTNAMEIN, "color", fgCol);
+    addCSSRule("#" + EL_ID_CLIENTNAMEIN, "background-color", bgCol);
+
+    clientSaveBtn_el.disabled = false;
+    updateRefsToElements();
+  };
+
+
+  newJobCreate = function() {
+    var
+    fgCol = getRandomHexColor("light"),
+    bgCol = getRandomHexColor("dark");
+
+    document.getElementById(EL_ID_JOBNAMEIN).value = getNextName(DATATYPE_JOB);
+    addCSSRule("#" + JOB_FG_COLPICK, "background-color", fgCol);
+    addCSSRule("#" + JOB_BG_COLPICK, "background-color", bgCol);
+    addCSSRule("#" + EL_ID_JOBNAMEIN, "color", fgCol);
+    addCSSRule("#" + EL_ID_JOBNAMEIN, "background-color", bgCol);
+
+    jobSaveBtn_el.disabled = false;
+    updateRefsToElements();
+  };
+
+
+  newClientFormSave = function() {
+    createClientOrJobFromOb({
+      name: document.getElementById(EL_ID_CLIENTNAMEIN).value,
+      color: getStyle(colPickClientFG_el, "background-color"),
+      bgcolor: getStyle(colPickClientBG_el, "background-color")
+    }, DATATYPE_CLIENT);
+    drawPage();
+  };
+
+
+  newJobFormSave = function() {
+    createClientOrJobFromOb({
+      name: document.getElementById(EL_ID_JOBNAMEIN).value,
+      color: getStyle(colPickJobFG_el, "background-color"),
+      bgcolor: getStyle(colPickJobBG_el, "background-color")
+    }, DATATYPE_JOB);
+    drawPage();
+  };
+
 
   /* ---------------------------------------------------------------------------
 
@@ -647,6 +768,58 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   navClick = function(e) {
     selectPage(arguments[0]);
+  };
+
+
+  updateSelected = function(e) {
+    var
+    day_ar, workItem_ar, day_ob,
+    select_selector = "#" + e.target.id,
+    option_selector = e.target.value,
+    pageType = dataRetrieveObject("prefs").pagetype,
+    workItem_el = document.getElementById(e.target.id).parentNode,
+    day_el = document.getElementById(e.target.id).parentNode.parentNode,
+    dayNum = day_el.dayNum;
+
+    switch (pageType) {
+      case PAGETYPE_TIMESHEETS:
+      case PAGETYPE_JOBSANDCLIENTS:
+        if (e.target.id.toUpperCase().indexOf(CLIENT_STR.toUpperCase()) !=-1) {
+          addCSSRule(select_selector, "color", dataRetrieveObject(CLIENT_STR)[option_selector].color);
+          addCSSRule(select_selector, "background-color", dataRetrieveObject(CLIENT_STR)[option_selector].bgcolor);
+        } else {
+          addCSSRule(select_selector, "color", dataRetrieveObject(JOB_STR)[option_selector].color);
+          addCSSRule(select_selector, "background-color", dataRetrieveObject(JOB_STR)[option_selector].bgcolor);
+        }
+        break;
+      case PAGETYPE_CONFIG:
+        break;
+      default:
+        break;
+    }
+    if (pageType === PAGETYPE_TIMESHEETS) {
+      day_ar = dataRetrieveObject("day");
+      day_ob = day_ar[dayNum];
+      if (day_ob === undefined) {
+        day_ob = { work: [] };
+      }
+      workItem_ar = day_ob.work;
+      workItem_ar.push({
+        time: "02:30",
+        client: "test client",
+        job: "test job",
+        jobNotes: "painting the edges",
+        money: -50,
+        moneyNotes: "bought canvas REceipt no.11234"
+      });
+      day_ar[dayNum] = day_ob;
+      dataStoreObject("day", day_ar);
+    }
+/*    if (e.target.id === EL_ID_SELECTCLIENT) {
+
+    } else if (e.target.id === EL_ID_SELECTJOB) {
+
+    }*/
   };
 
 

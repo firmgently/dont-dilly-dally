@@ -149,12 +149,33 @@ body#timesheets header nav button#timesheets.btnNav { font-size: @tab-fontsize-s
 body#config header nav button#config.btnNav { font-size: @tab-fontsize-selected; .topCurve(@mediumPadding); }
 
 
+#column-headings {
+  position: absolute; bottom: 0;
+  li { display: inline; text-align: center; background-color: orange; margin: @smallPadding; }
+  li:nth-child(1) { width: 8em; }
+  li:nth-child(2) { width: 2em; }
+  li:nth-child(3) { width: 6em; }
+  li:nth-child(4) { width: 6em; }
+  li:nth-child(5) { width: 10em; }
+  li:nth-child(6) { width: 3em; }
+  li:nth-child(7) { width: 3em; }
+  li:nth-child(8) { width: 10em; }
+}
+
+body#jobsClients, body#config {
+  #column-headings { display: none; }
+}
+
 #main { position: absolute; width: 100%; top: @header-height; }
 
 
 #editClientCol, #editJobCol { width: 50%; display: inline-block; padding: @largePadding}
 
-
+#createNewClientBtn, #createNewJobBtn,
+#saveNewClientBtn, #saveNewJobBtn,
+#clientNameIn, #jobNameIn {
+   font-family: @bold-font-family;
+}
 // Timesheets
 
 #timesheetContainer {
@@ -162,7 +183,7 @@ body#config header nav button#config.btnNav { font-size: @tab-fontsize-selected;
 	span {
     input[type=number] { max-width: 5em; display: inline-block; position: relative; }
 		&.date.col { width: @date-width; }
-		&.day-data.col { padding-left: @date-width; }
+		&.day-data.col { padding-left: @date-width; display: inline-block; float: left; clear: both; width: 80%; }
 		&.day {
 			cursor: pointer;
 			display: block;
@@ -181,9 +202,11 @@ body#config header nav button#config.btnNav { font-size: @tab-fontsize-selected;
 
 
 /* FORMS */
-select { appearance: none; -webkit-appearance: none; -moz-appearance: none; }
+select { font-family: @bold-font-family; appearance: none; -webkit-appearance: none; -moz-appearance: none; }
 #configForm {
-	input[type=radio] { display: block; }
+	input[type=radio] {
+    display: block;
+  }
 }
 
 
@@ -191,7 +214,7 @@ select { appearance: none; -webkit-appearance: none; -moz-appearance: none; }
 
 /* COLOR PICKER */
 
-.color-picker { display: inline-block; width: 50px; height: 50px; }
+.color-picker { display: inline-block; width: 50px; height: 50px; background-color: #efefef}
 
 
 /* TEXT */

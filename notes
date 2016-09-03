@@ -91,6 +91,10 @@ CONFIGURATION
       (eg. 06/04)
   [ ] use seasonal background colours (show demo colours and allow shift +/- to match months)
 
+  [ ] show day as:
+      day of year
+      day of tax year
+
     J: darker grey on white
     F: black on white
     M: light yellow on muted green
