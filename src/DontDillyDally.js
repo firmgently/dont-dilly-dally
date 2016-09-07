@@ -25,7 +25,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 	// methods
   doSetup, selectPage, drawPage, fillHTMLFromOb, drawGUIFromAr,
-  createButtonFromOb, createFormFromOb, createTextInputFromOb,
+  createButtonFromOb, createFormFromOb, createInputFromOb,
   callMethodFromObOnElement, callMethodFromOb, onFormClick,
   createSelectFromOb, createRadioFromOb, addLIsFromOb,
   createBasicElementFromOb, createColorPickerFromOb,
@@ -189,7 +189,7 @@ uk.co.firmgently.DontDillyDally = (function() {
           createFormFromOb(ob);
           break;
         case GUITYPE_TEXTINPUT:
-          createTextInputFromOb(ob);
+          createInputFromOb(ob);
           break;
         case GUITYPE_SELECT:
           createSelectFromOb(ob);
@@ -258,21 +258,27 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  createTextInputFromOb = function(ob) {
+  createInputFromOb = function(ob) {
     var
     prop, input_el, label_el,
     innerHTML = "",
     parent_el = document.getElementById(ob.parentID);
 
-    if (ob.label) { innerHTML += "<label>" + ob.label; }
     if (ob.id) {
-      innerHTML += "<input id='" + ob.id + "'>";
+      if (ob.label) {
+        label_el = document.createElement("label");
+        label_el.innerHTML = ob.label;
+        parent_el.appendChild(label_el);
+        label_el.htmlFor = ob.id;
+      }
+      input_el = createElementWithId("input", ob.id);
+      input_el.name = ob.id;
+      input_el.id = ob.id;
     } else {
-      innerHTML += "<input>";
+      input_el = document.createElement("input");
     }
-    if (ob.label) { innerHTML += "</label>" + ob.label; }
-    parent_el.innerHTML += innerHTML;
-    input_el = document.getElementById(ob.id);
+    if (ob.class) { addClassname(input_el, ob.class); }
+    parent_el.appendChild(input_el);
 
     if (ob.attributes) {
       for (prop in ob.attributes) {
@@ -280,14 +286,9 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
     }
 
-    input_el.setAttribute("type", "text");
-    // parent_el.appendChild(input_el);
-
     input_el.ob = ob;
 
-    if (ob.class) { addClassname(input_el, ob.class); }
-
-    if (ob.method !== undefined) {
+    if (ob.methodName !== undefined) {
       registerEventHandler(input_el, "change", callMethodFromObOnElement);
       registerEventHandler(input_el, "keyup", callMethodFromObOnElement);
       registerEventHandler(input_el, "paste", callMethodFromObOnElement);
@@ -302,13 +303,13 @@ uk.co.firmgently.DontDillyDally = (function() {
     dayPrefix,
     parent_el = document.getElementById(ob.parentID);
 
-    if (ob.label) {
-      label_el = document.createElement("label");
-      label_el.innerHTML = ob.label;
-      parent_el.appendChild(label_el);
-      label_el.htmlFor = ob.id;
-    }
     if (ob.id) {
+      if (ob.label) {
+        label_el = document.createElement("label");
+        label_el.innerHTML = ob.label;
+        parent_el.appendChild(label_el);
+        label_el.htmlFor = ob.id;
+      }
       select_el = createElementWithId("select", ob.id);
       select_el.name = ob.id;
       select_el.id = ob.id;
@@ -316,8 +317,9 @@ uk.co.firmgently.DontDillyDally = (function() {
       select_el = document.createElement("select");
     }
     if (ob.class) { addClassname(select_el, ob.class); }
-    select_el.setAttribute("size", "1"); // HACK maybe to allow styling of individual options
     parent_el.appendChild(select_el);
+
+    select_el.setAttribute("size", "1"); // HACK maybe to allow styling of individual options
 
     if (ob.contentType) { // clients / jobs options get treated differently to normal options
       if (ob.contentType === CONTENTTYPE_CLIENTS) {
@@ -336,14 +338,13 @@ uk.co.firmgently.DontDillyDally = (function() {
       for (prop in ob.options) {
         select_el.options[select_el.options.length] = new Option(ob.options[prop], prop);
       }
-      // if (ob.class) { addClassname(select_el, ob.class); }
     }
 
     select_el.ob = ob;
-    select_el.ob.method = "updateSelected";
-    registerEventHandler(document.getElementById(select_el.id), "change", callMethodFromObOnElement);
-    registerEventHandler(select_el, "change", updateSelected);
-    // logMsg("select_el.onchange: " + select_el.onchange);
+    // select_el.ob.methodName = "updateSelected";
+    if (ob.methodName) {
+      registerEventHandler(select_el, "change", callMethodFromObOnElement);
+    }
   };
 
 
@@ -358,14 +359,15 @@ uk.co.firmgently.DontDillyDally = (function() {
       parent_el.appendChild(label_el);
 
       radio_el = document.createElement("input");
-      radio_el.setAttribute("type", "radio");
+      if (ob.class) { addClassname(radio_el, ob.class); }
       parent_el.appendChild(radio_el);
+
+      radio_el.setAttribute("type", "radio");
       radio_el.id = ob.id;
       radio_el.name = ob.id;
       radio_el.value = prop;
       if (prop === dataRetrieveObject("prefs").timespan) { radio_el.checked = true; }
       label_el.htmlFor = ob.id;
-      if (ob.class) { addClassname(radio_el, ob.class); }
     }
   };
 
@@ -492,14 +494,14 @@ uk.co.firmgently.DontDillyDally = (function() {
     for calling one of many methods whose names (strings) have been stored in
     the constants file
 
-    ob.method contains a hard-coded string from DDDConsts.js
+    ob.methodName contains a hard-coded string from DDDConsts.js
 
     ! NO USER INPUT CAN MAKE IT INTO THIS LOCATION UNLESS THE SOURCE CODE
     ! HAS BEEN COMPROMISED. IF THAT HAPPENS WE'RE BUGGERED ANYWAY !!
     */
 
     /* jshint ignore:start */
-    eval(ob.method).apply(scope, ob.args);
+    eval(ob.methodName).apply(scope, ob.args);
     /* jshint ignore:end */
   };
 
@@ -572,7 +574,6 @@ uk.co.firmgently.DontDillyDally = (function() {
       dayCur.setDate(dayCur.getDate() + 1);
       day_el.dayNum = dayOfYear;
 
-      //
       addWorkItem(day_el, dayOfYear);
     }
   };
@@ -589,9 +590,9 @@ uk.co.firmgently.DontDillyDally = (function() {
     parent_el.appendChild(workItem_el);
 
     // hours
-    createTextInputFromOb({
+    createInputFromOb({
       class: "hrs",
-      parentID: itemID,
+      parentID: parent_el.id,
       id: "hrs" + suffix,
       attributes: {
         "type": "number",
@@ -603,7 +604,8 @@ uk.co.firmgently.DontDillyDally = (function() {
     createSelectFromOb({
       contentType: CONTENTTYPE_CLIENTS,
       id: CLIENT_STR + suffix,
-      parentID: itemID,
+      parentID: parent_el.id,
+      methodName: "updateSelected",
       args: [],
       scopeID: parent_el.id
     });
@@ -611,19 +613,21 @@ uk.co.firmgently.DontDillyDally = (function() {
     createSelectFromOb({
       contentType: CONTENTTYPE_JOBS,
       id: JOB_STR + suffix,
-      parentID: itemID,
+      parentID: parent_el.id,
+      methodName: "updateSelected",
       scopeID: parent_el.id
     });
     // job  notes
-    createTextInputFromOb({
+    createInputFromOb({
       class: "jobNotes",
       id: "jobNotes" + suffix,
-      parentID: itemID
+      parentID: parent_el.id,
+      attributes: { "type": "text" }
     });
     // money
-    createTextInputFromOb({
+    createInputFromOb({
       class: "money",
-      parentID: itemID,
+      parentID: parent_el.id,
       id: "money" + suffix,
       attributes: {
         "type": "number",
@@ -632,13 +636,12 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
     });
     // money notes
-    createTextInputFromOb({
+    createInputFromOb({
       class: "moneyNotes",
-      parentID: itemID,
+      parentID: parent_el.id,
       id: "moneyNotes" + suffix,
+      attributes: { "type": "text" }
     });
-
-    // return workItem_el;
   };
 
 

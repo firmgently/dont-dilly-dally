@@ -81,7 +81,7 @@ uk.co.firmgently.DDDConsts = (function() {
       class: CLASS_BTNNAV,
       id: BODYID_TIMESHEETS,
       label: "Timesheets",
-      method: "navClick",
+      methodName: "navClick",
       args: [PAGETYPE_TIMESHEETS],
       scopeID: "main",
       parentID: "nav-main"
@@ -90,7 +90,7 @@ uk.co.firmgently.DDDConsts = (function() {
       class: CLASS_BTNNAV,
       id: BODYID_JOBSANDCLIENTS,
       label: "Jobs & Clients",
-      method: "navClick",
+      methodName: "navClick",
       args: [PAGETYPE_JOBSANDCLIENTS],
       scopeID: "main",
       parentID: "nav-main"
@@ -99,7 +99,7 @@ uk.co.firmgently.DDDConsts = (function() {
       class: CLASS_BTNNAV,
       id: BODYID_CONFIG,
       label: "Settings",
-      method: "navClick",
+      methodName: "navClick",
       args: [PAGETYPE_CONFIG],
       scopeID: "main",
       parentID: "nav-main"
@@ -147,7 +147,7 @@ uk.co.firmgently.DDDConsts = (function() {
           type: GUITYPE_BTN,
           label: "Create new",
           id: "createNewClientBtn",
-          method: "newClientCreate",
+          methodName: "newClientCreate",
           args: [],
           scopeID: "createClientForm",
           parentID: "clientNewRow"
@@ -156,14 +156,15 @@ uk.co.firmgently.DDDConsts = (function() {
           id: EL_ID_CLIENTNAMEIN,
           label: "Client name",
           parentID: "clientNewRow",
-          method: "onClientTyped",
+          methodName: "onClientTyped",
           args: [],
-          scopeID: "createClientForm"
+          scopeID: "createClientForm",
+          attributes: { "type": "text" }
         }, {
           type: GUITYPE_BTN,
           label: "Save",
           id: EL_ID_CLIENTSAVEBTN,
-          method: "newClientFormSave",
+          methodName: "newClientFormSave",
           args: [],
           scopeID: "createClientForm",
           parentID: "clientNewRow",
@@ -184,6 +185,7 @@ uk.co.firmgently.DDDConsts = (function() {
           args: [],
           scopeID: "createClientForm",
           parentID: "clientsExistingRow",
+          methodName: "updateSelected",
           id: EL_ID_SELECTCLIENT,
           contentType: CONTENTTYPE_CLIENTS
         }
@@ -198,7 +200,7 @@ uk.co.firmgently.DDDConsts = (function() {
       id: "createJobForm",
       class: CLASS_FORMMAIN,
       title: "Fill in job details",
-      // method: null,
+      // methodName: null,
       parentID: "editJobCol",
       hidden: false,
       el_ar: [
@@ -216,7 +218,7 @@ uk.co.firmgently.DDDConsts = (function() {
           type: GUITYPE_BTN,
           label: "Create new",
           id: "createNewJobBtn",
-          method: "newJobCreate",
+          methodName: "newJobCreate",
           scopeID: "createJobForm",
           args: [],
           parentID: "jobNewRow"
@@ -224,12 +226,13 @@ uk.co.firmgently.DDDConsts = (function() {
           type: GUITYPE_TEXTINPUT,
           id: EL_ID_JOBNAMEIN,
           label: "Job name",
-          parentID: "jobNewRow"
+          parentID: "jobNewRow",
+          attributes: { "type": "text" }
         }, {
           type: GUITYPE_BTN,
           label: "Save",
           id: EL_ID_JOBSAVEBTN,
-          method: "newJobFormSave",
+          methodName: "newJobFormSave",
           scopeID: "createJobForm",
           args: [],
           parentID: "jobNewRow",
@@ -250,6 +253,7 @@ uk.co.firmgently.DDDConsts = (function() {
           args: [],
           scopeID: "createJobForm",
           parentID: "jobsExistingRow",
+          methodName: "updateSelected",
           id: "selectJob",
           contentType: CONTENTTYPE_JOBS
         }
@@ -268,7 +272,7 @@ uk.co.firmgently.DDDConsts = (function() {
       parentID: "main"
     }, {
       type: GUITYPE_METHODCALL,
-      method: "drawTimesheets",
+      methodName: "drawTimesheets",
       scopeID: "main"
     }
   ],
