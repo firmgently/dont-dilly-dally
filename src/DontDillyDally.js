@@ -70,7 +70,12 @@ uk.co.firmgently.DontDillyDally = (function() {
   initDataObject = function() {
     // if no preferences are stored create some defaults
     if (!dataRetrieveObject("prefs")) {
-      dataStoreObject("prefs", { pagetype: PAGETYPE_DEFAULT, timespan: TIMESPAN_DEFAULT });
+      dataStoreObject("prefs", {
+        pagetype: PAGETYPE_DEFAULT,
+        timespan: TIMESPAN_DEFAULT,
+        dateFormat: DATETYPE_DEFAULT,
+        totalsToShow: SHOWTOTALS_DEFAULT
+      });
       dataStoreObject("clientNum", 0);
       dataStoreObject("jobNum", 0);
 
@@ -240,7 +245,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   createButtonFromOb = function(ob) {
     var
     button_el,
-    parent_el = document.getElementById(ob.parentID);
+    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
 
     if (ob.id) {
       button_el = createElementWithId("button", ob.id);
@@ -262,7 +267,12 @@ uk.co.firmgently.DontDillyDally = (function() {
     var
     prop, input_el, label_el,
     innerHTML = "",
-    parent_el = document.getElementById(ob.parentID);
+    // parent_el = document.getElementById(ob.parent);
+    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
+
+    logMsg("ob.parent: " + ob.parent);
+    logMsg("parent_el: " + parent_el);
+    logMsg("typeof ob.parent: " + typeof ob.parent);
 
     if (ob.id) {
       if (ob.label) {
@@ -301,7 +311,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     var
     i, prop, select_el, label_el, option_el, clientOrJob_ob,
     dayPrefix,
-    parent_el = document.getElementById(ob.parentID);
+    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
 
     if (ob.id) {
       if (ob.label) {
@@ -351,7 +361,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   createRadioFromOb = function(ob) {
     var
     prop, radio_el, label_el,
-    parent_el = document.getElementById(ob.parentID);
+    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
 
     for (prop in ob.options) {
       label_el = document.createElement("label");
@@ -376,7 +386,8 @@ uk.co.firmgently.DontDillyDally = (function() {
     var
     i, li_el,
     UL_el = createElementWithId("ul", EL_ID_COLHEADING),
-    parent_el = document.getElementById(ob.parentID);
+    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
+
     addClassname(UL_el, CLASS_ROW);
 
     for (i = 0; i < ob.ar.length; i++) {
@@ -393,7 +404,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   createBasicElementFromOb = function(ob) {
     var
     el, elType,
-    parent_el = document.getElementById(ob.parentID);
+    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
 
     switch (ob.type) {
       case GUITYPE_COL:
@@ -421,7 +432,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   createColorPickerFromOb = function(ob) {
     var
     el,
-    parent_el = document.getElementById(ob.parentID);
+    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
     if (ob.id) {
       el = createElementWithId("span", ob.id);
     } else {
@@ -523,12 +534,13 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   drawTimesheets = function() {
     var
-    i, daysToDraw, isOddDay, weekdayCur,
+    i, j, daysToDraw, isOddDay, weekdayCur,
     isToday, rowClassname,
-    day_el, date_el, workItem_el, hrs_el, client_el, job_el, jobnotes_el,
-    ob_temp,
+    day_el, date_el, workItem_el, workItemCol_el, hrs_el, client_el, job_el, jobnotes_el,
+    ob_temp, dayWorkItems,
     weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
     parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
+    allWorkItems = dataRetrieveObject("day"),
     dayCur = new Date();
 
     switch(dataRetrieveObject("prefs").timespan) {
@@ -561,7 +573,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       isOddDay = !isOddDay; // flip state
       if (dayCur.getDay() === weekStartDay) { rowClassname += "week-start "; }
       if (dayCur.getDate() === 1) { rowClassname += "month-start "; }
-      day_el = createElementWithId("span", "day" + dayOfYear);
+      day_el = createElementWithId("div", "day" + dayOfYear);
       parent_el.appendChild(day_el);
       addClassname(day_el, rowClassname);
 
@@ -574,7 +586,23 @@ uk.co.firmgently.DontDillyDally = (function() {
       dayCur.setDate(dayCur.getDate() + 1);
       day_el.dayNum = dayOfYear;
 
-      addWorkItem(day_el, dayOfYear);
+      workItemCol_el = document.createElement("span");
+      day_el.appendChild(workItemCol_el);
+      addClassname(workItemCol_el, "day-data");
+      addClassname(workItemCol_el, "col");
+
+      dayWorkItems = allWorkItems[dayOfYear];
+      logMsg("allWorkItems: " + allWorkItems);
+      logMsg("dayWorkItems: " + dayWorkItems);
+      if (dayWorkItems === undefined) {
+        addWorkItem(workItemCol_el, "" + dayOfYear + "_0");
+      } else {
+        for (j = 0; j < dayWorkItems.length; j++) {
+          addWorkItem(workItemCol_el, "" + dayOfYear + "_" + j);
+        }
+      }
+
+
     }
   };
 
@@ -582,18 +610,17 @@ uk.co.firmgently.DontDillyDally = (function() {
   addWorkItem = function(parent_el, suffix) {
     var
     hrs_el, money_el, ob_temp,
-    itemID = "workItem" + suffix,
+    itemID = "item" + suffix,
+    // workItem_el = document.createElement("span");
     workItem_el = createElementWithId("span", itemID);
 
-    addClassname(workItem_el, "day-data");
-    addClassname(workItem_el, "col");
+
     parent_el.appendChild(workItem_el);
 
     // hours
     createInputFromOb({
       class: "hrs",
-      parentID: parent_el.id,
-      id: "hrs" + suffix,
+      parent: workItem_el,
       attributes: {
         "type": "number",
         "min":  "0", "max":  "59",
@@ -603,8 +630,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     // client select/dropdown
     createSelectFromOb({
       contentType: CONTENTTYPE_CLIENTS,
-      id: CLIENT_STR + suffix,
-      parentID: parent_el.id,
+      parent: workItem_el,
       methodName: "updateSelected",
       args: [],
       scopeID: parent_el.id
@@ -612,23 +638,20 @@ uk.co.firmgently.DontDillyDally = (function() {
     // job select/dropdown
     createSelectFromOb({
       contentType: CONTENTTYPE_JOBS,
-      id: JOB_STR + suffix,
-      parentID: parent_el.id,
+      parent: workItem_el,
       methodName: "updateSelected",
       scopeID: parent_el.id
     });
     // job  notes
     createInputFromOb({
       class: "jobNotes",
-      id: "jobNotes" + suffix,
-      parentID: parent_el.id,
+      parent: workItem_el,
       attributes: { "type": "text" }
     });
     // money
     createInputFromOb({
       class: "money",
-      parentID: parent_el.id,
-      id: "money" + suffix,
+      parent: workItem_el,
       attributes: {
         "type": "number",
         "min":  "0", "max":  "59",
@@ -638,10 +661,19 @@ uk.co.firmgently.DontDillyDally = (function() {
     // money notes
     createInputFromOb({
       class: "moneyNotes",
-      parentID: parent_el.id,
-      id: "moneyNotes" + suffix,
+      parent: workItem_el,
       attributes: { "type": "text" }
     });
+    // 'add task' button
+    createButtonFromOb({
+      id: "addTaskBtn",
+      label: "+",
+      methodName: "addTask",
+      parent: workItem_el
+    });
+
+
+
   };
 
 
@@ -670,7 +702,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   createFormFromOb = function(ob) {
     var
     i, form_el,
-    parent_el = document.getElementById(ob.parentID);
+    parent_el = document.getElementById(ob.parent);
 
     if (ob.id) {
       form_el = createElementWithId("form", ob.id);
@@ -680,7 +712,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     parent_el.appendChild(form_el);
 
     if (ob.class) { addClassname(form_el, ob.class); }
-    if (ob.label) { form_el.innerHTML = ob.label; }
+    if (ob.title) { form_el.innerHTML = "<h2>" + ob.title + "</h2>"; }
 
     if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
 
@@ -698,6 +730,9 @@ uk.co.firmgently.DontDillyDally = (function() {
       switch (form.id) {
         case "configForm":
           dataUpdateObject("prefs", "timespan", form.timesheetRange.value);
+          // dateFormat is an object, the form just stores the name of it so grab it here
+          dataUpdateObject("prefs", "dateFormat", uk.co.firmgently.DDDConsts[form.dateFormat.value]);
+          dataUpdateObject("prefs", "totalsToShow", form.totalsToShow.value);
           break;
         default:
           break;
@@ -775,6 +810,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   updateSelected = function(e) {
+    logMsg("updateSelected()");
+    logMsg("\te: " + e);
+    logMsg("\tthis: " + this);
     var
     day_ar, workItem_ar, day_ob,
     select_selector = "#" + e.target.id,

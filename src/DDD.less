@@ -157,9 +157,8 @@ body#config header nav button#config.btnNav { font-size: @tab-fontsize-selected;
   li:nth-child(3) { width: 6em; }
   li:nth-child(4) { width: 6em; }
   li:nth-child(5) { width: 10em; }
-  li:nth-child(6) { width: 3em; }
-  li:nth-child(7) { width: 3em; }
-  li:nth-child(8) { width: 10em; }
+  li:nth-child(6) { width: 2.5em; }
+  li:nth-child(7) { width: 10em; }
 }
 
 body#jobsClients, body#config {
@@ -180,10 +179,13 @@ body#jobsClients, body#config {
 
 #timesheetContainer {
 	display: block;
-	span {
-    input[type=number] { max-width: 5em; display: inline-block; position: relative; }
-		&.date.col { width: @date-width; }
-		&.day-data.col { padding-left: @date-width; display: inline-block; float: left; clear: both; width: 80%; }
+	div {
+    // input[type=number] { max-width: 5em; display: inline-block; position: relative; }
+		span.date.col { width: @date-width; margin-right: -8em; }
+		span.day-data.col {
+      padding-left: @date-width;
+      display: inline-block; float: right; z-index: 1;
+    }
 		&.day {
 			cursor: pointer;
 			display: block;
