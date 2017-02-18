@@ -34,7 +34,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   dataStoragePossible, initDataObject, dataStoreObject, dataRetrieveObject,
   dataUpdateObject, clientAndJobStyleSheet, createClientOrJobFromOb,
   newClientFormSave, newJobFormSave, clientInputWasLastEmpty,
-  updateRefsToElements, updateSelected, addWorkItem
+  updateRefsToElements, updateSelected, addWorkItem, updateSavedWorkItem
 	;
 
   /* ---------------------------------------------------------------------------
@@ -113,6 +113,8 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
     dataStoreObject(category, ob);
   };
+
+
 
 
 
@@ -235,6 +237,8 @@ uk.co.firmgently.DontDillyDally = (function() {
     dataStoreObject(prefix + "Num", n);
     return prefix + n;
   };
+
+
 
 
 
@@ -444,6 +448,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 
+
+
   /* ---------------------------------------------------------------------------
 
 	--------------------------------------------------------------------------- */
@@ -528,6 +534,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 
+
+
   /* ---------------------------------------------------------------------------
 		page drawing methods
 	--------------------------------------------------------------------------- */
@@ -607,12 +615,15 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  addWorkItem = function(parent_el, suffix) {
+  addWorkItem = function(parent_el, dayOfYear, itemNum) {
     var
     hrs_el, money_el, ob_temp,
-    itemID = "item" + suffix,
+    itemID = "item" + dayOfYear + "_" + itemNum,
     // workItem_el = document.createElement("span");
     workItem_el = createElementWithId("span", itemID);
+
+    workItem_el.setAttribute("dayOfYear", dayOfYear);
+    workItem_el.setAttribute("itemNum", itemNum);
 
 
     parent_el.appendChild(workItem_el);
@@ -693,6 +704,9 @@ uk.co.firmgently.DontDillyDally = (function() {
     colPickJobFG_el = document.getElementById(JOB_FG_COLPICK);
     colPickJobBG_el = document.getElementById(JOB_BG_COLPICK);
   };
+
+
+
 
 
   /* ---------------------------------------------------------------------------
@@ -799,6 +813,9 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+
+
+
   /* ---------------------------------------------------------------------------
 
 	--------------------------------------------------------------------------- */
@@ -806,6 +823,14 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   navClick = function(e) {
     selectPage(arguments[0]);
+  };
+
+
+  updateSavedWorkItem = function(workItem_el) {
+    var
+    dayOfYear = workItem_el.getAttribute("dayOfYear"),
+    itemNum = workItem_el.getAttribute("itemNum");
+
   };
 
 
@@ -862,6 +887,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     }*/
   };
+
+
 
 
 
