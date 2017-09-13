@@ -1,5 +1,0 @@
-"src/*.js" : "uglifyjs \
-  src/FGUtils.js \
-  src/DDDConsts.js \
-  src/DontDillyDally.js \
-  -o js/FGDontDillyDally.js --source-map js/FGDontDillyDally.js.map"
