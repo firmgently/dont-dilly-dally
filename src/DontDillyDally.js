@@ -24,11 +24,9 @@ uk.co.firmgently.DontDillyDally = (function() {
   dayOfYear,
 
 	// methods
-  doSetup, selectPage, drawPage, fillHTMLFromOb, drawGUIFromAr,
-  createButtonFromOb, createFormFromOb, createInputFromOb,
+  doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
+  createFormFromOb, addTask,
   callMethodFromObOnElement, callMethodFromOb, onFormClick,
-  createSelectFromOb, createRadioFromOb, addLIsFromOb,
-  createBasicElementFromOb, createColorPickerFromOb,
   drawTimesheets, getNextName, newClientCreate, newJobCreate,
   navClick, onClientTyped, onJobTyped, onFormSubmit,
   dataStoragePossible, initDataObject, dataStoreObject, dataRetrieveObject,
@@ -51,6 +49,10 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 	for (prop in uk.co.firmgently.FGUtils) {
 		this[prop] = uk.co.firmgently.FGUtils[prop];
+	}
+
+	for (prop in uk.co.firmgently.FGHTMLBuild) {
+		this[prop] = uk.co.firmgently.FGHTMLBuild[prop];
 	}
 
 
@@ -133,26 +135,34 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     if(dataStoragePossible()) {
       initDataObject();
-      selectPage(dataRetrieveObject("prefs").pagetype);
       drawGUIFromAr(GUIDATA_NAVMAIN);
       if (location.hash) {
-        selectPage(location.hash.substring(1));
+        selectPage(decodeURIComponent(location.hash.substring(1)));
+      } else {
+        selectPage(dataRetrieveObject("prefs").pagetype);
       }
     }
   };
 
 
   selectPage = function(pagetype) {
+    logMsg("selectPage('" + pagetype + "')");
     dataUpdateObject("prefs", "pagetype", pagetype);
     location.hash = pagetype;
-    drawPage();
+    clearPage();
+    setTimeout(drawPage, 100); // on timer to force reflow after clearPage()
+  };
+
+
+  clearPage = function() {
+    removeClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
+    document.getElementById("main").innerHTML = "";
   };
 
 
   drawPage = function() {
     // var colHeading_el;
     // clear any pre-created html content
-    document.getElementById("main").innerHTML = "";
 
     switch (dataRetrieveObject("prefs").pagetype) {
       case PAGETYPE_TIMESHEETS:
@@ -174,35 +184,48 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
     }
     updateRefsToElements();
-  };
-
-
-  fillHTMLFromOb = function(ob) {
-    for (var prop in ob) {
-      document.getElementById(prop).innerHTML = ob[prop];
-    }
+    addClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
   };
 
 
   drawGUIFromAr = function(ar) {
-    var i, ob;
+    var i, ob, el_temp;
     for (i = 0; i < ar.length; i++) {
       ob = ar[i];
       switch (ob.type) {
         case GUITYPE_BTN:
-          createButtonFromOb(ob);
+          el_temp = createButtonFromOb(ob);
+          if (ob.methodName) {
+            registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
+          }
           break;
         case GUITYPE_FORM:
           createFormFromOb(ob);
           break;
         case GUITYPE_TEXTINPUT:
-          createInputFromOb(ob);
+          el_temp = createInputFromOb(ob);
+          if (ob.methodName) {
+            registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+            registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
+            registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
+            registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+          }
           break;
         case GUITYPE_SELECT:
-          createSelectFromOb(ob);
+          el_temp = createSelectFromOb(ob);
+          if (ob.methodName) {
+            registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+          }
           break;
         case GUITYPE_RADIOBTN:
-          createRadioFromOb(ob);
+          // alert(dataRetrieveObject("prefs").timespan);
+          // TODO this checkIfMatched should not be added here it should
+          // be included in main data higher up
+          ob.checkIfMatched = dataRetrieveObject("prefs").timespan;
+          el_temp = createRadioFromOb(ob);
+          if (ob.methodName) {
+            registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+          }
           break;
         case GUITYPE_UL:
           addLIsFromOb(ob);
@@ -226,6 +249,44 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  createFormFromOb = function(ob) {
+    var
+    i, form_el,
+    parent_el = document.getElementById(ob.parent);
+
+    if (ob.id) {
+      form_el = createElementWithId("form", ob.id);
+    } else {
+      form_el = document.createElement("form");
+    }
+    parent_el.appendChild(form_el);
+
+    if (ob.class) { addClassname(form_el, ob.class); }
+    if (ob.title) { form_el.innerHTML = "<h2>" + ob.title + "</h2>"; }
+
+    if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
+
+    if (ob.hidden) { form_el.style.display = "none"; }
+
+    form_el.ob = ob;
+    registerEventHandler(form_el, "submit", onFormSubmit);
+    registerEventHandler(form_el, "click", onFormClick);
+
+		return form_el;
+  };
+
+
+  addTask = function() {
+    // alert("this: " + this);
+    // alert("this.id: " + this.id);
+    // alert("this.ob.scopeID: " + this.ob.scopeID);
+    // addWorkItem();
+
+    // called from the scope of the 'add task' button
+    addWorkItem(this.parentNode, dayOfYear, 0);
+  };
+
+
   getNextName = function(type) {
     var prefix, name, n;
     if (type === DATATYPE_JOB) {
@@ -242,209 +303,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 
-  /* -----------------------------------------------------------------------------
-    create individual specific elements
-  ----------------------------------------------------------------------------- */
 
-  createButtonFromOb = function(ob) {
-    var
-    button_el,
-    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
-
-    if (ob.id) {
-      button_el = createElementWithId("button", ob.id);
-    } else {
-      button_el = document.createElement("button");
-    }
-    parent_el.appendChild(button_el);
-
-    if (ob.class) { addClassname(button_el, ob.class); }
-    button_el.innerHTML = ob.label;
-    button_el.ob = ob;
-    registerEventHandler(button_el, "mousedown", callMethodFromObOnElement);
-
-    if (ob.disabled) { button_el.disabled = ob.disabled; }
-  };
-
-
-  createInputFromOb = function(ob) {
-    var
-    prop, input_el, label_el,
-    innerHTML = "",
-    // parent_el = document.getElementById(ob.parent);
-    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
-
-    logMsg("ob.parent: " + ob.parent);
-    logMsg("parent_el: " + parent_el);
-    logMsg("typeof ob.parent: " + typeof ob.parent);
-
-    if (ob.id) {
-      if (ob.label) {
-        label_el = document.createElement("label");
-        label_el.innerHTML = ob.label;
-        parent_el.appendChild(label_el);
-        label_el.htmlFor = ob.id;
-      }
-      input_el = createElementWithId("input", ob.id);
-      input_el.name = ob.id;
-      input_el.id = ob.id;
-    } else {
-      input_el = document.createElement("input");
-    }
-    if (ob.class) { addClassname(input_el, ob.class); }
-    parent_el.appendChild(input_el);
-
-    if (ob.attributes) {
-      for (prop in ob.attributes) {
-        input_el.setAttribute("" + prop, "" + ob.attributes[prop]);
-      }
-    }
-
-    input_el.ob = ob;
-
-    if (ob.methodName !== undefined) {
-      registerEventHandler(input_el, "change", callMethodFromObOnElement);
-      registerEventHandler(input_el, "keyup", callMethodFromObOnElement);
-      registerEventHandler(input_el, "paste", callMethodFromObOnElement);
-      registerEventHandler(input_el, "input", callMethodFromObOnElement);
-    }
-  };
-
-
-  createSelectFromOb = function(ob) {
-    var
-    i, prop, select_el, label_el, option_el, clientOrJob_ob,
-    dayPrefix,
-    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
-
-    if (ob.id) {
-      if (ob.label) {
-        label_el = document.createElement("label");
-        label_el.innerHTML = ob.label;
-        parent_el.appendChild(label_el);
-        label_el.htmlFor = ob.id;
-      }
-      select_el = createElementWithId("select", ob.id);
-      select_el.name = ob.id;
-      select_el.id = ob.id;
-    } else {
-      select_el = document.createElement("select");
-    }
-    if (ob.class) { addClassname(select_el, ob.class); }
-    parent_el.appendChild(select_el);
-
-    select_el.setAttribute("size", "1"); // HACK maybe to allow styling of individual options
-
-    if (ob.contentType) { // clients / jobs options get treated differently to normal options
-      if (ob.contentType === CONTENTTYPE_CLIENTS) {
-        ob.options = dataRetrieveObject(CLIENT_STR);
-      } else if (ob.contentType === CONTENTTYPE_JOBS) {
-        ob.options = dataRetrieveObject(JOB_STR);
-      }
-      for (prop in ob.options) {
-        clientOrJob_ob = ob.options[prop];
-        option_el = select_el.options[select_el.options.length] = new Option(clientOrJob_ob.name, clientOrJob_ob.class);
-        addClassname(option_el, clientOrJob_ob.class);
-        addCSSRule("." + clientOrJob_ob.class, "background-color", clientOrJob_ob.bgcolor);
-        addCSSRule("." + clientOrJob_ob.class, "color", clientOrJob_ob.color);
-      }
-    } else { // normal options
-      for (prop in ob.options) {
-        select_el.options[select_el.options.length] = new Option(ob.options[prop], prop);
-      }
-    }
-
-    select_el.ob = ob;
-    // select_el.ob.methodName = "updateSelected";
-    if (ob.methodName) {
-      registerEventHandler(select_el, "change", callMethodFromObOnElement);
-    }
-  };
-
-
-  createRadioFromOb = function(ob) {
-    var
-    prop, radio_el, label_el,
-    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
-
-    for (prop in ob.options) {
-      label_el = document.createElement("label");
-      label_el.innerHTML = ob.options[prop];
-      parent_el.appendChild(label_el);
-
-      radio_el = document.createElement("input");
-      if (ob.class) { addClassname(radio_el, ob.class); }
-      parent_el.appendChild(radio_el);
-
-      radio_el.setAttribute("type", "radio");
-      radio_el.id = ob.id;
-      radio_el.name = ob.id;
-      radio_el.value = prop;
-      if (prop === dataRetrieveObject("prefs").timespan) { radio_el.checked = true; }
-      label_el.htmlFor = ob.id;
-    }
-  };
-
-
-  addLIsFromOb = function(ob) {
-    var
-    i, li_el,
-    UL_el = createElementWithId("ul", EL_ID_COLHEADING),
-    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
-
-    addClassname(UL_el, CLASS_ROW);
-
-    for (i = 0; i < ob.ar.length; i++) {
-      li_el = document.createElement("li");
-      li_el.innerHTML = ob.ar[i];
-      UL_el.appendChild(li_el);
-      if (ob.class) { addClassname(li_el, ob.class); }
-    }
-
-    parent_el.appendChild(UL_el);
-  };
-
-
-  createBasicElementFromOb = function(ob) {
-    var
-    el, elType,
-    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
-
-    switch (ob.type) {
-      case GUITYPE_COL:
-      case GUITYPE_ROW:
-        elType = "span";
-        break;
-      case GUITYPE_SECTION:
-        elType = "section";
-        break;
-      default:
-        elType = "div";
-        break;
-    }
-
-    if (ob.id) {
-      el = createElementWithId(elType, ob.id);
-    } else {
-      el = document.createElement(elType);
-    }
-    parent_el.appendChild(el);
-    if (ob.class) { addClassname(el, ob.class); }
-  };
-
-
-  createColorPickerFromOb = function(ob) {
-    var
-    el,
-    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
-    if (ob.id) {
-      el = createElementWithId("span", ob.id);
-    } else {
-      el = document.createElement("span");
-    }
-    parent_el.appendChild(el);
-    if (ob.class) { addClassname(el, ob.class); }
-  };
 
 
 
@@ -497,14 +356,22 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   callMethodFromObOnElement = function(e) {
     logMsg("callMethodFromObOnElement()");
-    logMsg("\tcallMethodFromObOnElement: " + JSON.stringify(e.target.ob));
+    logMsg("\te.target.ob: " + JSON.stringify(e.target.ob));
+    logMsg("\tthis: " + this);
     callMethodFromOb(e.target.ob);
   };
 
 
   callMethodFromOb = function(ob) {
-    logMsg("\tcallMethodFromOb: " + JSON.stringify(ob));
-    var scope = (ob.scopeID !== undefined) ? document.getElementById(ob.scopeID) : undefined;
+    logMsg("callMethodFromOb(): " + ob.methodName);
+    logMsg("\tob: " + JSON.stringify(ob));
+    var scope;
+    if (ob.scopeID !== undefined) {
+      scope = document.getElementById(ob.scopeID);
+    } else {
+      scope = undefined;
+    }
+    logMsg("\tscope: " + scope);
 
     /*
     eval usage has been carefully considered and is the best solution
@@ -517,9 +384,9 @@ uk.co.firmgently.DontDillyDally = (function() {
     ! HAS BEEN COMPROMISED. IF THAT HAPPENS WE'RE BUGGERED ANYWAY !!
     */
 
-    /* jshint ignore:start */
+    /*ignore jslint start*/
     eval(ob.methodName).apply(scope, ob.args);
-    /* jshint ignore:end */
+    /*ignore jslint end*/
   };
 
 
@@ -529,7 +396,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   onJobTyped = function() {
-      jobSaveBtn_el.disabled = jobNameInput_el.value.isEmpty();
+    jobSaveBtn_el.disabled = jobNameInput_el.value.isEmpty();
   };
 
 
@@ -548,6 +415,8 @@ uk.co.firmgently.DontDillyDally = (function() {
     ob_temp, dayWorkItems,
     weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
     parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
+    // TODO timesheet should be <ul>
+    workingFragment = document.createDocumentFragment(),
     allWorkItems = dataRetrieveObject("day"),
     dayCur = new Date();
 
@@ -582,108 +451,141 @@ uk.co.firmgently.DontDillyDally = (function() {
       if (dayCur.getDay() === weekStartDay) { rowClassname += "week-start "; }
       if (dayCur.getDate() === 1) { rowClassname += "month-start "; }
       day_el = createElementWithId("div", "day" + dayOfYear);
-      parent_el.appendChild(day_el);
       addClassname(day_el, rowClassname);
+      // create days in documentFragment to avoid unneccessary reflows
+      workingFragment.appendChild(day_el);
 
       // date
       date_el = document.createElement("span");
       addClassname(date_el, "date");
       addClassname(date_el, "col");
-      day_el.appendChild(date_el);
-      date_el.innerHTML = getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
+      date_el.innerHTML = dayCur.getWeekDay(1) + "&nbsp;|&nbsp;" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
       dayCur.setDate(dayCur.getDate() + 1);
       day_el.dayNum = dayOfYear;
+      day_el.appendChild(date_el);
 
       workItemCol_el = document.createElement("span");
-      day_el.appendChild(workItemCol_el);
       addClassname(workItemCol_el, "day-data");
       addClassname(workItemCol_el, "col");
+      day_el.appendChild(workItemCol_el);
 
       dayWorkItems = allWorkItems[dayOfYear];
-      logMsg("allWorkItems: " + allWorkItems);
-      logMsg("dayWorkItems: " + dayWorkItems);
+      // logMsg("allWorkItems: " + allWorkItems);
+      // logMsg("dayWorkItems: " + dayWorkItems);
       if (dayWorkItems === undefined) {
-        addWorkItem(workItemCol_el, "" + dayOfYear + "_0");
+        addWorkItem(workItemCol_el, dayOfYear, 0);
       } else {
         for (j = 0; j < dayWorkItems.length; j++) {
-          addWorkItem(workItemCol_el, "" + dayOfYear + "_" + j);
+          addWorkItem(workItemCol_el, dayOfYear, j);
         }
       }
 
-
     }
+    parent_el.appendChild(workingFragment);
   };
 
 
   addWorkItem = function(parent_el, dayOfYear, itemNum) {
     var
-    hrs_el, money_el, ob_temp,
+    hrs_el, money_el, ob_temp, el_temp,
     itemID = "item" + dayOfYear + "_" + itemNum,
-    // workItem_el = document.createElement("span");
     workItem_el = createElementWithId("span", itemID);
 
     workItem_el.setAttribute("dayOfYear", dayOfYear);
     workItem_el.setAttribute("itemNum", itemNum);
 
-
     parent_el.appendChild(workItem_el);
 
     // hours
-    createInputFromOb({
+    el_temp = createInputFromOb({
       class: "hrs",
       parent: workItem_el,
       attributes: {
         "type": "number",
         "min":  "0", "max":  "59",
         "step": "15", "size": "5"
-      }
+      },
+      methodName: "updateInput",
+      scopeID: workItem_el.id
     });
+    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+
     // client select/dropdown
-    createSelectFromOb({
+    el_temp = createSelectFromOb({
       contentType: CONTENTTYPE_CLIENTS,
+      options: dataRetrieveObject(CLIENT_STR),
       parent: workItem_el,
       methodName: "updateSelected",
       args: [],
-      scopeID: parent_el.id
+      scopeID: workItem_el.id
     });
+    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+
     // job select/dropdown
-    createSelectFromOb({
+    el_temp = createSelectFromOb({
       contentType: CONTENTTYPE_JOBS,
+      options: dataRetrieveObject(JOB_STR),
       parent: workItem_el,
       methodName: "updateSelected",
-      scopeID: parent_el.id
+      scopeID: workItem_el.id
     });
+    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+
     // job  notes
-    createInputFromOb({
+    el_temp = createInputFromOb({
       class: "jobNotes",
       parent: workItem_el,
-      attributes: { "type": "text" }
+      attributes: { "type": "text" },
+      methodName: "updateInput",
+      scopeID: workItem_el.id
     });
+    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+
     // money
-    createInputFromOb({
+    el_temp = createInputFromOb({
       class: "money",
       parent: workItem_el,
       attributes: {
         "type": "number",
         "min":  "0", "max":  "59",
         "step": "15", "size": "5"
-      }
+      },
+      methodName: "updateInput",
+      scopeID: workItem_el.id
     });
+    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+
     // money notes
-    createInputFromOb({
+    el_temp = createInputFromOb({
       class: "moneyNotes",
       parent: workItem_el,
-      attributes: { "type": "text" }
+      attributes: { "type": "text" },
+      methodName: "updateInput",
+      scopeID: workItem_el.id
     });
+    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+
     // 'add task' button
-    createButtonFromOb({
-      id: "addTaskBtn",
+    el_temp = createButtonFromOb({
+      class: "addTaskBtn",
       label: "+",
+      parent: workItem_el,
       methodName: "addTask",
-      parent: workItem_el
+      scopeID: workItem_el.id
     });
-
-
+    registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
 
   };
 
@@ -713,29 +615,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 		FORMS
 	--------------------------------------------------------------------------- */
 
-  createFormFromOb = function(ob) {
-    var
-    i, form_el,
-    parent_el = document.getElementById(ob.parent);
 
-    if (ob.id) {
-      form_el = createElementWithId("form", ob.id);
-    } else {
-      form_el = document.createElement("form");
-    }
-    parent_el.appendChild(form_el);
-
-    if (ob.class) { addClassname(form_el, ob.class); }
-    if (ob.title) { form_el.innerHTML = "<h2>" + ob.title + "</h2>"; }
-
-    if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
-
-    if (ob.hidden) { form_el.style.display = "none"; }
-
-    form_el.ob = ob;
-    registerEventHandler(form_el, "submit", onFormSubmit);
-    registerEventHandler(form_el, "click", onFormClick);
-  };
 
 
   onFormClick = function(e) {
@@ -836,21 +716,27 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   updateSelected = function(e) {
     logMsg("updateSelected()");
-    logMsg("\te: " + e);
-    logMsg("\tthis: " + this);
+    // logMsg("\te: " + e);
+    // logMsg("\tthis: " + this);
+    // logMsg("\tthis.id: " + this.id);
     var
     day_ar, workItem_ar, day_ob,
-    select_selector = "#" + e.target.id,
-    option_selector = e.target.value,
+    select_selector = "#" + this.id,
+    // select_selector = "#" + e.target.id,
+    option_selector = this.value,
+    // option_selector = e.target.value,
     pageType = dataRetrieveObject("prefs").pagetype,
-    workItem_el = document.getElementById(e.target.id).parentNode,
-    day_el = document.getElementById(e.target.id).parentNode.parentNode,
+    workItem_el = this.parentNode,
+    // workItem_el = document.getElementById(e.target.id).parentNode,
+    day_el = this.parentNode.parentNode,
+    // day_el = document.getElementById(e.target.id).parentNode.parentNode,
     dayNum = day_el.dayNum;
 
     switch (pageType) {
       case PAGETYPE_TIMESHEETS:
       case PAGETYPE_JOBSANDCLIENTS:
-        if (e.target.id.toUpperCase().indexOf(CLIENT_STR.toUpperCase()) !=-1) {
+        if (this.id.toUpperCase().indexOf(CLIENT_STR.toUpperCase()) !=-1) {
+        // if (e.target.id.toUpperCase().indexOf(CLIENT_STR.toUpperCase()) !=-1) {
           addCSSRule(select_selector, "color", dataRetrieveObject(CLIENT_STR)[option_selector].color);
           addCSSRule(select_selector, "background-color", dataRetrieveObject(CLIENT_STR)[option_selector].bgcolor);
         } else {
@@ -870,6 +756,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         day_ob = { work: [] };
       }
       workItem_ar = day_ob.work;
+      // TODO this test data should be shown on the page
       workItem_ar.push({
         time: "02:30",
         client: "test client",
@@ -898,7 +785,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   doSetup();
 
-	return;
+  return;
 
 
 // 'this' would be undefined because of "use strict",

@@ -27,7 +27,7 @@ uk.co.firmgently.DDDConsts = (function() {
   APP_ID = "FGDDD",
 
   PAGETYPE_TIMESHEETS = " > timesheets",
-  PAGETYPE_CONFIG = " > settings",
+  PAGETYPE_CONFIG = " > preferences",
   PAGETYPE_JOBSANDCLIENTS = " > jobsAndClients",
   PAGETYPE_DEFAULT = PAGETYPE_TIMESHEETS,
   BODYID_TIMESHEETS = "timesheets",
@@ -74,6 +74,7 @@ uk.co.firmgently.DDDConsts = (function() {
   CONTENTTYPE_JOBS = "contentTypeJobs",
 
   TIMESHEETCONTAINER_ID = "timesheetContainer",
+  LOADINGINDICATOR_ID = "loading-indicator",
 
   GUIDATA_NAVMAIN = [
     {
@@ -98,7 +99,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: GUITYPE_BTN,
       class: CLASS_BTNNAV,
       id: BODYID_CONFIG,
-      label: "Settings",
+      label: "Preferences",
       methodName: "navClick",
       args: [PAGETYPE_CONFIG],
       scopeID: "main",
@@ -263,7 +264,7 @@ uk.co.firmgently.DDDConsts = (function() {
 
   PAGEDATA_TIMESHEETS = {
     pageTitle: "Timesheets",
-    intro: "This is where you keep track of actual work."
+    intro: "Keep track of where you spend your time. Also record payments in and expenses paid out."
   },
   GUIDATA_TIMESHEETS = [
     {
@@ -278,7 +279,7 @@ uk.co.firmgently.DDDConsts = (function() {
   ],
 
   PAGEDATA_CONFIG = {
-    pageTitle: "Settings",
+    pageTitle: "Preferences",
     intro: "Show and hide things and customise settings."
   },
   GUIDATA_CONFIG = [
@@ -408,6 +409,7 @@ uk.co.firmgently.DDDConsts = (function() {
     GUITYPE_COLORPICKER: GUITYPE_COLORPICKER,
     GUITYPE_UL: GUITYPE_UL,
     TIMESHEETCONTAINER_ID: TIMESHEETCONTAINER_ID,
+    LOADINGINDICATOR_ID: LOADINGINDICATOR_ID,
     PAGEDATA_JOBSANDCLIENTS: PAGEDATA_JOBSANDCLIENTS,
     GUIDATA_JOBSANDCLIENTS: GUIDATA_JOBSANDCLIENTS,
     PAGEDATA_TIMESHEETS: PAGEDATA_TIMESHEETS,

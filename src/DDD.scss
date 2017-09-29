@@ -1,4 +1,5 @@
-// out: ../css/DDD.css, sourcemap: true, compress: true
+// compileOnSave: true
+//   @include topCurve// out: ../css/DDD.css, sourcemap: true, compress: true
 @charset "UTF-8";
 
 /* ===============================================
@@ -69,89 +70,91 @@ table {	border-collapse: collapse; border-spacing: 0; }
 	Don't Dilly Dally
 ================================================== */
 
-@bold-font-family: "FG_Bold", Tahoma, Arial, Helvetica;
-@normal-font-family: "FG_Medium", Tahoma, Arial, Helvetica;
+$bold-font-family: "FG_Bold", Tahoma, Arial, Helvetica;
+$normal-font-family: "FG_Medium", Tahoma, Arial, Helvetica;
 
-@red: #f00;
-@blue: #00f;
-@white: #fff;
-@black: #000;
-@panelBgColour: #008800;
-@panelBgColour1: mix(@panelBgColour, @white, 25%);
-@panelBgColour2: mix(@panelBgColour, @white, 15%);
-@panelBgColour3: mix(@panelBgColour, @white, 10%);
-@panelBgColourImportant: mix(@panelBgColour2, @red, 80%);
-@panelBgColourAltered: mix(@panelBgColour1, @red, 95%);
-@panelBgColourTrans: fade(@panelBgColour1, 80%);
+$red: #f00;
+$blue: #00f;
+$white: #fff;
+$black: #000;
+$panelBgColour: #008800;
+$panelBgColour1: mix($panelBgColour, $white, 25%);
+$panelBgColour2: mix($panelBgColour, $white, 15%);
+$panelBgColour3: mix($panelBgColour, $white, 10%);
+$panelBgColourImportant: mix($panelBgColour2, $red, 80%);
+$panelBgColourAltered: mix($panelBgColour1, $red, 95%);
+$panelBgColourTrans: fade($panelBgColour1, 80%);
 
-@buttonBgColourOut: #000258;
-@buttonBgColourOver: darken(@buttonBgColourOut, 25%);
-@buttonColourOut: #bbb;
-@buttonColourOver: #ddd;
+$buttonBgColourOut: #000258;
+$buttonBgColourOver: darken($buttonBgColourOut, 25%);
+$buttonColourOut: #bbb;
+$buttonColourOver: #ddd;
 
-@darkHeadingBgColour: #555555;
-@darkerHeadingBgColour: mix(@darkHeadingBgColour, @black, 70%);
-@darkHeadingColour: #fff;
-@midHeadingBgColour: mix(@darkHeadingBgColour, @white, 70%);
+$darkHeadingBgColour: #555555;
+$darkerHeadingBgColour: mix($darkHeadingBgColour, $black, 70%);
+$darkHeadingColour: #fff;
+$midHeadingBgColour: mix($darkHeadingBgColour, $white, 70%);
 
-@tinyPadding: 2px;
-@smallPadding: 4px;
-@mediumPadding: 6px;
-@largePadding: 12px;
-@bottomPadding: 15px;
-@topPadding: 65px;
+$tinyPadding: 2px;
+$smallPadding: 4px;
+$mediumPadding: 6px;
+$largePadding: 12px;
+$bottomPadding: 15px;
+$topPadding: 65px;
 
-@fontSizeNormal: 1em;
-@fontSizeSmall: 0.9em;
+$fontSizeNormal: 1em;
+$fontSizeSmall: 0.9em;
 
-@baseZ: 99999990;
-@aboveBaseZ: 99999991;
-@aboveAboveBaseZ: 99999992;
+$baseZ: 99999990;
+$aboveBaseZ: 99999991;
+$aboveAboveBaseZ: 99999992;
 
-@date-width: 8em;
-@header-height: 8em;
+$date-width: 10em;
+$header-height: 8em;
 
-@tab-fontsize-unselected: 1.15em;
-@tab-fontsize-selected:   1.5em;
-@tab-padding: @tinyPadding;
-@tab-margin: @mediumPadding;
+$tab-fontsize-unselected: 1.15em;
+$tab-fontsize-selected:   1.5em;
+$tab-padding: $tinyPadding;
+$tab-margin: $mediumPadding;
 
 
-.topCurve(@args) {
-  -webkit-border-radius: @args @args 0 0;
-  -moz-border-radius: @args @args 0 0;
-  border-radius: @args @args 0 0;
+@mixin topCurve($args) {
+  -webkit-border-radius: $args $args 0 0;
+  -moz-border-radius: $args $args 0 0;
+  border-radius: $args $args 0 0;
   behavior: url(/css/pie.htc);
 }
 
 
 body {
-	font-family: @normal-font-family;
+	font-family: $normal-font-family;
 }
 
 header {
 	position: fixed; display: inline-block; z-index: 1;
-	width: 100%; height: @header-height;
-	color: white; background-color: @panelBgColour;
+	width: 100%; height: $header-height;
+	color: white; background-color: $panelBgColour;
 	nav {
     position: relative; background-color: gray;
     button.btnNav {
-      padding: @tab-padding; margin: @tab-margin @tab-margin 0 0;
-      font-size: @tab-fontsize-unselected; vertical-align: bottom;
-      width: 18%; overflow: hidden; .topCurve(@smallPadding);
-      color: white; background-color: @panelBgColour;
+      padding: $tab-padding; margin: $tab-margin $tab-margin 0 0;
+      font-size: $tab-fontsize-unselected; vertical-align: bottom;
+      width: 18%; overflow: hidden; @include topCurve($smallPadding);
+      color: white; background-color: $panelBgColour;
       border-bottom: none;
     }
   }
 }
-body#jobsClients header nav button#jobsClients.btnNav { font-size: @tab-fontsize-selected; .topCurve(@mediumPadding); }
-body#timesheets header nav button#timesheets.btnNav { font-size: @tab-fontsize-selected; .topCurve(@mediumPadding); }
-body#config header nav button#config.btnNav { font-size: @tab-fontsize-selected; .topCurve(@mediumPadding); }
+body#jobsClients header nav button#jobsClients.btnNav { font-size: $tab-fontsize-selected; @include topCurve($mediumPadding); }
+body#timesheets header nav button#timesheets.btnNav { font-size: $tab-fontsize-selected; @include topCurve($mediumPadding); }
+body#config header nav button#config.btnNav { font-size: $tab-fontsize-selected; @include topCurve($mediumPadding); }
+
+.hidden { visibility: hidden; }
 
 
 #column-headings {
   position: absolute; bottom: 0;
-  li { display: inline; text-align: center; background-color: orange; margin: @smallPadding; }
+  li { display: inline; text-align: center; background-color: orange; margin: $smallPadding; }
   li:nth-child(1) { width: 8em; }
   li:nth-child(2) { width: 2em; }
   li:nth-child(3) { width: 6em; }
@@ -165,52 +168,70 @@ body#jobsClients, body#config {
   #column-headings { display: none; }
 }
 
-#main { position: absolute; width: 100%; top: @header-height; }
+#main { position: absolute; width: 100%; top: $header-height; }
 
 
-#editClientCol, #editJobCol { width: 50%; display: inline-block; padding: @largePadding}
+#editClientCol, #editJobCol { width: 50%; display: inline-block; padding: $largePadding}
 
 #createNewClientBtn, #createNewJobBtn,
 #saveNewClientBtn, #saveNewJobBtn,
 #clientNameIn, #jobNameIn {
-   font-family: @bold-font-family;
+   font-family: $bold-font-family;
 }
+
+
+.header-info { position: relative; margin: $mediumPadding 0 0 $mediumPadding; }
+#loading-indicator {
+  position: absolute; z-index: 2; top: 0; left: 0; bottom: 0; right: 0;
+  background-color: green;
+}
+
 // Timesheets
 
 #timesheetContainer {
 	display: block;
 	div {
     // input[type=number] { max-width: 5em; display: inline-block; position: relative; }
-		span.date.col { width: @date-width; margin-right: -8em; }
+		span.date.col {
+      font-family: 'Lucida Console', 'Monaco', 'monospace', 'Courier';
+      width: $date-width; margin-right: -$date-width;
+    }
 		span.day-data.col {
-      padding-left: @date-width;
+      padding-left: $date-width;
       display: inline-block; float: right; z-index: 1;
+      span {
+        display: block;
+        // .addTaskBtn:not(:last-child) { display: none; }
+      }
     }
 		&.day {
 			cursor: pointer;
 			display: block;
-			padding: @tinyPadding;
-			color: @panelBgColour; background-color: @panelBgColour3;
-			border-style: dotted; border-width: @smallPadding; border-color: @panelBgColour3;
-			&:hover { color: mix(@panelBgColour, @black, 25%); }
+			padding: $tinyPadding;
+			color: $panelBgColour; background-color: $panelBgColour3;
+			border-style: dotted; border-width: $smallPadding; border-color: $panelBgColour3;
+			&:hover { color: mix($panelBgColour, $black, 25%); }
 		}
-		&.odd { background-color: @panelBgColour2; border-color: @panelBgColour2; }
-		&.today { font-family: @bold-font-family; background-color: @panelBgColour1; border-color: @panelBgColour1; }
-		&.week-start { margin-top: @smallPadding; }
-		&.month-start { border-top-color: @panelBgColour; }
+		&.odd { background-color: $panelBgColour2; border-color: $panelBgColour2; }
+		&.today { font-family: $bold-font-family; background-color: $panelBgColour1; border-color: $panelBgColour1; }
+		&.week-start { margin-top: $smallPadding; }
+		&.month-start { border-top-color: $panelBgColour; }
 	}
 }
 
 
 
 /* FORMS */
-select { font-family: @bold-font-family; appearance: none; -webkit-appearance: none; -moz-appearance: none; }
+select { font-family: $bold-font-family; appearance: none; -webkit-appearance: none; -moz-appearance: none; }
 #configForm {
 	input[type=radio] {
     display: block;
   }
 }
-
+input.hrs { background-color: red; }
+input.jobNotes { background-color: lightgrey; }
+input.money { background-color: darkblue; }
+input.moneyNotes { background-color: lightblue; }
 
 
 

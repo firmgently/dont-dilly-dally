@@ -73,6 +73,16 @@ uk.co.firmgently.FGUtils = (function() {
 	    return dayOfYear;
 	};
 
+	Date.prototype.getWeekDay = function(length) {
+	    var ret,
+					weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+			ret = weekday[this.getDay()];
+			if (length > 0) { ret = ret.substring(0, length);	}
+
+	    return ret;
+	};
+
 
 	/* -------------------------------------------------------------------------------
 		general helpers
@@ -178,7 +188,7 @@ uk.co.firmgently.FGUtils = (function() {
 
 	getFormattedDate = function(date, format) {
 		var dateString;
-		format = format.replace("yy", date.getUTCFullYear());
+		format = format.replace("yy", date.getUTCFullYear().toString().substr(-2));
 		format = format.replace("dd", ("0" + (date.getUTCDate())).slice(-2));
 		format = format.replace("mm", ("0" + (date.getUTCMonth()+1)).slice(-2));
 		return format;
