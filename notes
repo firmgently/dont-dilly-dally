@@ -1,6 +1,11 @@
 TODO
 ---------------------------------------
 
+add/remove task buttons
+  need to update data object
+  remove needs to be implemented completely
+
+
 make all 'hidden = true' / 'disabled = true' options work or remove them
 
 i

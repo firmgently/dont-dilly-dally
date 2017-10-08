@@ -28,32 +28,33 @@ uk.co.firmgently.DontDillyDally = (function() {
   createFormFromOb, addTask,
   callMethodFromObOnElement, callMethodFromOb, onFormClick,
   drawTimesheets, getNextName, newClientCreate, newJobCreate,
-  navClick, onClientTyped, onJobTyped, onFormSubmit,
+  navClick, onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
   dataStoragePossible, initDataObject, dataStoreObject, dataRetrieveObject,
   dataUpdateObject, clientAndJobStyleSheet, createClientOrJobFromOb,
   newClientFormSave, newJobFormSave, clientInputWasLastEmpty,
   updateRefsToElements, updateSelected, addWorkItem, updateSavedWorkItem
 	;
 
+
   /* ---------------------------------------------------------------------------
-    create local references to public vars (unenforced constants) from DDDConsts
+    create local references to public members from external sources
 	--------------------------------------------------------------------------- */
+
+  // constants
   for (prop in uk.co.firmgently.DDDConsts) {
     this[prop] = uk.co.firmgently.DDDConsts[prop];
   }
 
-  /* ---------------------------------------------------------------------------
-    create local references to public methods from FGUtils
-    (saves typing/less verbosity)
-	--------------------------------------------------------------------------- */
-
+  // general utility methods
 	for (prop in uk.co.firmgently.FGUtils) {
 		this[prop] = uk.co.firmgently.FGUtils[prop];
 	}
 
+  // HTML/DOM creation methods
 	for (prop in uk.co.firmgently.FGHTMLBuild) {
 		this[prop] = uk.co.firmgently.FGHTMLBuild[prop];
 	}
+
 
 
   /* -----------------------------------------------------------------------------
@@ -121,7 +122,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   /* -----------------------------------------------------------------------------
-    set up methods
+    setup methods
   ----------------------------------------------------------------------------- */
 
   doSetup = function() {
@@ -195,7 +196,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       switch (ob.type) {
         case GUITYPE_BTN:
           el_temp = createButtonFromOb(ob);
-          if (ob.methodName) {
+          if (ob.methodPathStr) {
             registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
           }
           break;
@@ -204,7 +205,7 @@ uk.co.firmgently.DontDillyDally = (function() {
           break;
         case GUITYPE_TEXTINPUT:
           el_temp = createInputFromOb(ob);
-          if (ob.methodName) {
+          if (ob.methodPathStr) {
             registerEventHandler(el_temp, "change", callMethodFromObOnElement);
             registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
             registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
@@ -213,7 +214,7 @@ uk.co.firmgently.DontDillyDally = (function() {
           break;
         case GUITYPE_SELECT:
           el_temp = createSelectFromOb(ob);
-          if (ob.methodName) {
+          if (ob.methodPathStr) {
             registerEventHandler(el_temp, "change", callMethodFromObOnElement);
           }
           break;
@@ -223,7 +224,7 @@ uk.co.firmgently.DontDillyDally = (function() {
           // be included in main data higher up
           ob.checkIfMatched = dataRetrieveObject("prefs").timespan;
           el_temp = createRadioFromOb(ob);
-          if (ob.methodName) {
+          if (ob.methodPathStr) {
             registerEventHandler(el_temp, "change", callMethodFromObOnElement);
           }
           break;
@@ -276,14 +277,9 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  // addTask is called from the scope of the 'add task' button
   addTask = function() {
-    // alert("this: " + this);
-    // alert("this.id: " + this.id);
-    // alert("this.ob.scopeID: " + this.ob.scopeID);
-    // addWorkItem();
-
-    // called from the scope of the 'add task' button
-    addWorkItem(this.parentNode, dayOfYear, 0);
+    addWorkItem(this.parentNode);
   };
 
 
@@ -301,19 +297,12 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 
-
-
-
-
-
-
-
-
   /* ---------------------------------------------------------------------------
 
 	--------------------------------------------------------------------------- */
 
   createClientOrJobFromOb = function(ob, dataType) {
+    logMsg("createClientOrJobFromOb()");
     // create unique number to be used in object name/key
     var
     id, ar, n, prefix, newItemCSS_selector, //pluralName,
@@ -354,39 +343,47 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  callMethodFromObOnElement = function(e) {
-    logMsg("callMethodFromObOnElement()");
-    logMsg("\te.target.ob: " + JSON.stringify(e.target.ob));
-    logMsg("\tthis: " + this);
-    callMethodFromOb(e.target.ob);
+  callMethodFromObOnElement = function(event) {
+    // logMsg("callMethodFromObOnElement()");
+    // logMsg("\te.target.ob: " + JSON.stringify(e.target.ob));
+    // logMsg("\tthis: " + this);
+    // event.target.ob.event = new event.constructor(event.type, event);
+    // logMsg(event);
+    callMethodFromOb(event.target.ob, event);
   };
 
 
-  callMethodFromOb = function(ob) {
-    logMsg("callMethodFromOb(): " + ob.methodName);
-    logMsg("\tob: " + JSON.stringify(ob));
+  callMethodFromOb = function(ob, event) {
+    logMsg("callMethodFromOb()");
+    // logMsg("\tob: " + JSON.stringify(ob));
     var scope;
-    if (ob.scopeID !== undefined) {
+/*    if (ob.scopeID !== undefined) {
+      scope = document.getElementById(ob.scopeID);
+    } else {
+      scope = undefined;
+    }*/
+
+    if (ob.scope) {
+      scope = ob.scope;
+    } else if (ob.scopeID) {
       scope = document.getElementById(ob.scopeID);
     } else {
       scope = undefined;
     }
+
+    logMsg("\tob.methodPathStr: " + ob.methodPathStr);
     logMsg("\tscope: " + scope);
 
-    /*
-    eval usage has been carefully considered and is the best solution
-    for calling one of many methods whose names (strings) have been stored in
-    the constants file
+    if (event) {
+      // logMsg(ob.args = event);
+      if (ob.args) {
+        ob.args.push(event);
+      } else {
+        ob.args = [event];
+      }
+    }
 
-    ob.methodName contains a hard-coded string from DDDConsts.js
-
-    ! NO USER INPUT CAN MAKE IT INTO THIS LOCATION UNLESS THE SOURCE CODE
-    ! HAS BEEN COMPROMISED. IF THAT HAPPENS WE'RE BUGGERED ANYWAY !!
-    */
-
-    /*ignore jslint start*/
-    eval(ob.methodName).apply(scope, ob.args);
-    /*ignore jslint end*/
+    getFunctionFromString(ob.methodPathStr).apply(scope, ob.args);
   };
 
 
@@ -403,6 +400,14 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 
+
+
+
+
+
+
+
+
   /* ---------------------------------------------------------------------------
 		page drawing methods
 	--------------------------------------------------------------------------- */
@@ -411,7 +416,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     var
     i, j, daysToDraw, isOddDay, weekdayCur,
     isToday, rowClassname,
-    day_el, date_el, workItem_el, workItemCol_el, hrs_el, client_el, job_el, jobnotes_el,
+    day_el, date_el, workItem_el, dayDataContainer_el, hrs_el, client_el, job_el, jobnotes_el,
     ob_temp, dayWorkItems,
     weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
     parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
@@ -440,6 +445,8 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
     }
 
+    logMsg("daysToDraw: " + daysToDraw);
+
     isOddDay = false;
     for (i = 0; i < daysToDraw; i++) {
       dayOfYear = dayCur.getDOY();
@@ -450,64 +457,61 @@ uk.co.firmgently.DontDillyDally = (function() {
       isOddDay = !isOddDay; // flip state
       if (dayCur.getDay() === weekStartDay) { rowClassname += "week-start "; }
       if (dayCur.getDate() === 1) { rowClassname += "month-start "; }
-      day_el = createElementWithId("div", "day" + dayOfYear);
+      day_el = createElementWithId("li", "day" + dayOfYear);
       addClassname(day_el, rowClassname);
+      day_el.setAttribute("dayOfYear", dayOfYear);
       // create days in documentFragment to avoid unneccessary reflows
       workingFragment.appendChild(day_el);
 
       // date
-      date_el = document.createElement("span");
-      addClassname(date_el, "date");
-      addClassname(date_el, "col");
+      date_el = document.createElement("p");
+      addClassname(date_el, "date col");
       date_el.innerHTML = dayCur.getWeekDay(1) + "&nbsp;|&nbsp;" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
       dayCur.setDate(dayCur.getDate() + 1);
-      day_el.dayNum = dayOfYear;
       day_el.appendChild(date_el);
 
-      workItemCol_el = document.createElement("span");
-      addClassname(workItemCol_el, "day-data");
-      addClassname(workItemCol_el, "col");
-      day_el.appendChild(workItemCol_el);
+      dayDataContainer_el = document.createElement("ul");
+      addClassname(dayDataContainer_el, "day-data col");
+      day_el.appendChild(dayDataContainer_el);
 
       dayWorkItems = allWorkItems[dayOfYear];
-      // logMsg("allWorkItems: " + allWorkItems);
-      // logMsg("dayWorkItems: " + dayWorkItems);
       if (dayWorkItems === undefined) {
-        addWorkItem(workItemCol_el, dayOfYear, 0);
+        addWorkItem(dayDataContainer_el);
       } else {
         for (j = 0; j < dayWorkItems.length; j++) {
-          addWorkItem(workItemCol_el, dayOfYear, j);
+          addWorkItem(dayDataContainer_el);
         }
       }
-
     }
+
     parent_el.appendChild(workingFragment);
   };
 
 
-  addWorkItem = function(parent_el, dayOfYear, itemNum) {
+  addWorkItem = function(dayDataContainer_el) {
     var
     hrs_el, money_el, ob_temp, el_temp,
-    itemID = "item" + dayOfYear + "_" + itemNum,
-    workItem_el = createElementWithId("span", itemID);
+    itemID, workItem_el, dayOfYear, itemNum,
+    day_el = dayDataContainer_el.parentNode;
 
-    workItem_el.setAttribute("dayOfYear", dayOfYear);
-    workItem_el.setAttribute("itemNum", itemNum);
+    dayOfYear = day_el.getAttribute("dayOfYear");
+    itemNum = dayDataContainer_el.children.length;
+    itemID = "item" + dayOfYear + "_" + itemNum;
 
-    parent_el.appendChild(workItem_el);
+    workItem_el = createElementWithId("li", itemID);
+    dayDataContainer_el.appendChild(workItem_el);
 
-    // hours
+    // hours/money
     el_temp = createInputFromOb({
-      class: "hrs",
+      class: "count hrs",
       parent: workItem_el,
       attributes: {
-        "type": "number",
-        "min":  "0", "max":  "59",
-        "step": "15", "size": "5"
+        "type": "number", "value": "00"
       },
-      methodName: "updateInput",
-      scopeID: workItem_el.id
+      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput"
     });
+    el_temp.ob.scope = el_temp;
+    //el_temp.id = itemID + "_" + "Spinner";
     registerEventHandler(el_temp, "change", callMethodFromObOnElement);
     registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
     registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
@@ -516,49 +520,53 @@ uk.co.firmgently.DontDillyDally = (function() {
     // client select/dropdown
     el_temp = createSelectFromOb({
       contentType: CONTENTTYPE_CLIENTS,
+      placeholderText: CLIENT_SELECT_PLACEHOLDER,
       options: dataRetrieveObject(CLIENT_STR),
       parent: workItem_el,
-      methodName: "updateSelected",
-      args: [],
-      scopeID: workItem_el.id
+      methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected",
     });
+    el_temp.ob.scope = el_temp;
+    //el_temp.id = itemID + "_" + CLIENT_STR + "Select";
     registerEventHandler(el_temp, "change", callMethodFromObOnElement);
 
     // job select/dropdown
     el_temp = createSelectFromOb({
       contentType: CONTENTTYPE_JOBS,
+      placeholderText: JOB_SELECT_PLACEHOLDER,
       options: dataRetrieveObject(JOB_STR),
       parent: workItem_el,
-      methodName: "updateSelected",
-      scopeID: workItem_el.id
+      methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected"
     });
+    el_temp.ob.scope = el_temp;
+    //el_temp.id = itemID + "_" + JOB_STR + "Select";
     registerEventHandler(el_temp, "change", callMethodFromObOnElement);
 
-    // job  notes
+    // job/money notes
     el_temp = createInputFromOb({
-      class: "jobNotes",
+      class: "notes job",
       parent: workItem_el,
-      attributes: { "type": "text" },
-      methodName: "updateInput",
-      scopeID: workItem_el.id
+      attributes: { "type": "text", "placeholder": JOBNOTES_PLACEHOLDER },
+      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+      scopeID: itemID
     });
     registerEventHandler(el_temp, "change", callMethodFromObOnElement);
     registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
     registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
 
-    // money
+  /*  // money
     el_temp = createInputFromOb({
       class: "money",
       parent: workItem_el,
       attributes: {
-        "type": "number",
+        "type": "number", "value": "00.00",
         "min":  "0", "max":  "59",
         "step": "15", "size": "5"
       },
-      methodName: "updateInput",
-      scopeID: workItem_el.id
+      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput"
     });
+    el_temp.ob.scope = el_temp;
+    el_temp.id = itemID + "_" + "Spinner";
     registerEventHandler(el_temp, "change", callMethodFromObOnElement);
     registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
     registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
@@ -568,24 +576,46 @@ uk.co.firmgently.DontDillyDally = (function() {
     el_temp = createInputFromOb({
       class: "moneyNotes",
       parent: workItem_el,
-      attributes: { "type": "text" },
-      methodName: "updateInput",
-      scopeID: workItem_el.id
+      attributes: { "type": "text", "placeholder": MONEYNOTES_PLACEHOLDER },
+      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+      scopeID: itemID
     });
     registerEventHandler(el_temp, "change", callMethodFromObOnElement);
     registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
     registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "input", callMethodFromObOnElement);*/
+
+    // 'remove task' button
+    el_temp = createButtonFromOb({
+      class: "removeTaskBtn",
+      label: "-",
+      parent: workItem_el,
+      methodPathStr: "uk.co.firmgently.DontDillyDally.removeTask",
+      scopeID: itemID
+    });
+    registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
 
     // 'add task' button
     el_temp = createButtonFromOb({
       class: "addTaskBtn",
       label: "+",
       parent: workItem_el,
-      methodName: "addTask",
-      scopeID: workItem_el.id
+      methodPathStr: "uk.co.firmgently.DontDillyDally.addTask",
+      scopeID: itemID
     });
     registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
+
+    // 'money/task' checkbox
+    el_temp = createCheckboxFromOb({
+      class: "isMoneyTaskChk",
+      label: "money",
+      parent: workItem_el,
+      checked: false,
+      //id: itemID + "_" + "MoneyChk",
+      methodPathStr: "uk.co.firmgently.DontDillyDally.onIsMoneyTaskChkChange",
+      scopeID: itemID
+    });
+    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
 
   };
 
@@ -641,11 +671,41 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  onUpdateInput = function(event) {
+    logMsg(this);
+    logMsg(event);
+  };
+
+
+  onIsMoneyTaskChkChange = function() {
+    var
+    checkbox = this.getElementsByClassName("isMoneyTaskChk")[0],
+    countInput = this.getElementsByClassName("count")[0],
+    notesInput = this.getElementsByClassName("notes")[0];
+    if (checkbox.checked) {
+      addClassname(countInput, "money");
+      removeClassname(countInput, "hrs");
+      addClassname(notesInput, "money");
+      removeClassname(notesInput, "job");
+      notesInput.placeholder = MONEYNOTES_PLACEHOLDER;
+    } else {
+      addClassname(countInput, "hrs");
+      removeClassname(countInput, "money");
+      addClassname(notesInput, "job");
+      removeClassname(notesInput, "money");
+      notesInput.placeholder = JOBNOTES_PLACEHOLDER;
+    }
+    logMsg("\tcheckbox: " + checkbox);
+    logMsg("\tinput: " + notesInput);
+    logMsg("\tinput.id: " + notesInput.id);
+  };
+
+
   newClientCreate = function() {
     var
     fgCol = getRandomHexColor("dark"),
     bgCol = getRandomHexColor("light");
-
+    logMsg("newClientCreate()");
     document.getElementById(EL_ID_CLIENTNAMEIN).value = getNextName(DATATYPE_CLIENT);
     addCSSRule("#" + CLIENT_FG_COLPICK, "background-color", fgCol);
     addCSSRule("#" + CLIENT_BG_COLPICK, "background-color", bgCol);
@@ -661,6 +721,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     var
     fgCol = getRandomHexColor("light"),
     bgCol = getRandomHexColor("dark");
+    logMsg("newJobCreate()");
 
     document.getElementById(EL_ID_JOBNAMEIN).value = getNextName(DATATYPE_JOB);
     addCSSRule("#" + JOB_FG_COLPICK, "background-color", fgCol);
@@ -710,39 +771,34 @@ uk.co.firmgently.DontDillyDally = (function() {
     var
     dayOfYear = workItem_el.getAttribute("dayOfYear"),
     itemNum = workItem_el.getAttribute("itemNum");
-
   };
 
 
-  updateSelected = function(e) {
-    logMsg("updateSelected()");
-    // logMsg("\te: " + e);
-    // logMsg("\tthis: " + this);
-    // logMsg("\tthis.id: " + this.id);
+  updateSelected = function() {
     var
     day_ar, workItem_ar, day_ob,
-    select_selector = "#" + this.id,
-    // select_selector = "#" + e.target.id,
+    //select_selector = "#" + this.id,
     option_selector = this.value,
-    // option_selector = e.target.value,
     pageType = dataRetrieveObject("prefs").pagetype,
     workItem_el = this.parentNode,
-    // workItem_el = document.getElementById(e.target.id).parentNode,
     day_el = this.parentNode.parentNode,
-    // day_el = document.getElementById(e.target.id).parentNode.parentNode,
-    dayNum = day_el.dayNum;
+    dayOfYear = day_el.getAttribute("dayOfYear");
+
+    //logMsg("\tthis: " + this);
 
     switch (pageType) {
-      case PAGETYPE_TIMESHEETS:
+      case PAGETYPE_TIMESHEETS: // run on to next case
       case PAGETYPE_JOBSANDCLIENTS:
-        if (this.id.toUpperCase().indexOf(CLIENT_STR.toUpperCase()) !=-1) {
-        // if (e.target.id.toUpperCase().indexOf(CLIENT_STR.toUpperCase()) !=-1) {
-          addCSSRule(select_selector, "color", dataRetrieveObject(CLIENT_STR)[option_selector].color);
-          addCSSRule(select_selector, "background-color", dataRetrieveObject(CLIENT_STR)[option_selector].bgcolor);
-        } else {
-          addCSSRule(select_selector, "color", dataRetrieveObject(JOB_STR)[option_selector].color);
-          addCSSRule(select_selector, "background-color", dataRetrieveObject(JOB_STR)[option_selector].bgcolor);
-        }
+        this.className = option_selector;
+        //if (this.id.toUpperCase().indexOf(CLIENT_STR.toUpperCase()) !=-1) {
+          //addClassname(this, "client1");
+          //addCSSRule(select_selector, "color", dataRetrieveObject(CLIENT_STR)[option_selector].color);
+          //addCSSRule(select_selector, "background-color", dataRetrieveObject(CLIENT_STR)[option_selector].bgcolor);
+        //} else {
+          //addClassname(this, "job1");
+          //addCSSRule(select_selector, "color", dataRetrieveObject(JOB_STR)[option_selector].color);
+          //addCSSRule(select_selector, "background-color", dataRetrieveObject(JOB_STR)[option_selector].bgcolor);
+        //}
         break;
       case PAGETYPE_CONFIG:
         break;
@@ -751,7 +807,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
     if (pageType === PAGETYPE_TIMESHEETS) {
       day_ar = dataRetrieveObject("day");
-      day_ob = day_ar[dayNum];
+      day_ob = day_ar[dayOfYear];
       if (day_ob === undefined) {
         day_ob = { work: [] };
       }
@@ -765,7 +821,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         money: -50,
         moneyNotes: "bought canvas REceipt no.11234"
       });
-      day_ar[dayNum] = day_ob;
+      day_ar[dayOfYear] = day_ob;
       dataStoreObject("day", day_ar);
     }
 /*    if (e.target.id === EL_ID_SELECTCLIENT) {
@@ -777,15 +833,25 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 
-
-
 	/* ---------------------------------------------------------------------------
 		BEGIN...
 	--------------------------------------------------------------------------- */
 
   doSetup();
 
-  return;
+  return {
+    drawTimesheets: drawTimesheets,
+    addTask: addTask,
+    navClick: navClick,
+    newClientCreate: newClientCreate,
+    newJobCreate: newJobCreate,
+    newClientFormSave: newClientFormSave,
+    newJobFormSave: newJobFormSave,
+    updateSelected: updateSelected,
+    onUpdateInput: onUpdateInput,
+    onIsMoneyTaskChkChange: onIsMoneyTaskChkChange,
+    onClientTyped: onClientTyped
+  };
 
 
 // 'this' would be undefined because of "use strict",

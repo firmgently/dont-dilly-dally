@@ -53,6 +53,10 @@ uk.co.firmgently.DDDConsts = (function() {
 
   CLIENT_STR = "client",
   JOB_STR = "job",
+  CLIENT_SELECT_PLACEHOLDER = "select client",
+  JOB_SELECT_PLACEHOLDER = "select job",
+  JOBNOTES_PLACEHOLDER = "job notes",
+  MONEYNOTES_PLACEHOLDER = "money notes",
 
   EL_ID_COLHEADING = "column-headings",
   EL_ID_JOBNAMEIN = "jobNameIn",
@@ -82,7 +86,7 @@ uk.co.firmgently.DDDConsts = (function() {
       class: CLASS_BTNNAV,
       id: BODYID_TIMESHEETS,
       label: "Timesheets",
-      methodName: "navClick",
+      methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
       args: [PAGETYPE_TIMESHEETS],
       scopeID: "main",
       parent: "nav-main"
@@ -91,7 +95,7 @@ uk.co.firmgently.DDDConsts = (function() {
       class: CLASS_BTNNAV,
       id: BODYID_JOBSANDCLIENTS,
       label: "Jobs & Clients",
-      methodName: "navClick",
+      methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
       args: [PAGETYPE_JOBSANDCLIENTS],
       scopeID: "main",
       parent: "nav-main"
@@ -100,19 +104,19 @@ uk.co.firmgently.DDDConsts = (function() {
       class: CLASS_BTNNAV,
       id: BODYID_CONFIG,
       label: "Preferences",
-      methodName: "navClick",
+      methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
       args: [PAGETYPE_CONFIG],
       scopeID: "main",
       parent: "nav-main"
-    }, {
+    }/*, {
       type: GUITYPE_UL,
       ar: [
         "date", "hrs", "client", "job", "job notes", "£", "£ notes"
       ],
-      ulID: EL_ID_COLHEADING,
+      id: EL_ID_COLHEADING,
       class: CLASS_COL,
       parent: "header-main"
-    }
+    }*/
   ],
 
 
@@ -148,7 +152,7 @@ uk.co.firmgently.DDDConsts = (function() {
           type: GUITYPE_BTN,
           label: "Create new",
           id: "createNewClientBtn",
-          methodName: "newClientCreate",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.newClientCreate",
           args: [],
           scopeID: "createClientForm",
           parent: "clientNewRow"
@@ -157,7 +161,7 @@ uk.co.firmgently.DDDConsts = (function() {
           id: EL_ID_CLIENTNAMEIN,
           label: "Client name",
           parent: "clientNewRow",
-          methodName: "onClientTyped",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.onClientTyped",
           args: [],
           scopeID: "createClientForm",
           attributes: { "type": "text" }
@@ -165,7 +169,7 @@ uk.co.firmgently.DDDConsts = (function() {
           type: GUITYPE_BTN,
           label: "Save",
           id: EL_ID_CLIENTSAVEBTN,
-          methodName: "newClientFormSave",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.newClientFormSave",
           args: [],
           scopeID: "createClientForm",
           parent: "clientNewRow",
@@ -186,7 +190,7 @@ uk.co.firmgently.DDDConsts = (function() {
           args: [],
           scopeID: "createClientForm",
           parent: "clientsExistingRow",
-          methodName: "updateSelected",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected",
           id: EL_ID_SELECTCLIENT,
           contentType: CONTENTTYPE_CLIENTS
         }
@@ -201,7 +205,7 @@ uk.co.firmgently.DDDConsts = (function() {
       id: "createJobForm",
       class: CLASS_FORMMAIN,
       title: "Fill in job details",
-      // methodName: null,
+      // methodPathStr: null,
       parent: "editJobCol",
       hidden: false,
       el_ar: [
@@ -219,7 +223,7 @@ uk.co.firmgently.DDDConsts = (function() {
           type: GUITYPE_BTN,
           label: "Create new",
           id: "createNewJobBtn",
-          methodName: "newJobCreate",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.newJobCreate",
           scopeID: "createJobForm",
           args: [],
           parent: "jobNewRow"
@@ -233,7 +237,7 @@ uk.co.firmgently.DDDConsts = (function() {
           type: GUITYPE_BTN,
           label: "Save",
           id: EL_ID_JOBSAVEBTN,
-          methodName: "newJobFormSave",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.newJobFormSave",
           scopeID: "createJobForm",
           args: [],
           parent: "jobNewRow",
@@ -254,7 +258,7 @@ uk.co.firmgently.DDDConsts = (function() {
           args: [],
           scopeID: "createJobForm",
           parent: "jobsExistingRow",
-          methodName: "updateSelected",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected",
           id: "selectJob",
           contentType: CONTENTTYPE_JOBS
         }
@@ -268,12 +272,12 @@ uk.co.firmgently.DDDConsts = (function() {
   },
   GUIDATA_TIMESHEETS = [
     {
-      type: GUITYPE_SECTION,
+      type: GUITYPE_UL,
       id: TIMESHEETCONTAINER_ID,
       parent: "main"
     }, {
       type: GUITYPE_METHODCALL,
-      methodName: "drawTimesheets",
+      methodPathStr: "uk.co.firmgently.DontDillyDally.drawTimesheets",
       scopeID: "main"
     }
   ],
@@ -361,7 +365,7 @@ uk.co.firmgently.DDDConsts = (function() {
   CLIENT_DEFAULT_2 = {
     name: "Diamond Jules",
     color: "#435",
-    bgcolor: "#821"
+    bgcolor: "#89a"
   },
 
   // these string values have to match those used in the GUIDATA_CONFIG options
@@ -456,6 +460,10 @@ uk.co.firmgently.DDDConsts = (function() {
     SHOWTOTALS_WEEK: SHOWTOTALS_WEEK,
     SHOWTOTALS_MONTH: SHOWTOTALS_MONTH,
     SHOWTOTALS_BOTH: SHOWTOTALS_BOTH,
+    CLIENT_SELECT_PLACEHOLDER: CLIENT_SELECT_PLACEHOLDER,
+    JOB_SELECT_PLACEHOLDER: JOB_SELECT_PLACEHOLDER,
+    JOBNOTES_PLACEHOLDER: JOBNOTES_PLACEHOLDER,
+    MONEYNOTES_PLACEHOLDER: MONEYNOTES_PLACEHOLDER,
     SHOWTOTALS_DEFAULT: SHOWTOTALS_DEFAULT
   };
 

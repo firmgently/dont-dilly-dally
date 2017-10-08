@@ -190,33 +190,32 @@ body#jobsClients, body#config {
 
 #timesheetContainer {
 	display: block;
-	div {
-    // input[type=number] { max-width: 5em; display: inline-block; position: relative; }
-		span.date.col {
-      font-family: 'Lucida Console', 'Monaco', 'monospace', 'Courier';
-      width: $date-width; margin-right: -$date-width;
+  // input[type=number] { max-width: 5em; display: inline-block; position: relative; }
+	.date.col {
+    font-family: 'Lucida Console', 'Monaco', 'monospace', 'Courier';
+    width: $date-width; margin-right: -$date-width;
+  }
+	ul.day-data.col {
+    padding-left: $date-width;
+    display: inline-block; float: right; z-index: 1;
+    li { display: block; }
+    li:only-child .removeTaskBtn { visibility: hidden; }
+    li:not(:last-child) .addTaskBtn { visibility: hidden; }
+  }
+  li {
+    &.day {
+      cursor: pointer;
+      display: block;
+      padding: $tinyPadding;
+      color: $panelBgColour; background-color: $panelBgColour3;
+      border-style: dotted; border-width: $smallPadding; border-color: $panelBgColour3;
+      &:hover { color: mix($panelBgColour, $black, 25%); }
     }
-		span.day-data.col {
-      padding-left: $date-width;
-      display: inline-block; float: right; z-index: 1;
-      span {
-        display: block;
-        // .addTaskBtn:not(:last-child) { display: none; }
-      }
-    }
-		&.day {
-			cursor: pointer;
-			display: block;
-			padding: $tinyPadding;
-			color: $panelBgColour; background-color: $panelBgColour3;
-			border-style: dotted; border-width: $smallPadding; border-color: $panelBgColour3;
-			&:hover { color: mix($panelBgColour, $black, 25%); }
-		}
-		&.odd { background-color: $panelBgColour2; border-color: $panelBgColour2; }
-		&.today { font-family: $bold-font-family; background-color: $panelBgColour1; border-color: $panelBgColour1; }
-		&.week-start { margin-top: $smallPadding; }
-		&.month-start { border-top-color: $panelBgColour; }
-	}
+    &.odd { background-color: $panelBgColour2; border-color: $panelBgColour2; }
+    &.today { font-family: $bold-font-family; background-color: $panelBgColour1; border-color: $panelBgColour1; }
+    &.week-start { margin-top: $smallPadding; }
+    &.month-start { border-top-color: $panelBgColour; }
+  }
 }
 
 
@@ -228,11 +227,16 @@ select { font-family: $bold-font-family; appearance: none; -webkit-appearance: n
     display: block;
   }
 }
-input.hrs { background-color: red; }
-input.jobNotes { background-color: lightgrey; }
-input.money { background-color: darkblue; }
-input.moneyNotes { background-color: lightblue; }
-
+input.count {
+  display: inline-block; width: 3em;
+  font-size: 1.25em; font-weight: bold;
+  &.hrs { background-color: #333; color: red; }
+  &.money { background-color: darkgreen; color: white; }
+}
+input.notes {
+  &.job { background-color: lightgrey; }
+  &.money { background-color: lightblue; }
+}
 
 
 /* COLOR PICKER */

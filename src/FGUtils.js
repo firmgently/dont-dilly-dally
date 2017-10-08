@@ -18,6 +18,7 @@ uk.co.firmgently.FGUtils = (function() {
 	hexOpacityToRGBA, getRandomHexColor, createElementWithId,
 	removeClassname, addClassname, getStyle,
   treatAsUTC, daysBetween, getFormattedDate,
+	getFunctionFromString,
 	logMsg;
 
 
@@ -166,12 +167,14 @@ uk.co.firmgently.FGUtils = (function() {
 
 
 	addCSSRule = function(selector, property, newValue) {
-		// logMsg("selector: " + selector);
-		// logMsg("property: " + property);
-		// logMsg("newValue: " + newValue);
-		var	i, curStyleSheet,
-			totalStyleSheets = document.styleSheets.length,
-			newStyle = property + ": " + newValue;
+		logMsg("selector: " + selector);
+		logMsg("\tproperty: " + property);
+		logMsg("\tnewValue: " + newValue);
+		var
+		i, curStyleSheet,
+		totalStyleSheets = document.styleSheets.length,
+		newStyle = property + ": " + newValue;
+
 		for (i = 0; i < totalStyleSheets; i++) {
 			curStyleSheet = document.styleSheets[i];
 			// logMsg("curStyleSheet: " + curStyleSheet);
@@ -183,6 +186,22 @@ uk.co.firmgently.FGUtils = (function() {
 				} catch(err2) {}
 			}
 		}
+	};
+
+
+	getFunctionFromString = function(str) {
+			var
+			i,
+			scope = window,
+			chain_ar = str.split('.'),
+			chainLength = chain_ar.length - 1;
+
+			for (i = 0; i < chainLength; i++) {
+					scope = scope[chain_ar[i]];
+					if (scope === undefined) { return; }
+			}
+
+			return scope[chain_ar[chainLength]];
 	};
 
 
@@ -286,6 +305,7 @@ uk.co.firmgently.FGUtils = (function() {
 		hexOpacityToRGBA: hexOpacityToRGBA,
 		getRandomHexColor: getRandomHexColor,
 		createElementWithId: createElementWithId,
+		getFunctionFromString: getFunctionFromString,
 		getFormattedDate: getFormattedDate,
 		treatAsUTC: treatAsUTC,
 		daysBetween: daysBetween,

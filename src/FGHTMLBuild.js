@@ -14,14 +14,10 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
 	var
 	fillHTMLFromOb,
-	createButtonFromOb, createRadioFromOb,
+	createButtonFromOb, createRadioFromOb, createCheckboxFromOb,
 	createInputFromOb, createSelectFromOb,
 	createFormFromOb,
 	addLIsFromOb, createBasicElementFromOb, createColorPickerFromOb
-
-	// callMethodFromObOnElement = uk.co.firmgently.DontDillyDally.callMethodFromObOnElement,
-	// callMethodFromOb = uk.co.firmgently.DontDillyDally.callMethodFromOb;
-	// callMethodFromObOnElement;
 	;
 
 
@@ -96,13 +92,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
     input_el.ob = ob;
 
-    // if (ob.methodName !== undefined) {
-    //   registerEventHandler(input_el, "change", uk.co.firmgently.DontDillyDally.callMethodFromObOnElement);
-    //   registerEventHandler(input_el, "keyup", uk.co.firmgently.DontDillyDally.callMethodFromObOnElement);
-    //   registerEventHandler(input_el, "paste", uk.co.firmgently.DontDillyDally.callMethodFromObOnElement);
-    //   registerEventHandler(input_el, "input", uk.co.firmgently.DontDillyDally.callMethodFromObOnElement);
-    // }
-
 		return input_el;
   };
 
@@ -110,7 +99,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   createSelectFromOb = function(ob) {
     var
     i, prop, select_el, label_el, option_el, clientOrJob_ob,
-    dayPrefix,
+    dayPrefix, placeholderOption,
     parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
 
     if (ob.id) {
@@ -131,6 +120,14 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
     select_el.setAttribute("size", "1"); // HACK maybe to allow styling of individual options
 
+		if (ob.placeholderText) {
+			placeholderOption = new Option(ob.placeholderText, "");
+			placeholderOption.disabled = true;
+			placeholderOption.selected = true;
+			placeholderOption.hidden = true;
+			select_el.options[select_el.options.length] = placeholderOption;
+		}
+
     if (ob.contentType) { // clients / jobs options get treated differently to normal options
 /*      if (ob.contentType === CONTENTTYPE_CLIENTS) {
         ob.options = ob.clientOptions;
@@ -143,8 +140,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 				// logMsg(JSON.stringify(clientOrJob_ob));
         option_el = select_el.options[select_el.options.length] = new Option(clientOrJob_ob.name, clientOrJob_ob.class);
         addClassname(option_el, clientOrJob_ob.class);
-        addCSSRule("." + clientOrJob_ob.class, "background-color", clientOrJob_ob.bgcolor);
-        addCSSRule("." + clientOrJob_ob.class, "color", clientOrJob_ob.color);
+        //addCSSRule("." + clientOrJob_ob.class, "background-color", clientOrJob_ob.bgcolor);
+        //addCSSRule("." + clientOrJob_ob.class, "color", clientOrJob_ob.color);
       }
     } else { // normal options
       for (prop in ob.options) {
@@ -153,12 +150,36 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     }
 
     select_el.ob = ob;
-    // select_el.ob.methodName = "updateSelected";
-    // if (ob.methodName) {
-    //   registerEventHandler(select_el, "change", uk.co.firmgently.DontDillyDally.callMethodFromObOnElement);
-    // }
 
 		return select_el;
+  };
+
+
+  createCheckboxFromOb = function(ob) {
+    var
+    prop, checkbox_el, label_el,
+    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
+
+    if (ob.label) {
+      label_el = document.createElement("label");
+      label_el.innerHTML = ob.label;
+      parent_el.appendChild(label_el);
+      label_el.htmlFor = ob.id;
+    }
+
+    checkbox_el = document.createElement("input");
+    if (ob.class) { addClassname(checkbox_el, ob.class); }
+
+    checkbox_el.setAttribute("type", "checkbox");
+    checkbox_el.id = ob.id;
+    checkbox_el.name = ob.id;
+    logMsg("ob.checked: " + ob.checked);
+    checkbox_el.checked = ob.checked;
+    parent_el.appendChild(checkbox_el);
+
+    checkbox_el.ob = ob;
+
+		return checkbox_el;
   };
 
 
@@ -192,18 +213,25 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
   addLIsFromOb = function(ob) {
     var
-    i, li_el,
-    UL_el = createElementWithId("ul", EL_ID_COLHEADING),
+    i, li_el, UL_el,
     parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
+
+		if (ob.id) {
+			UL_el = createElementWithId("ul", ob.id)
+		} else {
+			UL_el = document.createElement("ul");
+		}
 
     addClassname(UL_el, CLASS_ROW);
 
-    for (i = 0; i < ob.ar.length; i++) {
-      li_el = document.createElement("li");
-      li_el.innerHTML = ob.ar[i];
-      UL_el.appendChild(li_el);
-      if (ob.class) { addClassname(li_el, ob.class); }
-    }
+		if (ob.ar) {
+	    for (i = 0; i < ob.ar.length; i++) {
+	      li_el = document.createElement("li");
+	      li_el.innerHTML = ob.ar[i];
+	      UL_el.appendChild(li_el);
+	      if (ob.class) { addClassname(li_el, ob.class); }
+	    }
+		}
 
     parent_el.appendChild(UL_el);
   };
@@ -301,10 +329,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 		createInputFromOb: createInputFromOb,
 		// createTextInputFromOb: createTextInputFromOb,
 		createRadioFromOb: createRadioFromOb,
+		createCheckboxFromOb: createCheckboxFromOb,
 		addLIsFromOb: addLIsFromOb,
 		createBasicElementFromOb: createBasicElementFromOb,
-		// callMethodFromOb: callMethodFromOb,
-		// callMethodFromObOnElement: callMethodFromObOnElement,
 		createColorPickerFromOb: createColorPickerFromOb
 	};
 

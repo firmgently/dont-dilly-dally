@@ -13,7 +13,7 @@ var gulp = require('gulp'),
       'src/DontDillyDally.js'
     ];
 
-gulp.task('js-fef', function(){
+gulp.task('js-concat-uglify', function(){
     return gulp.src(jsFilesIn_ar)
         .pipe(gp_sourcemaps.init())
         .pipe(gp_concat(output_filename + '-concat.js'))
@@ -31,5 +31,5 @@ gulp.task('css', function(){
    .pipe(gulp.dest('css/'));
 });*/
 
-gulp.task('default', ['js-fef'], function(){});
+gulp.task('default', ['js-concat-uglify'], function(){});
 // gulp.task('default', ['js-fef', 'css'], function(){});
