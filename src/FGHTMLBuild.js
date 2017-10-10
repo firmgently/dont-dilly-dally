@@ -157,27 +157,39 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
   createCheckboxFromOb = function(ob) {
     var
-    prop, checkbox_el, label_el,
+    prop, checkbox_el, label_el, div_el,
     parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
 
     if (ob.label) {
       label_el = document.createElement("label");
       label_el.innerHTML = ob.label;
       parent_el.appendChild(label_el);
-      label_el.htmlFor = ob.id;
     }
+
+		if (ob.id) {
+			checkbox_el.id = ob.id;
+			checkbox_el.name = ob.id;
+			if (ob.label) {
+				label_el.htmlFor = ob.id;
+			}
+		}
 
     checkbox_el = document.createElement("input");
     if (ob.class) { addClassname(checkbox_el, ob.class); }
 
     checkbox_el.setAttribute("type", "checkbox");
-    checkbox_el.id = ob.id;
-    checkbox_el.name = ob.id;
+    checkbox_el.ob = ob;
     logMsg("ob.checked: " + ob.checked);
     checkbox_el.checked = ob.checked;
-    parent_el.appendChild(checkbox_el);
-
-    checkbox_el.ob = ob;
+		if (ob.wrapLabel) {
+			label_el.appendChild(checkbox_el);
+			if (ob.addDivToLabel) { // add empty div to facilitate 'toggle switch' CSS
+				div_el = document.createElement("div");
+				label_el.appendChild(div_el);
+			}
+		} else {
+    	parent_el.appendChild(checkbox_el);
+		}
 
 		return checkbox_el;
   };

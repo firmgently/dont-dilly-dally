@@ -25,14 +25,14 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 	// methods
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
-  createFormFromOb, addTask,
+  createFormFromOb, addTask, removeTask,
   callMethodFromObOnElement, callMethodFromOb, onFormClick,
   drawTimesheets, getNextName, newClientCreate, newJobCreate,
   navClick, onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
   dataStoragePossible, initDataObject, dataStoreObject, dataRetrieveObject,
   dataUpdateObject, clientAndJobStyleSheet, createClientOrJobFromOb,
   newClientFormSave, newJobFormSave, clientInputWasLastEmpty,
-  updateRefsToElements, updateSelected, addWorkItem, updateSavedWorkItem
+  updateRefsToElements, updateSelected, addWorkItem, removeWorkItem, updateSavedWorkItem
 	;
 
 
@@ -282,6 +282,9 @@ uk.co.firmgently.DontDillyDally = (function() {
     addWorkItem(this.parentNode);
   };
 
+	removeTask = function() {
+		removeWorkItem(this);
+	};
 
   getNextName = function(type) {
     var prefix, name, n;
@@ -466,7 +469,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       // date
       date_el = document.createElement("p");
       addClassname(date_el, "date col");
-      date_el.innerHTML = dayCur.getWeekDay(1) + "&nbsp;|&nbsp;" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
+      date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
       dayCur.setDate(dayCur.getDate() + 1);
       day_el.appendChild(date_el);
 
@@ -500,6 +503,30 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     workItem_el = createElementWithId("li", itemID);
     dayDataContainer_el.appendChild(workItem_el);
+
+    // 'add task' button
+    el_temp = createButtonFromOb({
+      class: "addTaskBtn",
+      label: "&#xe821;",
+      parent: workItem_el,
+      methodPathStr: "uk.co.firmgently.DontDillyDally.addTask",
+      scopeID: itemID
+    });
+    registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
+
+    // 'money/task' checkbox
+    el_temp = createCheckboxFromOb({
+      class: "ios-switch isMoneyTaskChk",
+      label: " ", // a label is needed for wrapLabel/addDivToLabel to work
+			wrapLabel: true,
+			addDivToLabel: true,
+      parent: workItem_el,
+      checked: false,
+      //id: itemID + "_" + "MoneyChk",
+      methodPathStr: "uk.co.firmgently.DontDillyDally.onIsMoneyTaskChkChange",
+      scopeID: itemID
+    });
+    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
 
     // hours/money
     el_temp = createInputFromOb({
@@ -554,71 +581,21 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
 
-  /*  // money
-    el_temp = createInputFromOb({
-      class: "money",
-      parent: workItem_el,
-      attributes: {
-        "type": "number", "value": "00.00",
-        "min":  "0", "max":  "59",
-        "step": "15", "size": "5"
-      },
-      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput"
-    });
-    el_temp.ob.scope = el_temp;
-    el_temp.id = itemID + "_" + "Spinner";
-    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "input", callMethodFromObOnElement);
-
-    // money notes
-    el_temp = createInputFromOb({
-      class: "moneyNotes",
-      parent: workItem_el,
-      attributes: { "type": "text", "placeholder": MONEYNOTES_PLACEHOLDER },
-      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
-      scopeID: itemID
-    });
-    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "input", callMethodFromObOnElement);*/
-
     // 'remove task' button
     el_temp = createButtonFromOb({
       class: "removeTaskBtn",
-      label: "-",
+      label: "&#xe83d;",
       parent: workItem_el,
       methodPathStr: "uk.co.firmgently.DontDillyDally.removeTask",
       scopeID: itemID
     });
     registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
 
-    // 'add task' button
-    el_temp = createButtonFromOb({
-      class: "addTaskBtn",
-      label: "+",
-      parent: workItem_el,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.addTask",
-      scopeID: itemID
-    });
-    registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
-
-    // 'money/task' checkbox
-    el_temp = createCheckboxFromOb({
-      class: "isMoneyTaskChk",
-      label: "money",
-      parent: workItem_el,
-      checked: false,
-      //id: itemID + "_" + "MoneyChk",
-      methodPathStr: "uk.co.firmgently.DontDillyDally.onIsMoneyTaskChkChange",
-      scopeID: itemID
-    });
-    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
-
   };
 
+	removeWorkItem = function(item_el) {
+		item_el.parentNode.removeChild(item_el);
+	};
 
 /*  updateColoursFromPickers = function(type, fgCol, bgCol) {
 
@@ -842,6 +819,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   return {
     drawTimesheets: drawTimesheets,
     addTask: addTask,
+    removeTask: removeTask,
     navClick: navClick,
     newClientCreate: newClientCreate,
     newJobCreate: newJobCreate,

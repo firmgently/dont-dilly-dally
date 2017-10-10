@@ -91,15 +91,15 @@ header {
     position: relative;
     background-color: gray; }
     header nav button.btnNav {
-      padding: 2px;
-      margin: 6px 6px 0 0;
+      padding: 0.1em;
+      margin: 0.3em 0.3em 0 0;
       font-size: 1.15em;
       vertical-align: bottom;
       width: 18%;
       overflow: hidden;
-      -webkit-border-radius: 4px 4px 0 0;
-      -moz-border-radius: 4px 4px 0 0;
-      border-radius: 4px 4px 0 0;
+      -webkit-border-radius: 0.2em 0.2em 0 0;
+      -moz-border-radius: 0.2em 0.2em 0 0;
+      border-radius: 0.2em 0.2em 0 0;
       behavior: url(/css/pie.htc);
       color: white;
       background-color: #008800;
@@ -107,23 +107,23 @@ header {
 
 body#jobsClients header nav button#jobsClients.btnNav {
   font-size: 1.5em;
-  -webkit-border-radius: 6px 6px 0 0;
-  -moz-border-radius: 6px 6px 0 0;
-  border-radius: 6px 6px 0 0;
+  -webkit-border-radius: 0.3em 0.3em 0 0;
+  -moz-border-radius: 0.3em 0.3em 0 0;
+  border-radius: 0.3em 0.3em 0 0;
   behavior: url(/css/pie.htc); }
 
 body#timesheets header nav button#timesheets.btnNav {
   font-size: 1.5em;
-  -webkit-border-radius: 6px 6px 0 0;
-  -moz-border-radius: 6px 6px 0 0;
-  border-radius: 6px 6px 0 0;
+  -webkit-border-radius: 0.3em 0.3em 0 0;
+  -moz-border-radius: 0.3em 0.3em 0 0;
+  border-radius: 0.3em 0.3em 0 0;
   behavior: url(/css/pie.htc); }
 
 body#config header nav button#config.btnNav {
   font-size: 1.5em;
-  -webkit-border-radius: 6px 6px 0 0;
-  -moz-border-radius: 6px 6px 0 0;
-  border-radius: 6px 6px 0 0;
+  -webkit-border-radius: 0.3em 0.3em 0 0;
+  -moz-border-radius: 0.3em 0.3em 0 0;
+  border-radius: 0.3em 0.3em 0 0;
   behavior: url(/css/pie.htc); }
 
 .hidden {
@@ -136,7 +136,7 @@ body#config header nav button#config.btnNav {
     display: inline;
     text-align: center;
     background-color: orange;
-    margin: 4px; }
+    margin: 0.2em; }
   #column-headings li:nth-child(1) {
     width: 8em; }
   #column-headings li:nth-child(2) {
@@ -163,7 +163,7 @@ body#jobsClients #column-headings, body#config #column-headings {
 #editClientCol, #editJobCol {
   width: 50%;
   display: inline-block;
-  padding: 12px; }
+  padding: 0.6em; }
 
 #createNewClientBtn, #createNewJobBtn,
 #saveNewClientBtn, #saveNewJobBtn,
@@ -172,7 +172,7 @@ body#jobsClients #column-headings, body#config #column-headings {
 
 .header-info {
   position: relative;
-  margin: 6px 0 0 6px; }
+  margin: 0.3em 0 0 0.3em; }
 
 #loading-indicator {
   position: absolute;
@@ -187,27 +187,48 @@ body#jobsClients #column-headings, body#config #column-headings {
   display: block; }
   #timesheetContainer .date.col {
     font-family: 'Lucida Console', 'Monaco', 'monospace', 'Courier';
-    width: 10em;
-    margin-right: -10em; }
+    width: 8em;
+    margin-right: -8.3em;
+    margin-top: 0.3em;
+    margin-left: 0.3em;
+    padding-top: 0.3em; }
+    #timesheetContainer .date.col em {
+      background-color: #008800;
+      color: white;
+      padding: 0.3em;
+      top: -0.1em;
+      margin-right: 0.3em;
+      position: relative;
+      display: inline-block; }
   #timesheetContainer ul.day-data.col {
-    padding-left: 10em;
+    padding-left: 8em;
     display: inline-block;
     float: right;
     z-index: 1; }
     #timesheetContainer ul.day-data.col li {
       display: block; }
+    #timesheetContainer ul.day-data.col li .removeTaskBtn, #timesheetContainer ul.day-data.col li .addTaskBtn {
+      font-family: "ddd-icons";
+      -webkit-border-radius: 1em 1em 1em 1em;
+      -moz-border-radius: 1em 1em 1em 1em;
+      border-radius: 1em 1em 1em 1em;
+      behavior: url(/css/pie.htc);
+      border: none;
+      height: 2rem;
+      width: 2rem;
+      margin-left: 0.6em;
+      cursor: pointer; }
     #timesheetContainer ul.day-data.col li:only-child .removeTaskBtn {
       visibility: hidden; }
     #timesheetContainer ul.day-data.col li:not(:last-child) .addTaskBtn {
       visibility: hidden; }
   #timesheetContainer li.day {
-    cursor: pointer;
     display: block;
-    padding: 2px;
+    padding: 0.1em;
     color: #008800;
     background-color: #e6f3e6;
     border-style: dotted;
-    border-width: 4px;
+    border-width: 0.2em;
     border-color: #e6f3e6; }
     #timesheetContainer li.day:hover {
       color: #002200; }
@@ -219,7 +240,7 @@ body#jobsClients #column-headings, body#config #column-headings {
     background-color: #bfe1bf;
     border-color: #bfe1bf; }
   #timesheetContainer li.week-start {
-    margin-top: 4px; }
+    margin-top: 0.2em; }
   #timesheetContainer li.month-start {
     border-top-color: #008800; }
 
@@ -233,22 +254,90 @@ select {
 #configForm input[type=radio] {
   display: block; }
 
+:root input[type="checkbox"] {
+  /* :root here acting as a filter for older browsers */
+  position: absolute;
+  opacity: 0; }
+
+:root input[type="checkbox"].ios-switch + div {
+  display: inline-block;
+  vertical-align: middle;
+  width: 3em;
+  height: 1.2em;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 999px;
+  margin: 0 .5em;
+  background: black;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.1), transparent), linear-gradient(90deg, #3d99f5 50%, transparent 50%);
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  background-origin: border-box;
+  background-clip: border-box;
+  overflow: hidden;
+  transition-duration: .2s;
+  transition-property: padding, width, background-position, text-indent;
+  box-shadow: 0 0.1em 0.1em rgba(0, 0, 0, 0.2) inset, 0 0.45em 0 0.1em rgba(0, 0, 0, 0.05) inset;
+  font-size: 140%;
+  /* change this and see how they adjust! */
+  font-family: "ddd-icons";
+  cursor: pointer; }
+
+:root input[type="checkbox"].ios-switch:checked + div {
+  padding-left: 2em;
+  width: 1em;
+  background-position: 0 0; }
+
+:root input[type="checkbox"].ios-switch + div:before {
+  content: '\e801';
+  float: left;
+  width: 0.825em;
+  height: 0.825em;
+  margin: -.05em;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: inherit;
+  background: white;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), transparent);
+  box-shadow: 0 0.1em 0.1em 0.1em rgba(255, 255, 255, 0.8) inset, 0 0 0.5em rgba(0, 0, 0, 0.3);
+  color: white;
+  text-indent: -1.35em; }
+
+:root input[type="checkbox"].ios-switch:active + div:before {
+  background-color: #eee; }
+
+:root input[type="checkbox"].ios-switch:focus + div {
+  box-shadow: 0 0.1em 0.1em rgba(0, 0, 0, 0.2) inset, 0 0.45em 0 0.1em rgba(0, 0, 0, 0.05) inset, 0 0 0.4em 1px rgba(255, 255, 255, 0.5); }
+
+:root input[type="checkbox"].ios-switch + div:before,
+:root input[type="checkbox"].ios-switch + div:after {
+  font-size: 120%; }
+
+:root input[type="checkbox"].ios-switch + div:after {
+  content: '\e800';
+  float: left;
+  text-indent: .5em;
+  color: red; }
+
 input.count {
   display: inline-block;
   width: 3em;
   font-size: 1.25em;
-  font-weight: bold; }
-  input.count.hrs {
-    background-color: #333;
-    color: red; }
+  font-weight: bold;
+  margin-right: 0.6em; }
   input.count.money {
     background-color: darkgreen;
     color: white; }
+  input.count.hrs {
+    background-color: black;
+    color: red; }
 
-input.notes.job {
-  background-color: lightgrey; }
-input.notes.money {
-  background-color: lightblue; }
+input.notes {
+  margin-left: 0.6em; }
+  input.notes.money {
+    color: darkgreen;
+    background-color: white; }
+  input.notes.job {
+    color: black;
+    background-color: red; }
 
 /* COLOR PICKER */
 .color-picker {
@@ -258,6 +347,12 @@ input.notes.money {
   background-color: #efefef; }
 
 /* TEXT */
+@font-face {
+  font-family: 'ddd-icons';
+  src: url("/fonts/ddd-icons.eot?48170321");
+  src: url("/fonts/ddd-icons.eot?48170321#iefix") format("embedded-opentype"), url("/fonts/ddd-icons.woff2?48170321") format("woff2"), url("/fonts/ddd-icons.woff?48170321") format("woff"), url("/fonts/ddd-icons.ttf?48170321") format("truetype"), url("/fonts/ddd-icons.svg?48170321#ddd-icons") format("svg");
+  font-weight: normal;
+  font-style: normal; }
 @font-face {
   font-family: 'FG_Bold';
   src: url("/fonts/NotoSans-Bold-webfont.eot?") format("eot"), url("/fonts/NotoSans-Bold-webfont.woff2") format("woff2"), url("/fonts/NotoSans-Bold-webfont.woff") format("woff"), url("/fonts/NotoSans-Bold-webfont.ttf") format("truetype"); }
