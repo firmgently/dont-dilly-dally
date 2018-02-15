@@ -95,36 +95,30 @@ header {
       margin: 0.3em 0.3em 0 0;
       font-size: 1.15em;
       vertical-align: bottom;
-      width: 18%;
+      width: 30vw;
       overflow: hidden;
       -webkit-border-radius: 0.2em 0.2em 0 0;
       -moz-border-radius: 0.2em 0.2em 0 0;
       border-radius: 0.2em 0.2em 0 0;
-      behavior: url(/css/pie.htc);
-      color: white;
-      background-color: #000066;
-      border-bottom: none; }
+      color: #a0a0a0;
+      background-color: #60607a;
+      border-color: #40408c;
+      border-bottom: none;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
+      header nav button.btnNav:hover, header nav button.btnNav:focus {
+        color: #fff;
+        outline: 0; }
 
-body#jobsClients header nav button#jobsClients.btnNav {
-  font-size: 1.5em;
-  -webkit-border-radius: 0.3em 0.3em 0 0;
-  -moz-border-radius: 0.3em 0.3em 0 0;
-  border-radius: 0.3em 0.3em 0 0;
-  behavior: url(/css/pie.htc); }
-
-body#timesheets header nav button#timesheets.btnNav {
-  font-size: 1.5em;
-  -webkit-border-radius: 0.3em 0.3em 0 0;
-  -moz-border-radius: 0.3em 0.3em 0 0;
-  border-radius: 0.3em 0.3em 0 0;
-  behavior: url(/css/pie.htc); }
-
+body#jobsClients header nav button#jobsClients.btnNav,
+body#timesheets header nav button#timesheets.btnNav,
 body#config header nav button#config.btnNav {
   font-size: 1.5em;
   -webkit-border-radius: 0.3em 0.3em 0 0;
   -moz-border-radius: 0.3em 0.3em 0 0;
   border-radius: 0.3em 0.3em 0 0;
-  behavior: url(/css/pie.htc); }
+  color: #fff;
+  background-color: #000066; }
 
 .hidden {
   visibility: hidden; }
@@ -212,7 +206,6 @@ body#jobsClients #column-headings, body#config #column-headings {
       -webkit-border-radius: 1em 1em 1em 1em;
       -moz-border-radius: 1em 1em 1em 1em;
       border-radius: 1em 1em 1em 1em;
-      behavior: url(/css/pie.htc);
       border: none;
       height: 2rem;
       width: 2rem;

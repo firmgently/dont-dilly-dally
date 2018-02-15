@@ -230,7 +230,7 @@ uk.co.firmgently.FGUtils = (function() {
 
 
   logMsg = function(msg) {
-  //  console.log(msg);
+    console.log(msg);
   };
 
 

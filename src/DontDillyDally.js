@@ -25,7 +25,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 	// methods
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
-  createFormFromOb, addTask, removeTask,
+  createFormFromOb, addTask, removeTask, getDefaultDayOb,
   callMethodFromObOnElement, callMethodFromOb, onFormClick,
   drawTimesheets, getNextName, newClientCreate, newJobCreate,
   navClick, onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
@@ -41,6 +41,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 	--------------------------------------------------------------------------- */
 
   // constants
+  // these aren't real constants, are declared with var
+  // denoted by ALL_CAPS
   for (prop in uk.co.firmgently.DDDConsts) {
     this[prop] = uk.co.firmgently.DDDConsts[prop];
   }
@@ -69,7 +71,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
   };
 
-
   initDataObject = function() {
     // if no preferences are stored create some defaults
     if (!dataRetrieveObject("prefs")) {
@@ -79,18 +80,18 @@ uk.co.firmgently.DontDillyDally = (function() {
         dateFormat: DATETYPE_DEFAULT,
         totalsToShow: SHOWTOTALS_DEFAULT
       });
-      dataStoreObject("clientNum", 0);
-      dataStoreObject("jobNum", 0);
+      dataStoreObject(CLIENTS_STR + TOTAL_STR, 0);
+      dataStoreObject(JOBS_STR + TOTAL_STR, 0);
 
-      dataStoreObject(CLIENT_STR, {});
+      dataStoreObject(CLIENTS_STR, {});
       createClientOrJobFromOb(CLIENT_DEFAULT_1, DATATYPE_CLIENT);
       createClientOrJobFromOb(CLIENT_DEFAULT_2, DATATYPE_CLIENT);
 
-      dataStoreObject(JOB_STR, {});
+      dataStoreObject(JOBS_STR, {});
       createClientOrJobFromOb(JOB_DEFAULT_1, DATATYPE_JOB);
       createClientOrJobFromOb(JOB_DEFAULT_2, DATATYPE_JOB);
 
-      dataStoreObject("day", {});
+      dataStoreObject(DAYS_STR, {});
     }
   };
 
@@ -151,7 +152,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     dataUpdateObject("prefs", "pagetype", pagetype);
     location.hash = pagetype;
     clearPage();
-    setTimeout(drawPage, 100); // on timer to force reflow after clearPage()
+    setTimeout(drawPage, 1); // on timer to force reflow after clearPage()
   };
 
 
@@ -162,9 +163,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   drawPage = function() {
-    // var colHeading_el;
-    // clear any pre-created html content
-
     switch (dataRetrieveObject("prefs").pagetype) {
       case PAGETYPE_TIMESHEETS:
         document.body.id = BODYID_TIMESHEETS;
@@ -231,9 +229,8 @@ uk.co.firmgently.DontDillyDally = (function() {
         case GUITYPE_UL:
           addLIsFromOb(ob);
           break;
-          // intentional rollthrough as they all do exactly the same thing
-        case GUITYPE_SECTION:
-        case GUITYPE_COL:
+        case GUITYPE_SECTION: // intentional rollthrough
+        case GUITYPE_COL: // intentional rollthrough
         case GUITYPE_ROW:
           createBasicElementFromOb(ob);
           break;
@@ -264,9 +261,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     if (ob.class) { addClassname(form_el, ob.class); }
     if (ob.title) { form_el.innerHTML = "<h2>" + ob.title + "</h2>"; }
-
     if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
-
     if (ob.hidden) { form_el.style.display = "none"; }
 
     form_el.ob = ob;
@@ -289,12 +284,12 @@ uk.co.firmgently.DontDillyDally = (function() {
   getNextName = function(type) {
     var prefix, name, n;
     if (type === DATATYPE_JOB) {
-      prefix = JOB_STR;
+      prefix = JOBS_STR;
     } else if (type === DATATYPE_CLIENT) {
-      prefix = CLIENT_STR;
+      prefix = CLIENTS_STR;
     }
-    n = 0 + (dataRetrieveObject(prefix + "Num")) + 1;
-    dataStoreObject(prefix + "Num", n);
+    n = 0 + (dataRetrieveObject(prefix + TOTAL_STR)) + 1;
+    dataStoreObject(prefix + TOTAL_STR, n);
     return prefix + n;
   };
 
@@ -314,10 +309,10 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     if (dataType === DATATYPE_CLIENT) {
       input_el = document.getElementById(EL_ID_CLIENTNAMEIN);
-      prefix = CLIENT_STR;
+      prefix = CLIENTS_STR;
     } else if (dataType === DATATYPE_JOB) {
       input_el = document.getElementById(EL_ID_JOBNAMEIN);
-      prefix = JOB_STR;
+      prefix = JOBS_STR;
     }
     id = getNextName(dataType);
     ob.id = id;
@@ -347,24 +342,13 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   callMethodFromObOnElement = function(event) {
-    // logMsg("callMethodFromObOnElement()");
-    // logMsg("\te.target.ob: " + JSON.stringify(e.target.ob));
-    // logMsg("\tthis: " + this);
-    // event.target.ob.event = new event.constructor(event.type, event);
-    // logMsg(event);
     callMethodFromOb(event.target.ob, event);
   };
 
 
   callMethodFromOb = function(ob, event) {
     logMsg("callMethodFromOb()");
-    // logMsg("\tob: " + JSON.stringify(ob));
     var scope;
-/*    if (ob.scopeID !== undefined) {
-      scope = document.getElementById(ob.scopeID);
-    } else {
-      scope = undefined;
-    }*/
 
     if (ob.scope) {
       scope = ob.scope;
@@ -378,7 +362,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     logMsg("\tscope: " + scope);
 
     if (event) {
-      // logMsg(ob.args = event);
       if (ob.args) {
         ob.args.push(event);
       } else {
@@ -403,14 +386,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 
-
-
-
-
-
-
-
-
   /* ---------------------------------------------------------------------------
 		page drawing methods
 	--------------------------------------------------------------------------- */
@@ -425,7 +400,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
     // TODO timesheet should be <ul>
     workingFragment = document.createDocumentFragment(),
-    allWorkItems = dataRetrieveObject("day"),
+    allWorkItems = dataRetrieveObject(DAYS_STR),
     dayCur = new Date();
 
     switch(dataRetrieveObject("prefs").timespan) {
@@ -460,7 +435,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       isOddDay = !isOddDay; // flip state
       if (dayCur.getDay() === weekStartDay) { rowClassname += "week-start "; }
       if (dayCur.getDate() === 1) { rowClassname += "month-start "; }
-      day_el = createElementWithId("li", "day" + dayOfYear);
+      day_el = createElementWithId("li", DAYS_STR + dayOfYear);
       addClassname(day_el, rowClassname);
       day_el.setAttribute("dayOfYear", dayOfYear);
       // create days in documentFragment to avoid unneccessary reflows
@@ -522,7 +497,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 			addDivToLabel: true,
       parent: workItem_el,
       checked: false,
-      //id: itemID + "_" + "MoneyChk",
       methodPathStr: "uk.co.firmgently.DontDillyDally.onIsMoneyTaskChkChange",
       scopeID: itemID
     });
@@ -538,7 +512,6 @@ uk.co.firmgently.DontDillyDally = (function() {
       methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput"
     });
     el_temp.ob.scope = el_temp;
-    //el_temp.id = itemID + "_" + "Spinner";
     registerEventHandler(el_temp, "change", callMethodFromObOnElement);
     registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
     registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
@@ -548,24 +521,22 @@ uk.co.firmgently.DontDillyDally = (function() {
     el_temp = createSelectFromOb({
       contentType: CONTENTTYPE_CLIENTS,
       placeholderText: CLIENT_SELECT_PLACEHOLDER,
-      options: dataRetrieveObject(CLIENT_STR),
+      options: dataRetrieveObject(CLIENTS_STR),
       parent: workItem_el,
       methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected",
     });
     el_temp.ob.scope = el_temp;
-    //el_temp.id = itemID + "_" + CLIENT_STR + "Select";
     registerEventHandler(el_temp, "change", callMethodFromObOnElement);
 
     // job select/dropdown
     el_temp = createSelectFromOb({
       contentType: CONTENTTYPE_JOBS,
       placeholderText: JOB_SELECT_PLACEHOLDER,
-      options: dataRetrieveObject(JOB_STR),
+      options: dataRetrieveObject(JOBS_STR),
       parent: workItem_el,
       methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected"
     });
     el_temp.ob.scope = el_temp;
-    //el_temp.id = itemID + "_" + JOB_STR + "Select";
     registerEventHandler(el_temp, "change", callMethodFromObOnElement);
 
     // job/money notes
@@ -621,9 +592,6 @@ uk.co.firmgently.DontDillyDally = (function() {
   /* ---------------------------------------------------------------------------
 		FORMS
 	--------------------------------------------------------------------------- */
-
-
-
 
   onFormClick = function(e) {
     var form = e.target.form;
@@ -751,31 +719,26 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  getDefaultDayOb = function() {
+    return { work: [] };
+  };
+
+
   updateSelected = function() {
     var
     day_ar, workItem_ar, day_ob,
-    //select_selector = "#" + this.id,
     option_selector = this.value,
     pageType = dataRetrieveObject("prefs").pagetype,
     workItem_el = this.parentNode,
-    day_el = this.parentNode.parentNode,
+    day_el = this.parentNode.parentNode.parentNode,
     dayOfYear = day_el.getAttribute("dayOfYear");
-
-    //logMsg("\tthis: " + this);
+    logMsg("day_el.className: " + day_el.className);
+    logMsg("dayOfYear: " + dayOfYear);
 
     switch (pageType) {
       case PAGETYPE_TIMESHEETS: // run on to next case
       case PAGETYPE_JOBSANDCLIENTS:
         this.className = option_selector;
-        //if (this.id.toUpperCase().indexOf(CLIENT_STR.toUpperCase()) !=-1) {
-          //addClassname(this, "client1");
-          //addCSSRule(select_selector, "color", dataRetrieveObject(CLIENT_STR)[option_selector].color);
-          //addCSSRule(select_selector, "background-color", dataRetrieveObject(CLIENT_STR)[option_selector].bgcolor);
-        //} else {
-          //addClassname(this, "job1");
-          //addCSSRule(select_selector, "color", dataRetrieveObject(JOB_STR)[option_selector].color);
-          //addCSSRule(select_selector, "background-color", dataRetrieveObject(JOB_STR)[option_selector].bgcolor);
-        //}
         break;
       case PAGETYPE_CONFIG:
         break;
@@ -783,29 +746,28 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
     }
     if (pageType === PAGETYPE_TIMESHEETS) {
-      day_ar = dataRetrieveObject("day");
+      day_ar = dataRetrieveObject(DAYS_STR);
       day_ob = day_ar[dayOfYear];
       if (day_ob === undefined) {
-        day_ob = { work: [] };
+        day_ob = getDefaultDayOb();
       }
       workItem_ar = day_ob.work;
       // TODO this test data should be shown on the page
       workItem_ar.push({
+        client: "client1",
+        job: "job2",
         time: "02:30",
-        client: "test client",
-        job: "test job",
-        jobNotes: "painting the edges",
+        jobNotes: "painting the edges"
+      });
+      workItem_ar.push({
+        client: "client2",
+        job: "job1",
         money: -50,
-        moneyNotes: "bought canvas REceipt no.11234"
+        moneyNotes: "bought canvas, Receipt no.11234"
       });
       day_ar[dayOfYear] = day_ob;
-      dataStoreObject("day", day_ar);
+      dataStoreObject(DAYS_STR, day_ar);
     }
-/*    if (e.target.id === EL_ID_SELECTCLIENT) {
-
-    } else if (e.target.id === EL_ID_SELECTJOB) {
-
-    }*/
   };
 
 

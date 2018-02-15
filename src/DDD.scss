@@ -77,7 +77,12 @@ $red: #f00;
 $blue: #00f;
 $white: #fff;
 $black: #000;
+$panelFgColour: $white;
 $panelBgColour: #000066;
+$panelFgColourDimmed: mix($panelFgColour, grey, 25%);
+$panelBgColourDimmed: mix($panelBgColour, grey, 25%);
+$panelBgColourTint: mix($panelBgColour, white, 75%);
+$panelBgColourShade: mix($panelBgColour, black, 75%);
 $panelBgColour1: mix($panelBgColour, $white, 25%);
 $panelBgColour2: mix($panelBgColour, $white, 15%);
 $panelBgColour3: mix($panelBgColour, $white, 10%);
@@ -128,14 +133,12 @@ $tab-margin: $mediumPadding;
   -webkit-border-radius: $args $args $args $args;
   -moz-border-radius: $args $args $args $args;
   border-radius: $args $args $args $args;
-  behavior: url(/css/pie.htc);
 }
 
 @mixin topCurve($args) {
   -webkit-border-radius: $args $args 0 0;
   -moz-border-radius: $args $args 0 0;
   border-radius: $args $args 0 0;
-  behavior: url(/css/pie.htc);
 }
 
 
@@ -152,15 +155,20 @@ header {
     button.btnNav {
       padding: $tab-padding; margin: $tab-margin $tab-margin 0 0;
       font-size: $tab-fontsize-unselected; vertical-align: bottom;
-      width: 18%; overflow: hidden; @include topCurve($smallPadding);
-      color: white; background-color: $panelBgColour;
-      border-bottom: none;
+      width: 30vw; overflow: hidden; @include topCurve($smallPadding);
+      color: $panelFgColourDimmed; background-color: $panelBgColourDimmed;
+      border-color: $panelBgColourTint; border-bottom: none;
+      text-overflow: ellipsis; white-space: nowrap;
+      &:hover, &:focus { color: $panelFgColour; outline: 0; }
     }
   }
 }
-body#jobsClients header nav button#jobsClients.btnNav { font-size: $tab-fontsize-selected; @include topCurve($mediumPadding); }
-body#timesheets header nav button#timesheets.btnNav { font-size: $tab-fontsize-selected; @include topCurve($mediumPadding); }
-body#config header nav button#config.btnNav { font-size: $tab-fontsize-selected; @include topCurve($mediumPadding); }
+body#jobsClients header nav button#jobsClients.btnNav,
+body#timesheets header nav button#timesheets.btnNav,
+body#config header nav button#config.btnNav {
+  font-size: $tab-fontsize-selected; @include topCurve($mediumPadding);
+  color: $panelFgColour; background-color: $panelBgColour;
+}
 
 .hidden { visibility: hidden; }
 
