@@ -10,25 +10,25 @@ uk.co = (uk.co !== undefined) ? uk.co : {};
 uk.co.firmgently = (uk.co.firmgently !== undefined) ? uk.co.firmgently : {};
 //
 uk.co.firmgently.FGUtils = (function() {
-	"use strict";
+  "use strict";
 
-	var
-	addCSSRule, getIEVersion, isTouchDevice,
-	registerEventHandler, unregisterEventHandler, stopPropagation,
-	hexOpacityToRGBA, getRandomHexColor, createElementWithId,
-	removeClassname, addClassname, getStyle,
+  var
+  addCSSRule, getIEVersion, isTouchDevice,
+  registerEventHandler, unregisterEventHandler, stopPropagation,
+  hexOpacityToRGBA, getRandomHexColor, createElementWithId,
+  removeClassname, addClassname, getStyle,
   treatAsUTC, daysBetween, getFormattedDate,
-	getFunctionFromString,
-	logMsg;
+  getFunctionFromString,
+  logMsg;
 
 
   /* -------------------------------------------------------------------------------
-  	extend some global objects
+    extend some global objects
   ---------------------------------------------------------------------------------- */
 
-	String.prototype.isEmpty = function() {
-		return (!this || /^\s*$/.test(this));
-	};
+  String.prototype.isEmpty = function() {
+    return (!this || /^\s*$/.test(this));
+  };
 
 
 
@@ -49,72 +49,73 @@ uk.co.firmgently.FGUtils = (function() {
 
 
 
-	// http://stackoverflow.com/questions/1184334/get-number-days-in-a-specified-month-using-javascript
-	Date.prototype.monthDays= function() {
-	    var d = new Date(this.getFullYear(), this.getMonth() + 1, 0);
-	    return d.getDate();
-	};
+  // http://stackoverflow.com/questions/1184334/get-number-days-in-a-specified-month-using-javascript
+  Date.prototype.monthDays= function() {
+      var d = new Date(this.getFullYear(), this.getMonth() + 1, 0);
+      return d.getDate();
+  };
 
 
-	// http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
-	Date.prototype.isLeapYear = function() {
-	    var year = this.getFullYear();
-	    if ((year & 3) !== 0) { return false; }
-	    return ((year % 100) !== 0 || (year % 400) === 0);
-	};
+  // http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
+  Date.prototype.isLeapYear = function() {
+      var year = this.getFullYear();
+      if ((year & 3) !== 0) { return false; }
+      return ((year % 100) !== 0 || (year % 400) === 0);
+  };
 
-	//http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
-	// Get Day of Year
-	Date.prototype.getDOY = function() {
-	    var dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
-	    var mn = this.getMonth();
-	    var dn = this.getDate();
-	    var dayOfYear = dayCount[mn] + dn;
-	    if(mn > 1 && this.isLeapYear()) dayOfYear++;
-	    return dayOfYear;
-	};
+  //http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
+  // Get Day of Year
+  Date.prototype.getDOY = function() {
+      var dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334],
+          mn = this.getMonth(),
+          dn = this.getDate(),
+          dayOfYear = dayCount[mn] + dn;
 
-	Date.prototype.getWeekDay = function(length) {
-	    var ret,
-					weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      if(mn > 1 && this.isLeapYear()) { dayOfYear++ };
+      return dayOfYear;
+  };
 
-			ret = weekday[this.getDay()];
-			if (length > 0) { ret = ret.substring(0, length);	}
+  Date.prototype.getWeekDay = function(length) {
+      var ret,
+          weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-	    return ret;
-	};
+      ret = weekday[this.getDay()];
+      if (length > 0) { ret = ret.substring(0, length); }
+
+      return ret;
+  };
 
 
-	/* -------------------------------------------------------------------------------
-		general helpers
-	---------------------------------------------------------------------------------- */
+  /* -------------------------------------------------------------------------------
+    general helpers
+  ---------------------------------------------------------------------------------- */
 
-	// prevent bubbling/propagation/default events (image drag and drop etc)
-	// also when showing another image on click we don't want the event to bubble
-	// up to its container, as a click on the container closes the overlay
-	stopPropagation = function(e) {
+  // prevent bubbling/propagation/default events (image drag and drop etc)
+  // also when showing another image on click we don't want the event to bubble
+  // up to its container, as a click on the container closes the overlay
+  stopPropagation = function(e) {
     if (e.preventDefault) { e.preventDefault(); }
     if (e.stopPropagation) { e.stopPropagation(); }
     e.cancelBubble = true;
     e.returnValue = false;
     return false;
-	};
+  };
 
 
-	registerEventHandler = function(node, event, handler, useCapture) {
+  registerEventHandler = function(node, event, handler, useCapture) {
     useCapture = (useCapture === undefined) ? false : useCapture;
     if (typeof node.addEventListener === "function") {
       node.addEventListener(event, handler, useCapture);
     } else {
       node.attachEvent("on" + event, handler);
     }
-		// logMsg("node: " + node);
-		// logMsg("event: " + event);
-		// logMsg("handler: " + handler);
+    // logMsg("node: " + node);
+    // logMsg("event: " + event);
+    // logMsg("handler: " + handler);
   };
 
 
-	unregisterEventHandler = function(node, event, handler, useCapture) {
+  unregisterEventHandler = function(node, event, handler, useCapture) {
     useCapture = (useCapture === undefined) ? false : useCapture;
     if (typeof node.removeEventListener === "function") {
       node.removeEventListener(event, handler, useCapture);
@@ -133,23 +134,23 @@ uk.co.firmgently.FGUtils = (function() {
   };
 
 
-	getRandomHexColor = function(tone) {
-		// Based on http://www.paulirish.com/2009/random-hex-color-code-snippets/
-		var full = 16777215, mid = 8388607, third = 5592405, smalln = 1864135, hexString;
-		if (tone === undefined) {
-			hexString = '#' + Math.floor(Math.random()*full).toString(16);
-		} else if (tone.toUpperCase() === "LIGHT") {
-			hexString = '#' + Math.floor(full - Math.random()*third).toString(16);
-		} else if (tone.toUpperCase() === "DARK") {
-			hexString = '#' + Math.floor(Math.random()*smalln).toString(16);
-		}
-		return hexString;
-	};
+  getRandomHexColor = function(tone) {
+    // Based on http://www.paulirish.com/2009/random-hex-color-code-snippets/
+    var full = 16777215, third = 5592405, smalln = 1864135, hexString;
+    if (tone === undefined) {
+      hexString = '#' + Math.floor(Math.random()*full).toString(16);
+    } else if (tone.toUpperCase() === "LIGHT") {
+      hexString = '#' + Math.floor(full - Math.random()*third).toString(16);
+    } else if (tone.toUpperCase() === "DARK") {
+      hexString = '#' + Math.floor(Math.random()*smalln).toString(16);
+    }
+    return hexString;
+  };
 
 
   createElementWithId = function(elType, id) {
     var el = document.createElement(elType);
-		el.id = id;
+    el.id = id;
     return el;
   };
 
@@ -166,75 +167,74 @@ uk.co.firmgently.FGUtils = (function() {
   };
 
 
-	addCSSRule = function(selector, property, newValue) {
-		logMsg("selector: " + selector);
-		logMsg("\tproperty: " + property);
-		logMsg("\tnewValue: " + newValue);
-		var
-		i, curStyleSheet,
-		totalStyleSheets = document.styleSheets.length,
-		newStyle = property + ": " + newValue;
+  addCSSRule = function(selector, property, newValue) {
+    logMsg("selector: " + selector);
+    logMsg("\tproperty: " + property);
+    logMsg("\tnewValue: " + newValue);
+    var
+    i, curStyleSheet,
+    totalStyleSheets = document.styleSheets.length,
+    newStyle = property + ": " + newValue;
 
-		for (i = 0; i < totalStyleSheets; i++) {
-			curStyleSheet = document.styleSheets[i];
-			// logMsg("curStyleSheet: " + curStyleSheet);
-			try {
-				curStyleSheet.insertRule(selector + " {" + newStyle + "}", curStyleSheet.cssRules.length);
-			} catch(err1) {
-				try {
-					curStyleSheet.addRule(selector, newStyle);
-				} catch(err2) {}
-			}
-		}
-	};
-
-
-	getFunctionFromString = function(str) {
-			var
-			i,
-			scope = window,
-			chain_ar = str.split('.'),
-			chainLength = chain_ar.length - 1;
-
-			for (i = 0; i < chainLength; i++) {
-					scope = scope[chain_ar[i]];
-					if (scope === undefined) { return; }
-			}
-
-			return scope[chain_ar[chainLength]];
-	};
+    for (i = 0; i < totalStyleSheets; i++) {
+      curStyleSheet = document.styleSheets[i];
+      // logMsg("curStyleSheet: " + curStyleSheet);
+      try {
+        curStyleSheet.insertRule(selector + " {" + newStyle + "}", curStyleSheet.cssRules.length);
+      } catch(err1) {
+        try {
+          curStyleSheet.addRule(selector, newStyle);
+        } catch(err2) {}
+      }
+    }
+  };
 
 
-	getFormattedDate = function(date, format) {
-		var dateString;
-		format = format.replace("yy", date.getUTCFullYear().toString().substr(-2));
-		format = format.replace("dd", ("0" + (date.getUTCDate())).slice(-2));
-		format = format.replace("mm", ("0" + (date.getUTCMonth()+1)).slice(-2));
-		return format;
-		// =
-		//   date.getUTCFullYear() +"/"+
-		//   ("0" + (date.getUTCMonth()+1)).slice(-2) +"/"+
-		//   ("0" + date.getUTCDate()).slice(-2);
-	};
+  getFunctionFromString = function(str) {
+      var
+      i,
+      scope = window,
+      chain_ar = str.split('.'),
+      chainLength = chain_ar.length - 1;
+
+      for (i = 0; i < chainLength; i++) {
+          scope = scope[chain_ar[i]];
+          if (scope === undefined) { return; }
+      }
+
+      return scope[chain_ar[chainLength]];
+  };
 
 
-	getStyle = function(el, styleProp) {
-		var style;
-		if (el.currentStyle) {
-			style = el.currentStyle[styleProp];
-		} else if (window.getComputedStyle) {
-			style = document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
-		}
-		return style;
-	};
+  getFormattedDate = function(date, format) {
+    format = format.replace("yy", date.getUTCFullYear().toString().substr(-2));
+    format = format.replace("dd", ("0" + (date.getUTCDate())).slice(-2));
+    format = format.replace("mm", ("0" + (date.getUTCMonth()+1)).slice(-2));
+    return format;
+    // =
+    //   date.getUTCFullYear() +"/"+
+    //   ("0" + (date.getUTCMonth()+1)).slice(-2) +"/"+
+    //   ("0" + date.getUTCDate()).slice(-2);
+  };
 
 
-	logMsg = function(msg) {
+  getStyle = function(el, styleProp) {
+    var style;
+    if (el.currentStyle) {
+      style = el.currentStyle[styleProp];
+    } else if (window.getComputedStyle) {
+      style = document.defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
+    }
+    return style;
+  };
+
+
+  logMsg = function(msg) {
   //  console.log(msg);
   };
 
 
-	// ----------------------------------------------------------
+  // ----------------------------------------------------------
   // A short snippet for detecting versions of IE in JavaScript
   // without resorting to user-agent sniffing
   // http://james.padolsey.com/javascript/detect-ie-in-js-using-conditional-comments/
@@ -267,7 +267,7 @@ uk.co.firmgently.FGUtils = (function() {
   };
 
 
-	isTouchDevice = function() {
+  isTouchDevice = function() {
     // window.alert("ontouchstart in window: " + ('ontouchstart' in window) );
     // window.alert("onmsgesturechange in window: " + ('onmsgesturechange' in window) );
     // return 'ontouchstart' in window || 'onmsgesturechange' in window;
@@ -290,29 +290,29 @@ uk.co.firmgently.FGUtils = (function() {
 
 
 
-	return {
-		/*
-		---------------------------------------------------------
-								PUBLIC
-		---------------------------------------------------------
-		*/
-		registerEventHandler: registerEventHandler,
-		unregisterEventHandler: unregisterEventHandler,
-		stopPropagation: stopPropagation,
-		removeClassname: removeClassname,
-		addClassname: addClassname,
-		addCSSRule: addCSSRule,
-		hexOpacityToRGBA: hexOpacityToRGBA,
-		getRandomHexColor: getRandomHexColor,
-		createElementWithId: createElementWithId,
-		getFunctionFromString: getFunctionFromString,
-		getFormattedDate: getFormattedDate,
-		treatAsUTC: treatAsUTC,
-		daysBetween: daysBetween,
-		logMsg: logMsg,
-		getIEVersion: getIEVersion,
-		getStyle: getStyle,
-		isTouchDevice: isTouchDevice
-	};
+  return {
+    /*
+    ---------------------------------------------------------
+                PUBLIC
+    ---------------------------------------------------------
+    */
+    registerEventHandler: registerEventHandler,
+    unregisterEventHandler: unregisterEventHandler,
+    stopPropagation: stopPropagation,
+    removeClassname: removeClassname,
+    addClassname: addClassname,
+    addCSSRule: addCSSRule,
+    hexOpacityToRGBA: hexOpacityToRGBA,
+    getRandomHexColor: getRandomHexColor,
+    createElementWithId: createElementWithId,
+    getFunctionFromString: getFunctionFromString,
+    getFormattedDate: getFormattedDate,
+    treatAsUTC: treatAsUTC,
+    daysBetween: daysBetween,
+    logMsg: logMsg,
+    getIEVersion: getIEVersion,
+    getStyle: getStyle,
+    isTouchDevice: isTouchDevice
+  };
 
 }());

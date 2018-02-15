@@ -86,7 +86,7 @@ header {
   width: 100%;
   height: 8em;
   color: white;
-  background-color: #008800; }
+  background-color: #000066; }
   header nav {
     position: relative;
     background-color: gray; }
@@ -102,7 +102,7 @@ header {
       border-radius: 0.2em 0.2em 0 0;
       behavior: url(/css/pie.htc);
       color: white;
-      background-color: #008800;
+      background-color: #000066;
       border-bottom: none; }
 
 body#jobsClients header nav button#jobsClients.btnNav {
@@ -193,7 +193,7 @@ body#jobsClients #column-headings, body#config #column-headings {
     margin-left: 0.3em;
     padding-top: 0.3em; }
     #timesheetContainer .date.col em {
-      background-color: #008800;
+      background-color: #000066;
       color: white;
       padding: 0.3em;
       top: -0.1em;
@@ -225,24 +225,24 @@ body#jobsClients #column-headings, body#config #column-headings {
   #timesheetContainer li.day {
     display: block;
     padding: 0.1em;
-    color: #008800;
-    background-color: #e6f3e6;
+    color: #000066;
+    background-color: #e6e6f0;
     border-style: dotted;
     border-width: 0.2em;
-    border-color: #e6f3e6; }
+    border-color: #e6e6f0; }
     #timesheetContainer li.day:hover {
-      color: #002200; }
+      color: #00001a; }
   #timesheetContainer li.odd {
-    background-color: #d9edd9;
-    border-color: #d9edd9; }
+    background-color: #d9d9e8;
+    border-color: #d9d9e8; }
   #timesheetContainer li.today {
     font-family: "FG_Bold", Tahoma, Arial, Helvetica;
-    background-color: #bfe1bf;
-    border-color: #bfe1bf; }
+    background-color: #bfbfd9;
+    border-color: #bfbfd9; }
   #timesheetContainer li.week-start {
     margin-top: 0.2em; }
   #timesheetContainer li.month-start {
-    border-top-color: #008800; }
+    border-top-color: #000066; }
 
 /* FORMS */
 select {

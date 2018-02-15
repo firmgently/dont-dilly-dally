@@ -1,0 +1,2 @@
+use following command:
+ls src/* | entr make

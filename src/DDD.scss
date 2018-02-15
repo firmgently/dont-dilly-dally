@@ -77,7 +77,7 @@ $red: #f00;
 $blue: #00f;
 $white: #fff;
 $black: #000;
-$panelBgColour: #008800;
+$panelBgColour: #000066;
 $panelBgColour1: mix($panelBgColour, $white, 25%);
 $panelBgColour2: mix($panelBgColour, $white, 15%);
 $panelBgColour3: mix($panelBgColour, $white, 10%);
@@ -95,7 +95,7 @@ $jobInputBackgroundColour: black;
 $moneyInputColour: white;
 $moneyInputBackgroundColour: darkgreen;
 
-$darkHeadingBgColour: #555555;
+$darkHeadingBgColour: #551155;
 $darkerHeadingBgColour: mix($darkHeadingBgColour, $black, 70%);
 $darkHeadingColour: #fff;
 $midHeadingBgColour: mix($darkHeadingBgColour, $white, 70%);
