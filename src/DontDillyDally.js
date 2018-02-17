@@ -427,7 +427,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     isOddDay = false;
     for (i = 0; i < daysToDraw; i++) {
-      dayOfYear = dayCur.getDOY();
+      dayOfYear = dayCur.getShortISO();
       rowClassname = "day row ";
       isToday = !Math.round(daysBetween(dayCur, dateToday));
       if (isToday) { rowClassname += "today "; }
@@ -435,7 +435,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       isOddDay = !isOddDay; // flip state
       if (dayCur.getDay() === weekStartDay) { rowClassname += "week-start "; }
       if (dayCur.getDate() === 1) { rowClassname += "month-start "; }
-      day_el = createElementWithId("li", DAY_STR + dayOfYear);
+      day_el = createElementWithId("li", dayOfYear);
       addClassname(day_el, rowClassname);
       day_el.setAttribute("dayOfYear", dayOfYear);
       // create days in documentFragment to avoid unneccessary reflows

@@ -75,6 +75,10 @@ uk.co.firmgently.FGUtils = (function() {
       return dayOfYear;
   };
 
+	Date.prototype.getShortISO = function() {
+		return this.toISOString().substring(0, 10)
+	};
+
   Date.prototype.getWeekDay = function(length) {
       var ret,
           weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];

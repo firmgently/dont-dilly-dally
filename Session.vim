@@ -10,15 +10,15 @@ endif
 set shortmess=aoO
 badd +83 src/DDDConsts.js
 badd +85 src/DDD.scss
-badd +21 src/FGUtils.js
+badd +79 src/FGUtils.js
 badd +4 src/FGHTMLBuild.js
-badd +756 src/DontDillyDally.js
+badd +430 src/DontDillyDally.js
 badd +1 src
 badd +7 index.htm
 argglobal
 silent! argdel *
 argadd src
-edit src/FGUtils.js
+edit src/DontDillyDally.js
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
