@@ -18,7 +18,7 @@ uk.co.firmgently.FGUtils = (function() {
   hexOpacityToRGBA, getRandomHexColor, createElementWithId,
   removeClassname, addClassname, getStyle,
   treatAsUTC, daysBetween, getFormattedDate,
-  getFunctionFromString, getGUID,
+  getFunctionFromString, getGUID, changeSelectByOption, fireEvent,
   logMsg;
 
 
@@ -309,6 +309,30 @@ uk.co.firmgently.FGUtils = (function() {
     });
 	};
 
+
+	changeSelectByOption = function(el, option) {
+		var i, options = el.options;
+		for (i = 0; i < options.length; i++) {
+			if (options[i].value === option) {
+				el.selectedIndex = i;
+				break;
+			}
+		}
+	};
+
+
+	fireEvent = function(el, eventName) {
+		var evt;
+		if ("createEvent" in document) {
+			evt = document.createEvent("HTMLEvents");
+			evt.initEvent(eventName, false, true);
+			el.dispatchEvent(evt);
+		} else{
+			el.fireEvent("on" + eventName);
+		}
+	};
+
+
   return {
     /*
     ---------------------------------------------------------
@@ -332,6 +356,8 @@ uk.co.firmgently.FGUtils = (function() {
     getIEVersion: getIEVersion,
     getStyle: getStyle,
     isTouchDevice: isTouchDevice,
+		changeSelectByOption: changeSelectByOption,
+		fireEvent: fireEvent,
 		getGUID: getGUID
   };
 

@@ -517,7 +517,7 @@ uk.co.firmgently.FGUtils = (function() {
   hexOpacityToRGBA, getRandomHexColor, createElementWithId,
   removeClassname, addClassname, getStyle,
   treatAsUTC, daysBetween, getFormattedDate,
-  getFunctionFromString, getGUID,
+  getFunctionFromString, getGUID, changeSelectByOption, fireEvent,
   logMsg;
 
 
@@ -808,6 +808,30 @@ uk.co.firmgently.FGUtils = (function() {
     });
 	};
 
+
+	changeSelectByOption = function(el, option) {
+		var i, options = el.options;
+		for (i = 0; i < options.length; i++) {
+			if (options[i].value === option) {
+				el.selectedIndex = i;
+				break;
+			}
+		}
+	};
+
+
+	fireEvent = function(el, eventName) {
+		var evt;
+		if ("createEvent" in document) {
+			evt = document.createEvent("HTMLEvents");
+			evt.initEvent(eventName, false, true);
+			el.dispatchEvent(evt);
+		} else{
+			el.fireEvent("on" + eventName);
+		}
+	};
+
+
   return {
     /*
     ---------------------------------------------------------
@@ -831,6 +855,8 @@ uk.co.firmgently.FGUtils = (function() {
     getIEVersion: getIEVersion,
     getStyle: getStyle,
     isTouchDevice: isTouchDevice,
+		changeSelectByOption: changeSelectByOption,
+		fireEvent: fireEvent,
 		getGUID: getGUID
   };
 
@@ -1017,7 +1043,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
     checkbox_el.setAttribute("type", "checkbox");
     checkbox_el.ob = ob;
-    logMsg("ob.checked: " + ob.checked);
     checkbox_el.checked = ob.checked;
 		if (ob.wrapLabel) {
 			label_el.appendChild(checkbox_el);
@@ -1269,8 +1294,8 @@ uk.co.firmgently.DontDillyDally = (function() {
         dateFormat: DATETYPE_DEFAULT,
         totalsToShow: SHOWTOTALS_DEFAULT
       });
-      dataStoreObject(CLIENTS_STR + TOTAL_STR, 0);
-      dataStoreObject(JOBS_STR + TOTAL_STR, 0);
+      dataStoreObject(CLIENT_STR + TOTAL_STR, 0);
+      dataStoreObject(JOB_STR + TOTAL_STR, 0);
 
       dataStoreObject(CLIENTS_STR, {});
       createClientOrJobFromOb(CLIENT_DEFAULT_1, DATATYPE_CLIENT);
@@ -1321,7 +1346,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     dateToday = new Date();
 
 
-   localStorage.clear();
+   //localStorage.clear();
 
 
     if(dataStoragePossible()) {
@@ -1584,7 +1609,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     i, j, daysToDraw, isOddDay, weekdayCur,
     isToday, rowClassname,
     day_el, date_el, workItem_el, dayDataContainer_el, hrs_el, client_el, job_el, jobnotes_el,
-    ob_temp, dayWorkItems,
+    ob_temp, dayWorkItems, workItem,
     weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
     parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
     // TODO timesheet should be <ul>
@@ -1626,7 +1651,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       if (dayCur.getDate() === 1) { rowClassname += "month-start "; }
       day_el = createElementWithId("li", dayOfYear);
       addClassname(day_el, rowClassname);
-      day_el.setAttribute("dayOfYear", dayOfYear);
+      //day_el.setAttribute("dayOfYear", dayOfYear);
       // create days in documentFragment to avoid unneccessary reflows
       workingFragment.appendChild(day_el);
 
@@ -1645,8 +1670,9 @@ uk.co.firmgently.DontDillyDally = (function() {
       if (dayWorkItems === undefined) {
         addUIWorkItem(dayDataContainer_el);
       } else {
-        for (j = 0; j < dayWorkItems.length; j++) {
-          addUIWorkItem(dayDataContainer_el);
+				logMsg("items found for " + dayOfYear);
+				for (workItem in dayWorkItems) {
+          addUIWorkItem(dayDataContainer_el, workItem, dayWorkItems[workItem]);
         }
       }
     }
@@ -1655,13 +1681,13 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  addUIWorkItem = function(dayDataContainer_el) {
+  addUIWorkItem = function(dayDataContainer_el, itemID, itemData_ob) {
     var
     hrs_el, money_el, ob_temp, el_temp,
-    itemID, workItem_el,
+    workItem_el,
     day_el = dayDataContainer_el.parentNode;
 
-    itemID = getGUID(); 
+		if (itemID === undefined) { itemID = getGUID(); }
 
     workItem_el = createElementWithId("li", itemID);
     dayDataContainer_el.appendChild(workItem_el);
@@ -1688,6 +1714,10 @@ uk.co.firmgently.DontDillyDally = (function() {
       scopeID: itemID
     });
     registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_MONEY) {
+			el_temp.checked = true;
+			// TODO - fields aren't updating properly
+		}
 
     // hours/money
     el_temp = createInputFromOb({
@@ -1704,6 +1734,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
     registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+		if (itemData_ob) { el_temp.value = itemData_ob[DATAINDICES.numberValue]; }
 
     // client select/dropdown
     el_temp = createSelectFromOb({
@@ -1715,6 +1746,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     });
     el_temp.ob.scope = el_temp;
     registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+		if (itemData_ob) { changeSelectByOption(el_temp, itemData_ob[DATAINDICES.clientID]); }
 
     // job select/dropdown
     el_temp = createSelectFromOb({
@@ -1726,6 +1758,11 @@ uk.co.firmgently.DontDillyDally = (function() {
     });
     el_temp.ob.scope = el_temp;
     registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+		if (itemData_ob && itemData_ob[DATAINDICES.jobID] && itemData_ob[DATAINDICES.jobID].length > 0) {
+//			logMsg("itemData_ob[DATAINDICES.jobID]: " + itemData_ob[DATAINDICES.jobID]);
+			changeSelectByOption(el_temp, itemData_ob[DATAINDICES.jobID]);
+//			fireEvent(el_temp, "change");
+		}
 
     // job/money notes
     el_temp = createInputFromOb({
@@ -1740,6 +1777,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
     registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+		if (itemData_ob) { el_temp.value = itemData_ob[DATAINDICES.notes]; }
 
     // 'remove task' button
     el_temp = createButtonFromOb({
@@ -1754,7 +1792,19 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 	removeWorkItem = function(item_el) {
+		var
+		day_ar = dataRetrieveObject(DAYS_STR),
+		day_el = item_el.parentNode.parentNode,
+		dayOfYear = day_el.id,
+		day_ob = day_ar[dayOfYear];
+		
+		logMsg("day_el: " + day_el);
+		logMsg("dayOfYear: " + dayOfYear);
+		logMsg("day_ob: " + day_ob);
+		delete day_ob[item_el.id];
+		logMsg("item_el.id: " + item_el.id);
 		item_el.parentNode.removeChild(item_el);
+		dataStoreObject(DAYS_STR, day_ar);
 	};
 
 /*  updateColoursFromPickers = function(type, fgCol, bgCol) {
@@ -1934,7 +1984,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 		pageType = dataRetrieveObject("prefs").pagetype,
 		day_el = workItem_el.parentNode.parentNode,
 		
-		dayOfYear = day_el.getAttribute("dayOfYear");
+		dayOfYear = day_el.id;
 		isMoneyTaskChk_el = workItem_el.getElementsByClassName("isMoneyTaskChk")[0];
 		countInput_el = workItem_el.getElementsByClassName("count")[0];
 		clientSelect_el = workItem_el.getElementsByClassName(CLASS_CLIENTSELECT)[0];

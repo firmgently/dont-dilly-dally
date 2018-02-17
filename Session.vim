@@ -10,9 +10,9 @@ endif
 set shortmess=aoO
 badd +65 src/DDDConsts.js
 badd +85 src/DDD.scss
-badd +79 src/FGUtils.js
-badd +133 src/FGHTMLBuild.js
-badd +760 src/DontDillyDally.js
+badd +331 src/FGUtils.js
+badd +185 src/FGHTMLBuild.js
+badd +549 src/DontDillyDally.js
 badd +1 src
 badd +7 index.htm
 argglobal

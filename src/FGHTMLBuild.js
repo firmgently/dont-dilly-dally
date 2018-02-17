@@ -180,7 +180,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
     checkbox_el.setAttribute("type", "checkbox");
     checkbox_el.ob = ob;
-    logMsg("ob.checked: " + ob.checked);
     checkbox_el.checked = ob.checked;
 		if (ob.wrapLabel) {
 			label_el.appendChild(checkbox_el);
