@@ -130,11 +130,11 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 		}
 
     if (ob.contentType) { // clients / jobs options get treated differently to normal options
-/*      if (ob.contentType === CONTENTTYPE_CLIENTS) {
-        ob.options = ob.clientOptions;
+      if (ob.contentType === CONTENTTYPE_CLIENTS) {
+				addClassname(select_el, CLASS_CLIENTSELECT);
       } else if (ob.contentType === CONTENTTYPE_JOBS) {
-        ob.options = ob.jobOptions;
-      }*/
+				addClassname(select_el, CLASS_JOBSELECT);
+      }
 			// logMsg("ob.options:");
       for (prop in ob.options) {
         clientOrJob_ob = ob.options[prop];

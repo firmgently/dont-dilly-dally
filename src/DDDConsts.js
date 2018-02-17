@@ -50,6 +50,8 @@ uk.co.firmgently.DDDConsts = (function() {
   CLASS_FORMMAIN = "formMain",
   CLASS_COL = "col",
   CLASS_ROW = "row",
+	CLASS_CLIENTSELECT = "select-client",
+	CLASS_JOBSELECT = "select-job",
 
   TOTAL_STR = "Total",
   DAY_STR = "day",
@@ -82,6 +84,14 @@ uk.co.firmgently.DDDConsts = (function() {
 	ITEMTYPE_WORK = "WORK",
 	ITEMTYPE_MONEY = "CASH",
 	
+	DATAINDICES = {
+		itemType:			0,
+		numberValue:	1,
+		clientID:			2,
+		jobID:				3,
+		notes:				4
+	},
+
   CONTENTTYPE_CLIENTS = "contentTypeClients",
   CONTENTTYPE_JOBS = "contentTypeJobs",
 
@@ -438,6 +448,7 @@ uk.co.firmgently.DDDConsts = (function() {
     TIMESPAN_MONTH: TIMESPAN_MONTH,
     TIMESPAN_YEAR: TIMESPAN_YEAR,
     TIMESPAN_DEFAULT: TIMESPAN_DEFAULT,
+		DATAINDICES: DATAINDICES,
     DAYSINWEEK: DAYSINWEEK,
     DAYSINMONTH: DAYSINMONTH,
     DAYSINYEAR: DAYSINYEAR,
@@ -445,6 +456,8 @@ uk.co.firmgently.DDDConsts = (function() {
     CLASS_FORMMAIN: CLASS_FORMMAIN,
     CLASS_COL: CLASS_COL,
     CLASS_ROW: CLASS_ROW,
+    CLASS_CLIENTSELECT: CLASS_CLIENTSELECT,
+    CLASS_JOBSELECT: CLASS_JOBSELECT,
     EL_ID_COLHEADING: EL_ID_COLHEADING,
     TOTAL_STR: TOTAL_STR,
     DAY_STR: DAY_STR,

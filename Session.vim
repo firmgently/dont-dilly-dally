@@ -8,11 +8,11 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +83 src/DDDConsts.js
+badd +65 src/DDDConsts.js
 badd +85 src/DDD.scss
 badd +79 src/FGUtils.js
-badd +4 src/FGHTMLBuild.js
-badd +430 src/DontDillyDally.js
+badd +133 src/FGHTMLBuild.js
+badd +760 src/DontDillyDally.js
 badd +1 src
 badd +7 index.htm
 argglobal
