@@ -1,6 +1,7 @@
 /*
 ---------------------------------------------------------
-  Firm Gently Utilities
+  Firm Gently HTMLBuild
+  Collection of functions for creating HTML elements
   Mark Mayes 2016
 ---------------------------------------------------------
 */

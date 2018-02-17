@@ -52,6 +52,9 @@ uk.co.firmgently.DDDConsts = (function() {
   CLASS_ROW = "row",
 
   TOTAL_STR = "Total",
+  DAY_STR = "day",
+  CLIENT_STR = "client",
+  JOB_STR = "job",
   DAYS_STR = "days",
   CLIENTS_STR = "clients",
   JOBS_STR = "jobs",
@@ -76,6 +79,9 @@ uk.co.firmgently.DDDConsts = (function() {
   DATATYPE_JOB = "dataTypeJob",
   DATATYPE_CLIENT = "dataTypeClient",
 
+	ITEMTYPE_WORK = "WORK",
+	ITEMTYPE_MONEY = "CASH",
+	
   CONTENTTYPE_CLIENTS = "contentTypeClients",
   CONTENTTYPE_JOBS = "contentTypeJobs",
 
@@ -426,6 +432,8 @@ uk.co.firmgently.DDDConsts = (function() {
     DATETYPE_DDMMYY: DATETYPE_DDMMYY,
     DATETYPE_MMDDYY: DATETYPE_MMDDYY,
     DATETYPE_DEFAULT: DATETYPE_DEFAULT,
+		ITEMTYPE_WORK: ITEMTYPE_WORK,
+		ITEMTYPE_MONEY: ITEMTYPE_MONEY,
     TIMESPAN_WEEK: TIMESPAN_WEEK,
     TIMESPAN_MONTH: TIMESPAN_MONTH,
     TIMESPAN_YEAR: TIMESPAN_YEAR,
@@ -439,6 +447,9 @@ uk.co.firmgently.DDDConsts = (function() {
     CLASS_ROW: CLASS_ROW,
     EL_ID_COLHEADING: EL_ID_COLHEADING,
     TOTAL_STR: TOTAL_STR,
+    DAY_STR: DAY_STR,
+    CLIENT_STR: CLIENT_STR,
+    JOB_STR: JOB_STR,
     DAYS_STR: DAYS_STR,
     CLIENTS_STR: CLIENTS_STR,
     JOBS_STR: JOBS_STR,

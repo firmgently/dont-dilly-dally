@@ -52,6 +52,9 @@ uk.co.firmgently.DDDConsts = (function() {
   CLASS_ROW = "row",
 
   TOTAL_STR = "Total",
+  DAY_STR = "day",
+  CLIENT_STR = "client",
+  JOB_STR = "job",
   DAYS_STR = "days",
   CLIENTS_STR = "clients",
   JOBS_STR = "jobs",
@@ -76,6 +79,9 @@ uk.co.firmgently.DDDConsts = (function() {
   DATATYPE_JOB = "dataTypeJob",
   DATATYPE_CLIENT = "dataTypeClient",
 
+	ITEMTYPE_WORK = "WORK",
+	ITEMTYPE_MONEY = "CASH",
+	
   CONTENTTYPE_CLIENTS = "contentTypeClients",
   CONTENTTYPE_JOBS = "contentTypeJobs",
 
@@ -426,6 +432,8 @@ uk.co.firmgently.DDDConsts = (function() {
     DATETYPE_DDMMYY: DATETYPE_DDMMYY,
     DATETYPE_MMDDYY: DATETYPE_MMDDYY,
     DATETYPE_DEFAULT: DATETYPE_DEFAULT,
+		ITEMTYPE_WORK: ITEMTYPE_WORK,
+		ITEMTYPE_MONEY: ITEMTYPE_MONEY,
     TIMESPAN_WEEK: TIMESPAN_WEEK,
     TIMESPAN_MONTH: TIMESPAN_MONTH,
     TIMESPAN_YEAR: TIMESPAN_YEAR,
@@ -439,6 +447,9 @@ uk.co.firmgently.DDDConsts = (function() {
     CLASS_ROW: CLASS_ROW,
     EL_ID_COLHEADING: EL_ID_COLHEADING,
     TOTAL_STR: TOTAL_STR,
+    DAY_STR: DAY_STR,
+    CLIENT_STR: CLIENT_STR,
+    JOB_STR: JOB_STR,
     DAYS_STR: DAYS_STR,
     CLIENTS_STR: CLIENTS_STR,
     JOBS_STR: JOBS_STR,
@@ -493,7 +504,7 @@ uk.co.firmgently.FGUtils = (function() {
   hexOpacityToRGBA, getRandomHexColor, createElementWithId,
   removeClassname, addClassname, getStyle,
   treatAsUTC, daysBetween, getFormattedDate,
-  getFunctionFromString,
+  getFunctionFromString, getGUID,
   logMsg;
 
 
@@ -763,7 +774,22 @@ uk.co.firmgently.FGUtils = (function() {
   };
 
 
-
+	// https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+	getGUID = function() {
+		/*return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+			var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+			return v.toString(16);
+		});*/
+    var d = new Date().getTime();
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
+        d += performance.now(); //use high-precision timer if available
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+	};
 
   return {
     /*
@@ -787,13 +813,15 @@ uk.co.firmgently.FGUtils = (function() {
     logMsg: logMsg,
     getIEVersion: getIEVersion,
     getStyle: getStyle,
-    isTouchDevice: isTouchDevice
+    isTouchDevice: isTouchDevice,
+		getGUID: getGUID
   };
 
 }());
 /*
 ---------------------------------------------------------
-  Firm Gently Utilities
+  Firm Gently HTMLBuild
+  Collection of functions for creating HTML elements
   Mark Mayes 2016
 ---------------------------------------------------------
 */
@@ -1168,14 +1196,14 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 	// methods
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
-  createFormFromOb, addTask, removeTask, getDefaultDayOb,
+  createFormFromOb, addTask, removeTask,
   callMethodFromObOnElement, callMethodFromOb, onFormClick,
   drawTimesheets, getNextName, newClientCreate, newJobCreate,
   navClick, onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
   dataStoragePossible, initDataObject, dataStoreObject, dataRetrieveObject,
   dataUpdateObject, clientAndJobStyleSheet, createClientOrJobFromOb,
   newClientFormSave, newJobFormSave, clientInputWasLastEmpty,
-  updateRefsToElements, updateSelected, addWorkItem, removeWorkItem, updateSavedWorkItem
+  updateLayoutRefs, updateSelected, addUIWorkItem, removeWorkItem, updateSavedWorkItem
 	;
 
 
@@ -1325,7 +1353,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       default:
         break;
     }
-    updateRefsToElements();
+    updateLayoutRefs();
     addClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
   };
 
@@ -1417,7 +1445,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   // addTask is called from the scope of the 'add task' button
   addTask = function() {
-    addWorkItem(this.parentNode);
+    addUIWorkItem(this.parentNode);
   };
 
 	removeTask = function() {
@@ -1427,9 +1455,9 @@ uk.co.firmgently.DontDillyDally = (function() {
   getNextName = function(type) {
     var prefix, name, n;
     if (type === DATATYPE_JOB) {
-      prefix = JOBS_STR;
+      prefix = JOB_STR;
     } else if (type === DATATYPE_CLIENT) {
-      prefix = CLIENTS_STR;
+      prefix = CLIENT_STR;
     }
     n = 0 + (dataRetrieveObject(prefix + TOTAL_STR)) + 1;
     dataStoreObject(prefix + TOTAL_STR, n);
@@ -1443,13 +1471,13 @@ uk.co.firmgently.DontDillyDally = (function() {
 	--------------------------------------------------------------------------- */
 
   createClientOrJobFromOb = function(ob, dataType) {
-    logMsg("createClientOrJobFromOb()");
-    // create unique number to be used in object name/key
     var
-    id, ar, n, prefix, newItemCSS_selector, //pluralName,
+    id, ar, n, prefix, newItemCSS_selector,
     input_el,
     colorPickerFGSelector, colorPickerBGSelector;
 
+    logMsg("createClientOrJobFromOb()");
+    // create unique number to be used in object name/key
     if (dataType === DATATYPE_CLIENT) {
       input_el = document.getElementById(EL_ID_CLIENTNAMEIN);
       prefix = CLIENTS_STR;
@@ -1578,7 +1606,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       isOddDay = !isOddDay; // flip state
       if (dayCur.getDay() === weekStartDay) { rowClassname += "week-start "; }
       if (dayCur.getDate() === 1) { rowClassname += "month-start "; }
-      day_el = createElementWithId("li", DAYS_STR + dayOfYear);
+      day_el = createElementWithId("li", DAY_STR + dayOfYear);
       addClassname(day_el, rowClassname);
       day_el.setAttribute("dayOfYear", dayOfYear);
       // create days in documentFragment to avoid unneccessary reflows
@@ -1597,10 +1625,10 @@ uk.co.firmgently.DontDillyDally = (function() {
 
       dayWorkItems = allWorkItems[dayOfYear];
       if (dayWorkItems === undefined) {
-        addWorkItem(dayDataContainer_el);
+        addUIWorkItem(dayDataContainer_el);
       } else {
         for (j = 0; j < dayWorkItems.length; j++) {
-          addWorkItem(dayDataContainer_el);
+          addUIWorkItem(dayDataContainer_el);
         }
       }
     }
@@ -1609,15 +1637,13 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  addWorkItem = function(dayDataContainer_el) {
+  addUIWorkItem = function(dayDataContainer_el) {
     var
     hrs_el, money_el, ob_temp, el_temp,
-    itemID, workItem_el, dayOfYear, itemNum,
+    itemID, workItem_el,
     day_el = dayDataContainer_el.parentNode;
 
-    dayOfYear = day_el.getAttribute("dayOfYear");
-    itemNum = dayDataContainer_el.children.length;
-    itemID = "item" + dayOfYear + "_" + itemNum;
+    itemID = getGUID(); 
 
     workItem_el = createElementWithId("li", itemID);
     dayDataContainer_el.appendChild(workItem_el);
@@ -1717,7 +1743,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 */
 
-  updateRefsToElements = function() {
+  updateLayoutRefs = function() {
     clientNameInput_el = document.getElementById(EL_ID_CLIENTNAMEIN);
     clientSaveBtn_el = document.getElementById(EL_ID_CLIENTSAVEBTN);
     colPickClientFG_el = document.getElementById(CLIENT_FG_COLPICK);
@@ -1801,7 +1827,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     addCSSRule("#" + EL_ID_CLIENTNAMEIN, "background-color", bgCol);
 
     clientSaveBtn_el.disabled = false;
-    updateRefsToElements();
+    updateLayoutRefs();
   };
 
 
@@ -1818,7 +1844,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     addCSSRule("#" + EL_ID_JOBNAMEIN, "background-color", bgCol);
 
     jobSaveBtn_el.disabled = false;
-    updateRefsToElements();
+    updateLayoutRefs();
   };
 
 
@@ -1862,19 +1888,15 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  getDefaultDayOb = function() {
-    return { work: [] };
-  };
-
-
   updateSelected = function() {
     var
-    day_ar, workItem_ar, day_ob,
+    day_ar, day_ob,
     option_selector = this.value,
     pageType = dataRetrieveObject("prefs").pagetype,
     workItem_el = this.parentNode,
     day_el = this.parentNode.parentNode.parentNode,
     dayOfYear = day_el.getAttribute("dayOfYear");
+
     logMsg("day_el.className: " + day_el.className);
     logMsg("dayOfYear: " + dayOfYear);
 
@@ -1892,22 +1914,23 @@ uk.co.firmgently.DontDillyDally = (function() {
       day_ar = dataRetrieveObject(DAYS_STR);
       day_ob = day_ar[dayOfYear];
       if (day_ob === undefined) {
-        day_ob = getDefaultDayOb();
+        day_ob = {};
       }
-      workItem_ar = day_ob.work;
       // TODO this test data should be shown on the page
-      workItem_ar.push({
-        client: "client1",
-        job: "job2",
-        time: "02:30",
-        jobNotes: "painting the edges"
-      });
-      workItem_ar.push({
-        client: "client2",
-        job: "job1",
-        money: -50,
-        moneyNotes: "bought canvas, Receipt no.11234"
-      });
+			day_ob[getGUID()] = [ 
+				ITEMTYPE_MONEY,        // ITEMTYPE_WORK or ITEMTYPE_MONEY
+				"client2",            // clientID
+				"job1",               // jobID
+				-13.99,      		    	// either time in minutes (if JOB) or +/- amount (if MONEY)
+				"acrylic gel medium"  // notes (either JOB or MONEY related)
+			];
+			day_ob[getGUID()] = [ 
+				ITEMTYPE_WORK,        // ITEMTYPE_WORK or ITEMTYPE_MONEY
+				"client1",            // clientID
+				"job2",               // jobID
+				150,         		    	// either time in minutes (if JOB) or +/- amount (if MONEY)
+				"painting the edges"  // notes (either JOB or MONEY related)
+			];
       day_ar[dayOfYear] = day_ob;
       dataStoreObject(DAYS_STR, day_ar);
     }
