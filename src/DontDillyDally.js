@@ -81,7 +81,8 @@ uk.co.firmgently.DontDillyDally = (function() {
         pagetype: PAGETYPE_DEFAULT,
         timespan: TIMESPAN_DEFAULT,
         dateFormat: DATETYPE_DEFAULT,
-        totalsToShow: SHOWTOTALS_DEFAULT
+        totalsToShow: SHOWTOTALS_DEFAULT,
+        minuteIncrements: MINUTEINCREMENTS_DEFAULT
       });
 
 			// create client/job unitBigers and set them to zero
@@ -235,7 +236,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         case GUITYPE_RADIOBTN:
           // TODO this checkIfMatched should not be added here it should
           // be included in main data higher up
-          ob.checkIfMatched = dataRetrieveObject("prefs").timespan;
+          ob.checkIfMatched = dataRetrieveObject("prefs")[ob.id];
           el_temp = createRadioFromOb(ob);
           if (ob.methodPathStr) {
             registerEventHandler(el_temp, "change", callMethodFromObOnElement);
@@ -464,6 +465,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       // date
       date_el = document.createElement("p");
       addClassname(date_el, "date col");
+      // TODO DATETYPE_DEFAULT being used here is that correct?
       date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
       dayCur.setDate(dayCur.getDate() + 1);
       day_el.appendChild(date_el);
@@ -547,6 +549,13 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
     registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
+      el_temp.min = 0;
+      el_temp.max = 23;
+    } else {
+      el_temp.min = 0 - Number.MAX_VALUE;
+      el_temp.max = Number.MAX_VALUE;
+    }
 		if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
 			el_temp.value = numberValue_ar[0];
 			// TODO 'negative' class is not being added when field is pre-filled with saved data	
@@ -568,6 +577,25 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
     registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
+      el_temp.min = 0;
+      el_temp.max = 59;
+      switch(dataRetrieveObject("prefs").minuteIncrements) {
+        case MINUTEINCREMENTS_15:
+          el_temp.step = 15;
+          break;
+        case MINUTEINCREMENTS_30:
+          el_temp.step = 30;
+          break;
+        case MINUTEINCREMENTS_1: // intentional rollthrough
+        default:
+          el_temp.step = 1;
+          break;
+      }
+    } else {
+      el_temp.min = 0;
+      el_temp.max = 99;
+    }
 		if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
 			el_temp.value = numberValue_ar[1];
 			// TODO 'negative' class is not being added when field is pre-filled with saved data	
@@ -680,10 +708,11 @@ uk.co.firmgently.DontDillyDally = (function() {
     if (form && form.id) {
       switch (form.id) {
         case "configForm":
-          dataUpdateObject("prefs", "timespan", form.timesheetRange.value);
+          dataUpdateObject("prefs", "timespan", form.timespan.value);
           // dateFormat is an object, the form just stores the name of it so grab it here
           dataUpdateObject("prefs", "dateFormat", uk.co.firmgently.DDDConsts[form.dateFormat.value]);
           dataUpdateObject("prefs", "totalsToShow", form.totalsToShow.value);
+          dataUpdateObject("prefs", "minuteIncrements", form.minuteIncrements.value);
           break;
         default:
           break;
@@ -714,16 +743,21 @@ uk.co.firmgently.DontDillyDally = (function() {
     var
     checkbox = this.getElementsByClassName("isMoneyTaskChk")[0],
     unitBigInput = this.getElementsByClassName("unitBig")[0],
+    unitSmallInput = this.getElementsByClassName("unitSmall")[0],
     notesInput = this.getElementsByClassName("notes")[0];
     if (checkbox.checked) {
       addClassname(unitBigInput, "money");
+      addClassname(unitSmallInput, "money");
       removeClassname(unitBigInput, "hrs");
+      removeClassname(unitSmallInput, "hrs");
       addClassname(notesInput, "money");
       removeClassname(notesInput, "job");
       notesInput.placeholder = MONEYNOTES_PLACEHOLDER;
     } else {
       addClassname(unitBigInput, "hrs");
+      addClassname(unitSmallInput, "hrs");
       removeClassname(unitBigInput, "money");
+      removeClassname(unitSmallInput, "money");
       addClassname(notesInput, "job");
       removeClassname(notesInput, "money");
       notesInput.placeholder = JOBNOTES_PLACEHOLDER;

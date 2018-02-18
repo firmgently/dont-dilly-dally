@@ -50,7 +50,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     if (ob.class) { addClassname(button_el, ob.class); }
     button_el.innerHTML = ob.label;
     button_el.ob = ob;
-    // registerEventHandler(button_el, "mousedown", uk.co.firmgently.DontDillyDally.callMethodFromObOnElement);
 
     if (ob.disabled) { button_el.disabled = ob.disabled; }
 
@@ -130,14 +129,10 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       } else if (ob.contentType === CONTENTTYPE_JOBS) {
 				addClassname(select_el, CLASS_JOBSELECT);
       }
-			// logMsg("ob.options:");
       for (prop in ob.options) {
         clientOrJob_ob = ob.options[prop];
-				// logMsg(JSON.stringify(clientOrJob_ob));
         option_el = select_el.options[select_el.options.length] = new Option(clientOrJob_ob.name, clientOrJob_ob.class);
         addClassname(option_el, clientOrJob_ob.class);
-        //addCSSRule("." + clientOrJob_ob.class, "background-color", clientOrJob_ob.bgcolor);
-        //addCSSRule("." + clientOrJob_ob.class, "color", clientOrJob_ob.color);
       }
     } else { // normal options
       for (prop in ob.options) {
@@ -192,8 +187,14 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
   createRadioFromOb = function(ob) {
     var
-    prop, radio_el, label_el,
+    prop, description_el, radio_el, label_el,
     parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
+
+    if (ob.label) {
+      description_el = document.createElement("p");
+      description_el.innerHTML = ob.label;
+      parent_el.appendChild(description_el);
+    }
 
     for (prop in ob.options) {
       label_el = document.createElement("label");
@@ -210,7 +211,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       radio_el.value = prop;
 			logMsg("ob.checkIfMatched: " + ob.checkIfMatched);
       if (prop === ob.checkIfMatched) { radio_el.checked = true; }
-      // if (prop === dataRetrieveObject("prefs").timespan) { radio_el.checked = true; }
       label_el.htmlFor = ob.id;
     }
 
@@ -290,35 +290,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   };
 
 
-/*	createFormFromOb = function(ob) {
-    var
-    i, form_el,
-    parent_el = document.getElementById(ob.parent);
-
-    if (ob.id) {
-      form_el = createElementWithId("form", ob.id);
-    } else {
-      form_el = document.createElement("form");
-    }
-    parent_el.appendChild(form_el);
-
-    if (ob.class) { addClassname(form_el, ob.class); }
-    if (ob.title) { form_el.innerHTML = "<h2>" + ob.title + "</h2>"; }
-
-    if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
-
-    if (ob.hidden) { form_el.style.display = "none"; }
-
-    form_el.ob = ob;
-    registerEventHandler(form_el, "submit", onFormSubmit);
-    registerEventHandler(form_el, "click", onFormClick);
-
-		return form_el;
-  };*/
-
-
-
-
 
 
 
@@ -332,9 +303,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 		fillHTMLFromOb: fillHTMLFromOb,
 		createButtonFromOb: createButtonFromOb,
 		createSelectFromOb: createSelectFromOb,
-		// createFormFromOb: createFormFromOb,
 		createInputFromOb: createInputFromOb,
-		// createTextInputFromOb: createTextInputFromOb,
 		createRadioFromOb: createRadioFromOb,
 		createCheckboxFromOb: createCheckboxFromOb,
 		addLIsFromOb: addLIsFromOb,

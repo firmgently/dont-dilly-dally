@@ -330,7 +330,7 @@ uk.co.firmgently.DDDConsts = (function() {
            disabled: true
          }, {
            type: GUITYPE_RADIOBTN,
-           id: "timesheetRange",
+           id: "timespan",
            label: "Choose how many days you want to show on the timesheet page",
            parent: "configForm",
            options: {
@@ -348,6 +348,17 @@ uk.co.firmgently.DDDConsts = (function() {
              showTotalsWeek: "Show weekly totals",
              showTotalsMonth: "Show monthly totals",
              showTotalsWeekAndMonth: "Show both weekly and monthly totals"
+           },
+           disabled: true
+         }, {
+           type: GUITYPE_RADIOBTN,
+           id: "minuteIncrements",
+           label: "The shortest length of a time entry",
+           parent: "configForm",
+           options: {
+             minuteIncrement1: "1 minute",
+             minuteIncrement15: "15 minutes",
+             minuteIncrement30: "30 minutes"
            },
            disabled: true
          }
@@ -404,6 +415,12 @@ uk.co.firmgently.DDDConsts = (function() {
   SHOWTOTALS_MONTH = "showTotalsMonth",
   SHOWTOTALS_BOTH = "showTotalsWeekAndMonth",
   SHOWTOTALS_DEFAULT = SHOWTOTALS_BOTH,
+
+  // minimum minutes per work item
+  MINUTEINCREMENTS_1 = "minuteIncrement1",
+  MINUTEINCREMENTS_15 = "minuteIncrement15",
+  MINUTEINCREMENTS_30 = "minuteIncrement30",
+  MINUTEINCREMENTS_DEFAULT = MINUTEINCREMENTS_15,
 
   TXT_STORAGE_UNSUPPORTED = "Sorry - storage is not supported on this device or browser"
   ;
@@ -496,11 +513,15 @@ uk.co.firmgently.DDDConsts = (function() {
     SHOWTOTALS_WEEK: SHOWTOTALS_WEEK,
     SHOWTOTALS_MONTH: SHOWTOTALS_MONTH,
     SHOWTOTALS_BOTH: SHOWTOTALS_BOTH,
+    SHOWTOTALS_DEFAULT: SHOWTOTALS_DEFAULT,
+    MINUTEINCREMENTS_1: MINUTEINCREMENTS_1,
+    MINUTEINCREMENTS_15: MINUTEINCREMENTS_15,
+    MINUTEINCREMENTS_30: MINUTEINCREMENTS_30,
+    MINUTEINCREMENTS_DEFAULT: MINUTEINCREMENTS_DEFAULT,
     CLIENT_SELECT_PLACEHOLDER: CLIENT_SELECT_PLACEHOLDER,
     JOB_SELECT_PLACEHOLDER: JOB_SELECT_PLACEHOLDER,
     JOBNOTES_PLACEHOLDER: JOBNOTES_PLACEHOLDER,
-    MONEYNOTES_PLACEHOLDER: MONEYNOTES_PLACEHOLDER,
-    SHOWTOTALS_DEFAULT: SHOWTOTALS_DEFAULT
+    MONEYNOTES_PLACEHOLDER: MONEYNOTES_PLACEHOLDER
   };
 
 
@@ -917,7 +938,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     if (ob.class) { addClassname(button_el, ob.class); }
     button_el.innerHTML = ob.label;
     button_el.ob = ob;
-    // registerEventHandler(button_el, "mousedown", uk.co.firmgently.DontDillyDally.callMethodFromObOnElement);
 
     if (ob.disabled) { button_el.disabled = ob.disabled; }
 
@@ -997,14 +1017,10 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       } else if (ob.contentType === CONTENTTYPE_JOBS) {
 				addClassname(select_el, CLASS_JOBSELECT);
       }
-			// logMsg("ob.options:");
       for (prop in ob.options) {
         clientOrJob_ob = ob.options[prop];
-				// logMsg(JSON.stringify(clientOrJob_ob));
         option_el = select_el.options[select_el.options.length] = new Option(clientOrJob_ob.name, clientOrJob_ob.class);
         addClassname(option_el, clientOrJob_ob.class);
-        //addCSSRule("." + clientOrJob_ob.class, "background-color", clientOrJob_ob.bgcolor);
-        //addCSSRule("." + clientOrJob_ob.class, "color", clientOrJob_ob.color);
       }
     } else { // normal options
       for (prop in ob.options) {
@@ -1059,8 +1075,14 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
   createRadioFromOb = function(ob) {
     var
-    prop, radio_el, label_el,
+    prop, description_el, radio_el, label_el,
     parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
+
+    if (ob.label) {
+      description_el = document.createElement("p");
+      description_el.innerHTML = ob.label;
+      parent_el.appendChild(description_el);
+    }
 
     for (prop in ob.options) {
       label_el = document.createElement("label");
@@ -1077,7 +1099,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       radio_el.value = prop;
 			logMsg("ob.checkIfMatched: " + ob.checkIfMatched);
       if (prop === ob.checkIfMatched) { radio_el.checked = true; }
-      // if (prop === dataRetrieveObject("prefs").timespan) { radio_el.checked = true; }
       label_el.htmlFor = ob.id;
     }
 
@@ -1157,35 +1178,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   };
 
 
-/*	createFormFromOb = function(ob) {
-    var
-    i, form_el,
-    parent_el = document.getElementById(ob.parent);
-
-    if (ob.id) {
-      form_el = createElementWithId("form", ob.id);
-    } else {
-      form_el = document.createElement("form");
-    }
-    parent_el.appendChild(form_el);
-
-    if (ob.class) { addClassname(form_el, ob.class); }
-    if (ob.title) { form_el.innerHTML = "<h2>" + ob.title + "</h2>"; }
-
-    if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
-
-    if (ob.hidden) { form_el.style.display = "none"; }
-
-    form_el.ob = ob;
-    registerEventHandler(form_el, "submit", onFormSubmit);
-    registerEventHandler(form_el, "click", onFormClick);
-
-		return form_el;
-  };*/
-
-
-
-
 
 
 
@@ -1199,9 +1191,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 		fillHTMLFromOb: fillHTMLFromOb,
 		createButtonFromOb: createButtonFromOb,
 		createSelectFromOb: createSelectFromOb,
-		// createFormFromOb: createFormFromOb,
 		createInputFromOb: createInputFromOb,
-		// createTextInputFromOb: createTextInputFromOb,
 		createRadioFromOb: createRadioFromOb,
 		createCheckboxFromOb: createCheckboxFromOb,
 		addLIsFromOb: addLIsFromOb,
@@ -1293,7 +1283,8 @@ uk.co.firmgently.DontDillyDally = (function() {
         pagetype: PAGETYPE_DEFAULT,
         timespan: TIMESPAN_DEFAULT,
         dateFormat: DATETYPE_DEFAULT,
-        totalsToShow: SHOWTOTALS_DEFAULT
+        totalsToShow: SHOWTOTALS_DEFAULT,
+        minuteIncrements: MINUTEINCREMENTS_DEFAULT
       });
 
 			// create client/job unitBigers and set them to zero
@@ -1447,7 +1438,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         case GUITYPE_RADIOBTN:
           // TODO this checkIfMatched should not be added here it should
           // be included in main data higher up
-          ob.checkIfMatched = dataRetrieveObject("prefs").timespan;
+          ob.checkIfMatched = dataRetrieveObject("prefs")[ob.id];
           el_temp = createRadioFromOb(ob);
           if (ob.methodPathStr) {
             registerEventHandler(el_temp, "change", callMethodFromObOnElement);
@@ -1676,6 +1667,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       // date
       date_el = document.createElement("p");
       addClassname(date_el, "date col");
+      // TODO DATETYPE_DEFAULT being used here is that correct?
       date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
       dayCur.setDate(dayCur.getDate() + 1);
       day_el.appendChild(date_el);
@@ -1759,6 +1751,13 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
     registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
+      el_temp.min = 0;
+      el_temp.max = 23;
+    } else {
+      el_temp.min = 0 - Number.MAX_VALUE;
+      el_temp.max = Number.MAX_VALUE;
+    }
 		if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
 			el_temp.value = numberValue_ar[0];
 			// TODO 'negative' class is not being added when field is pre-filled with saved data	
@@ -1780,6 +1779,25 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
     registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
+      el_temp.min = 0;
+      el_temp.max = 59;
+      switch(dataRetrieveObject("prefs").minuteIncrements) {
+        case MINUTEINCREMENTS_15:
+          el_temp.step = 15;
+          break;
+        case MINUTEINCREMENTS_30:
+          el_temp.step = 30;
+          break;
+        case MINUTEINCREMENTS_1: // intentional rollthrough
+        default:
+          el_temp.step = 1;
+          break;
+      }
+    } else {
+      el_temp.min = 0;
+      el_temp.max = 99;
+    }
 		if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
 			el_temp.value = numberValue_ar[1];
 			// TODO 'negative' class is not being added when field is pre-filled with saved data	
@@ -1892,10 +1910,11 @@ uk.co.firmgently.DontDillyDally = (function() {
     if (form && form.id) {
       switch (form.id) {
         case "configForm":
-          dataUpdateObject("prefs", "timespan", form.timesheetRange.value);
+          dataUpdateObject("prefs", "timespan", form.timespan.value);
           // dateFormat is an object, the form just stores the name of it so grab it here
           dataUpdateObject("prefs", "dateFormat", uk.co.firmgently.DDDConsts[form.dateFormat.value]);
           dataUpdateObject("prefs", "totalsToShow", form.totalsToShow.value);
+          dataUpdateObject("prefs", "minuteIncrements", form.minuteIncrements.value);
           break;
         default:
           break;
@@ -1926,16 +1945,21 @@ uk.co.firmgently.DontDillyDally = (function() {
     var
     checkbox = this.getElementsByClassName("isMoneyTaskChk")[0],
     unitBigInput = this.getElementsByClassName("unitBig")[0],
+    unitSmallInput = this.getElementsByClassName("unitSmall")[0],
     notesInput = this.getElementsByClassName("notes")[0];
     if (checkbox.checked) {
       addClassname(unitBigInput, "money");
+      addClassname(unitSmallInput, "money");
       removeClassname(unitBigInput, "hrs");
+      removeClassname(unitSmallInput, "hrs");
       addClassname(notesInput, "money");
       removeClassname(notesInput, "job");
       notesInput.placeholder = MONEYNOTES_PLACEHOLDER;
     } else {
       addClassname(unitBigInput, "hrs");
+      addClassname(unitSmallInput, "hrs");
       removeClassname(unitBigInput, "money");
+      removeClassname(unitSmallInput, "money");
       addClassname(notesInput, "job");
       removeClassname(notesInput, "money");
       notesInput.placeholder = JOBNOTES_PLACEHOLDER;

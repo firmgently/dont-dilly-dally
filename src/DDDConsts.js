@@ -330,7 +330,7 @@ uk.co.firmgently.DDDConsts = (function() {
            disabled: true
          }, {
            type: GUITYPE_RADIOBTN,
-           id: "timesheetRange",
+           id: "timespan",
            label: "Choose how many days you want to show on the timesheet page",
            parent: "configForm",
            options: {
@@ -348,6 +348,17 @@ uk.co.firmgently.DDDConsts = (function() {
              showTotalsWeek: "Show weekly totals",
              showTotalsMonth: "Show monthly totals",
              showTotalsWeekAndMonth: "Show both weekly and monthly totals"
+           },
+           disabled: true
+         }, {
+           type: GUITYPE_RADIOBTN,
+           id: "minuteIncrements",
+           label: "The shortest length of a time entry",
+           parent: "configForm",
+           options: {
+             minuteIncrement1: "1 minute",
+             minuteIncrement15: "15 minutes",
+             minuteIncrement30: "30 minutes"
            },
            disabled: true
          }
@@ -404,6 +415,12 @@ uk.co.firmgently.DDDConsts = (function() {
   SHOWTOTALS_MONTH = "showTotalsMonth",
   SHOWTOTALS_BOTH = "showTotalsWeekAndMonth",
   SHOWTOTALS_DEFAULT = SHOWTOTALS_BOTH,
+
+  // minimum minutes per work item
+  MINUTEINCREMENTS_1 = "minuteIncrement1",
+  MINUTEINCREMENTS_15 = "minuteIncrement15",
+  MINUTEINCREMENTS_30 = "minuteIncrement30",
+  MINUTEINCREMENTS_DEFAULT = MINUTEINCREMENTS_15,
 
   TXT_STORAGE_UNSUPPORTED = "Sorry - storage is not supported on this device or browser"
   ;
@@ -496,11 +513,15 @@ uk.co.firmgently.DDDConsts = (function() {
     SHOWTOTALS_WEEK: SHOWTOTALS_WEEK,
     SHOWTOTALS_MONTH: SHOWTOTALS_MONTH,
     SHOWTOTALS_BOTH: SHOWTOTALS_BOTH,
+    SHOWTOTALS_DEFAULT: SHOWTOTALS_DEFAULT,
+    MINUTEINCREMENTS_1: MINUTEINCREMENTS_1,
+    MINUTEINCREMENTS_15: MINUTEINCREMENTS_15,
+    MINUTEINCREMENTS_30: MINUTEINCREMENTS_30,
+    MINUTEINCREMENTS_DEFAULT: MINUTEINCREMENTS_DEFAULT,
     CLIENT_SELECT_PLACEHOLDER: CLIENT_SELECT_PLACEHOLDER,
     JOB_SELECT_PLACEHOLDER: JOB_SELECT_PLACEHOLDER,
     JOBNOTES_PLACEHOLDER: JOBNOTES_PLACEHOLDER,
-    MONEYNOTES_PLACEHOLDER: MONEYNOTES_PLACEHOLDER,
-    SHOWTOTALS_DEFAULT: SHOWTOTALS_DEFAULT
+    MONEYNOTES_PLACEHOLDER: MONEYNOTES_PLACEHOLDER
   };
 
 

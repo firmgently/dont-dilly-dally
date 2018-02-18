@@ -356,7 +356,6 @@ input.unitBig, input.unitSmall {
   }
   &.hrs { background-color: $jobInputBackgroundColour; color: $jobInputColour; }
   margin-right: $largePadding;
-  &:focus { font-size: 2em; }
 }
 
 input.notes {
