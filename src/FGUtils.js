@@ -18,7 +18,7 @@ uk.co.firmgently.FGUtils = (function() {
   hexOpacityToRGBA, getRandomHexColor, createElementWithId,
   removeClassname, addClassname, getStyle,
   treatAsUTC, daysBetween, getFormattedDate,
-  getFunctionFromString, getGUID, changeSelectByOption, fireEvent,
+  getFunctionFromString, getGUID, changeSelectByOption, manualEvent,
   logMsg;
 
 
@@ -321,7 +321,7 @@ uk.co.firmgently.FGUtils = (function() {
 	};
 
 
-	fireEvent = function(el, eventName) {
+	manualEvent = function(el, eventName) {
 		var evt;
 		if ("createEvent" in document) {
 			evt = document.createEvent("HTMLEvents");
@@ -357,7 +357,7 @@ uk.co.firmgently.FGUtils = (function() {
     getStyle: getStyle,
     isTouchDevice: isTouchDevice,
 		changeSelectByOption: changeSelectByOption,
-		fireEvent: fireEvent,
+		manualEvent: manualEvent,
 		getGUID: getGUID
   };
 

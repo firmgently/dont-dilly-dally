@@ -60,6 +60,8 @@ uk.co.firmgently.DDDConsts = (function() {
   DAYS_STR = "days",
   CLIENTS_STR = "clients",
   JOBS_STR = "jobs",
+	CLIENTSTOTAL_STR = "clientsTotal",
+	JOBSTOTAL_STR = "jobsTotal",
   CLIENT_SELECT_PLACEHOLDER = "select client",
   JOB_SELECT_PLACEHOLDER = "select job",
   JOBNOTES_PLACEHOLDER = "job notes",
@@ -466,6 +468,8 @@ uk.co.firmgently.DDDConsts = (function() {
     DAYS_STR: DAYS_STR,
     CLIENTS_STR: CLIENTS_STR,
     JOBS_STR: JOBS_STR,
+    CLIENTSTOTAL_STR: CLIENTSTOTAL_STR,
+    JOBSTOTAL_STR: JOBSTOTAL_STR,
     EL_ID_JOBNAMEIN: EL_ID_JOBNAMEIN,
     EL_ID_CLIENTNAMEIN: EL_ID_CLIENTNAMEIN,
     JOB_FG_COLPICK: JOB_FG_COLPICK,
@@ -517,7 +521,7 @@ uk.co.firmgently.FGUtils = (function() {
   hexOpacityToRGBA, getRandomHexColor, createElementWithId,
   removeClassname, addClassname, getStyle,
   treatAsUTC, daysBetween, getFormattedDate,
-  getFunctionFromString, getGUID, changeSelectByOption, fireEvent,
+  getFunctionFromString, getGUID, changeSelectByOption, manualEvent,
   logMsg;
 
 
@@ -820,7 +824,7 @@ uk.co.firmgently.FGUtils = (function() {
 	};
 
 
-	fireEvent = function(el, eventName) {
+	manualEvent = function(el, eventName) {
 		var evt;
 		if ("createEvent" in document) {
 			evt = document.createEvent("HTMLEvents");
@@ -856,7 +860,7 @@ uk.co.firmgently.FGUtils = (function() {
     getStyle: getStyle,
     isTouchDevice: isTouchDevice,
 		changeSelectByOption: changeSelectByOption,
-		fireEvent: fireEvent,
+		manualEvent: manualEvent,
 		getGUID: getGUID
   };
 
@@ -1240,10 +1244,10 @@ uk.co.firmgently.DontDillyDally = (function() {
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
   createFormFromOb, addTask, removeTask,
   callMethodFromObOnElement, callMethodFromOb, onFormClick,
-  drawTimesheets, getNextName, newClientCreate, newJobCreate,
+  drawTimesheets, getNextID, newClientCreate, newJobCreate,
   navClick, onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
-  dataStoragePossible, initDataObject, dataStoreObject, dataRetrieveObject,
-  dataUpdateObject, clientAndJobStyleSheet, createClientOrJobFromOb,
+  dataStoragePossible, initData, dataStoreObject, dataRetrieveObject,
+  dataUpdateObject, clientAndJobStyleSheet, createClientOrJobFromOb, createCSSForClientOrJobFromOb,
 	getJobOrClientIDFromElement, updateWorkItemByElement,
   newClientFormSave, newJobFormSave, clientInputWasLastEmpty,
   updateLayoutRefs, updateSelected, addUIWorkItem, removeWorkItem 
@@ -1285,28 +1289,48 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
   };
 
-  initDataObject = function() {
+  initData = function() {
+		var item, container;
     // if no preferences are stored create some defaults
     if (!dataRetrieveObject("prefs")) {
+			// create default preferences object
       dataStoreObject("prefs", {
         pagetype: PAGETYPE_DEFAULT,
         timespan: TIMESPAN_DEFAULT,
         dateFormat: DATETYPE_DEFAULT,
         totalsToShow: SHOWTOTALS_DEFAULT
       });
-      dataStoreObject(CLIENT_STR + TOTAL_STR, 0);
-      dataStoreObject(JOB_STR + TOTAL_STR, 0);
 
+			// create client/job counters and set them to zero
+			// counters are used to save having to iterate through objects
+			// to see how many children they have
+      dataStoreObject(CLIENTSTOTAL_STR, 0);
+      dataStoreObject(JOBSTOTAL_STR, 0);
+
+			// create new object to store clients and fill it with some defaults
       dataStoreObject(CLIENTS_STR, {});
       createClientOrJobFromOb(CLIENT_DEFAULT_1, DATATYPE_CLIENT);
       createClientOrJobFromOb(CLIENT_DEFAULT_2, DATATYPE_CLIENT);
 
+			// create new object to store jobs and fill it with some defaults
       dataStoreObject(JOBS_STR, {});
       createClientOrJobFromOb(JOB_DEFAULT_1, DATATYPE_JOB);
       createClientOrJobFromOb(JOB_DEFAULT_2, DATATYPE_JOB);
 
+			// new empty object to store days
+			// (work items are stored in days)
       dataStoreObject(DAYS_STR, {});
-    }
+    } else {
+			// customise client/job tyles based on existing data
+			container = dataRetrieveObject(CLIENTS_STR);
+			for (item in container) {
+				createCSSForClientOrJobFromOb(container[item], DATATYPE_CLIENT);
+			}
+			container = dataRetrieveObject(JOBS_STR);
+			for (item in container) {
+				createCSSForClientOrJobFromOb(container[item], DATATYPE_JOB);
+			}
+		}
   };
 
 
@@ -1350,7 +1374,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
     if(dataStoragePossible()) {
-      initDataObject();
+      initData();
       drawGUIFromAr(GUIDATA_NAVMAIN);
       if (location.hash) {
         selectPage(decodeURIComponent(location.hash.substring(1)));
@@ -1495,15 +1519,18 @@ uk.co.firmgently.DontDillyDally = (function() {
 		removeWorkItem(this);
 	};
 
-  getNextName = function(type) {
+	// get next available ID for job or client
+  getNextID = function(type) {
     var prefix, name, n;
     if (type === DATATYPE_JOB) {
       prefix = JOB_STR;
     } else if (type === DATATYPE_CLIENT) {
       prefix = CLIENT_STR;
     }
+		// increment totals
     n = 0 + (dataRetrieveObject(prefix + TOTAL_STR)) + 1;
     dataStoreObject(prefix + TOTAL_STR, n);
+		// 
     return prefix + n;
   };
 
@@ -1515,33 +1542,44 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   createClientOrJobFromOb = function(ob, dataType) {
     var
-    id, ar, n, prefix, newItemCSS_selector,
-    input_el,
-    colorPickerFGSelector, colorPickerBGSelector;
+    id, ar, n, containerObjectName, input_el;
 
     logMsg("createClientOrJobFromOb()");
-    // create unique number to be used in object name/key
+    
+		// create unique identifier for this job or client
     if (dataType === DATATYPE_CLIENT) {
+			// input_el will only be present on 'jobs & clients' page
       input_el = document.getElementById(EL_ID_CLIENTNAMEIN);
-      prefix = CLIENTS_STR;
+      containerObjectName = CLIENTS_STR;
     } else if (dataType === DATATYPE_JOB) {
       input_el = document.getElementById(EL_ID_JOBNAMEIN);
-      prefix = JOBS_STR;
+      containerObjectName = JOBS_STR;
     }
-    id = getNextName(dataType);
-    ob.id = id;
-    ob.class = id;
+    id = getNextID(dataType);
+		ob.id = ob.class = id;
 
-    ar = dataRetrieveObject(prefix);
+		// store the new client or job in its relevant container
+    ar = dataRetrieveObject(containerObjectName);
     ar[ob.id] = ob;
-    dataStoreObject(prefix, ar);
+    dataStoreObject(containerObjectName, ar);
 
-    newItemCSS_selector = "." + id + ", " +
-      "." + id + ":hover, " +
-      "." + id + ":active";
-    addCSSRule(newItemCSS_selector, "color", ob.color);
-    addCSSRule(newItemCSS_selector, "background-color", ob.bgcolor);
+		createCSSForClientOrJobFromOb(ob, dataType);
+  };
 
+
+	createCSSForClientOrJobFromOb = function(ob, dataType) {
+    var
+		selector =	"." + ob.class + ", " +
+								"." + ob.class + ":hover, " +
+								"." + ob.class + ":active",
+    colorPickerFGSelector, colorPickerBGSelector;
+
+		// add main CSS for eg. timesheets page
+		logMsg("selector: " + selector);
+    addCSSRule(selector, "color", ob.color);
+    addCSSRule(selector, "background-color", ob.bgcolor);
+
+		// colorPicker used on "jobs & clients" page
     if (dataType === DATATYPE_CLIENT) {
       colorPickerFGSelector = "#" + CLIENT_FG_COLPICK;
       colorPickerBGSelector = "#" + CLIENT_BG_COLPICK;
@@ -1549,10 +1587,9 @@ uk.co.firmgently.DontDillyDally = (function() {
       colorPickerFGSelector = "#" + JOB_FG_COLPICK;
       colorPickerBGSelector = "#" + JOB_BG_COLPICK;
     }
-
     addCSSRule(colorPickerFGSelector, "background-color", ob.color);
     addCSSRule(colorPickerBGSelector, "background-color", ob.bgcolor);
-  };
+	};
 
 
   callMethodFromObOnElement = function(event) {
@@ -1761,7 +1798,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 		if (itemData_ob && itemData_ob[DATAINDICES.jobID] && itemData_ob[DATAINDICES.jobID].length > 0) {
 //			logMsg("itemData_ob[DATAINDICES.jobID]: " + itemData_ob[DATAINDICES.jobID]);
 			changeSelectByOption(el_temp, itemData_ob[DATAINDICES.jobID]);
-//			fireEvent(el_temp, "change");
+			//manualEvent(el_temp, "change");
 		}
 
     // job/money notes
@@ -1794,15 +1831,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 	removeWorkItem = function(item_el) {
 		var
 		day_ar = dataRetrieveObject(DAYS_STR),
-		day_el = item_el.parentNode.parentNode,
-		dayOfYear = day_el.id,
-		day_ob = day_ar[dayOfYear];
+		day_ob = day_ar[item_el.parentNode.parentNode.id];
 		
-		logMsg("day_el: " + day_el);
-		logMsg("dayOfYear: " + dayOfYear);
-		logMsg("day_ob: " + day_ob);
 		delete day_ob[item_el.id];
-		logMsg("item_el.id: " + item_el.id);
 		item_el.parentNode.removeChild(item_el);
 		dataStoreObject(DAYS_STR, day_ar);
 	};
@@ -1891,7 +1922,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     fgCol = getRandomHexColor("dark"),
     bgCol = getRandomHexColor("light");
     logMsg("newClientCreate()");
-    document.getElementById(EL_ID_CLIENTNAMEIN).value = getNextName(DATATYPE_CLIENT);
+    document.getElementById(EL_ID_CLIENTNAMEIN).value = getNextID(DATATYPE_CLIENT);
     addCSSRule("#" + CLIENT_FG_COLPICK, "background-color", fgCol);
     addCSSRule("#" + CLIENT_BG_COLPICK, "background-color", bgCol);
     addCSSRule("#" + EL_ID_CLIENTNAMEIN, "color", fgCol);
@@ -1908,7 +1939,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     bgCol = getRandomHexColor("dark");
     logMsg("newJobCreate()");
 
-    document.getElementById(EL_ID_JOBNAMEIN).value = getNextName(DATATYPE_JOB);
+    document.getElementById(EL_ID_JOBNAMEIN).value = getNextID(DATATYPE_JOB);
     addCSSRule("#" + JOB_FG_COLPICK, "background-color", fgCol);
     addCSSRule("#" + JOB_BG_COLPICK, "background-color", bgCol);
     addCSSRule("#" + EL_ID_JOBNAMEIN, "color", fgCol);
@@ -1956,7 +1987,10 @@ uk.co.firmgently.DontDillyDally = (function() {
     var
 		pageType = dataRetrieveObject("prefs").pagetype,
     option_selector = this.value;
-
+		logMsg("option_selector: " + option_selector);
+		logMsg("(1) this.className: " + this.className);
+		logMsg("CLASS_CLIENTSELECT" + CLASS_CLIENTSELECT);
+		logMsg("this.className.indexOf(CLASS_CLIENTSELECT): " + this.className.indexOf(CLASS_CLIENTSELECT));
     switch (pageType) {
       case PAGETYPE_TIMESHEETS: // run on to next case
       case PAGETYPE_JOBSANDCLIENTS:
@@ -1965,6 +1999,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 				} else if (this.className.indexOf(CLASS_JOBSELECT) !== -1) {
 					this.className = CLASS_JOBSELECT + " " + option_selector;
 				}
+		logMsg("(2) this.className: " + this.className);
         break;
       case PAGETYPE_CONFIG:
         break;
