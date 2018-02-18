@@ -66,6 +66,8 @@ uk.co.firmgently.DDDConsts = (function() {
   JOB_SELECT_PLACEHOLDER = "select job",
   JOBNOTES_PLACEHOLDER = "job notes",
   MONEYNOTES_PLACEHOLDER = "money notes",
+  SEPARATOR_CASH = ".",
+  SEPARATOR_TIME = ":",
 
   EL_ID_COLHEADING = "column-headings",
   EL_ID_JOBNAMEIN = "jobNameIn",
@@ -83,12 +85,12 @@ uk.co.firmgently.DDDConsts = (function() {
   DATATYPE_JOB = "dataTypeJob",
   DATATYPE_CLIENT = "dataTypeClient",
 
-	ITEMTYPE_WORK = "WORK",
+	ITEMTYPE_TIME = "TIME",
 	ITEMTYPE_MONEY = "CASH",
 	
 	DATAINDICES = {
 		itemType:			0,
-		numberValue:	1,
+		numberValue: 	1,
 		clientID:			2,
 		jobID:				3,
 		notes:				4
@@ -444,7 +446,7 @@ uk.co.firmgently.DDDConsts = (function() {
     DATETYPE_DDMMYY: DATETYPE_DDMMYY,
     DATETYPE_MMDDYY: DATETYPE_MMDDYY,
     DATETYPE_DEFAULT: DATETYPE_DEFAULT,
-		ITEMTYPE_WORK: ITEMTYPE_WORK,
+		ITEMTYPE_TIME: ITEMTYPE_TIME,
 		ITEMTYPE_MONEY: ITEMTYPE_MONEY,
     TIMESPAN_WEEK: TIMESPAN_WEEK,
     TIMESPAN_MONTH: TIMESPAN_MONTH,
@@ -470,6 +472,8 @@ uk.co.firmgently.DDDConsts = (function() {
     JOBS_STR: JOBS_STR,
     CLIENTSTOTAL_STR: CLIENTSTOTAL_STR,
     JOBSTOTAL_STR: JOBSTOTAL_STR,
+    SEPARATOR_CASH: SEPARATOR_CASH,
+    SEPARATOR_TIME: SEPARATOR_TIME,
     EL_ID_JOBNAMEIN: EL_ID_JOBNAMEIN,
     EL_ID_CLIENTNAMEIN: EL_ID_CLIENTNAMEIN,
     JOB_FG_COLPICK: JOB_FG_COLPICK,

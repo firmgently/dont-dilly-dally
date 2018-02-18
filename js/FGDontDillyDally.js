@@ -66,6 +66,8 @@ uk.co.firmgently.DDDConsts = (function() {
   JOB_SELECT_PLACEHOLDER = "select job",
   JOBNOTES_PLACEHOLDER = "job notes",
   MONEYNOTES_PLACEHOLDER = "money notes",
+  SEPARATOR_CASH = ".",
+  SEPARATOR_TIME = ":",
 
   EL_ID_COLHEADING = "column-headings",
   EL_ID_JOBNAMEIN = "jobNameIn",
@@ -83,12 +85,12 @@ uk.co.firmgently.DDDConsts = (function() {
   DATATYPE_JOB = "dataTypeJob",
   DATATYPE_CLIENT = "dataTypeClient",
 
-	ITEMTYPE_WORK = "WORK",
+	ITEMTYPE_TIME = "TIME",
 	ITEMTYPE_MONEY = "CASH",
 	
 	DATAINDICES = {
 		itemType:			0,
-		numberValue:	1,
+		numberValue: 	1,
 		clientID:			2,
 		jobID:				3,
 		notes:				4
@@ -444,7 +446,7 @@ uk.co.firmgently.DDDConsts = (function() {
     DATETYPE_DDMMYY: DATETYPE_DDMMYY,
     DATETYPE_MMDDYY: DATETYPE_MMDDYY,
     DATETYPE_DEFAULT: DATETYPE_DEFAULT,
-		ITEMTYPE_WORK: ITEMTYPE_WORK,
+		ITEMTYPE_TIME: ITEMTYPE_TIME,
 		ITEMTYPE_MONEY: ITEMTYPE_MONEY,
     TIMESPAN_WEEK: TIMESPAN_WEEK,
     TIMESPAN_MONTH: TIMESPAN_MONTH,
@@ -470,6 +472,8 @@ uk.co.firmgently.DDDConsts = (function() {
     JOBS_STR: JOBS_STR,
     CLIENTSTOTAL_STR: CLIENTSTOTAL_STR,
     JOBSTOTAL_STR: JOBSTOTAL_STR,
+    SEPARATOR_CASH: SEPARATOR_CASH,
+    SEPARATOR_TIME: SEPARATOR_TIME,
     EL_ID_JOBNAMEIN: EL_ID_JOBNAMEIN,
     EL_ID_CLIENTNAMEIN: EL_ID_CLIENTNAMEIN,
     JOB_FG_COLPICK: JOB_FG_COLPICK,
@@ -675,9 +679,6 @@ uk.co.firmgently.FGUtils = (function() {
 
 
   addCSSRule = function(selector, property, newValue) {
-    logMsg("selector: " + selector);
-    logMsg("\tproperty: " + property);
-    logMsg("\tnewValue: " + newValue);
     var
     i, curStyleSheet,
     totalStyleSheets = document.styleSheets.length,
@@ -685,7 +686,6 @@ uk.co.firmgently.FGUtils = (function() {
 
     for (i = 0; i < totalStyleSheets; i++) {
       curStyleSheet = document.styleSheets[i];
-      // logMsg("curStyleSheet: " + curStyleSheet);
       try {
         curStyleSheet.insertRule(selector + " {" + newStyle + "}", curStyleSheet.cssRules.length);
       } catch(err1) {
@@ -929,12 +929,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     var
     prop, input_el, label_el,
     innerHTML = "",
-    // parent_el = document.getElementById(ob.parent);
     parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
-
-    // logMsg("ob.parent: " + ob.parent);
-    // logMsg("parent_el: " + parent_el);
-    // logMsg("typeof ob.parent: " + typeof ob.parent);
 
     if (ob.id) {
       if (ob.label) {
@@ -1247,7 +1242,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   navClick, onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
   dataStoragePossible, initData, dataStoreObject, dataRetrieveObject,
   dataUpdateObject, clientAndJobStyleSheet, createClientOrJobFromOb, createCSSForClientOrJobFromOb,
-	getJobOrClientIDFromElement, updateWorkItemDataFromEl,
+	getJobOrClientIDFromElement, updateDataFromWorkItemEl,
   newClientFormSave, newJobFormSave, clientInputWasLastEmpty,
   updateLayoutRefs, updateSelected, addUIWorkItem, removeWorkItem 
 	;
@@ -1301,8 +1296,8 @@ uk.co.firmgently.DontDillyDally = (function() {
         totalsToShow: SHOWTOTALS_DEFAULT
       });
 
-			// create client/job counters and set them to zero
-			// counters are used to save having to iterate through objects
+			// create client/job unitBigers and set them to zero
+			// unitBigers are used to save having to iterate through objects
 			// to see how many children they have
       dataStoreObject(CLIENTSTOTAL_STR, 0);
       dataStoreObject(JOBSTOTAL_STR, 0);
@@ -1538,8 +1533,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     var
     id, ar, n, containerObjectName, input_el;
 
-    logMsg("createClientOrJobFromOb()");
-    
 		// create unique identifier for this job or client
     if (dataType === DATATYPE_CLIENT) {
 			// input_el will only be present on 'jobs & clients' page
@@ -1570,7 +1563,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     colorPickerFGSelector, colorPickerBGSelector;
 
 		// add main CSS for eg. timesheets page
-		logMsg("selector: " + selector);
     addCSSRule(selector, "color", ob.color);
     addCSSRule(selector, "background-color", ob.bgcolor);
 
@@ -1593,7 +1585,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   callMethodFromOb = function(ob, event) {
-    logMsg("callMethodFromOb()");
     var scope;
 
     if (ob.scope) {
@@ -1603,9 +1594,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     } else {
       scope = undefined;
     }
-
-    logMsg("\tob.methodPathStr: " + ob.methodPathStr);
-    logMsg("\tscope: " + scope);
 
     if (event) {
       if (ob.args) {
@@ -1640,7 +1628,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     var
     i, j, daysToDraw, isOddDay, weekdayCur, day_str,
     isToday, rowClassname,
-    day_el, date_el, workItem_el, dayDataContainer_el,
+    day_el, date_el, dayDataContainer_el,
 		hrs_el, client_el, job_el,
     ob_temp, dayWorkItems, workItem,
     weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
@@ -1700,7 +1688,6 @@ uk.co.firmgently.DontDillyDally = (function() {
       if (dayWorkItems === undefined) {
         addUIWorkItem(dayDataContainer_el);
       } else {
-				logMsg("items found for " + day_str);
 				for (workItem in dayWorkItems) {
           addUIWorkItem(dayDataContainer_el, workItem, dayWorkItems[workItem]);
         }
@@ -1713,46 +1700,54 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   addUIWorkItem = function(dayDataContainer_el, itemID, itemData_ob) {
     var
-    hrs_el, money_el, ob_temp, el_temp, workItem_el, wrappedCheckbox_el,
+    hrs_el, money_el, ob_temp, el_temp, item_el, wrappedCheckbox_el, numberValue_ar,
     day_el = dayDataContainer_el.parentNode;
 
 		if (itemID === undefined) { itemID = getGUID(); }
 
-    workItem_el = createElementWithId("li", itemID);
-    dayDataContainer_el.appendChild(workItem_el);
+    item_el = createElementWithId("li", itemID);
+    dayDataContainer_el.appendChild(item_el);
 
-    // 'add task' button
+    // 'remove task' button
     el_temp = createButtonFromOb({
-      class: "addTaskBtn",
-      label: "&#xe821;",
-      parent: workItem_el,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.addTask",
+      class: "removeTaskBtn",
+      label: "&#xe83d;",
+      parent: item_el,
+      methodPathStr: "uk.co.firmgently.DontDillyDally.removeTask",
       scopeID: itemID
     });
     registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
-
-    // 'money/task' checkbox
+    
+		// 'money/task' checkbox
     el_temp = createCheckboxFromOb({
       class: "ios-switch isMoneyTaskChk",
       label: " ", // a label is needed for wrapLabel/addDivToLabel to work
 			wrapLabel: true,
 			addDivToLabel: true,
-      parent: workItem_el,
+      parent: item_el,
       checked: false,
       methodPathStr: "uk.co.firmgently.DontDillyDally.onIsMoneyTaskChkChange",
       scopeID: itemID
     });
 		registerEventHandler(el_temp, "change", callMethodFromObOnElement);
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_MONEY) {
-			el_temp.checked = true;
 			// after checking this box its onChange method has to be called, but not yet
 			// as it depends on other elements added below... see bottom of this function
-		}
+			el_temp.checked = true;
+      //
+      if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
+        numberValue_ar = itemData_ob[DATAINDICES.numberValue].split(SEPARATOR_CASH);
+      }
+		} else {
+      if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
+        numberValue_ar = itemData_ob[DATAINDICES.numberValue].split(SEPARATOR_TIME);
+      }
+    }
 
-    // hours/money
+    // hours/money big units
     el_temp = createInputFromOb({
-      class: "count hrs",
-      parent: workItem_el,
+      class: "unitBig hrs",
+      parent: item_el,
       attributes: {
         "type": "number", "value": "00"
       },
@@ -1764,14 +1759,39 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
     registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
-		if (itemData_ob) { el_temp.value = itemData_ob[DATAINDICES.numberValue]; }
+		if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
+			el_temp.value = numberValue_ar[0];
+			// TODO 'negative' class is not being added when field is pre-filled with saved data	
+		//	onUpdateInput.call(el_temp);
+		}
+
+    // hours/money small units
+    el_temp = createInputFromOb({
+      class: "unitSmall hrs",
+      parent: item_el,
+      attributes: {
+        "type": "number", "value": "00"
+      },
+      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+      scopeID: itemID
+    });
+    el_temp.ob.scope = el_temp;
+    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+		if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
+			el_temp.value = numberValue_ar[1];
+			// TODO 'negative' class is not being added when field is pre-filled with saved data	
+		//	onUpdateInput.call(el_temp);
+		}
 
     // client select/dropdown
     el_temp = createSelectFromOb({
       contentType: CONTENTTYPE_CLIENTS,
       placeholderText: CLIENT_SELECT_PLACEHOLDER,
       options: dataRetrieveObject(CLIENTS_STR),
-      parent: workItem_el,
+      parent: item_el,
       methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected",
     });
     el_temp.ob.scope = el_temp;
@@ -1787,7 +1807,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       contentType: CONTENTTYPE_JOBS,
       placeholderText: JOB_SELECT_PLACEHOLDER,
       options: dataRetrieveObject(JOBS_STR),
-      parent: workItem_el,
+      parent: item_el,
       methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected"
     });
     el_temp.ob.scope = el_temp;
@@ -1801,7 +1821,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     // job/money notes
     el_temp = createInputFromOb({
       class: "notes job",
-      parent: workItem_el,
+      parent: item_el,
       attributes: { "type": "text", "placeholder": JOBNOTES_PLACEHOLDER },
       methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
       scopeID: itemID
@@ -1813,21 +1833,22 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
 		if (itemData_ob && itemData_ob[DATAINDICES.notes]) { el_temp.value = itemData_ob[DATAINDICES.notes]; }
 
-    // 'remove task' button
+    // 'add task' button
     el_temp = createButtonFromOb({
-      class: "removeTaskBtn",
-      label: "&#xe83d;",
-      parent: workItem_el,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.removeTask",
+      class: "addTaskBtn",
+      label: "&#xe821;",
+      parent: item_el,
+      methodPathStr: "uk.co.firmgently.DontDillyDally.addTask",
       scopeID: itemID
     });
     registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
+
 
 		// if this item is being filled with stored data,
 		// and the money checkbox is checked, we have to call the onChange function here
 		// as it depends on the other elements such as "notes" being present
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_MONEY) {
-			onIsMoneyTaskChkChange.call(workItem_el);
+			onIsMoneyTaskChkChange.call(item_el);
 		}
   };
 
@@ -1890,9 +1911,13 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   onUpdateInput = function(event) {
-    logMsg(this.nodeName);
 		if (document.body.contains(this)) {
-			updateWorkItemDataFromEl(this.parentNode);
+			if (this.value < 0) {
+				addClassname(this, "negative");
+			} else {
+				removeClassname(this, "negative");
+			}
+			updateDataFromWorkItemEl(this.parentNode);
 		}
   };
 
@@ -1900,22 +1925,22 @@ uk.co.firmgently.DontDillyDally = (function() {
   onIsMoneyTaskChkChange = function() {
     var
     checkbox = this.getElementsByClassName("isMoneyTaskChk")[0],
-    countInput = this.getElementsByClassName("count")[0],
+    unitBigInput = this.getElementsByClassName("unitBig")[0],
     notesInput = this.getElementsByClassName("notes")[0];
     if (checkbox.checked) {
-      addClassname(countInput, "money");
-      removeClassname(countInput, "hrs");
+      addClassname(unitBigInput, "money");
+      removeClassname(unitBigInput, "hrs");
       addClassname(notesInput, "money");
       removeClassname(notesInput, "job");
       notesInput.placeholder = MONEYNOTES_PLACEHOLDER;
     } else {
-      addClassname(countInput, "hrs");
-      removeClassname(countInput, "money");
+      addClassname(unitBigInput, "hrs");
+      removeClassname(unitBigInput, "money");
       addClassname(notesInput, "job");
       removeClassname(notesInput, "money");
       notesInput.placeholder = JOBNOTES_PLACEHOLDER;
     }
-		if (document.body.contains(this)) { updateWorkItemDataFromEl(this); }
+		if (document.body.contains(this)) { updateDataFromWorkItemEl(this); }
   };
 
 
@@ -2005,22 +2030,23 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
     if (pageType === PAGETYPE_TIMESHEETS) {
 			if (document.body.contains(this)) {
-				updateWorkItemDataFromEl(this.parentNode);
+				updateDataFromWorkItemEl(this.parentNode);
 			}
     }
   };
 
 
-	updateWorkItemDataFromEl = function (el) {
+	updateDataFromWorkItemEl = function (el) {
 		var
 		days_ar, day_ob, workItem_ar,
-		isMoneyTaskChk_el, countInput_el, clientSelect_el, jobSelect_el, notesInput_el,
+		isMoneyTaskChk_el, unitBigInput_el, unitSmallInput_el, clientSelect_el, jobSelect_el, notesInput_el,
 		pageType = dataRetrieveObject("prefs").pagetype,
 		day_el = el.parentNode.parentNode,
 		day_str = day_el.id;
 		
 		isMoneyTaskChk_el = el.getElementsByClassName("isMoneyTaskChk")[0];
-		countInput_el = el.getElementsByClassName("count")[0];
+		unitBigInput_el = el.getElementsByClassName("unitBig")[0];
+		unitSmallInput_el = el.getElementsByClassName("unitSmall")[0];
 		clientSelect_el = el.getElementsByClassName(CLASS_CLIENTSELECT)[0];
 		jobSelect_el = el.getElementsByClassName(CLASS_JOBSELECT)[0];
 		notesInput_el = el.getElementsByClassName("notes")[0]; 
@@ -2031,10 +2057,11 @@ uk.co.firmgently.DontDillyDally = (function() {
 		workItem_ar = [];
 		if (isMoneyTaskChk_el.checked) {
 			workItem_ar[DATAINDICES.itemType] = ITEMTYPE_MONEY;
+      workItem_ar[DATAINDICES.numberValue] = unitBigInput_el.value + SEPARATOR_CASH + unitSmallInput_el.value;
 		} else {
-			workItem_ar[DATAINDICES.itemType] = ITEMTYPE_WORK;
+			workItem_ar[DATAINDICES.itemType] = ITEMTYPE_TIME;
+      workItem_ar[DATAINDICES.numberValue] = unitBigInput_el.value + SEPARATOR_TIME + unitSmallInput_el.value;
 		}
-		workItem_ar[DATAINDICES.numberValue] = countInput_el.value;
 		workItem_ar[DATAINDICES.clientID] = getJobOrClientIDFromElement(clientSelect_el);
 		workItem_ar[DATAINDICES.jobID] = getJobOrClientIDFromElement(jobSelect_el);
 		workItem_ar[DATAINDICES.notes] = notesInput_el.value;

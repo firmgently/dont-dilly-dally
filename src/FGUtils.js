@@ -172,9 +172,6 @@ uk.co.firmgently.FGUtils = (function() {
 
 
   addCSSRule = function(selector, property, newValue) {
-    logMsg("selector: " + selector);
-    logMsg("\tproperty: " + property);
-    logMsg("\tnewValue: " + newValue);
     var
     i, curStyleSheet,
     totalStyleSheets = document.styleSheets.length,
@@ -182,7 +179,6 @@ uk.co.firmgently.FGUtils = (function() {
 
     for (i = 0; i < totalStyleSheets; i++) {
       curStyleSheet = document.styleSheets[i];
-      // logMsg("curStyleSheet: " + curStyleSheet);
       try {
         curStyleSheet.insertRule(selector + " {" + newStyle + "}", curStyleSheet.cssRules.length);
       } catch(err1) {

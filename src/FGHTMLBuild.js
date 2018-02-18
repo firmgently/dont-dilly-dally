@@ -62,12 +62,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     var
     prop, input_el, label_el,
     innerHTML = "",
-    // parent_el = document.getElementById(ob.parent);
     parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
-
-    // logMsg("ob.parent: " + ob.parent);
-    // logMsg("parent_el: " + parent_el);
-    // logMsg("typeof ob.parent: " + typeof ob.parent);
 
     if (ob.id) {
       if (ob.label) {

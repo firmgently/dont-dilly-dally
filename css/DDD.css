@@ -1,5 +1,6 @@
+@charset "UTF-8";
 /* ===============================================
-		Dead Simple Grid (c) 2015 Vladimir Agafonkin
+Dead Simple Grid (c) 2015 Vladimir Agafonkin
 ================================================== */
 .row .row {
   margin: 0 0; }
@@ -18,10 +19,10 @@
     width: 100%;
     box-sizing: border-box; } }
 /* ===============================================
-		http://meyerweb.com/eric/tools/css/reset/
-		v2.0b1 | 201101
-		NOTE: WORK IN PROGRESS
-		USE WITH CAUTION AND TEST WITH ABANDON
+http://meyerweb.com/eric/tools/css/reset/
+v2.0b1 | 201101
+NOTE: WORK IN PROGRESS
+USE WITH CAUTION AND TEST WITH ABANDON
 ================================================== */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -74,7 +75,7 @@ table {
   border-spacing: 0; }
 
 /* ===============================================
-	Don't Dilly Dally
+Don't Dilly Dally
 ================================================== */
 body {
   font-family: "FG_Medium", Tahoma, Arial, Helvetica; }
@@ -235,7 +236,8 @@ body#jobsClients #column-headings, body#config #column-headings {
   #timesheetContainer li.week-start {
     margin-top: 0.2em; }
   #timesheetContainer li.month-start {
-    border-top-color: #000066; }
+    border-top-color: #000066;
+    border-top-width: 20px; }
 
 /* FORMS */
 select {
@@ -310,18 +312,25 @@ select {
   text-indent: .5em;
   color: red; }
 
-input.count {
+input.unitBig, input.unitSmall {
   display: inline-block;
   width: 3em;
   font-size: 1.25em;
   font-weight: bold;
   margin-right: 0.6em; }
-  input.count.money {
+  input.unitBig.money, input.unitSmall.money {
     background-color: darkgreen;
-    color: white; }
-  input.count.hrs {
+    color: white;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='1.25em' width='3em'><text x='2' y='13' fill='white' font-size='1em' font-family='arial'>£</text></svg>");
+    background-size: 100%;
+    padding-left: 1em; }
+    input.unitBig.money.negative, input.unitSmall.money.negative {
+      background-color: red; }
+  input.unitBig.hrs, input.unitSmall.hrs {
     background-color: black;
     color: red; }
+  input.unitBig:focus, input.unitSmall:focus {
+    font-size: 2em; }
 
 input.notes {
   margin-left: 0.6em; }
@@ -329,8 +338,7 @@ input.notes {
     color: darkgreen;
     background-color: white; }
   input.notes.job {
-    color: black;
-    background-color: red; }
+    color: red; }
 
 /* COLOR PICKER */
 .color-picker {
