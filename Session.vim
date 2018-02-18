@@ -11,8 +11,8 @@ set shortmess=aoO
 badd +472 src/DDDConsts.js
 badd +237 src/DDD.scss
 badd +360 src/FGUtils.js
-badd +144 src/FGHTMLBuild.js
-badd +104 src/DontDillyDally.js
+badd +201 src/FGHTMLBuild.js
+badd +537 src/DontDillyDally.js
 badd +1 src
 badd +7 index.htm
 argglobal
@@ -34,7 +34,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 31) / 63)
+let s:l = 1 - ((0 * winheight(0) + 38) / 76)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
