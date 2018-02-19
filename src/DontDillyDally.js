@@ -498,15 +498,17 @@ uk.co.firmgently.DontDillyDally = (function() {
     item_el = createElementWithId("li", itemID);
     dayDataContainer_el.appendChild(item_el);
 
-    // 'remove task' button
+    // 'add task' button
     el_temp = createButtonFromOb({
-      class: "removeTaskBtn",
-      label: "&#xe83d;",
+      class: "addTaskBtn",
+      label: "&#xe821;",
       parent: item_el,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.removeTask",
+      methodPathStr: "uk.co.firmgently.DontDillyDally.addTask",
       scopeID: itemID
     });
     registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
+
+
     
 		// 'money/task' checkbox
     el_temp = createCheckboxFromOb({
@@ -552,11 +554,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
       el_temp.min = 0;
       el_temp.max = 23;
-    } else {
-      el_temp.min = 0 - Number.MAX_VALUE;
-      el_temp.max = Number.MAX_VALUE;
-    }
-		if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
+    } 
+    if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
 			el_temp.value = numberValue_ar[0];
 			// TODO 'negative' class is not being added when field is pre-filled with saved data	
 		//	onUpdateInput.call(el_temp);
@@ -649,17 +648,16 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
 		if (itemData_ob && itemData_ob[DATAINDICES.notes]) { el_temp.value = itemData_ob[DATAINDICES.notes]; }
 
-    // 'add task' button
+    // 'remove task' button
     el_temp = createButtonFromOb({
-      class: "addTaskBtn",
-      label: "&#xe821;",
+      class: "removeTaskBtn",
+      label: "&#xe83d;",
       parent: item_el,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.addTask",
+      methodPathStr: "uk.co.firmgently.DontDillyDally.removeTask",
       scopeID: itemID
     });
     registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
-
-
+		
 		// if this item is being filled with stored data,
 		// and the money checkbox is checked, we have to call the onChange function here
 		// as it depends on the other elements such as "notes" being present
@@ -710,7 +708,8 @@ uk.co.firmgently.DontDillyDally = (function() {
         case "configForm":
           dataUpdateObject("prefs", "timespan", form.timespan.value);
           // dateFormat is an object, the form just stores the name of it so grab it here
-          dataUpdateObject("prefs", "dateFormat", uk.co.firmgently.DDDConsts[form.dateFormat.value]);
+          //dataUpdateObject("prefs", "dateFormat", uk.co.firmgently.DDDConsts[form.dateFormat.value]);
+          dataUpdateObject("prefs", "dateFormat", form.dateFormat.value);
           dataUpdateObject("prefs", "totalsToShow", form.totalsToShow.value);
           dataUpdateObject("prefs", "minuteIncrements", form.minuteIncrements.value);
           break;
@@ -729,10 +728,15 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   onUpdateInput = function(event) {
 		if (document.body.contains(this)) {
-			if (this.value < 0) {
-				addClassname(this, "negative");
-			} else {
-				removeClassname(this, "negative");
+			// TODO needs to handle negative small unit eg. -£0.13
+			if (this.className.indexOf("unitBig") !== -1) {
+				if (this.value < 0) {
+					addClassname(this, "negative");
+					addClassname(this.parentNode.getElementsByClassName("unitSmall")[0], "negative");
+				} else {
+					removeClassname(this, "negative");
+					removeClassname(this.parentNode.getElementsByClassName("unitSmall")[0], "negative");
+				}
 			}
 			updateDataFromWorkItemEl(this.parentNode);
 		}

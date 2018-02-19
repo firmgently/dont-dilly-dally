@@ -66,6 +66,9 @@ del {	text-decoration: line-through; }
 table {	border-collapse: collapse; border-spacing: 0; }
 
 
+* { box-sizing: border-box; }
+
+
 /* ===============================================
 Don't Dilly Dally
 ================================================== */
@@ -73,37 +76,48 @@ Don't Dilly Dally
 $bold-font-family: "FG_Bold", Tahoma, Arial, Helvetica;
 $normal-font-family: "FG_Medium", Tahoma, Arial, Helvetica;
 
-$red: #f00;
-$blue: #00f;
-$white: #fff;
-$black: #000;
-$panelFgColour: $white;
-$panelBgColour: #000066;
-$panelFgColourDimmed: mix($panelFgColour, grey, 25%);
-$panelBgColourDimmed: mix($panelBgColour, grey, 25%);
+$ddd-green: #778866;
+$ddd-greendark: #445533;
+$ddd-sand: #aa9977;
+$ddd-sandlight: #ddccaa;
+$ddd-sanddark: #776644;
+$ddd-gold: #ddaa55;
+$ddd-cream: #ffeedd;
+$ddd-brown: #443322;
+$ddd-browndark: #221100;
+$ddd-maroon: #662200;
+$ddd-orange: #cc6644;
+$ddd-orangedark: #993322;
+
+$panelFgColour: $ddd-browndark;
+$panelBgColour: $ddd-sand;
+$panelFgColourDimmed: mix($panelFgColour, $ddd-browndark, 75%);
+$panelBgColourDimmed: mix($panelBgColour, $ddd-browndark, 75%);
 $panelBgColourTint: mix($panelBgColour, white, 75%);
 $panelBgColourShade: mix($panelBgColour, black, 75%);
-$panelBgColour1: mix($panelBgColour, $white, 25%);
-$panelBgColour2: mix($panelBgColour, $white, 15%);
-$panelBgColour3: mix($panelBgColour, $white, 10%);
-$panelBgColourImportant: mix($panelBgColour2, $red, 80%);
-$panelBgColourAltered: mix($panelBgColour1, $red, 95%);
+$panelBgColour1: lighten($ddd-sandlight, 25%);
+$panelBgColour2: lighten($ddd-sandlight, 15%);
+$panelBgColour3: lighten($ddd-sandlight, 10%);
+$panelBgColourImportant: mix($panelBgColour2, $ddd-orangedark, 80%);
+$panelBgColourAltered: mix($panelBgColour1, $ddd-orangedark, 95%);
 $panelBgColourTrans: fade($panelBgColour1, 80%);
 
-$buttonBgColourOut: #000258;
+$buttonBgColourOut: $ddd-maroon;
 $buttonBgColourOver: darken($buttonBgColourOut, 25%);
-$buttonColourOut: #bbb;
-$buttonColourOver: #ddd;
+$buttonColourOut: $ddd-gold;
+$buttonColourOver: $ddd-sand;
 
-$jobInputColour: red;
-$jobInputBackgroundColour: black;
-$moneyInputColour: white;
-$moneyInputBackgroundColour: darkgreen;
+$jobInputColour: $ddd-brown;
+$jobInputBackgroundColour: $ddd-sand;
+$jobInputBackgroundColourTint: lighten($jobInputBackgroundColour, 25%);
+$moneyInputColour: $ddd-browndark;
+$moneyInputBackgroundColour: $ddd-green;
+$moneyInputBackgroundColourTint: lighten($moneyInputBackgroundColour, 25%);
 
-$darkHeadingBgColour: #551155;
-$darkerHeadingBgColour: mix($darkHeadingBgColour, $black, 70%);
-$darkHeadingColour: #fff;
-$midHeadingBgColour: mix($darkHeadingBgColour, $white, 70%);
+$darkHeadingBgColour: $ddd-brown;
+$darkerHeadingBgColour: mix($darkHeadingBgColour, $ddd-browndark, 70%);
+$darkHeadingColour: $ddd-cream;
+$midHeadingBgColour: mix($darkHeadingBgColour, $ddd-cream, 70%);
 
 $tinyPadding: 0.1em;
 $smallPadding: 0.2em;
@@ -141,17 +155,22 @@ $tab-margin: $mediumPadding;
   border-radius: $args $args 0 0;
 }
 
+:focus {
+	//outline: $largePadding solid $ddd-orange;
+	background-color: white; color: black;
+}
 
 body {
   font-family: $normal-font-family;
+	background-color: $ddd-sandlight;
 }
 
 header {
   position: fixed; display: inline-block; z-index: 1;
   width: 100%; height: $header-height;
-  color: white; background-color: $panelBgColour;
+  color: $ddd-cream; background-color: $panelBgColour;
   nav {
-    position: relative; background-color: gray;
+    position: relative; background-color: $ddd-browndark;
     button.btnNav {
       padding: $tab-padding; margin: $tab-margin $tab-margin 0 0;
       font-size: $tab-fontsize-unselected; vertical-align: bottom;
@@ -201,7 +220,7 @@ body#jobsClients, body#config {
 }
 
 
-.header-info { position: relative; margin: $mediumPadding 0 0 $mediumPadding; }
+.header-info { position: relative; margin: $largePadding 0 0 $largePadding; }
 #loading-indicator {
   position: absolute; z-index: 2; top: 0; left: 0; bottom: 0; right: 0;
   background-color: green;
@@ -213,48 +232,65 @@ body#jobsClients, body#config {
   display: block;
   .date.col {
     font-family: 'Lucida Console', 'Monaco', 'monospace', 'Courier';
+		font-size: 1.1em; font-weight: bold;
     width: $date-width; margin-right: 0 - ($date-width + $mediumPadding);
-    margin-top: $mediumPadding; margin-left: $mediumPadding;
+    margin-top: -$mediumPadding; margin-left: $mediumPadding;
     padding-top: $mediumPadding;
-    em {
-      background-color: $panelBgColour; color: white;
-      padding: $mediumPadding; top: -0.1em; margin-right: $mediumPadding;
-      position: relative; display: inline-block;
-    }
   }
   ul.day-data.col {
     padding-left: $date-width;
     display: inline-block; float: right; z-index: 1;
-    li { display: block; }
+    li {
+			display: block;
+			margin-bottom: $mediumPadding;
+//			&:first-child { margin-top: 0; }
+		}
     li .removeTaskBtn, li .addTaskBtn {
-      font-family: "ddd-icons";
+      font-family: "ddd-icons"; font-size: 1.33em;
       @include border-radius(1em); border: none;
       height: 2rem; width: 2rem;
       margin-left: $largePadding;
       cursor: pointer;
+			background-color: $ddd-cream; color: $ddd-sand;
     }
+    li .removeTaskBtn { color: $ddd-orangedark; }
     li:only-child .removeTaskBtn { visibility: hidden; }
     li:not(:last-child) .addTaskBtn { visibility: hidden; }
   }
   li {
+    em {
+      background-color: $panelBgColour2; 
+      padding: $largePadding; top: 0; margin-right: $mediumPadding;
+      position: relative; display: inline-block;
+			font-weight: normal;
+    }
     &.day {
       display: block;
       padding: $tinyPadding;
       color: $panelBgColour; background-color: $panelBgColour3;
       border-style: dotted; border-width: $smallPadding; border-color: $panelBgColour3;
-      &:hover { color: mix($panelBgColour, $black, 25%); }
+      &:hover, &:focus-within { color: mix($panelBgColour, $ddd-browndark, 25%); }
     }
-    &.odd { background-color: $panelBgColour2; border-color: $panelBgColour2; }
+		&.odd {
+			background-color: $panelBgColour2; border-color: $panelBgColour2;
+			em { background-color: $panelBgColour3; }
+		}
     &.today { font-family: $bold-font-family; background-color: $panelBgColour1; border-color: $panelBgColour1; }
     &.week-start { margin-top: $smallPadding; }
-    &.month-start { border-top-color: $panelBgColour; border-top-width: 20px; }
+    &.month-start { border-top-color: $panelBgColour; }
   }
 }
 
 
 
 /* FORMS */
-select { font-family: $bold-font-family; appearance: none; -webkit-appearance: none; -moz-appearance: none; }
+select, input, button { border: none; padding: $smallPadding $smallPadding $smallPadding $mediumPadding; }
+select {
+  font-family: $bold-font-family;
+  appearance: none; -webkit-appearance: none; -moz-appearance: none;
+  background-color: $ddd-cream; color: $ddd-sanddark;
+	&:first-of-type { margin-right: $largePadding; } 
+}
 #configForm {
   input[type=radio] {
     display: block;
@@ -274,13 +310,12 @@ select { font-family: $bold-font-family; appearance: none; -webkit-appearance: n
 :root input[type="checkbox"].ios-switch + div {
   display: inline-block;
   vertical-align: middle;
-  width: 3em;	height: 1.2em;
-  border: 1px solid rgba(0,0,0,.3);
+  width: 3.5em;	height: 1.52em;
   border-radius: 999px;
-  margin: 0 .5em;
+  margin: -0.18em 0.5em 0 .5em;
+	padding: $tinyPadding $mediumPadding;
   background: $jobInputBackgroundColour;
-  background-image: linear-gradient(rgba(0,0,0,.1), transparent),
-  linear-gradient(90deg, hsl(210, 90%, 60%) 50%, transparent 50%);
+  background-image: linear-gradient(90deg, $moneyInputBackgroundColour 50%, transparent 50%);
   background-size: 200% 100%;
   background-position: 100% 0;
   background-origin: border-box;
@@ -288,15 +323,13 @@ select { font-family: $bold-font-family; appearance: none; -webkit-appearance: n
   overflow: hidden;
   transition-duration: .2s;
   transition-property: padding, width, background-position, text-indent;
-  box-shadow: 0 .1em .1em rgba(0,0,0,.2) inset,
-  0 .45em 0 .1em rgba(0,0,0,.05) inset;
-  font-size: 140%; /* change this and see how they adjust! */
+  font-size: 130%; /* change this and see how they adjust! */
   font-family: "ddd-icons";
   cursor: pointer;
 }
 
 :root input[type="checkbox"].ios-switch:checked + div {
-  padding-left: 2em;	width: 1em;
+  padding-left: 1.8em;
   background-position: 0 0;
 }
 
@@ -304,30 +337,26 @@ select { font-family: $bold-font-family; appearance: none; -webkit-appearance: n
   content: '\e801';
   float: left;
   width: 0.825em; height: 0.825em;
-  margin: -.05em;
-  border: 1px solid rgba(0,0,0,.35);
+  margin: 0.1em -0.3em 0em 0.09em;
   border-radius: inherit;
-  background: white;
-  background-image: linear-gradient(rgba(0,0,0,.2), transparent);
-  box-shadow: 0 .1em .1em .1em hsla(0,0%,100%,.8) inset,
-  0 0 .5em rgba(0,0,0,.3);
-  color: white;
-  text-indent: -1.35em;
+  background: $ddd-cream;
+  color: $moneyInputColour;
+  text-indent: -1.3em;
 }
 
-:root input[type="checkbox"].ios-switch:active + div:before {
-  background-color: #eee;
-}
-
+/*:root input[type="checkbox"].ios-switch:active + div:before {
+  background-color: $ddd-orange;
+}*/
+/*
 :root input[type="checkbox"].ios-switch:focus + div {
   box-shadow: 0 .1em .1em rgba(0,0,0,.2) inset,
   0 .45em 0 .1em rgba(0,0,0,.05) inset,
   0 0 .4em 1px rgba(255,255,255,.5);
 }
-
+*/
 :root input[type="checkbox"].ios-switch + div:before,
 :root input[type="checkbox"].ios-switch + div:after {
-  font-size: 120%;
+  font-size: 140%;
 }
 
 :root input[type="checkbox"].ios-switch + div:after {
@@ -347,21 +376,36 @@ select { font-family: $bold-font-family; appearance: none; -webkit-appearance: n
 input.unitBig, input.unitSmall {
   display: inline-block; width: 3em;
   font-size: 1.25em; font-weight: bold;
+  text-align: center;
+	@include border-radius($mediumPadding);
   &.money {
     background-color: $moneyInputBackgroundColour; color: $moneyInputColour;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='1.25em' width='3em'><text x='2' y='13' fill='white' font-size='1em' font-family='arial'>£</text></svg>");
+/*    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='1.25em' width='3em'><text x='2' y='13' fill='#{$ddd-cream}' font-size='1em' font-family='arial'>£</text></svg>");*/
     background-size: 100%;
-    padding-left: 1em;
-    &.negative { background-color: red; }
+    // padding-left: 1em;
+    &.negative { background-color: $ddd-orange; }
   }
   &.hrs { background-color: $jobInputBackgroundColour; color: $jobInputColour; }
-  margin-right: $largePadding;
 }
+input.unitSmall { /*text-align: left;*/ margin-right: $largePadding; }
 
 input.notes {
-  &.money { color: $moneyInputBackgroundColour; background-color: $moneyInputColour; }
-  &.job { color: $jobInputColour; }
+  &.money { color: $moneyInputColour; background-color: $moneyInputBackgroundColourTint; }
+  &.job { color: $jobInputColour; background-color: $jobInputBackgroundColourTint; }
   margin-left: $largePadding;
+	padding: $mediumPadding $mediumPadding $mediumPadding $largePadding;
+	&::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+		color: inherit; opacity: 1; font-style: italic;
+	}
+	&::-moz-placeholder { /* Firefox 19+ */
+		color: inherit; opacity: 1; font-style: italic;
+	}
+	&:-ms-input-placeholder { /* IE 10+ */
+		color: inherit; opacity: 1; font-style: italic;
+	}
+	&:-moz-placeholder { /* Firefox 18- */
+		color: inherit; opacity: 1; font-style: italic;
+	}
 }
 
 

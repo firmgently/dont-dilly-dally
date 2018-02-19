@@ -24,7 +24,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
 	fillHTMLFromOb = function(ob) {
     for (var prop in ob) {
-      document.getElementById(prop).innerHTML = ob[prop];
+      if (document.getElementById(prop)) {
+        document.getElementById(prop).innerHTML = ob[prop];
+      }
     }
   };
 

@@ -74,11 +74,19 @@ table {
   border-collapse: collapse;
   border-spacing: 0; }
 
+* {
+  box-sizing: border-box; }
+
 /* ===============================================
 Don't Dilly Dally
 ================================================== */
+:focus {
+  background-color: white;
+  color: black; }
+
 body {
-  font-family: "FG_Medium", Tahoma, Arial, Helvetica; }
+  font-family: "FG_Medium", Tahoma, Arial, Helvetica;
+  background-color: #ddccaa; }
 
 header {
   position: fixed;
@@ -86,11 +94,11 @@ header {
   z-index: 1;
   width: 100%;
   height: 8em;
-  color: white;
-  background-color: #000066; }
+  color: #ffeedd;
+  background-color: #aa9977; }
   header nav {
     position: relative;
-    background-color: gray; }
+    background-color: #221100; }
     header nav button.btnNav {
       padding: 0.1em;
       margin: 0.3em 0.3em 0 0;
@@ -101,14 +109,14 @@ header {
       -webkit-border-radius: 0.2em 0.2em 0 0;
       -moz-border-radius: 0.2em 0.2em 0 0;
       border-radius: 0.2em 0.2em 0 0;
-      color: #a0a0a0;
-      background-color: #60607a;
-      border-color: #40408c;
+      color: #221100;
+      background-color: #887759;
+      border-color: #bfb399;
       border-bottom: none;
       text-overflow: ellipsis;
       white-space: nowrap; }
       header nav button.btnNav:hover, header nav button.btnNav:focus {
-        color: #fff;
+        color: #221100;
         outline: 0; }
 
 body#jobsClients header nav button#jobsClients.btnNav,
@@ -118,8 +126,8 @@ body#config header nav button#config.btnNav {
   -webkit-border-radius: 0.3em 0.3em 0 0;
   -moz-border-radius: 0.3em 0.3em 0 0;
   border-radius: 0.3em 0.3em 0 0;
-  color: #fff;
-  background-color: #000066; }
+  color: #221100;
+  background-color: #aa9977; }
 
 .hidden {
   visibility: hidden; }
@@ -167,7 +175,7 @@ body#jobsClients #column-headings, body#config #column-headings {
 
 .header-info {
   position: relative;
-  margin: 0.3em 0 0 0.3em; }
+  margin: 0.6em 0 0 0.6em; }
 
 #loading-indicator {
   position: absolute;
@@ -182,28 +190,24 @@ body#jobsClients #column-headings, body#config #column-headings {
   display: block; }
   #timesheetContainer .date.col {
     font-family: 'Lucida Console', 'Monaco', 'monospace', 'Courier';
+    font-size: 1.1em;
+    font-weight: bold;
     width: 8em;
     margin-right: -8.3em;
-    margin-top: 0.3em;
+    margin-top: -0.3em;
     margin-left: 0.3em;
     padding-top: 0.3em; }
-    #timesheetContainer .date.col em {
-      background-color: #000066;
-      color: white;
-      padding: 0.3em;
-      top: -0.1em;
-      margin-right: 0.3em;
-      position: relative;
-      display: inline-block; }
   #timesheetContainer ul.day-data.col {
     padding-left: 8em;
     display: inline-block;
     float: right;
     z-index: 1; }
     #timesheetContainer ul.day-data.col li {
-      display: block; }
+      display: block;
+      margin-bottom: 0.3em; }
     #timesheetContainer ul.day-data.col li .removeTaskBtn, #timesheetContainer ul.day-data.col li .addTaskBtn {
       font-family: "ddd-icons";
+      font-size: 1.33em;
       -webkit-border-radius: 1em 1em 1em 1em;
       -moz-border-radius: 1em 1em 1em 1em;
       border-radius: 1em 1em 1em 1em;
@@ -211,40 +215,61 @@ body#jobsClients #column-headings, body#config #column-headings {
       height: 2rem;
       width: 2rem;
       margin-left: 0.6em;
-      cursor: pointer; }
+      cursor: pointer;
+      background-color: #ffeedd;
+      color: #aa9977; }
+    #timesheetContainer ul.day-data.col li .removeTaskBtn {
+      color: #993322; }
     #timesheetContainer ul.day-data.col li:only-child .removeTaskBtn {
       visibility: hidden; }
     #timesheetContainer ul.day-data.col li:not(:last-child) .addTaskBtn {
       visibility: hidden; }
+  #timesheetContainer li em {
+    background-color: #f3ede1;
+    padding: 0.6em;
+    top: 0;
+    margin-right: 0.3em;
+    position: relative;
+    display: inline-block;
+    font-weight: normal; }
   #timesheetContainer li.day {
     display: block;
     padding: 0.1em;
-    color: #000066;
-    background-color: #e6e6f0;
+    color: #aa9977;
+    background-color: #ece2ce;
     border-style: dotted;
     border-width: 0.2em;
-    border-color: #e6e6f0; }
-    #timesheetContainer li.day:hover {
-      color: #00001a; }
+    border-color: #ece2ce; }
+    #timesheetContainer li.day:hover, #timesheetContainer li.day:focus-within {
+      color: #44331e; }
   #timesheetContainer li.odd {
-    background-color: #d9d9e8;
-    border-color: #d9d9e8; }
+    background-color: #f3ede1;
+    border-color: #f3ede1; }
+    #timesheetContainer li.odd em {
+      background-color: #ece2ce; }
   #timesheetContainer li.today {
     font-family: "FG_Bold", Tahoma, Arial, Helvetica;
-    background-color: #bfbfd9;
-    border-color: #bfbfd9; }
+    background-color: white;
+    border-color: white; }
   #timesheetContainer li.week-start {
     margin-top: 0.2em; }
   #timesheetContainer li.month-start {
-    border-top-color: #000066;
-    border-top-width: 20px; }
+    border-top-color: #aa9977; }
 
 /* FORMS */
+select, input, button {
+  border: none;
+  padding: 0.2em 0.2em 0.2em 0.3em; }
+
 select {
   font-family: "FG_Bold", Tahoma, Arial, Helvetica;
   appearance: none;
   -webkit-appearance: none;
-  -moz-appearance: none; }
+  -moz-appearance: none;
+  background-color: #ffeedd;
+  color: #776644; }
+  select:first-of-type {
+    margin-right: 0.6em; }
 
 #configForm input[type=radio] {
   display: block; }
@@ -257,13 +282,13 @@ select {
 :root input[type="checkbox"].ios-switch + div {
   display: inline-block;
   vertical-align: middle;
-  width: 3em;
-  height: 1.2em;
-  border: 1px solid rgba(0, 0, 0, 0.3);
+  width: 3.5em;
+  height: 1.52em;
   border-radius: 999px;
-  margin: 0 .5em;
-  background: black;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.1), transparent), linear-gradient(90deg, #3d99f5 50%, transparent 50%);
+  margin: -0.18em 0.5em 0 .5em;
+  padding: 0.1em 0.3em;
+  background: #aa9977;
+  background-image: linear-gradient(90deg, #778866 50%, transparent 50%);
   background-size: 200% 100%;
   background-position: 100% 0;
   background-origin: border-box;
@@ -271,15 +296,13 @@ select {
   overflow: hidden;
   transition-duration: .2s;
   transition-property: padding, width, background-position, text-indent;
-  box-shadow: 0 0.1em 0.1em rgba(0, 0, 0, 0.2) inset, 0 0.45em 0 0.1em rgba(0, 0, 0, 0.05) inset;
-  font-size: 140%;
+  font-size: 130%;
   /* change this and see how they adjust! */
   font-family: "ddd-icons";
   cursor: pointer; }
 
 :root input[type="checkbox"].ios-switch:checked + div {
-  padding-left: 2em;
-  width: 1em;
+  padding-left: 1.8em;
   background-position: 0 0; }
 
 :root input[type="checkbox"].ios-switch + div:before {
@@ -287,56 +310,85 @@ select {
   float: left;
   width: 0.825em;
   height: 0.825em;
-  margin: -.05em;
-  border: 1px solid rgba(0, 0, 0, 0.35);
+  margin: 0.1em -0.3em 0em 0.09em;
   border-radius: inherit;
-  background: white;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), transparent);
-  box-shadow: 0 0.1em 0.1em 0.1em rgba(255, 255, 255, 0.8) inset, 0 0 0.5em rgba(0, 0, 0, 0.3);
-  color: white;
-  text-indent: -1.35em; }
+  background: #ffeedd;
+  color: #221100;
+  text-indent: -1.3em; }
 
-:root input[type="checkbox"].ios-switch:active + div:before {
-  background-color: #eee; }
-
+/*:root input[type="checkbox"].ios-switch:active + div:before {
+  background-color: $ddd-orange;
+}*/
+/*
 :root input[type="checkbox"].ios-switch:focus + div {
-  box-shadow: 0 0.1em 0.1em rgba(0, 0, 0, 0.2) inset, 0 0.45em 0 0.1em rgba(0, 0, 0, 0.05) inset, 0 0 0.4em 1px rgba(255, 255, 255, 0.5); }
-
+  box-shadow: 0 .1em .1em rgba(0,0,0,.2) inset,
+  0 .45em 0 .1em rgba(0,0,0,.05) inset,
+  0 0 .4em 1px rgba(255,255,255,.5);
+}
+*/
 :root input[type="checkbox"].ios-switch + div:before,
 :root input[type="checkbox"].ios-switch + div:after {
-  font-size: 120%; }
+  font-size: 140%; }
 
 :root input[type="checkbox"].ios-switch + div:after {
   content: '\e800';
   float: left;
   text-indent: .5em;
-  color: red; }
+  color: #443322; }
 
 input.unitBig, input.unitSmall {
   display: inline-block;
   width: 3em;
   font-size: 1.25em;
   font-weight: bold;
-  margin-right: 0.6em; }
+  text-align: center;
+  -webkit-border-radius: 0.3em 0.3em 0.3em 0.3em;
+  -moz-border-radius: 0.3em 0.3em 0.3em 0.3em;
+  border-radius: 0.3em 0.3em 0.3em 0.3em; }
   input.unitBig.money, input.unitSmall.money {
-    background-color: darkgreen;
-    color: white;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='1.25em' width='3em'><text x='2' y='13' fill='white' font-size='1em' font-family='arial'>£</text></svg>");
-    background-size: 100%;
-    padding-left: 1em; }
+    background-color: #778866;
+    color: #221100;
+    /*    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='1.25em' width='3em'><text x='2' y='13' fill='#ffeedd' font-size='1em' font-family='arial'>£</text></svg>");*/
+    background-size: 100%; }
     input.unitBig.money.negative, input.unitSmall.money.negative {
-      background-color: red; }
+      background-color: #cc6644; }
   input.unitBig.hrs, input.unitSmall.hrs {
-    background-color: black;
-    color: red; }
+    background-color: #aa9977;
+    color: #443322; }
+
+input.unitSmall {
+  /*text-align: left;*/
+  margin-right: 0.6em; }
 
 input.notes {
-  margin-left: 0.6em; }
+  margin-left: 0.6em;
+  padding: 0.3em 0.3em 0.3em 0.6em; }
   input.notes.money {
-    color: darkgreen;
-    background-color: white; }
+    color: #221100;
+    background-color: #b7c1ac; }
   input.notes.job {
-    color: red; }
+    color: #443322;
+    background-color: #dbd4c5; }
+  input.notes::-webkit-input-placeholder {
+    /* Chrome/Opera/Safari */
+    color: inherit;
+    opacity: 1;
+    font-style: italic; }
+  input.notes::-moz-placeholder {
+    /* Firefox 19+ */
+    color: inherit;
+    opacity: 1;
+    font-style: italic; }
+  input.notes:-ms-input-placeholder {
+    /* IE 10+ */
+    color: inherit;
+    opacity: 1;
+    font-style: italic; }
+  input.notes:-moz-placeholder {
+    /* Firefox 18- */
+    color: inherit;
+    opacity: 1;
+    font-style: italic; }
 
 /* COLOR PICKER */
 .color-picker {
