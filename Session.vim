@@ -8,17 +8,16 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +1 src/DDDConsts.js
-badd +92 src/DDD.scss
-badd +143 src/FGUtils.js
+badd +495 src/DDDConsts.js
+badd +235 src/DDD.scss
+badd +93 src/FGUtils.js
 badd +28 src/FGHTMLBuild.js
-badd +196 src/DontDillyDally.js
-badd +1 src
+badd +475 src/DontDillyDally.js
 badd +14 index.htm
 argglobal
 silent! argdel *
-argadd src
-edit src/DDD.scss
+argadd src/
+edit src/DontDillyDally.js
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -34,7 +33,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 28) / 56)
+let s:l = 1 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt

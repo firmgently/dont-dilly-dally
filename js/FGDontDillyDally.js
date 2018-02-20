@@ -68,6 +68,7 @@ uk.co.firmgently.DDDConsts = (function() {
   MONEYNOTES_PLACEHOLDER = "money notes",
   SEPARATOR_CASH = ".",
   SEPARATOR_TIME = ":",
+  TODAY_STR = "today",
 
   EL_ID_COLHEADING = "column-headings",
   EL_ID_JOBNAMEIN = "jobNameIn",
@@ -491,6 +492,7 @@ uk.co.firmgently.DDDConsts = (function() {
     JOBSTOTAL_STR: JOBSTOTAL_STR,
     SEPARATOR_CASH: SEPARATOR_CASH,
     SEPARATOR_TIME: SEPARATOR_TIME,
+    TODAY_STR: TODAY_STR,
     EL_ID_JOBNAMEIN: EL_ID_JOBNAMEIN,
     EL_ID_CLIENTNAMEIN: EL_ID_CLIENTNAMEIN,
     JOB_FG_COLPICK: JOB_FG_COLPICK,
@@ -1556,8 +1558,13 @@ uk.co.firmgently.DontDillyDally = (function() {
     colorPickerFGSelector, colorPickerBGSelector;
 
 		// add main CSS for eg. timesheets page
-    addCSSRule(selector, "color", ob.color);
-    addCSSRule(selector, "background-color", ob.bgcolor);
+    if (dataType === DATATYPE_CLIENT || dataType === DATATYPE_JOB) {
+      addCSSRule(selector, "color", ob.color + " !important");
+      addCSSRule(selector, "background-color", ob.bgcolor + " !important");
+    } else {
+      addCSSRule(selector, "color", ob.color);
+      addCSSRule(selector, "background-color", ob.bgcolor);
+    }
 
 		// colorPicker used on "jobs & clients" page
     if (dataType === DATATYPE_CLIENT) {
@@ -1670,7 +1677,11 @@ uk.co.firmgently.DontDillyDally = (function() {
       date_el = document.createElement("p");
       addClassname(date_el, "date col");
       // TODO DATETYPE_DEFAULT being used here is that correct?
-      date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
+      if (isToday) {
+      date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label) + "<span>" + TODAY_STR + "</span>";
+      } else {
+        date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
+      }
       dayCur.setDate(dayCur.getDate() + 1);
       day_el.appendChild(date_el);
 

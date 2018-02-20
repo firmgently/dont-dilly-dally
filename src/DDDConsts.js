@@ -68,6 +68,7 @@ uk.co.firmgently.DDDConsts = (function() {
   MONEYNOTES_PLACEHOLDER = "money notes",
   SEPARATOR_CASH = ".",
   SEPARATOR_TIME = ":",
+  TODAY_STR = "today",
 
   EL_ID_COLHEADING = "column-headings",
   EL_ID_JOBNAMEIN = "jobNameIn",
@@ -491,6 +492,7 @@ uk.co.firmgently.DDDConsts = (function() {
     JOBSTOTAL_STR: JOBSTOTAL_STR,
     SEPARATOR_CASH: SEPARATOR_CASH,
     SEPARATOR_TIME: SEPARATOR_TIME,
+    TODAY_STR: TODAY_STR,
     EL_ID_JOBNAMEIN: EL_ID_JOBNAMEIN,
     EL_ID_CLIENTNAMEIN: EL_ID_CLIENTNAMEIN,
     JOB_FG_COLPICK: JOB_FG_COLPICK,

@@ -123,6 +123,7 @@ $tinyPadding: 0.1em;
 $smallPadding: 0.2em;
 $mediumPadding: 0.3em;
 $largePadding: 0.6em;
+$extraLargePadding: 2em;
 $bottomPadding: 0.9em;
 $topPadding: 4.5em;
 
@@ -133,7 +134,7 @@ $baseZ: 99999990;
 $aboveBaseZ: 99999991;
 $aboveAboveBaseZ: 99999992;
 
-$date-width: 8em;
+$date-width: 7.3em;
 $header-height: 8em;
 
 $tab-fontsize-unselected: 1.15em;
@@ -230,19 +231,13 @@ body#jobsClients, body#config {
 
 #timesheetContainer {
   display: block;
-  .date.col {
-    font-family: 'Lucida Console', 'Monaco', 'monospace', 'Courier';
-		font-size: 1.1em; font-weight: bold;
-    width: $date-width; margin-right: 0 - ($date-width + $mediumPadding);
-    margin-top: -$mediumPadding; margin-left: $mediumPadding;
-    padding-top: $mediumPadding;
-  }
   ul.day-data.col {
-    padding-left: $date-width;
+    padding-left: $date-width + $extraLargePadding + 2em;
     display: inline-block; float: right; z-index: 1;
     li {
 			display: block;
-			margin-bottom: $mediumPadding;
+			margin-bottom: $mediumPadding; $padding-left: 2em;
+      position: relative;
 //			&:first-child { margin-top: 0; }
 		}
     li .removeTaskBtn, li .addTaskBtn {
@@ -251,14 +246,28 @@ body#jobsClients, body#config {
       height: 2rem; width: 2rem;
       margin-left: $largePadding;
       cursor: pointer;
-			background-color: $ddd-cream; color: $ddd-sand;
+			color: $ddd-cream; background-color: $ddd-sand;
+      position: absolute; bottom: 0;
     }
-    li .removeTaskBtn { color: $ddd-orangedark; }
+    li .addTaskBtn { margin-left: -2rem }
+    li .removeTaskBtn { right: 1rem; background-color: $ddd-orangedark; }
     li:only-child .removeTaskBtn { visibility: hidden; }
     li:not(:last-child) .addTaskBtn { visibility: hidden; }
   }
   li {
-    em {
+    .date.col {
+      font-family: 'Lucida Console', 'Monaco', 'monospace', 'Courier';
+      font-size: 1.1em; font-weight: bold;
+      width: $date-width; margin-right: 0 - ($date-width + $mediumPadding);
+      margin-left: $mediumPadding;
+      span { // used for 'TODAY' text etc
+        display: block;
+        font-size: 0.8em; text-align: right; text-transform: uppercase;
+        margin-top: -0.5em; margin-right: 0.5em;
+        color: $ddd-orangedark;
+      }
+    }
+    em { // used for weekday letter label
       background-color: $panelBgColour2; 
       padding: $largePadding; top: 0; margin-right: $mediumPadding;
       position: relative; display: inline-block;
@@ -266,18 +275,25 @@ body#jobsClients, body#config {
     }
     &.day {
       display: block;
-      padding: $tinyPadding;
+      padding: $largePadding $tinyPadding;
       color: $panelBgColour; background-color: $panelBgColour3;
-      border-style: dotted; border-width: $smallPadding; border-color: $panelBgColour3;
       &:hover, &:focus-within { color: mix($panelBgColour, $ddd-browndark, 25%); }
     }
 		&.odd {
 			background-color: $panelBgColour2; border-color: $panelBgColour2;
 			em { background-color: $panelBgColour3; }
+      select { background-color: $panelBgColour3; }
 		}
-    &.today { font-family: $bold-font-family; background-color: $panelBgColour1; border-color: $panelBgColour1; }
+    &.today {
+      .date.col {
+        margin-top: -0.5em;
+        em { top: 0.5em; }
+      }
+    }
     &.week-start { margin-top: $smallPadding; }
-    &.month-start { border-top-color: $panelBgColour; }
+    &.month-start {
+      border-style: solid; border-top-width: $largePadding; border-color: $panelBgColour3;
+    }
   }
 }
 
