@@ -25,13 +25,18 @@ uk.co.firmgently.DontDillyDally = (function() {
 	// methods
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
   createFormFromOb, addTask, removeTask,
-  callMethodFromObOnElement, callMethodFromOb, onFormClick,
+  callMethodFromObOnElement, callMethodFromOb,
+	onFormClick,
   drawTimesheets, getNextID, newClientCreate, newJobCreate,
-  navClick, onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
-  dataStoragePossible, initData, dataStoreObject, dataRetrieveObject,
-  dataUpdateObject, clientAndJobStyleSheet, createClientOrJobFromOb, createCSSForClientOrJobFromOb,
+  navClick,
+	onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
+	onSaveBtnClick,
+  dataStoragePossible, initData,
+	dataStoreObject, dataRetrieveObject, dataUpdateObject,
+	clientAndJobStyleSheet, createClientOrJobFromOb, createCSSForClientOrJobFromOb,
 	getJobOrClientIDFromElement, updateDataFromWorkItemEl,
   newClientFormSave, newJobFormSave, clientInputWasLastEmpty,
+	handleFileSelect,
   updateLayoutRefs, updateSelected, addUIWorkItem, removeWorkItem 
 	;
 
@@ -75,9 +80,9 @@ uk.co.firmgently.DontDillyDally = (function() {
   initData = function() {
 		var item, container;
     // if no preferences are stored create some defaults
-    if (!dataRetrieveObject("prefs")) {
+    if (!dataRetrieveObject(PREFS_STR)) {
 			// create default preferences object
-      dataStoreObject("prefs", {
+      dataStoreObject(PREFS_STR, {
         pagetype: PAGETYPE_DEFAULT,
         timespan: TIMESPAN_DEFAULT,
         dateFormat: DATETYPE_DEFAULT,
@@ -141,6 +146,37 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  handleFileSelect = function(event) {
+    var
+		file = event.target.files[0], // FileList object first item (as only single file)
+		reader = new FileReader();
+		reader.onload = function(event) {
+			console.log(event.target.result);
+		};
+		reader.readAsText(file);
+		console.log(file);
+  };
+
+
+	onSaveBtnClick = function(event) {
+		var obj = {}, data, el;
+		obj[PREFS_STR] = dataRetrieveObject(PREFS_STR);
+		obj[JOBS_STR] = dataRetrieveObject(JOBS_STR);
+		obj[JOBSTOTAL_STR] = dataRetrieveObject(JOBSTOTAL_STR);
+		obj[CLIENTS_STR] = dataRetrieveObject(CLIENTS_STR);
+		obj[CLIENTSTOTAL_STR] = dataRetrieveObject(CLIENTSTOTAL_STR);
+		obj[DAYS_STR] = dataRetrieveObject(DAYS_STR);
+
+		data  = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+
+		el       = document.createElement("a");
+		el.href      = "data:" + data;
+		el.download  = SAVE_FILENAME + ".txt";
+		el.innerHTML = "download .txt file of json";
+
+		document.body.appendChild(el);
+		el.click();
+	};
 
 
 
@@ -159,14 +195,16 @@ uk.co.firmgently.DontDillyDally = (function() {
       if (location.hash) {
         selectPage(decodeURIComponent(location.hash.substring(1)));
       } else {
-        selectPage(dataRetrieveObject("prefs").pagetype);
+        selectPage(dataRetrieveObject(PREFS_STR).pagetype);
       }
     }
+		registerEventHandler(document.getElementById("file-chooser"), "change", handleFileSelect, false);
+		registerEventHandler(document.getElementById("file-save"), "click", onSaveBtnClick, false);
   };
 
 
   selectPage = function(pagetype) {
-    dataUpdateObject("prefs", "pagetype", pagetype);
+    dataUpdateObject(PREFS_STR, "pagetype", pagetype);
     location.hash = pagetype;
     clearPage();
     setTimeout(drawPage, 1); // on timer to force reflow after clearPage()
@@ -180,7 +218,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   drawPage = function() {
-    switch (dataRetrieveObject("prefs").pagetype) {
+    switch (dataRetrieveObject(PREFS_STR).pagetype) {
       case PAGETYPE_TIMESHEETS:
         document.body.id = BODYID_TIMESHEETS;
         fillHTMLFromOb(PAGEDATA_TIMESHEETS);
@@ -236,7 +274,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         case GUITYPE_RADIOBTN:
           // TODO this checkIfMatched should not be added here it should
           // be included in main data higher up
-          ob.checkIfMatched = dataRetrieveObject("prefs")[ob.id];
+          ob.checkIfMatched = dataRetrieveObject(PREFS_STR)[ob.id];
           el_temp = createRadioFromOb(ob);
           if (ob.methodPathStr) {
             registerEventHandler(el_temp, "change", callMethodFromObOnElement);
@@ -432,7 +470,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     allWorkItems = dataRetrieveObject(DAYS_STR),
     dayCur = new Date();
 
-    switch(dataRetrieveObject("prefs").timespan) {
+    switch(dataRetrieveObject(PREFS_STR).timespan) {
       case TIMESPAN_WEEK:
         weekdayCur = dayCur.getDay(); // 0 = Sunday, 1 = Monday etc
         dayCur.setDate(dayCur.getDate() - weekdayCur + weekStartDay); // first day of week
@@ -588,7 +626,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
       el_temp.min = 0;
       el_temp.max = 59;
-      switch(dataRetrieveObject("prefs").minuteIncrements) {
+      switch(dataRetrieveObject(PREFS_STR).minuteIncrements) {
         case MINUTEINCREMENTS_15:
           el_temp.step = 15;
           break;
@@ -715,12 +753,12 @@ uk.co.firmgently.DontDillyDally = (function() {
     if (form && form.id) {
       switch (form.id) {
         case "configForm":
-          dataUpdateObject("prefs", "timespan", form.timespan.value);
+          dataUpdateObject(PREFS_STR, "timespan", form.timespan.value);
           // dateFormat is an object, the form just stores the name of it so grab it here
-          //dataUpdateObject("prefs", "dateFormat", uk.co.firmgently.DDDConsts[form.dateFormat.value]);
-          dataUpdateObject("prefs", "dateFormat", form.dateFormat.value);
-          dataUpdateObject("prefs", "totalsToShow", form.totalsToShow.value);
-          dataUpdateObject("prefs", "minuteIncrements", form.minuteIncrements.value);
+          //dataUpdateObject(PREFS_STR, "dateFormat", uk.co.firmgently.DDDConsts[form.dateFormat.value]);
+          dataUpdateObject(PREFS_STR, "dateFormat", form.dateFormat.value);
+          dataUpdateObject(PREFS_STR, "totalsToShow", form.totalsToShow.value);
+          dataUpdateObject(PREFS_STR, "minuteIncrements", form.minuteIncrements.value);
           break;
         default:
           break;
@@ -847,7 +885,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   updateSelected = function() {
     var
-		pageType = dataRetrieveObject("prefs").pagetype,
+		pageType = dataRetrieveObject(PREFS_STR).pagetype,
     option_selector = this.value;
     switch (pageType) {
       case PAGETYPE_TIMESHEETS: // run on to next case
@@ -875,7 +913,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 		var
 		days_ar, day_ob, workItem_ar,
 		isMoneyTaskChk_el, unitBigInput_el, unitSmallInput_el, clientSelect_el, jobSelect_el, notesInput_el,
-		pageType = dataRetrieveObject("prefs").pagetype,
+		pageType = dataRetrieveObject(PREFS_STR).pagetype,
 		day_el = el.parentNode.parentNode,
 		day_str = day_el.id;
 		
