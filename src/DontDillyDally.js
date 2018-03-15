@@ -26,7 +26,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
   createFormFromOb, addTask, removeTask,
   callMethodFromObOnElement, callMethodFromOb,
-	onFormClick,
+	onFormClick, onScroll,
   drawTimesheets, getNextID, newClientCreate, newJobCreate,
   navClick,
 	onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
@@ -200,6 +200,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
 		registerEventHandler(document.getElementById("file-chooser"), "change", handleFileSelect, false);
 		registerEventHandler(document.getElementById("file-save"), "click", onSaveBtnClick, false);
+  //  registerEventHandler(window, "scroll", onScroll);
   };
 
 
@@ -449,7 +450,23 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-
+  onScroll = function() {
+    var i, day, rect,
+    days = document.getElementById(TIMESHEETCONTAINER_ID).childNodes;
+    
+    for (i=0; i < days.length; i++) {
+      day = days[i];
+      rect = day.getBoundingClientRect();
+      if (rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth) ) {
+        day.style.left = "-9999em";
+      } else {
+        day.style.left = "0";
+      }
+    }
+  }
 
 
   /* ---------------------------------------------------------------------------
