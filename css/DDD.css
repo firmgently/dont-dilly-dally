@@ -88,23 +88,21 @@ body {
   font-family: "FG_Medium", Tahoma, Arial, Helvetica;
   background-color: #ddccaa; }
 
-header {
+aside {
   display: inline-block;
-  width: 100%;
-  vertical-align: top;
   background-color: #776644; }
-  header img {
+  aside img {
     width: 8vw;
     margin: 1vw 1vw 0 1vw;
     display: inline-block; }
-  header h1 {
+  aside h1 {
     display: inline;
     font-size: 10vw;
     color: #aa9977; }
-  header nav {
+  aside nav {
     position: relative;
     display: inline-block; }
-    header nav button.btnNav {
+    aside nav button.btnNav {
       padding: 0.1em;
       margin: 0.3em 0.3em 0 0;
       font-size: 1.15em;
@@ -120,13 +118,13 @@ header {
       border-bottom: none;
       text-overflow: ellipsis;
       white-space: nowrap; }
-      header nav button.btnNav:hover, header nav button.btnNav:focus {
+      aside nav button.btnNav:hover, aside nav button.btnNav:focus {
         color: #221100;
         outline: 0; }
 
-body#jobsClients header nav button#jobsClients.btnNav,
-body#timesheets header nav button#timesheets.btnNav,
-body#config header nav button#config.btnNav {
+body#jobsClients aside nav button#jobsClients.btnNav,
+body#timesheets aside nav button#timesheets.btnNav,
+body#config aside nav button#config.btnNav {
   font-size: 1.5em;
   -webkit-border-radius: 0.3em 0.3em 0 0;
   -moz-border-radius: 0.3em 0.3em 0 0;
@@ -164,7 +162,14 @@ body#jobsClients #column-headings, body#config #column-headings {
   display: none; }
 
 #main {
-  width: 100%; }
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: 10vw;
+  right: 0;
+  overflow: scroll;
+  background-color: #ddccaa; }
 
 #editClientCol, #editJobCol {
   width: 50%;
@@ -176,7 +181,14 @@ body#jobsClients #column-headings, body#config #column-headings {
 #clientNameIn, #jobNameIn {
   font-family: "FG_Bold", Tahoma, Arial, Helvetica; }
 
-.header-info {
+#sidebar-main {
+  position: absolute;
+  left: 0;
+  right: 90vw;
+  top: 0;
+  bottom: 0; }
+
+.sidebar-info {
   background-color: #aa9977;
   position: relative;
   padding: 0.6em 0 0 0.6em; }
@@ -328,7 +340,7 @@ select {
   float: left;
   width: 0.825em;
   height: 0.825em;
-  margin: 0.1em -0.3em 0em 0.09em;
+  margin: 0.06em -0.3em 0em 0.09em;
   border-radius: inherit;
   background: #ffeedd;
   color: #221100;

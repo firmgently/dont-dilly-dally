@@ -134,8 +134,8 @@ $baseZ: 99999990;
 $aboveBaseZ: 99999991;
 $aboveAboveBaseZ: 99999992;
 
+$sidebar-width: 10vw;
 $date-width: 7.3em;
-$header-height: 8em;
 
 $tab-fontsize-unselected: 1.15em;
 $tab-fontsize-selected:   1.5em;
@@ -166,8 +166,8 @@ body {
 	background-color: $ddd-sandlight;
 }
 
-header {
-  display: inline-block;  width: 100%;   vertical-align: top;
+aside {
+  display: inline-block; 
   background-color: $ddd-sanddark;
   img { width: 8vw; margin: 1vw 1vw 0 1vw; display: inline-block; }
   h1 { display: inline; font-size: 10vw; color: $ddd-sand; } 
@@ -184,9 +184,9 @@ header {
     }
   }
 }
-body#jobsClients header nav button#jobsClients.btnNav,
-body#timesheets header nav button#timesheets.btnNav,
-body#config header nav button#config.btnNav {
+body#jobsClients aside nav button#jobsClients.btnNav,
+body#timesheets aside nav button#timesheets.btnNav,
+body#config aside nav button#config.btnNav {
   font-size: $tab-fontsize-selected; @include topCurve($mediumPadding);
   color: $panelFgColour; background-color: $panelBgColour;
 }
@@ -210,7 +210,12 @@ body#jobsClients, body#config {
   #column-headings { display: none; }
 }
 
-#main { width: 100%; }
+#main {
+  position: absolute; z-index: 2;
+  top: 0; bottom: 0; left: $sidebar-width; right: 0;
+  overflow: scroll;
+  background-color: $ddd-sandlight;
+}
 
 
 #editClientCol, #editJobCol { width: 50%; display: inline-block; padding: $largePadding}
@@ -222,7 +227,11 @@ body#jobsClients, body#config {
 }
 
 
-.header-info { background-color: $panelBgColour; position: relative; padding: $largePadding 0 0 $largePadding; }
+#sidebar-main {
+  position: absolute;
+  left: 0; right: (100vw - $sidebar-width); top: 0; bottom: 0;
+}
+.sidebar-info { background-color: $panelBgColour; position: relative; padding: $largePadding 0 0 $largePadding; }
 #loading-indicator {
   position: absolute; z-index: 2; top: 0; left: 0; bottom: 0; right: 0;
   background-color: $ddd-orange; text-align: center;
@@ -356,7 +365,7 @@ select {
   content: '\e801';
   float: left;
   width: 0.825em; height: 0.825em;
-  margin: 0.1em -0.3em 0em 0.09em;
+  margin: 0.06em -0.3em 0em 0.09em;
   border-radius: inherit;
   background: $ddd-cream;
   color: $moneyInputColour;
