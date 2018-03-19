@@ -88,23 +88,26 @@ body {
   font-family: "FG_Medium", Tahoma, Arial, Helvetica;
   background-color: #ddccaa; }
 
-header {
-  position: fixed;
+aside {
   display: inline-block;
-  z-index: 1;
-  width: 100%;
-  height: 8em;
-  color: #ffeedd;
-  background-color: #aa9977; }
-  header nav {
+  background-color: #776644; }
+  aside img {
+    width: 8vw;
+    margin: 1vw 1vw 0 1vw;
+    display: inline-block; }
+  aside h1 {
+    display: inline;
+    font-size: 10vw;
+    color: #aa9977; }
+  aside nav {
     position: relative;
-    background-color: #221100; }
-    header nav button.btnNav {
+    display: inline-block; }
+    aside nav button.btnNav {
       padding: 0.1em;
       margin: 0.3em 0.3em 0 0;
       font-size: 1.15em;
       vertical-align: bottom;
-      width: 30vw;
+      width: 28vw;
       overflow: hidden;
       -webkit-border-radius: 0.2em 0.2em 0 0;
       -moz-border-radius: 0.2em 0.2em 0 0;
@@ -115,13 +118,13 @@ header {
       border-bottom: none;
       text-overflow: ellipsis;
       white-space: nowrap; }
-      header nav button.btnNav:hover, header nav button.btnNav:focus {
+      aside nav button.btnNav:hover, aside nav button.btnNav:focus {
         color: #221100;
         outline: 0; }
 
-body#jobsClients header nav button#jobsClients.btnNav,
-body#timesheets header nav button#timesheets.btnNav,
-body#config header nav button#config.btnNav {
+body#jobsClients aside nav button#jobsClients.btnNav,
+body#timesheets aside nav button#timesheets.btnNav,
+body#config aside nav button#config.btnNav {
   font-size: 1.5em;
   -webkit-border-radius: 0.3em 0.3em 0 0;
   -moz-border-radius: 0.3em 0.3em 0 0;
@@ -160,8 +163,13 @@ body#jobsClients #column-headings, body#config #column-headings {
 
 #main {
   position: absolute;
-  width: 100%;
-  top: 8em; }
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: 10vw;
+  right: 0;
+  overflow: scroll;
+  background-color: #ddccaa; }
 
 #editClientCol, #editJobCol {
   width: 50%;
@@ -173,9 +181,17 @@ body#jobsClients #column-headings, body#config #column-headings {
 #clientNameIn, #jobNameIn {
   font-family: "FG_Bold", Tahoma, Arial, Helvetica; }
 
-.header-info {
+#sidebar-main {
+  position: absolute;
+  left: 0;
+  right: 90vw;
+  top: 0;
+  bottom: 0; }
+
+.sidebar-info {
+  background-color: #aa9977;
   position: relative;
-  margin: 0.6em 0 0 0.6em; }
+  padding: 0.6em 0 0 0.6em; }
 
 #loading-indicator {
   position: absolute;
@@ -184,7 +200,8 @@ body#jobsClients #column-headings, body#config #column-headings {
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: green; }
+  background-color: #cc6644;
+  text-align: center; }
 
 #timesheetContainer {
   display: block; }
@@ -194,6 +211,7 @@ body#jobsClients #column-headings, body#config #column-headings {
     float: right;
     z-index: 1; }
     #timesheetContainer ul.day-data.col li {
+      max-width: 42em;
       display: block;
       margin-bottom: 0.3em;
       position: relative; }
@@ -252,8 +270,7 @@ body#jobsClients #column-headings, body#config #column-headings {
     #timesheetContainer li.day:hover, #timesheetContainer li.day:focus-within {
       color: #44331e; }
   #timesheetContainer li.odd {
-    background-color: #f3ede1;
-    border-color: #f3ede1; }
+    background-color: #f3ede1; }
     #timesheetContainer li.odd em {
       background-color: #ece2ce; }
     #timesheetContainer li.odd select {
@@ -323,7 +340,7 @@ select {
   float: left;
   width: 0.825em;
   height: 0.825em;
-  margin: 0.1em -0.3em 0em 0.09em;
+  margin: 0.06em -0.3em 0em 0.09em;
   border-radius: inherit;
   background: #ffeedd;
   color: #221100;

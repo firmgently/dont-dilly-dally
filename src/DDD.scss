@@ -134,8 +134,8 @@ $baseZ: 99999990;
 $aboveBaseZ: 99999991;
 $aboveAboveBaseZ: 99999992;
 
+$sidebar-width: 10vw;
 $date-width: 7.3em;
-$header-height: 8em;
 
 $tab-fontsize-unselected: 1.15em;
 $tab-fontsize-selected:   1.5em;
@@ -166,16 +166,17 @@ body {
 	background-color: $ddd-sandlight;
 }
 
-header {
-  position: fixed; display: inline-block; z-index: 1;
-  width: 100%; height: $header-height;
-  color: $ddd-cream; background-color: $panelBgColour;
+aside {
+  display: inline-block; 
+  background-color: $ddd-sanddark;
+  img { width: 8vw; margin: 1vw 1vw 0 1vw; display: inline-block; }
+  h1 { display: inline; font-size: 10vw; color: $ddd-sand; } 
   nav {
-    position: relative; background-color: $ddd-browndark;
+    position: relative; display: inline-block;
     button.btnNav {
       padding: $tab-padding; margin: $tab-margin $tab-margin 0 0;
       font-size: $tab-fontsize-unselected; vertical-align: bottom;
-      width: 30vw; overflow: hidden; @include topCurve($smallPadding);
+      width: 28vw; overflow: hidden; @include topCurve($smallPadding);
       color: $panelFgColourDimmed; background-color: $panelBgColourDimmed;
       border-color: $panelBgColourTint; border-bottom: none;
       text-overflow: ellipsis; white-space: nowrap;
@@ -183,9 +184,9 @@ header {
     }
   }
 }
-body#jobsClients header nav button#jobsClients.btnNav,
-body#timesheets header nav button#timesheets.btnNav,
-body#config header nav button#config.btnNav {
+body#jobsClients aside nav button#jobsClients.btnNav,
+body#timesheets aside nav button#timesheets.btnNav,
+body#config aside nav button#config.btnNav {
   font-size: $tab-fontsize-selected; @include topCurve($mediumPadding);
   color: $panelFgColour; background-color: $panelBgColour;
 }
@@ -209,7 +210,12 @@ body#jobsClients, body#config {
   #column-headings { display: none; }
 }
 
-#main { position: absolute; width: 100%; top: $header-height; }
+#main {
+  position: absolute; z-index: 2;
+  top: 0; bottom: 0; left: $sidebar-width; right: 0;
+  overflow: scroll;
+  background-color: $ddd-sandlight;
+}
 
 
 #editClientCol, #editJobCol { width: 50%; display: inline-block; padding: $largePadding}
@@ -221,10 +227,14 @@ body#jobsClients, body#config {
 }
 
 
-.header-info { position: relative; margin: $largePadding 0 0 $largePadding; }
+#sidebar-main {
+  position: absolute;
+  left: 0; right: (100vw - $sidebar-width); top: 0; bottom: 0;
+}
+.sidebar-info { background-color: $panelBgColour; position: relative; padding: $largePadding 0 0 $largePadding; }
 #loading-indicator {
   position: absolute; z-index: 2; top: 0; left: 0; bottom: 0; right: 0;
-  background-color: green;
+  background-color: $ddd-orange; text-align: center;
 }
 
 // Timesheets
@@ -235,6 +245,7 @@ body#jobsClients, body#config {
     padding-left: $date-width + $extraLargePadding + 2em;
     display: inline-block; float: right; z-index: 1;
     li {
+      max-width: 42em;
 			display: block;
 			margin-bottom: $mediumPadding; $padding-left: 2em;
       position: relative;
@@ -280,7 +291,8 @@ body#jobsClients, body#config {
       &:hover, &:focus-within { color: mix($panelBgColour, $ddd-browndark, 25%); }
     }
 		&.odd {
-			background-color: $panelBgColour2; border-color: $panelBgColour2;
+			background-color: $panelBgColour2;
+     // border-color: $panelBgColour2;
 			em { background-color: $panelBgColour3; }
       select { background-color: $panelBgColour3; }
 		}
@@ -353,7 +365,7 @@ select {
   content: '\e801';
   float: left;
   width: 0.825em; height: 0.825em;
-  margin: 0.1em -0.3em 0em 0.09em;
+  margin: 0.06em -0.3em 0em 0.09em;
   border-radius: inherit;
   background: $ddd-cream;
   color: $moneyInputColour;
