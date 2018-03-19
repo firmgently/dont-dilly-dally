@@ -27,6 +27,7 @@ uk.co.firmgently.DDDConsts = (function() {
     PAGETYPE_TIMESHEETS: " > timesheets",
     PAGETYPE_CONFIG: " > preferences",
     PAGETYPE_JOBSANDCLIENTS: " > jobsAndClients",
+
     BODYID_TIMESHEETS: "timesheets",
     BODYID_CONFIG: "config",
     BODYID_JOBSANDCLIENTS: "jobsClients",
@@ -60,14 +61,13 @@ uk.co.firmgently.DDDConsts = (function() {
     PREFS_STR: "prefs",
     CLIENTSTOTAL_STR: "clientsTotal",
     JOBSTOTAL_STR: "jobsTotal",
+    TODAY_STR: "today",
+    
     CLIENT_SELECT_PLACEHOLDER: "select client",
     JOB_SELECT_PLACEHOLDER: "select job",
     JOBNOTES_PLACEHOLDER: "job notes",
     MONEYNOTES_PLACEHOLDER: "money notes",
-    SEPARATOR_CASH: ".",
-    SEPARATOR_TIME: ":",
-    TODAY_STR: "today",
-
+    
     EL_ID_COLHEADING: "column-headings",
     EL_ID_JOBNAMEIN: "jobNameIn",
     EL_ID_CLIENTNAMEIN: "clientNameIn",
@@ -75,6 +75,8 @@ uk.co.firmgently.DDDConsts = (function() {
     EL_ID_JOBSAVEBTN: "saveNewJobBtn",
     EL_ID_SELECTCLIENT: "selectClient",
     EL_ID_SELECTJOB: "selectJob",
+    TIMESHEETCONTAINER_ID: "timesheetContainer",
+    LOADINGINDICATOR_ID: "loading-indicator",
 
     CLIENT_FG_COLPICK: "clientFGPicker",
     CLIENT_BG_COLPICK: "clientBGPicker",
@@ -87,6 +89,9 @@ uk.co.firmgently.DDDConsts = (function() {
     ITEMTYPE_TIME: "TIME",
     ITEMTYPE_MONEY: "CASH",
     
+    SEPARATOR_CASH: ".",
+    SEPARATOR_TIME: ":",
+
     DATAINDICES: {
       itemType:			0,
       numberValue: 	1,
@@ -97,9 +102,6 @@ uk.co.firmgently.DDDConsts = (function() {
 
     CONTENTTYPE_CLIENTS: "contentTypeClients",
     CONTENTTYPE_JOBS: "contentTypeJobs",
-
-    TIMESHEETCONTAINER_ID: "timesheetContainer",
-    LOADINGINDICATOR_ID: "loading-indicator",
 
     PAGEDATA_JOBSANDCLIENTS: {
       pageTitle: "Jobs and Clients",
