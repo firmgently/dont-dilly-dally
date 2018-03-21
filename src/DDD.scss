@@ -90,7 +90,7 @@ $ddd-orange: #cc6644;
 $ddd-orangedark: #993322;
 
 $panelFgColour: $ddd-browndark;
-$panelBgColour: $ddd-sand;
+$panelBgColour: $ddd-sandlight;
 $panelFgColourDimmed: mix($panelFgColour, $ddd-browndark, 75%);
 $panelBgColourDimmed: mix($panelBgColour, $ddd-browndark, 75%);
 $panelBgColourTint: mix($panelBgColour, white, 75%);
@@ -119,26 +119,26 @@ $darkerHeadingBgColour: mix($darkHeadingBgColour, $ddd-browndark, 70%);
 $darkHeadingColour: $ddd-cream;
 $midHeadingBgColour: mix($darkHeadingBgColour, $ddd-cream, 70%);
 
-$tinyPadding: 0.1em;
-$smallPadding: 0.2em;
-$mediumPadding: 0.3em;
-$largePadding: 0.6em;
-$extraLargePadding: 2em;
-$bottomPadding: 0.9em;
-$topPadding: 4.5em;
+$tinyPadding: 0.15rem;
+$smallPadding: 0.3rem;
+$mediumPadding: 0.6rem;
+$largePadding: 0.8rem;
+$extraLargePadding: 2rem;
+$bottomPadding: 0.9rem;
+$topPadding: 4.5rem;
 
-$fontSizeNormal: 1em;
-$fontSizeSmall: 0.9em;
+$fontSizeNormal: 1rem;
+$fontSizeSmall: 0.9rem;
 
 $baseZ: 99999990;
 $aboveBaseZ: 99999991;
 $aboveAboveBaseZ: 99999992;
 
 $sidebar-width: 10vw;
-$date-width: 7.3em;
+$date-width: 9rem;
 
-$tab-fontsize-unselected: 1.15em;
-$tab-fontsize-selected:   1.5em;
+$tab-fontsize-unselected: 1rem;
+$tab-fontsize-selected:   1.15rem;
 $tab-padding: $tinyPadding;
 $tab-margin: $mediumPadding;
 
@@ -170,13 +170,23 @@ aside {
   display: inline-block; 
   background-color: $ddd-sanddark;
   img { width: 8vw; margin: 1vw 1vw 0 1vw; display: inline-block; }
-  h1 { display: inline; font-size: 10vw; color: $ddd-sand; } 
+  h1 {
+    width: $sidebar-width;
+    text-align: right; padding-right: $mediumPadding; 
+    font-size: 3vw; color: $ddd-sand;
+    text-transform: lowercase;
+  } 
   nav {
-    position: relative; display: inline-block;
+    position: absolute;
+    display: inline-block;
+    width: (100vw - $sidebar-width);
+    transform-origin: 0 0;
+    transform: rotate(-90deg);
+    bottom: 0; left: calc(#{$sidebar-width} - #{$extraLargePadding + $mediumPadding});
     button.btnNav {
       padding: $tab-padding; margin: $tab-margin $tab-margin 0 0;
       font-size: $tab-fontsize-unselected; vertical-align: bottom;
-      width: 28vw; overflow: hidden; @include topCurve($smallPadding);
+      width: 17vh; overflow: hidden; @include topCurve($smallPadding);
       color: $panelFgColourDimmed; background-color: $panelBgColourDimmed;
       border-color: $panelBgColourTint; border-bottom: none;
       text-overflow: ellipsis; white-space: nowrap;
@@ -197,13 +207,13 @@ body#config aside nav button#config.btnNav {
 #column-headings {
   position: absolute; bottom: 0;
   li { display: inline; text-align: center; background-color: orange; margin: $smallPadding; }
-  li:nth-child(1) { width: 8em; }
-  li:nth-child(2) { width: 2em; }
-  li:nth-child(3) { width: 6em; }
-  li:nth-child(4) { width: 6em; }
-  li:nth-child(5) { width: 10em; }
-  li:nth-child(6) { width: 2.5em; }
-  li:nth-child(7) { width: 10em; }
+  li:nth-child(1) { width: 8rem; }
+  li:nth-child(2) { width: 2rem; }
+  li:nth-child(3) { width: 6rem; }
+  li:nth-child(4) { width: 6rem; }
+  li:nth-child(5) { width: 10rem; }
+  li:nth-child(6) { width: 2.5rem; }
+  li:nth-child(7) { width: 10rem; }
 }
 
 body#jobsClients, body#config {
@@ -215,6 +225,7 @@ body#jobsClients, body#config {
   top: 0; bottom: 0; left: $sidebar-width; right: 0;
   overflow: scroll;
   background-color: $ddd-sandlight;
+  h1, h2 { padding: $largePadding $mediumPadding $largePadding $extraLargePadding; }
 }
 
 
@@ -233,7 +244,11 @@ body#jobsClients, body#config {
 }
 .sidebar-info { background-color: $panelBgColour; position: relative; padding: $largePadding 0 0 $largePadding; }
 #loading-indicator {
-  position: absolute; z-index: 2; top: 0; left: 0; bottom: 0; right: 0;
+  position: absolute; z-index: 20; top: 0; left: $sidebar-width; bottom: 0; right: 0;
+  padding: 45% 0;
+  color: $ddd-cream;
+  font-weight: bold; 
+  text-transform: lowercase;
   background-color: $ddd-orange; text-align: center;
 }
 
@@ -242,18 +257,18 @@ body#jobsClients, body#config {
 #timesheetContainer {
   display: block;
   ul.day-data.col {
-    padding-left: $date-width + $extraLargePadding + 2em;
+    padding-left: $date-width + $extraLargePadding + 2rem;
     display: inline-block; float: right; z-index: 1;
     li {
-      max-width: 42em;
+      max-width: 42rem;
 			display: block;
-			margin-bottom: $mediumPadding; $padding-left: 2em;
+			margin-bottom: $mediumPadding; $padding-left: 2rem;
       position: relative;
 //			&:first-child { margin-top: 0; }
 		}
     li .removeTaskBtn, li .addTaskBtn {
-      font-family: "ddd-icons"; font-size: 1.33em;
-      @include border-radius(1em); border: none;
+      font-family: "ddd-icons"; font-size: 1.33rem;
+      @include border-radius(1rem); border: none;
       height: 2rem; width: 2rem;
       margin-left: $largePadding;
       cursor: pointer;
@@ -268,13 +283,13 @@ body#jobsClients, body#config {
   li {
     .date.col {
       font-family: 'Lucida Console', 'Monaco', 'monospace', 'Courier';
-      font-size: 1.1em; font-weight: bold;
+      font-size: 1.1rem; font-weight: bold;
       width: $date-width; margin-right: 0 - ($date-width + $mediumPadding);
       margin-left: $mediumPadding;
       span { // used for 'TODAY' text etc
         display: block;
-        font-size: 0.8em; text-align: right; text-transform: uppercase;
-        margin-top: -0.5em; margin-right: 0.5em;
+        font-size: 0.8rem; text-align: right; text-transform: uppercase;
+        margin-top: -0.5rem; margin-right: 0.5rem;
         color: $ddd-orangedark;
       }
     }
@@ -298,8 +313,8 @@ body#jobsClients, body#config {
 		}
     &.today {
       .date.col {
-        margin-top: -0.5em;
-        em { top: 0.5em; }
+        margin-top: -0.5rem;
+        em { top: 0.5rem; background-color: $ddd-orange; color: $ddd-cream; }
       }
     }
     &.week-start { margin-top: $smallPadding; }
@@ -338,9 +353,9 @@ select {
 :root input[type="checkbox"].ios-switch + div {
   display: inline-block;
   vertical-align: middle;
-  width: 3.5em;	height: 1.52em;
+  width: 4.5rem;	height: 2rem;
   border-radius: 999px;
-  margin: -0.18em 0.5em 0 .5em;
+  margin: -0.18rem 0.5rem 0 .5rem;
 	padding: $tinyPadding $mediumPadding;
   background: $jobInputBackgroundColour;
   background-image: linear-gradient(90deg, $moneyInputBackgroundColour 50%, transparent 50%);
@@ -357,40 +372,30 @@ select {
 }
 
 :root input[type="checkbox"].ios-switch:checked + div {
-  padding-left: 1.8em;
+  padding-left: 1.8rem;
   background-position: 0 0;
 }
 
-:root input[type="checkbox"].ios-switch + div:before {
-  content: '\e801';
-  float: left;
-  width: 0.825em; height: 0.825em;
-  margin: 0.06em -0.3em 0em 0.09em;
-  border-radius: inherit;
-  background: $ddd-cream;
-  color: $moneyInputColour;
-  text-indent: -1.3em;
-}
-
-/*:root input[type="checkbox"].ios-switch:active + div:before {
-  background-color: $ddd-orange;
-}*/
-/*
-:root input[type="checkbox"].ios-switch:focus + div {
-  box-shadow: 0 .1em .1em rgba(0,0,0,.2) inset,
-  0 .45em 0 .1em rgba(0,0,0,.05) inset,
-  0 0 .4em 1px rgba(255,255,255,.5);
-}
-*/
 :root input[type="checkbox"].ios-switch + div:before,
 :root input[type="checkbox"].ios-switch + div:after {
   font-size: 140%;
 }
 
+:root input[type="checkbox"].ios-switch + div:before {
+  content: '\e801';
+  float: left;
+  width: 1.3rem; height: 1.3rem;
+  margin: 0rem 0rem 0rem 0rem;
+  border-radius: inherit;
+  background: $ddd-cream;
+  color: $moneyInputColour;
+  text-indent: -2.3rem;
+}
+
 :root input[type="checkbox"].ios-switch + div:after {
   content: '\e800';
   float: left;
-  text-indent: .5em;
+  text-indent: .3rem;
   color: $jobInputColour;
 }
 
@@ -402,15 +407,15 @@ select {
 
 
 input.unitBig, input.unitSmall {
-  display: inline-block; width: 3em;
-  font-size: 1.25em; font-weight: bold;
+  display: inline-block; width: 3rem;
+  font-size: 1.25rem; font-weight: bold;
   text-align: center;
 	@include border-radius($mediumPadding);
   &.money {
     background-color: $moneyInputBackgroundColour; color: $moneyInputColour;
-/*    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='1.25em' width='3em'><text x='2' y='13' fill='#{$ddd-cream}' font-size='1em' font-family='arial'>£</text></svg>");*/
+/*    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='1.25rem' width='3rem'><text x='2' y='13' fill='#{$ddd-cream}' font-size='1rem' font-family='arial'>£</text></svg>");*/
     background-size: 100%;
-    // padding-left: 1em;
+    // padding-left: 1rem;
     &.negative { background-color: $ddd-orange; }
   }
   &.hrs { background-color: $jobInputBackgroundColour; color: $jobInputColour; }

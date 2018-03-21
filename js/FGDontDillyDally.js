@@ -1336,6 +1336,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   drawPage = function() {
+    document.getElementById("main").appendChild(createElementWithId("h1", "pageTitle"));
+    document.getElementById("main").appendChild(createElementWithId("h2", "intro"));
     switch (dataRetrieveObject(PREFS_STR).pagetype) {
       case PAGETYPE_TIMESHEETS:
         document.body.id = BODYID_TIMESHEETS;
