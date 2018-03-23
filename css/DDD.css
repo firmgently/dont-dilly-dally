@@ -92,23 +92,28 @@ aside {
   display: inline-block;
   background-color: #776644; }
   aside img {
-    width: 8vw;
-    margin: 1vw 1vw 0 1vw;
+    height: 8vh;
+    margin: 1vh 1vh 0 1vh;
     display: inline-block; }
   aside h1 {
     width: 10vw;
-    text-align: right;
-    padding-right: 0.6rem;
-    font-size: 3vw;
+    text-align: center;
+    font-size: 3vh;
     color: #aa9977;
-    text-transform: lowercase; }
+    text-transform: lowercase;
+    letter-spacing: 0.07rem;
+    margin-bottom: 0.1rem; }
+    aside h1:nth-of-type(2) {
+      letter-spacing: 0.25rem; }
+    aside h1:nth-of-type(3) {
+      letter-spacing: 0.15rem; }
   aside nav {
     position: absolute;
+    white-space: nowrap;
     display: inline-block;
-    width: 90vw;
     transform-origin: 0 0;
     transform: rotate(-90deg);
-    bottom: 0;
+    top: 78vh;
     left: calc(10vw - 2.6rem); }
     aside nav button.btnNav {
       padding: 0.15rem;
@@ -125,7 +130,8 @@ aside {
       border-color: #e6d9bf;
       border-bottom: none;
       text-overflow: ellipsis;
-      white-space: nowrap; }
+      white-space: nowrap;
+      cursor: pointer; }
       aside nav button.btnNav:hover, aside nav button.btnNav:focus {
         color: #221100;
         outline: 0; }
@@ -133,6 +139,7 @@ aside {
 body#jobsClients aside nav button#jobsClients.btnNav,
 body#timesheets aside nav button#timesheets.btnNav,
 body#config aside nav button#config.btnNav {
+  width: 19vh;
   font-size: 1.15rem;
   -webkit-border-radius: 0.6rem 0.6rem 0 0;
   -moz-border-radius: 0.6rem 0.6rem 0 0;
@@ -180,6 +187,12 @@ body#jobsClients #column-headings, body#config #column-headings {
   background-color: #ddccaa; }
   #main h1, #main h2 {
     padding: 0.8rem 0.6rem 0.8rem 2rem; }
+
+#miniNavForm {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 20; }
 
 #editClientCol, #editJobCol {
   width: 50%;
@@ -425,6 +438,37 @@ input.notes {
     color: inherit;
     opacity: 1;
     font-style: italic; }
+
+/* Save/Load buttons */
+#file-chooser {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1; }
+
+#file-save {
+  margin-top: 0.3rem; }
+
+.file-buttons {
+  position: absolute;
+  bottom: 0; }
+  .file-buttons #file-save,
+  .file-buttons #file-chooser + label {
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+    color: #ffeedd;
+    background-color: #993322;
+    display: inline-block;
+    padding: 0.6rem;
+    cursor: pointer; }
+  .file-buttons #file-save:focus,
+  .file-buttons #file-save:hover,
+  .file-buttons #file-chooser:focus + label,
+  .file-buttons #file-chooser + label:hover {
+    background-color: #221100; }
 
 /* COLOR PICKER */
 .color-picker {

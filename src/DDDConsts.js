@@ -24,9 +24,9 @@ uk.co.firmgently.DDDConsts = (function() {
     APP_ID: "FGDDD",
     SAVE_FILENAME: "DontDillyDally-export",
 
-    PAGETYPE_TIMESHEETS: " > timesheets",
-    PAGETYPE_CONFIG: " > preferences",
-    PAGETYPE_JOBSANDCLIENTS: " > jobsAndClients",
+    PAGETYPE_TIMESHEETS: "timesheets",
+    PAGETYPE_CONFIG: "preferences",
+    PAGETYPE_JOBSANDCLIENTS: "jobs-and-clients",
     BODYID_TIMESHEETS: "timesheets",
     BODYID_CONFIG: "config",
     BODYID_JOBSANDCLIENTS: "jobsClients",
@@ -44,11 +44,13 @@ uk.co.firmgently.DDDConsts = (function() {
     GUITYPE_UL: "GUITypeUL",
 
     CLASS_BTNNAV: "btnNav",
+    CLASS_BTNMININAV: "btnMiniNav",
     CLASS_FORMMAIN: "formMain",
     CLASS_COL: "col",
     CLASS_ROW: "row",
     CLASS_CLIENTSELECT: "select-client",
     CLASS_JOBSELECT: "select-job",
+		CLASS_TODAY: "today",
 
     TOTAL_STR: "Total",
     DAY_STR: "day",
@@ -335,22 +337,13 @@ uk.co.firmgently.DDDConsts = (function() {
     {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
-      id: CONST.BODYID_TIMESHEETS,
-      label: "Timesheets",
-      methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      args: [CONST.PAGETYPE_TIMESHEETS],
-      scopeID: "main",
-      parent: "nav-main"
-    }, {
-      type: CONST.GUITYPE_BTN,
-      class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_JOBSANDCLIENTS,
       label: "Jobs & Clients",
       methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
       args: [CONST.PAGETYPE_JOBSANDCLIENTS],
       scopeID: "main",
       parent: "nav-main"
-    }, {
+   }, {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_CONFIG,
@@ -359,12 +352,57 @@ uk.co.firmgently.DDDConsts = (function() {
       args: [CONST.PAGETYPE_CONFIG],
       scopeID: "main",
       parent: "nav-main"
+     }, {
+      type: CONST.GUITYPE_BTN,
+      class: CONST.CLASS_BTNNAV,
+      id: CONST.BODYID_TIMESHEETS,
+      label: "Timesheets",
+      methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+      args: [CONST.PAGETYPE_TIMESHEETS],
+      scopeID: "main",
+      parent: "nav-main"
     }
   ];
 
 
   CONST.GUIDATA_TIMESHEETS = [
-    {
+		{ type: CONST.GUITYPE_FORM,
+			id: "miniNavForm",
+			parent: "main",
+			el_ar: [
+			{
+				type: CONST.GUITYPE_BTN,
+				class: CONST.CLASS_BTNMININAV,
+				label: "Month Previous",
+				methodPathStr: "uk.co.firmgently.DontDillyDally.monthPrevClick",
+				parent: "miniNavForm"
+		 }, {
+				type: CONST.GUITYPE_BTN,
+				class: CONST.CLASS_BTNMININAV,
+				label: "Month Next",
+				methodPathStr: "uk.co.firmgently.DontDillyDally.monthNextClick",
+				parent: "miniNavForm"
+		 }, {
+				type: CONST.GUITYPE_BTN,
+				class: CONST.CLASS_BTNMININAV,
+				label: "Week Previous",
+				methodPathStr: "uk.co.firmgently.DontDillyDally.weekPrevClick",
+				parent: "miniNavForm"
+			 }, {
+				type: CONST.GUITYPE_BTN,
+				class: CONST.CLASS_BTNMININAV,
+				label: "Week Next",
+				methodPathStr: "uk.co.firmgently.DontDillyDally.weekNextClick",
+				parent: "miniNavForm"
+			 }, {
+				type: CONST.GUITYPE_BTN,
+				class: CONST.CLASS_BTNMININAV,
+				label: "Today",
+				methodPathStr: "uk.co.firmgently.DontDillyDally.todayClick",
+				parent: "miniNavForm"
+		   }
+			]
+		}, {
       type: CONST.GUITYPE_UL,
       id: CONST.TIMESHEETCONTAINER_ID,
       parent: "main"

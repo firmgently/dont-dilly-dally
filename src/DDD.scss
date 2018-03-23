@@ -169,20 +169,23 @@ body {
 aside {
   display: inline-block; 
   background-color: $ddd-sanddark;
-  img { width: 8vw; margin: 1vw 1vw 0 1vw; display: inline-block; }
+  img { height: 8vh; margin: 1vh 1vh 0 1vh; display: inline-block; }
   h1 {
     width: $sidebar-width;
-    text-align: right; padding-right: $mediumPadding; 
-    font-size: 3vw; color: $ddd-sand;
+    text-align: center;
+    font-size: 3vh; color: $ddd-sand;
     text-transform: lowercase;
+		letter-spacing: 0.07rem;
+		margin-bottom: 0.1rem;
+		&:nth-of-type(2) { letter-spacing: 0.25rem; }
+		&:nth-of-type(3) { letter-spacing: 0.15rem; }
   } 
   nav {
-    position: absolute;
+    position: absolute; white-space: nowrap;
     display: inline-block;
-    width: (100vw - $sidebar-width);
     transform-origin: 0 0;
     transform: rotate(-90deg);
-    bottom: 0; left: calc(#{$sidebar-width} - #{$extraLargePadding + $mediumPadding});
+    top: 78vh; left: calc(#{$sidebar-width} - #{$extraLargePadding + $mediumPadding});
     button.btnNav {
       padding: $tab-padding; margin: $tab-margin $tab-margin 0 0;
       font-size: $tab-fontsize-unselected; vertical-align: bottom;
@@ -190,6 +193,7 @@ aside {
       color: $panelFgColourDimmed; background-color: $panelBgColourDimmed;
       border-color: $panelBgColourTint; border-bottom: none;
       text-overflow: ellipsis; white-space: nowrap;
+			cursor: pointer;
       &:hover, &:focus { color: $panelFgColour; outline: 0; }
     }
   }
@@ -197,6 +201,7 @@ aside {
 body#jobsClients aside nav button#jobsClients.btnNav,
 body#timesheets aside nav button#timesheets.btnNav,
 body#config aside nav button#config.btnNav {
+	width: 19vh;
   font-size: $tab-fontsize-selected; @include topCurve($mediumPadding);
   color: $panelFgColour; background-color: $panelBgColour;
 }
@@ -228,6 +233,12 @@ body#jobsClients, body#config {
   h1, h2 { padding: $largePadding $mediumPadding $largePadding $extraLargePadding; }
 }
 
+#miniNavForm {
+	position: fixed;
+	top: 0;
+	right: 0;
+	z-index: 20;
+}
 
 #editClientCol, #editJobCol { width: 50%; display: inline-block; padding: $largePadding}
 
@@ -441,6 +452,34 @@ input.notes {
 	}
 }
 
+/* Save/Load buttons */
+
+#file-chooser {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+#file-save { margin-top: $smallPadding; }
+.file-buttons {
+	position: absolute; bottom: 0;
+	#file-save,
+	#file-chooser + label {
+		font-size: 1rem; font-weight: 700; text-align: center;
+		color: $ddd-cream; background-color: $ddd-orangedark;
+		display: inline-block;
+		padding: $mediumPadding;
+		cursor: pointer;
+	}
+	#file-save:focus,
+	#file-save:hover,
+	#file-chooser:focus + label,
+	#file-chooser + label:hover {
+		background-color: $ddd-browndark;
+	}
+}
 
 /* COLOR PICKER */
 

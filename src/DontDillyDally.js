@@ -28,7 +28,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   callMethodFromObOnElement, callMethodFromOb,
 	onFormClick, onScroll,
   drawTimesheets, getNextID, newClientCreate, newJobCreate,
-  navClick,
+  navClick, todayClick, weekNextClick, weekPrevClick, monthNextClick, monthPrevClick,
 	onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
 	onSaveBtnClick,
   dataStoragePossible, initData,
@@ -207,6 +207,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   selectPage = function(pagetype) {
     dataUpdateObject(PREFS_STR, "pagetype", pagetype);
     location.hash = pagetype;
+		document.body.id = "";
     clearPage();
     setTimeout(drawPage, 1); // on timer to force reflow after clearPage()
   };
@@ -514,7 +515,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       day_str = dayCur.getShortISO();
       rowClassname = "day row ";
       isToday = !Math.round(daysBetween(dayCur, dateToday));
-      if (isToday) { rowClassname += "today "; }
+      if (isToday) { rowClassname += CLASS_TODAY + " "; }
       if (isOddDay) { rowClassname += "odd "; }
       isOddDay = !isOddDay; // flip state
       if (dayCur.getDay() === weekStartDay) { rowClassname += "week-start "; }
@@ -902,6 +903,31 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+	weekPrevClick = function(e) {
+		document.getElementsByClassName(CLASS_TODAY)[0].scrollIntoView();
+	};
+
+
+	weekNextClick = function(e) {
+		document.getElementsByClassName(CLASS_TODAY)[0].scrollIntoView();
+	};
+
+
+	monthPrevClick = function(e) {
+		document.getElementsByClassName(CLASS_TODAY)[0].scrollIntoView();
+	};
+
+
+	monthNextClick = function(e) {
+		document.getElementsByClassName(CLASS_TODAY)[0].scrollIntoView();
+	};
+
+
+	todayClick = function(e) {
+		document.getElementsByClassName(CLASS_TODAY)[0].scrollIntoView();
+	};
+
+
   updateSelected = function() {
     var
 		pageType = dataRetrieveObject(PREFS_STR).pagetype,
@@ -990,6 +1016,11 @@ uk.co.firmgently.DontDillyDally = (function() {
     addTask: addTask,
     removeTask: removeTask,
     navClick: navClick,
+    todayClick: todayClick,
+    weekNextClick: weekNextClick,
+    weekPrevClick: weekPrevClick,
+    monthNextClick: monthNextClick,
+    monthPrevClick: monthPrevClick,
     newClientCreate: newClientCreate,
     newJobCreate: newJobCreate,
     newClientFormSave: newClientFormSave,
