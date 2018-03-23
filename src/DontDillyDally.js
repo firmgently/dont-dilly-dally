@@ -35,6 +35,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 	dataStoreObject, dataRetrieveObject, dataUpdateObject,
 	clientAndJobStyleSheet, createClientOrJobFromOb, createCSSForClientOrJobFromOb,
 	getJobOrClientIDFromElement, updateDataFromWorkItemEl,
+  getFirstVisibleDayElement,
   newClientFormSave, newJobFormSave, clientInputWasLastEmpty,
 	handleFileSelect,
   updateLayoutRefs, updateSelected, addUIWorkItem, removeWorkItem 
@@ -287,6 +288,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         case GUITYPE_UL:
           addLIsFromOb(ob);
           break;
+        case GUITYPE_PARA: // intentional rollthrough
         case GUITYPE_SECTION: // intentional rollthrough
         case GUITYPE_COL: // intentional rollthrough
         case GUITYPE_ROW:
@@ -904,22 +906,58 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 	weekPrevClick = function(e) {
-		document.getElementsByClassName(CLASS_TODAY)[0].scrollIntoView();
+    var i, day,
+    scrollTop = document.getElementById("main").scrollTop,
+    days = document.getElementsByClassName("week-start");
+    for (i = days.length - 1; i >= 0; i--) {
+      day = days[i];
+      if (day.offsetTop < scrollTop) {
+        day.scrollIntoView();
+        break;
+      }
+    }
 	};
 
 
 	weekNextClick = function(e) {
-		document.getElementsByClassName(CLASS_TODAY)[0].scrollIntoView();
+    var i, day,
+    scrollTop = document.getElementById("main").scrollTop,
+    days = document.getElementsByClassName("week-start");
+    for (i = 0; i < days.length; i++) {
+      day = days[i];
+      if (day.offsetTop > scrollTop) {
+        day.scrollIntoView();
+        break;
+      }
+    }
 	};
 
 
 	monthPrevClick = function(e) {
-		document.getElementsByClassName(CLASS_TODAY)[0].scrollIntoView();
+    var i, day,
+    scrollTop = document.getElementById("main").scrollTop,
+    days = document.getElementsByClassName("month-start");
+    for (i = days.length - 1; i >= 0; i--) {
+      day = days[i];
+      if (day.offsetTop < scrollTop) {
+        day.scrollIntoView();
+        break;
+      }
+    }
 	};
 
 
 	monthNextClick = function(e) {
-		document.getElementsByClassName(CLASS_TODAY)[0].scrollIntoView();
+    var i, day,
+    scrollTop = document.getElementById("main").scrollTop,
+    days = document.getElementsByClassName("month-start");
+    for (i = 0; i < days.length; i++) {
+      day = days[i];
+      if (day.offsetTop > scrollTop) {
+        day.scrollIntoView();
+        break;
+      }
+    }
 	};
 
 
@@ -1003,6 +1041,18 @@ uk.co.firmgently.DontDillyDally = (function() {
 		}
 	};
 
+  
+  getFirstVisibleDayElement = function() {
+    var i, day,
+    scrollTop = document.getElementById("main").scrollTop,
+    days = document.getElementById(TIMESHEETCONTAINER_ID).childNodes;
+    for (i = 0; i < days.length; i++) {
+      day = days[i];
+      if (day.offsetTop > scrollTop) {
+        return day;
+      }
+    }
+  };
 
 
 	/* ---------------------------------------------------------------------------

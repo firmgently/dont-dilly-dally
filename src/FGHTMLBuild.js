@@ -256,6 +256,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       case GUITYPE_ROW:
         elType = "span";
         break;
+      case GUITYPE_PARA:
+        elType = "p";
+        break;
       case GUITYPE_SECTION:
         elType = "section";
         break;
@@ -271,6 +274,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     }
     parent_el.appendChild(el);
     if (ob.class) { addClassname(el, ob.class); }
+    if (ob.text) { el.innerHTML = ob.text; }
 
 		return el;
   };

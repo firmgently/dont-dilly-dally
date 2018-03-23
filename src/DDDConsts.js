@@ -31,6 +31,7 @@ uk.co.firmgently.DDDConsts = (function() {
     BODYID_CONFIG: "config",
     BODYID_JOBSANDCLIENTS: "jobsClients",
 
+    GUITYPE_PARA: "GUITypePara",
     GUITYPE_COL: "GUITypeCol",
     GUITYPE_ROW: "GUITypeRow",
     GUITYPE_BTN: "GUITypeBtn",
@@ -366,43 +367,51 @@ uk.co.firmgently.DDDConsts = (function() {
 
 
   CONST.GUIDATA_TIMESHEETS = [
-		{ type: CONST.GUITYPE_FORM,
-			id: "miniNavForm",
-			parent: "main",
-			el_ar: [
-			{
-				type: CONST.GUITYPE_BTN,
-				class: CONST.CLASS_BTNMININAV,
-				label: "Month Previous",
-				methodPathStr: "uk.co.firmgently.DontDillyDally.monthPrevClick",
-				parent: "miniNavForm"
-		 }, {
-				type: CONST.GUITYPE_BTN,
-				class: CONST.CLASS_BTNMININAV,
-				label: "Month Next",
-				methodPathStr: "uk.co.firmgently.DontDillyDally.monthNextClick",
-				parent: "miniNavForm"
-		 }, {
-				type: CONST.GUITYPE_BTN,
-				class: CONST.CLASS_BTNMININAV,
-				label: "Week Previous",
-				methodPathStr: "uk.co.firmgently.DontDillyDally.weekPrevClick",
-				parent: "miniNavForm"
-			 }, {
-				type: CONST.GUITYPE_BTN,
-				class: CONST.CLASS_BTNMININAV,
-				label: "Week Next",
-				methodPathStr: "uk.co.firmgently.DontDillyDally.weekNextClick",
-				parent: "miniNavForm"
-			 }, {
-				type: CONST.GUITYPE_BTN,
-				class: CONST.CLASS_BTNMININAV,
-				label: "Today",
-				methodPathStr: "uk.co.firmgently.DontDillyDally.todayClick",
-				parent: "miniNavForm"
-		   }
-			]
-		}, {
+    { type: CONST.GUITYPE_FORM,
+      id: "miniNavForm",
+      parent: "main",
+      el_ar: [
+        {
+          type: CONST.GUITYPE_BTN,
+          class: CONST.CLASS_BTNMININAV,
+          label: "&#x25B2;",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.monthPrevClick",
+          parent: "miniNavForm"
+        }, {
+          type: CONST.GUITYPE_PARA,
+          text: "month",
+          parent: "miniNavForm"
+        }, {
+          type: CONST.GUITYPE_BTN,
+          class: CONST.CLASS_BTNMININAV,
+          label: "&#x25BC;",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.monthNextClick",
+          parent: "miniNavForm"
+        }, {
+          type: CONST.GUITYPE_BTN,
+          class: CONST.CLASS_BTNMININAV,
+          label: "&#x25B2;",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.weekPrevClick",
+          parent: "miniNavForm"
+        }, {
+          type: CONST.GUITYPE_PARA,
+          text: "week",
+          parent: "miniNavForm"
+        }, {
+          type: CONST.GUITYPE_BTN,
+          class: CONST.CLASS_BTNMININAV,
+          label: "&#x25BC;",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.weekNextClick",
+          parent: "miniNavForm"
+        }, {
+          type: CONST.GUITYPE_BTN,
+          class: CONST.CLASS_BTNMININAV,
+          label: "Today",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.todayClick",
+          parent: "miniNavForm"
+        }
+      ]
+    }, {
       type: CONST.GUITYPE_UL,
       id: CONST.TIMESHEETCONTAINER_ID,
       parent: "main"

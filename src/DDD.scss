@@ -238,6 +238,11 @@ body#jobsClients, body#config {
 	top: 0;
 	right: 0;
 	z-index: 20;
+  p { display: inline; margin: 0 $largePadding}
+  button:nth-of-type(2),
+  button:nth-of-type(4) {
+    margin-right: $extraLargePadding;
+  }
 }
 
 #editClientCol, #editJobCol { width: 50%; display: inline-block; padding: $largePadding}

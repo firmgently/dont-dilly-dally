@@ -193,6 +193,12 @@ body#jobsClients #column-headings, body#config #column-headings {
   top: 0;
   right: 0;
   z-index: 20; }
+  #miniNavForm p {
+    display: inline;
+    margin: 0 0.8rem; }
+  #miniNavForm button:nth-of-type(2),
+  #miniNavForm button:nth-of-type(4) {
+    margin-right: 2rem; }
 
 #editClientCol, #editJobCol {
   width: 50%;
