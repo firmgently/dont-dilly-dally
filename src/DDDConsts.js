@@ -31,6 +31,11 @@ uk.co.firmgently.DDDConsts = (function() {
     BODYID_CONFIG: "config",
     BODYID_JOBSANDCLIENTS: "jobsClients",
 
+    MONTH_NAMES: [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ],
+
     GUITYPE_PARA: "GUITypePara",
     GUITYPE_COL: "GUITypeCol",
     GUITYPE_ROW: "GUITypeRow",

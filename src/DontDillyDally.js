@@ -2,7 +2,19 @@
 ---------------------------------------------------------
   Firm Gently
   DontDillyDally
-  Mark Mayes 2016
+  Mark Mayes 2018
+
+  FIXME timesheet container not getting scroll focus
+  FIXME blank object being stored in data object results in missing day in UI
+  TODO  number spinners
+  TODO  match all button styles
+  FIXME blank space appears at bottom of page (seems related to LOADING element)
+  FIXME negative money values should attach negative classname on initial page load
+  TODO  jobs and clients list existing jobs/clients
+  TODO  jobs and clients proper colour picker
+  TODO  minify JS on save
+
+
 ---------------------------------------------------------
 */
 // create namespace: uk.co.firmgently
@@ -481,7 +493,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   drawTimesheets = function() {
     var
     i, j, daysToDraw, isOddDay, weekdayCur, day_str,
-    isToday, rowClassname,
+    isToday, significance_str, rowClassname,
     day_el, date_el, dayDataContainer_el,
 		hrs_el, client_el, job_el,
     ob_temp, dayWorkItems, workItem,
@@ -514,14 +526,28 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     isOddDay = false;
     for (i = 0; i < daysToDraw; i++) {
+      significance_str = "";
       day_str = dayCur.getShortISO();
       rowClassname = "day row ";
       isToday = !Math.round(daysBetween(dayCur, dateToday));
-      if (isToday) { rowClassname += CLASS_TODAY + " "; }
+      if (isToday) {
+        rowClassname += CLASS_TODAY + " ";
+        significance_str += "TODAYYYY";
+      }
       if (isOddDay) { rowClassname += "odd "; }
       isOddDay = !isOddDay; // flip state
-      if (dayCur.getDay() === weekStartDay) { rowClassname += "week-start "; }
-      if (dayCur.getDate() === 1) { rowClassname += "month-start "; }
+      if (dayCur.getDay() === weekStartDay) {
+        rowClassname += "week-start ";
+        significance_str += "week " + dayCur.getWeekNumber();
+        // if this is week 1 and month is December, must be week 1 of next year
+        if (dayCur.getWeekNumber() === 1 && dayCur.getMonth() === 11) {
+          significance_str += " (" + (dayCur.getFullYear() + 1) + ")";
+        }
+      }
+      if (dayCur.getDate() === 1) {
+        rowClassname += "month-start ";
+        significance_str += MONTH_NAMES[dayCur.getMonth()];
+      }
       day_el = createElementWithId("li", day_str);
       addClassname(day_el, rowClassname);
       // create days in documentFragment to avoid unneccessary reflows
@@ -531,8 +557,9 @@ uk.co.firmgently.DontDillyDally = (function() {
       date_el = document.createElement("p");
       addClassname(date_el, "date col");
       // TODO DATETYPE_DEFAULT being used here is that correct?
-      if (isToday) {
-      date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label) + "<span>" + TODAY_STR + "</span>";
+      if (significance_str !== "") {
+      //if (isToday) {
+        date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label) + "<span>" + significance_str + "</span>";
       } else {
         date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
       }
@@ -544,7 +571,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       day_el.appendChild(dayDataContainer_el);
 
       dayWorkItems = allWorkItems[day_str];
-      if (dayWorkItems === undefined) {
+      if (dayWorkItems === undefined || isEmpty(dayWorkItems)) {
         addUIWorkItem(dayDataContainer_el);
       } else {
 				for (workItem in dayWorkItems) {
@@ -802,9 +829,13 @@ uk.co.firmgently.DontDillyDally = (function() {
 				if (this.value < 0) {
 					addClassname(this, "negative");
 					addClassname(this.parentNode.getElementsByClassName("unitSmall")[0], "negative");
+					addClassname(this.parentNode.getElementsByClassName("notes")[0], "negative");
+					addClassname(this.parentNode.getElementsByClassName("ios-switch")[0], "negative");
 				} else {
 					removeClassname(this, "negative");
 					removeClassname(this.parentNode.getElementsByClassName("unitSmall")[0], "negative");
+					removeClassname(this.parentNode.getElementsByClassName("notes")[0], "negative");
+					removeClassname(this.parentNode.getElementsByClassName("ios-switch")[0], "negative");
 				}
 			}
 			updateDataFromWorkItemEl(this.parentNode);

@@ -19,7 +19,7 @@ uk.co.firmgently.FGUtils = (function() {
   removeClassname, addClassname, getStyle,
   treatAsUTC, daysBetween, getFormattedDate,
   getFunctionFromString, getGUID, changeSelectByOption, manualEvent,
-  logMsg;
+  isEmpty, logMsg;
 
 
   /* -------------------------------------------------------------------------------
@@ -87,6 +87,18 @@ uk.co.firmgently.FGUtils = (function() {
       if (length > 0) { ret = ret.substring(0, length); }
 
       return ret;
+  };
+
+  // https://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php
+  Date.prototype.getWeekNumber = function(){
+    var yearStart,
+      d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate())),
+      dayNum = d.getUTCDay() || 7;
+
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+
+    return Math.ceil((((d - yearStart) / 86400000) + 1)/7)
   };
 
 
@@ -233,6 +245,16 @@ uk.co.firmgently.FGUtils = (function() {
     console.log(msg);
   };
 
+  
+  isEmpty = function(obj) {
+    var prop;
+    for(prop in obj) {
+      if(obj.hasOwnProperty(prop)) { return false; }
+    }
+    return JSON.stringify(obj) === JSON.stringify({});
+  };
+
+
 
   // ----------------------------------------------------------
   // A short snippet for detecting versions of IE in JavaScript
@@ -350,6 +372,7 @@ uk.co.firmgently.FGUtils = (function() {
     treatAsUTC: treatAsUTC,
     daysBetween: daysBetween,
     logMsg: logMsg,
+    isEmpty: isEmpty,
     getIEVersion: getIEVersion,
     getStyle: getStyle,
     isTouchDevice: isTouchDevice,

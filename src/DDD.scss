@@ -107,10 +107,10 @@ $buttonBgColourOver: darken($buttonBgColourOut, 25%);
 $buttonColourOut: $ddd-gold;
 $buttonColourOver: $ddd-sand;
 
-$jobInputColour: $ddd-brown;
+$jobInputColour: $ddd-cream;
 $jobInputBackgroundColour: $ddd-sand;
 $jobInputBackgroundColourTint: lighten($jobInputBackgroundColour, 25%);
-$moneyInputColour: $ddd-browndark;
+$moneyInputColour: $ddd-cream;
 $moneyInputBackgroundColour: $ddd-green;
 $moneyInputBackgroundColourTint: lighten($moneyInputBackgroundColour, 25%);
 
@@ -127,8 +127,11 @@ $extraLargePadding: 2rem;
 $bottomPadding: 0.9rem;
 $topPadding: 4.5rem;
 
-$fontSizeNormal: 1rem;
-$fontSizeSmall: 0.9rem;
+$fontSizeNormal: 0.9rem;
+$fontSizeSmall: 0.8rem;
+$fontSizeTiny: 0.7rem;
+$fontSizeIcon: 1.2rem;
+$fontSizeIconLarge: 1.5rem;
 
 $baseZ: 99999990;
 $aboveBaseZ: 99999991;
@@ -283,28 +286,28 @@ body#jobsClients, body#config {
 //			&:first-child { margin-top: 0; }
 		}
     li .removeTaskBtn, li .addTaskBtn {
-      font-family: "ddd-icons"; font-size: 1.33rem;
+      font-family: "ddd-icons"; font-size: $fontSizeIcon;
       @include border-radius(1rem); border: none;
       height: 2rem; width: 2rem;
-      margin-left: $largePadding;
+      margin-left: $largePadding; padding: 0.4rem 0.5rem 0.5rem 0.5rem;
       cursor: pointer;
 			color: $ddd-cream; background-color: $ddd-sand;
       position: absolute; bottom: 0;
     }
     li .addTaskBtn { margin-left: -2rem }
-    li .removeTaskBtn { right: 1rem; background-color: $ddd-orangedark; }
+    li .removeTaskBtn { right: 0; background-color: $ddd-orangedark; }
     li:only-child .removeTaskBtn { visibility: hidden; }
     li:not(:last-child) .addTaskBtn { visibility: hidden; }
   }
   li {
     .date.col {
       font-family: 'Lucida Console', 'Monaco', 'monospace', 'Courier';
-      font-size: 1.1rem; font-weight: bold;
+      font-size: $fontSizeNormal; font-weight: bold;
       width: $date-width; margin-right: 0 - ($date-width + $mediumPadding);
       margin-left: $mediumPadding;
       span { // used for 'TODAY' text etc
         display: block;
-        font-size: 0.8rem; text-align: right; text-transform: uppercase;
+        font-size: $fontSizeTiny; text-align: right; text-transform: uppercase;
         margin-top: -0.5rem; margin-right: 0.5rem;
         color: $ddd-orangedark;
       }
@@ -318,12 +321,17 @@ body#jobsClients, body#config {
     &.day {
       display: block;
       padding: $largePadding $tinyPadding;
-      color: $panelBgColour; background-color: $panelBgColour3;
-      &:hover, &:focus-within { color: mix($panelBgColour, $ddd-browndark, 25%); }
+      color: $ddd-sand; background-color: $panelBgColour3;
+      &:hover, &:focus-within {
+        color: mix($ddd-sand, $ddd-browndark, 25%);
+        background-color: mix($panelBgColour3, $ddd-sanddark, 95%);
+      }
     }
 		&.odd {
 			background-color: $panelBgColour2;
-     // border-color: $panelBgColour2;
+      &:hover, &:focus-within {
+        background-color: mix($panelBgColour2, white, 75%);
+      }
 			em { background-color: $panelBgColour3; }
       select { background-color: $panelBgColour3; }
 		}
@@ -371,8 +379,8 @@ select {
   vertical-align: middle;
   width: 4.5rem;	height: 2rem;
   border-radius: 999px;
-  margin: -0.18rem 0.5rem 0 .5rem;
-	padding: $tinyPadding $mediumPadding;
+  margin: 0 $mediumPadding;
+	padding: $smallPadding 0.5rem;
   background: $jobInputBackgroundColour;
   background-image: linear-gradient(90deg, $moneyInputBackgroundColour 50%, transparent 50%);
   background-size: 200% 100%;
@@ -380,21 +388,25 @@ select {
   background-origin: border-box;
   background-clip: border-box;
   overflow: hidden;
-  transition-duration: .2s;
-  transition-property: padding, width, background-position, text-indent;
-  font-size: 130%; /* change this and see how they adjust! */
+ /* transition-duration: .2s; */
+ /* transition-property: padding, width, background-position, text-indent; */
+  font-size: $fontSizeIconLarge;
   font-family: "ddd-icons";
   cursor: pointer;
 }
+:root input[type="checkbox"].ios-switch.negative + div {
+  background-image: linear-gradient(90deg, $ddd-orange 50%, transparent 50%);
+}
 
 :root input[type="checkbox"].ios-switch:checked + div {
-  padding-left: 1.8rem;
+  padding-left: 2.7rem;
   background-position: 0 0;
+  white-space: nowrap;
 }
 
 :root input[type="checkbox"].ios-switch + div:before,
 :root input[type="checkbox"].ios-switch + div:after {
-  font-size: 140%;
+  font-size: $fontSizeIconLarge;
 }
 
 :root input[type="checkbox"].ios-switch + div:before {
@@ -405,13 +417,12 @@ select {
   border-radius: inherit;
   background: $ddd-cream;
   color: $moneyInputColour;
-  text-indent: -2.3rem;
+  text-indent: -2.2rem;
 }
 
 :root input[type="checkbox"].ios-switch + div:after {
   content: '\e800';
-  float: left;
-  text-indent: .3rem;
+  margin-left: 0.8rem;
   color: $jobInputColour;
 }
 
@@ -424,14 +435,12 @@ select {
 
 input.unitBig, input.unitSmall {
   display: inline-block; width: 3rem;
-  font-size: 1.25rem; font-weight: bold;
+  font-size: $fontSizeNormal; font-weight: bold;
   text-align: center;
 	@include border-radius($mediumPadding);
   &.money {
     background-color: $moneyInputBackgroundColour; color: $moneyInputColour;
-/*    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='1.25rem' width='3rem'><text x='2' y='13' fill='#{$ddd-cream}' font-size='1rem' font-family='arial'>£</text></svg>");*/
     background-size: 100%;
-    // padding-left: 1rem;
     &.negative { background-color: $ddd-orange; }
   }
   &.hrs { background-color: $jobInputBackgroundColour; color: $jobInputColour; }
@@ -439,8 +448,12 @@ input.unitBig, input.unitSmall {
 input.unitSmall { /*text-align: left;*/ margin-right: $largePadding; }
 
 input.notes {
-  &.money { color: $moneyInputColour; background-color: $moneyInputBackgroundColourTint; }
-  &.job { color: $jobInputColour; background-color: $jobInputBackgroundColourTint; }
+  &.money {
+    color: $moneyInputColour; background-color: $moneyInputBackgroundColour;
+    &.negative { background-color: $ddd-orange; }
+  }
+  &.job { color: $jobInputColour; background-color: $jobInputBackgroundColour; }
+	@include border-radius($mediumPadding);
   margin-left: $largePadding;
 	padding: $mediumPadding $mediumPadding $mediumPadding $largePadding;
 	&::-webkit-input-placeholder { /* Chrome/Opera/Safari */
@@ -472,7 +485,7 @@ input.notes {
 	position: absolute; bottom: 0;
 	#file-save,
 	#file-chooser + label {
-		font-size: 1rem; font-weight: 700; text-align: center;
+		font-size: $fontSizeSmall; font-weight: 700; text-align: center;
 		color: $ddd-cream; background-color: $ddd-orangedark;
 		display: inline-block;
 		padding: $mediumPadding;
