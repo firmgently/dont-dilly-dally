@@ -16,7 +16,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 	var
 	fillHTMLFromOb,
 	createButtonFromOb, createRadioFromOb, createCheckboxFromOb,
-	createInputFromOb, createSelectFromOb,
+	createInputFromOb, createSpinnerFromOb, createSelectFromOb,
 	createFormFromOb,
 	addLIsFromOb, createBasicElementFromOb, createColorPickerFromOb
 	;
@@ -74,7 +74,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       }
       input_el = createElementWithId("input", ob.id);
       input_el.name = ob.id;
-      input_el.id = ob.id;
     } else {
       input_el = document.createElement("input");
     }
@@ -88,6 +87,97 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     }
 
     input_el.ob = ob;
+
+		return input_el;
+  };
+
+
+  createSpinnerFromOb = function(ob) {
+    var
+    prop, input_el, label_el, up_el, down_el,
+    innerHTML = "",
+    wrapper_el = document.createElement("div"),
+    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
+
+    parent_el.appendChild(wrapper_el);
+    input_el = document.createElement("input");
+    if (ob.class) { addClassname(input_el, ob.class); }
+
+    addClassname(wrapper_el, "spinner");
+    wrapper_el.appendChild(input_el);
+
+    if (ob.attributes) {
+      input_el.ob = {};
+			for (prop in ob.attributes) {
+        input_el.ob[prop] = ob.attributes[prop];
+      }
+    }
+
+    up_el = document.createElement("button");
+    up_el.innerHTML = "&#x25B2;";
+    up_el.spinner = input_el;
+    addClassname(up_el, "spin-button-up");
+    wrapper_el.appendChild(up_el);
+    registerEventHandler(up_el, "mousedown", function() {
+      var
+      timer, timer2,
+      spinner = this.spinner,
+      timeFunc = function() {
+        var valNew = parseInt(spinner.value) + parseInt(spinner.ob.step);
+				if (isNaN(valNew)) { valNew = 0; }
+				if (valNew > spinner.ob.max) {
+					if (spinner.ob.wrapNum) {
+						valNew = spinner.ob.min;
+					} else {
+						valNew = spinner.ob.max;
+					}
+				}
+        spinner.value = valNew;
+        if (spinner.isChanging) {
+          window.clearTimeout(timer);
+          timer = window.setTimeout(timeFunc, spinner.ob.repeatRate);
+        }
+      };
+      spinner.isChanging = true;
+      window.clearTimeout(timer2);
+      timer2 = window.setTimeout(timeFunc, spinner.ob.repeatRate);
+    });
+    registerEventHandler(up_el, "mouseup", function() {
+      this.spinner.isChanging = false;
+    });
+    
+    down_el = document.createElement("button");
+    down_el.innerHTML = "&#x25BC;";
+    down_el.spinner = input_el;
+    addClassname(down_el, "spin-button-down");
+    wrapper_el.appendChild(down_el);
+    registerEventHandler(down_el, "mousedown", function() {
+      var
+      timer, timer2,
+      spinner = this.spinner,
+      timeFunc = function() {
+        var valNew = parseInt(spinner.value) - parseInt(spinner.ob.step);
+				if (isNaN(valNew)) { valNew = 0; }
+        if (valNew < spinner.ob.min) {
+					if (spinner.ob.wrapNum) {
+						valNew = spinner.ob.max;
+					} else {
+						valNew = spinner.ob.min;
+					}
+				}
+        spinner.value = valNew;
+        if (spinner.isChanging) {
+          window.clearTimeout(timer2);
+          timer2 = window.setTimeout(timeFunc, spinner.ob.repeatRate);
+        }
+      };
+      spinner.isChanging = true;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(timeFunc, spinner.ob.repeatRate);
+    });
+    registerEventHandler(down_el, "mouseup", function() {
+      this.spinner.isChanging = false;
+    });
 
 		return input_el;
   };
@@ -310,6 +400,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 		createButtonFromOb: createButtonFromOb,
 		createSelectFromOb: createSelectFromOb,
 		createInputFromOb: createInputFromOb,
+		createSpinnerFromOb: createSpinnerFromOb,
 		createRadioFromOb: createRadioFromOb,
 		createCheckboxFromOb: createCheckboxFromOb,
 		addLIsFromOb: addLIsFromOb,

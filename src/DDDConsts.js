@@ -132,27 +132,33 @@ uk.co.firmgently.DDDConsts = (function() {
       label: "mm/dd/yy"
     },
 
-    JOB_DEFAULT_1: {
-      name: "Purchasing",
-      color: "#000",
-      bgcolor: "#0ff"
-    },
-    JOB_DEFAULT_2: {
-      name: "Administration",
-      color: "#0f0",
-      bgcolor: "#123"
-    },
+    JOB_DEFAULTS: [
+      {
+        name: "Purchasing",
+        color: "#000",
+        bgcolor: "#0ff"
+      }, {
+        name: "Administration",
+        color: "#0f0",
+        bgcolor: "#123"
+      }, {
+        name: "Design",
+        color: "#0ff",
+        bgcolor: "#111"
+      }
+    ],
 
-    CLIENT_DEFAULT_1: {
-      name: "Will @ ACME CO",
-      color: "#fff",
-      bgcolor: "#f00"
-    },
-    CLIENT_DEFAULT_2: {
-      name: "Diamond Jules",
-      color: "#435",
-      bgcolor: "#89a"
-    },
+    CLIENT_DEFAULTS: [
+      {
+        name: "ACME CO",
+        color: "#fff",
+        bgcolor: "#f00"
+      }, {
+        name: "General Corp.",
+        color: "#435",
+        bgcolor: "#89a"
+      }
+    ],
 
     // these string values have to match those used in the GUIDATA_CONFIG options
     TIMESPAN_WEEK: "timespanWeek",
@@ -377,14 +383,14 @@ uk.co.firmgently.DDDConsts = (function() {
       parent: "main",
       el_ar: [
         {
+          type: CONST.GUITYPE_PARA,
+          text: "month",
+          parent: "miniNavForm"
+        }, {
           type: CONST.GUITYPE_BTN,
           class: CONST.CLASS_BTNMININAV,
           label: "&#x25B2;",
           methodPathStr: "uk.co.firmgently.DontDillyDally.monthPrevClick",
-          parent: "miniNavForm"
-        }, {
-          type: CONST.GUITYPE_PARA,
-          text: "month",
           parent: "miniNavForm"
         }, {
           type: CONST.GUITYPE_BTN,
@@ -393,14 +399,14 @@ uk.co.firmgently.DDDConsts = (function() {
           methodPathStr: "uk.co.firmgently.DontDillyDally.monthNextClick",
           parent: "miniNavForm"
         }, {
+          type: CONST.GUITYPE_PARA,
+          text: "week",
+          parent: "miniNavForm"
+        }, {
           type: CONST.GUITYPE_BTN,
           class: CONST.CLASS_BTNMININAV,
           label: "&#x25B2;",
           methodPathStr: "uk.co.firmgently.DontDillyDally.weekPrevClick",
-          parent: "miniNavForm"
-        }, {
-          type: CONST.GUITYPE_PARA,
-          text: "week",
           parent: "miniNavForm"
         }, {
           type: CONST.GUITYPE_BTN,

@@ -13,8 +13,30 @@
   TODO  jobs and clients list existing jobs/clients
   TODO  jobs and clients proper colour picker
   TODO  minify JS on save
-
-
+  TODO  delete temporary <a> created when file is saved
+  FIXME next/prev week/month buttons not working
+  TODO  all strings should be constants
+  TODO  display month/week start correctly
+  TODO  month/week skip buttons should auto-repeat
+  TODO  validate all input data
+          time/money
+          notes
+          client/job names in clients/jobs page
+  TODO  ensure big/small units update min/max/step when changing from money to hours or viceversa
+  TODO  spinners: hour/minute units can wrap
+  TODO  spinners: NaN gets converted to 0
+  FIXME spinners: other events should trigger mouseup to prevent stuck spin
+	FIXME	spinners: numbers should pad eg. 00:45h, £10.00
+	TODO	spinners: unit should be denoted, with £/h and ./:
+	TODO	add 'wipe data' buttons with confirmation prompt
+	TODO	add privacy page/statement
+					by default all data is saved in your browser (localStorage)
+					you can wipe your data at any time
+					you can export your data to a file (in JSON format) and import it into another browser or device
+					we don't see any of your personal data
+	FIXME	if empty or bad time/money data is stored, correct it to zero
+	FIXME	'even' class wrongly being applied to child elements
+  
 ---------------------------------------------------------
 */
 // create namespace: uk.co.firmgently
@@ -111,13 +133,15 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 			// create new object to store clients and fill it with some defaults
       dataStoreObject(CLIENTS_STR, {});
-      createClientOrJobFromOb(CLIENT_DEFAULT_1, DATATYPE_CLIENT);
-      createClientOrJobFromOb(CLIENT_DEFAULT_2, DATATYPE_CLIENT);
+      for (item in CLIENT_DEFAULTS) {
+        createClientOrJobFromOb(CLIENT_DEFAULTS[item], DATATYPE_CLIENT);
+      }
 
 			// create new object to store jobs and fill it with some defaults
       dataStoreObject(JOBS_STR, {});
-      createClientOrJobFromOb(JOB_DEFAULT_1, DATATYPE_JOB);
-      createClientOrJobFromOb(JOB_DEFAULT_2, DATATYPE_JOB);
+      for (item in JOB_DEFAULTS) {
+        createClientOrJobFromOb(JOB_DEFAULTS[item], DATATYPE_JOB);
+      }
 
 			// new empty object to store days
 			// (work items are stored in days)
@@ -189,6 +213,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 		document.body.appendChild(el);
 		el.click();
+    document.body.removeChild(el);
 	};
 
 
@@ -492,7 +517,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   drawTimesheets = function() {
     var
-    i, j, daysToDraw, isOddDay, weekdayCur, day_str,
+    i, j, daysToDraw, weekdayCur, day_str,
     isToday, significance_str, rowClassname,
     day_el, date_el, dayDataContainer_el,
 		hrs_el, client_el, job_el,
@@ -524,7 +549,6 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
     }
 
-    isOddDay = false;
     for (i = 0; i < daysToDraw; i++) {
       significance_str = "";
       day_str = dayCur.getShortISO();
@@ -534,8 +558,6 @@ uk.co.firmgently.DontDillyDally = (function() {
         rowClassname += CLASS_TODAY + " ";
         significance_str += "TODAYYYY";
       }
-      if (isOddDay) { rowClassname += "odd "; }
-      isOddDay = !isOddDay; // flip state
       if (dayCur.getDay() === weekStartDay) {
         rowClassname += "week-start ";
         significance_str += "week " + dayCur.getWeekNumber();
@@ -604,99 +626,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     });
     registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
 
-
-    
-		// 'money/task' checkbox
-    el_temp = createCheckboxFromOb({
-      class: "ios-switch isMoneyTaskChk",
-      label: " ", // a label is needed for wrapLabel/addDivToLabel to work
-			wrapLabel: true,
-			addDivToLabel: true,
-      parent: item_el,
-      checked: false,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.onIsMoneyTaskChkChange",
-      scopeID: itemID
-    });
-		registerEventHandler(el_temp, "change", callMethodFromObOnElement);
-		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_MONEY) {
-			// after checking this box its onChange method has to be called, but not yet
-			// as it depends on other elements added below... see bottom of this function
-			el_temp.checked = true;
-      //
-      if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
-        numberValue_ar = itemData_ob[DATAINDICES.numberValue].split(SEPARATOR_CASH);
-      }
-		} else {
-      if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
-        numberValue_ar = itemData_ob[DATAINDICES.numberValue].split(SEPARATOR_TIME);
-      }
-    }
-
-    // hours/money big units
-    el_temp = createInputFromOb({
-      class: "unitBig hrs",
-      parent: item_el,
-      attributes: {
-        "type": "number", "value": "00"
-      },
-      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
-      scopeID: itemID
-    });
-    el_temp.ob.scope = el_temp;
-    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "input", callMethodFromObOnElement);
-		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
-      el_temp.min = 0;
-      el_temp.max = 23;
-    } 
-    if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
-			el_temp.value = numberValue_ar[0];
-			// TODO 'negative' class is not being added when field is pre-filled with saved data	
-		//	onUpdateInput.call(el_temp);
-		}
-
-    // hours/money small units
-    el_temp = createInputFromOb({
-      class: "unitSmall hrs",
-      parent: item_el,
-      attributes: {
-        "type": "number", "value": "00"
-      },
-      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
-      scopeID: itemID
-    });
-    el_temp.ob.scope = el_temp;
-    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "input", callMethodFromObOnElement);
-		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
-      el_temp.min = 0;
-      el_temp.max = 59;
-      switch(dataRetrieveObject(PREFS_STR).minuteIncrements) {
-        case MINUTEINCREMENTS_15:
-          el_temp.step = 15;
-          break;
-        case MINUTEINCREMENTS_30:
-          el_temp.step = 30;
-          break;
-        case MINUTEINCREMENTS_1: // intentional rollthrough
-        default:
-          el_temp.step = 1;
-          break;
-      }
-    } else {
-      el_temp.min = 0;
-      el_temp.max = 99;
-    }
-		if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
-			el_temp.value = numberValue_ar[1];
-			// TODO 'negative' class is not being added when field is pre-filled with saved data	
-		//	onUpdateInput.call(el_temp);
-		}
-
     // client select/dropdown
     el_temp = createSelectFromOb({
       contentType: CONTENTTYPE_CLIENTS,
@@ -727,6 +656,92 @@ uk.co.firmgently.DontDillyDally = (function() {
 		&& itemData_ob[DATAINDICES.jobID].length > 0) {
 			changeSelectByOption(el_temp, itemData_ob[DATAINDICES.jobID]);
 			manualEvent(el_temp, "change");
+		}
+    
+		// 'money/task' checkbox
+    el_temp = createCheckboxFromOb({
+      class: "ios-switch isMoneyTaskChk",
+      label: " ", // a label is needed for wrapLabel/addDivToLabel to work
+			wrapLabel: true,
+			addDivToLabel: true,
+      parent: item_el,
+      checked: false,
+      methodPathStr: "uk.co.firmgently.DontDillyDally.onIsMoneyTaskChkChange",
+      scopeID: itemID
+    });
+		registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_MONEY) {
+			// after checking this box its onChange method has to be called, but not yet
+			// as it depends on other elements added below... see bottom of this function
+			el_temp.checked = true;
+      //
+      if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
+        numberValue_ar = itemData_ob[DATAINDICES.numberValue].split(SEPARATOR_CASH);
+      }
+		} else {
+      if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
+        numberValue_ar = itemData_ob[DATAINDICES.numberValue].split(SEPARATOR_TIME);
+      }
+    }
+
+    // hours/money big units
+		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
+      ob_temp = { min: 0, max: 23, step: 1, repeatRate: 200, wrapNum: true };
+    } else {
+      ob_temp = { min: -999999999, max: 999999999, step: 1, repeatRate: 200 };
+    }
+    el_temp = createSpinnerFromOb({
+      class: "unitBig hrs",
+      parent: item_el,
+      attributes: ob_temp,
+      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+      scopeID: itemID
+    });
+    el_temp.ob.scope = el_temp;
+    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+    if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
+			el_temp.value = numberValue_ar[0];
+			// TODO 'negative' class is not being added when field is pre-filled with saved data	
+		//	onUpdateInput.call(el_temp);
+		}
+
+    // hours/money small units
+		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
+      ob_temp = { min: 0, max: 59, repeatRate: 200, wrapNum: true };
+      switch(dataRetrieveObject(PREFS_STR).minuteIncrements) {
+        case MINUTEINCREMENTS_15:
+          ob_temp.step = 15;
+          break;
+        case MINUTEINCREMENTS_30:
+          ob_temp.step = 30;
+          break;
+        case MINUTEINCREMENTS_1: // intentional rollthrough
+        default:
+          ob_temp.step = 1;
+          break;
+      }
+    } else {
+      ob_temp = { min: 0, max: 99, step: 1, repeatRate: 200, wrapNum: true };
+    }
+    el_temp = createSpinnerFromOb({
+      class: "unitSmall hrs",
+      parent: item_el,
+      attributes: ob_temp,
+      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+      scopeID: itemID
+    });
+    el_temp.ob.scope = el_temp;
+    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+		if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
+			el_temp.value = numberValue_ar[1];
+			// TODO 'negative' class is not being added when field is pre-filled with saved data	
+		//	onUpdateInput.call(el_temp);
 		}
 
     // job/money notes
