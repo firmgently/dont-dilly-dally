@@ -1307,14 +1307,14 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   Mark Mayes 2018
 
   FIXME timesheet container not getting scroll focus
-  FIXME blank object being stored in data object results in missing day in UI
-  TODO  number spinners
+  DONE	blank object being stored in data object results in missing day in UI
+  DONE	 number spinners
   TODO  match all button styles
   FIXME blank space appears at bottom of page (seems related to LOADING element)
-  FIXME negative money values should attach negative classname on initial page load
+  DONE	negative money values should attach negative classname on initial page load
   TODO  jobs and clients list existing jobs/clients
   TODO  jobs and clients proper colour picker
-  TODO  minify JS on save
+  DONE	 minify JS on save
   TODO  delete temporary <a> created when file is saved
   FIXME next/prev week/month buttons not working
   TODO  all strings should be constants
@@ -1325,9 +1325,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
           notes
           client/job names in clients/jobs page
   TODO  ensure big/small units update min/max/step when changing from money to hours or viceversa
-  TODO  spinners: hour/minute units can wrap
-  TODO  spinners: NaN gets converted to 0
-  FIXME spinners: other events should trigger mouseup to prevent stuck spin
+  DONE	 spinners: hour/minute units can wrap
+  DONE	 spinners: NaN gets converted to 0
+  DONE	spinners: other events should trigger mouseup to prevent stuck spin
 	FIXME	spinners: numbers should pad eg. 00:45h, £10.00
 	TODO	spinners: unit should be denoted, with £/h and ./:
 	TODO	add 'wipe data' buttons with confirmation prompt
@@ -1337,7 +1337,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 					you can export your data to a file (in JSON format) and import it into another browser or device
 					we don't see any of your personal data
 	FIXME	if empty or bad time/money data is stored, correct it to zero
-	FIXME	'even' class wrongly being applied to child elements
+	DONE	'even' class wrongly being applied to child elements
+	FIXME	select client/job - day remains highlighted (eg. darker date text)
   
 ---------------------------------------------------------
 */
@@ -1357,9 +1358,11 @@ uk.co.firmgently.DontDillyDally = (function() {
   prop, dateDisplayStart, dateDisplaySelected, dateToday, //timespanDisplay,
   clientNameInput_el, jobNameInput_el, clientSaveBtn_el, jobSaveBtn_el,
   colPickClientFG_el, colPickClientBG_el, colPickJobFG_el, colPickJobBG_el,
+	dayJumpTimer,
 
 	// methods
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
+	eventAutoRepeat, dayJumpAutorepeatStop,
   createFormFromOb, addTask, removeTask,
   callMethodFromObOnElement, callMethodFromOb,
 	onFormClick, onScroll,
@@ -1474,7 +1477,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   dataUpdateObject = function(category, key, value) {
     var prop,
-    ob = dataRetrieveObject(category);
+				ob = dataRetrieveObject(category);
     for (prop in ob) {
       if (prop === key) {
         ob[prop] = value;
@@ -1486,9 +1489,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   handleFileSelect = function(event) {
-    var
-		file = event.target.files[0], // FileList object first item (as only single file)
-		reader = new FileReader();
+    var file = event.target.files[0], // FileList object first item (as only single file)
+				reader = new FileReader();
 		reader.onload = function(event) {
 			console.log(event.target.result);
 		};
@@ -1647,9 +1649,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   createFormFromOb = function(ob) {
-    var
-    i, form_el,
-    parent_el = document.getElementById(ob.parent);
+    var i, form_el,
+				parent_el = document.getElementById(ob.parent);
 
     if (ob.id) {
       form_el = createElementWithId("form", ob.id);
@@ -1702,8 +1703,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 	--------------------------------------------------------------------------- */
 
   createClientOrJobFromOb = function(ob, dataType) {
-    var
-    id, ar, n, containerObjectName, input_el;
+    var id, ar, n, containerObjectName, input_el;
 
 		// create unique identifier for this job or client
     if (dataType === DATATYPE_CLIENT) {
@@ -1728,11 +1728,10 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 	createCSSForClientOrJobFromOb = function(ob, dataType) {
-    var
-		selector =	"." + ob.class + ", " +
-								"." + ob.class + ":hover, " +
-								"." + ob.class + ":active",
-    colorPickerFGSelector, colorPickerBGSelector;
+    var selector =	"." + ob.class + ", " +
+										"." + ob.class + ":hover, " +
+										"." + ob.class + ":active",
+				colorPickerFGSelector, colorPickerBGSelector;
 
 		// add main CSS for eg. timesheets page
     if (dataType === DATATYPE_CLIENT || dataType === DATATYPE_JOB) {
@@ -1796,7 +1795,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   onScroll = function() {
     var i, day, rect,
-    days = document.getElementById(TIMESHEETCONTAINER_ID).childNodes;
+				days = document.getElementById(TIMESHEETCONTAINER_ID).childNodes;
     
     for (i=0; i < days.length; i++) {
       day = days[i];
@@ -1818,18 +1817,17 @@ uk.co.firmgently.DontDillyDally = (function() {
 	--------------------------------------------------------------------------- */
 
   drawTimesheets = function() {
-    var
-    i, j, daysToDraw, weekdayCur, day_str,
-    isToday, significance_str, rowClassname,
-    day_el, date_el, dayDataContainer_el,
-		hrs_el, client_el, job_el,
-    ob_temp, dayWorkItems, workItem,
-    weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
-    parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
-    // TODO timesheet should be <ul>
-    workingFragment = document.createDocumentFragment(),
-    allWorkItems = dataRetrieveObject(DAYS_STR),
-    dayCur = new Date();
+    var i, j, daysToDraw, weekdayCur, day_str,
+				isToday, significance_str, rowClassname,
+				monthHeader_el, day_el, date_el, dayDataContainer_el,
+				hrs_el, client_el, job_el,
+				ob_temp, dayWorkItems, workItem,
+				weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
+				parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
+				// TODO timesheet should be <ul>
+				workingFragment = document.createDocumentFragment(),
+				allWorkItems = dataRetrieveObject(DAYS_STR),
+				dayCur = new Date();
 
     switch(dataRetrieveObject(PREFS_STR).timespan) {
       case TIMESPAN_WEEK:
@@ -1856,6 +1854,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       day_str = dayCur.getShortISO();
       rowClassname = "day row ";
       isToday = !Math.round(daysBetween(dayCur, dateToday));
+      day_el = createElementWithId("li", day_str);
       if (isToday) {
         rowClassname += CLASS_TODAY + " ";
         significance_str += "TODAYYYY";
@@ -1870,9 +1869,10 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
       if (dayCur.getDate() === 1) {
         rowClassname += "month-start ";
-        significance_str += MONTH_NAMES[dayCur.getMonth()];
+				monthHeader_el = document.createElement("h4");
+				monthHeader_el.innerHTML = MONTH_NAMES[dayCur.getMonth()];
+				day_el.appendChild(monthHeader_el);
       }
-      day_el = createElementWithId("li", day_str);
       addClassname(day_el, rowClassname);
       // create days in documentFragment to avoid unneccessary reflows
       workingFragment.appendChild(day_el);
@@ -1909,9 +1909,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   addUIWorkItem = function(dayDataContainer_el, itemID, itemData_ob) {
-    var
-    hrs_el, money_el, ob_temp, el_temp, item_el, wrappedCheckbox_el, numberValue_ar,
-    day_el = dayDataContainer_el.parentNode;
+    var hrs_el, money_el, ob_temp, el_temp, item_el, wrappedCheckbox_el, numberValue_ar,
+				day_el = dayDataContainer_el.parentNode;
 
 		if (itemID === undefined) { itemID = getGUID(); }
 
@@ -1980,11 +1979,14 @@ uk.co.firmgently.DontDillyDally = (function() {
       if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
         numberValue_ar = itemData_ob[DATAINDICES.numberValue].split(SEPARATOR_CASH);
       }
+			addClassname(item_el, "money");
 		} else {
       if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
         numberValue_ar = itemData_ob[DATAINDICES.numberValue].split(SEPARATOR_TIME);
       }
+			addClassname(item_el, "hrs");
     }
+		// TODO remove unnecessary specific classnames hrs/money
 
     // hours/money big units
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
@@ -1993,7 +1995,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       ob_temp = { min: -999999999, max: 999999999, step: 1 };
     }
     el_temp = createSpinnerFromOb({
-      class: "unitBig hrs",
+      class: "unitBig",
       parent: item_el,
       attributes: ob_temp,
       methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
@@ -2031,7 +2033,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       ob_temp = { min: 0, max: 99, step: 1, wrapNum: true };
     }
     el_temp = createSpinnerFromOb({
-      class: "unitSmall hrs",
+      class: "unitSmall",
       parent: item_el,
       attributes: ob_temp,
       methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
@@ -2048,7 +2050,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     // job/money notes
     el_temp = createInputFromOb({
-      class: "notes job",
+      class: "notes",
       parent: item_el,
       attributes: { "type": "text", "placeholder": JOBNOTES_PLACEHOLDER },
       methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
@@ -2080,9 +2082,8 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 	removeWorkItem = function(item_el) {
-		var
-		days_ar = dataRetrieveObject(DAYS_STR),
-		day_ob = days_ar[item_el.parentNode.parentNode.id];
+		var days_ar = dataRetrieveObject(DAYS_STR),
+				day_ob = days_ar[item_el.parentNode.parentNode.id];
 		
 		delete day_ob[item_el.id];
 		item_el.parentNode.removeChild(item_el);
@@ -2156,26 +2157,15 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   onIsMoneyTaskChkChange = function() {
-    var
-    checkbox = this.getElementsByClassName("isMoneyTaskChk")[0],
-    unitBigInput = this.getElementsByClassName("unitBig")[0],
-    unitSmallInput = this.getElementsByClassName("unitSmall")[0],
-    notesInput = this.getElementsByClassName("notes")[0];
+    var checkbox = this.getElementsByClassName("isMoneyTaskChk")[0],
+				notesInput = this.getElementsByClassName("notes")[0];
     if (checkbox.checked) {
-      addClassname(unitBigInput, "money");
-      addClassname(unitSmallInput, "money");
-      removeClassname(unitBigInput, "hrs");
-      removeClassname(unitSmallInput, "hrs");
-      addClassname(notesInput, "money");
-      removeClassname(notesInput, "job");
+			addClassname(this, "money");
+			removeClassname(this, "hrs");
       notesInput.placeholder = MONEYNOTES_PLACEHOLDER;
     } else {
-      addClassname(unitBigInput, "hrs");
-      addClassname(unitSmallInput, "hrs");
-      removeClassname(unitBigInput, "money");
-      removeClassname(unitSmallInput, "money");
-      addClassname(notesInput, "job");
-      removeClassname(notesInput, "money");
+			addClassname(this, "hrs");
+			removeClassname(this, "money");
       notesInput.placeholder = JOBNOTES_PLACEHOLDER;
     }
 		if (document.body.contains(this)) { updateDataFromWorkItemEl(this); }
@@ -2183,10 +2173,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   newClientCreate = function() {
-    var
-    fgCol = getRandomHexColor("dark"),
-    bgCol = getRandomHexColor("light");
-    logMsg("newClientCreate()");
+    var fgCol = getRandomHexColor("dark"),
+				bgCol = getRandomHexColor("light");
     document.getElementById(EL_ID_CLIENTNAMEIN).value = getNextID(DATATYPE_CLIENT);
     addCSSRule("#" + CLIENT_FG_COLPICK, "background-color", fgCol);
     addCSSRule("#" + CLIENT_BG_COLPICK, "background-color", bgCol);
@@ -2199,10 +2187,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   newJobCreate = function() {
-    var
-    fgCol = getRandomHexColor("light"),
-    bgCol = getRandomHexColor("dark");
-    logMsg("newJobCreate()");
+    var fgCol = getRandomHexColor("light"),
+				bgCol = getRandomHexColor("dark");
 
     document.getElementById(EL_ID_JOBNAMEIN).value = getNextID(DATATYPE_JOB);
     addCSSRule("#" + JOB_FG_COLPICK, "background-color", fgCol);
@@ -2250,8 +2236,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 	weekPrevClick = function(e) {
     var i, day,
-    scrollTop = document.getElementById("main").scrollTop,
-    days = document.getElementsByClassName("week-start");
+				scrollTop = document.getElementById("main").scrollTop,
+				days = document.getElementsByClassName("week-start");
     for (i = days.length - 1; i >= 0; i--) {
       day = days[i];
       if (day.offsetTop < scrollTop) {
@@ -2259,13 +2245,16 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
       }
     }
+		eventAutoRepeat(e.target, e.type);
+		registerEventHandler(e.target, "mouseup", dayJumpAutorepeatStop);
+		registerEventHandler(e.target, "mouseout", dayJumpAutorepeatStop);
 	};
 
 
 	weekNextClick = function(e) {
     var i, day,
-    scrollTop = document.getElementById("main").scrollTop,
-    days = document.getElementsByClassName("week-start");
+				scrollTop = document.getElementById("main").scrollTop,
+				days = document.getElementsByClassName("week-start");
     for (i = 0; i < days.length; i++) {
       day = days[i];
       if (day.offsetTop > scrollTop) {
@@ -2273,13 +2262,16 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
       }
     }
+		eventAutoRepeat(e.target, e.type);
+		registerEventHandler(e.target, "mouseup", dayJumpAutorepeatStop);
+		registerEventHandler(e.target, "mouseout", dayJumpAutorepeatStop);
 	};
 
 
 	monthPrevClick = function(e) {
     var i, day,
-    scrollTop = document.getElementById("main").scrollTop,
-    days = document.getElementsByClassName("month-start");
+				scrollTop = document.getElementById("main").scrollTop,
+				days = document.getElementsByClassName("month-start");
     for (i = days.length - 1; i >= 0; i--) {
       day = days[i];
       if (day.offsetTop < scrollTop) {
@@ -2287,13 +2279,16 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
       }
     }
+		eventAutoRepeat(e.target, e.type);
+		registerEventHandler(e.target, "mouseup", dayJumpAutorepeatStop);
+		registerEventHandler(e.target, "mouseout", dayJumpAutorepeatStop);
 	};
 
 
 	monthNextClick = function(e) {
     var i, day,
-    scrollTop = document.getElementById("main").scrollTop,
-    days = document.getElementsByClassName("month-start");
+				scrollTop = document.getElementById("main").scrollTop,
+				days = document.getElementsByClassName("month-start");
     for (i = 0; i < days.length; i++) {
       day = days[i];
       if (day.offsetTop > scrollTop) {
@@ -2301,6 +2296,9 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
       }
     }
+		eventAutoRepeat(e.target, e.type);
+		registerEventHandler(e.target, "mouseup", dayJumpAutorepeatStop);
+		registerEventHandler(e.target, "mouseout", dayJumpAutorepeatStop);
 	};
 
 
@@ -2309,10 +2307,20 @@ uk.co.firmgently.DontDillyDally = (function() {
 	};
 
 
+	eventAutoRepeat = function(el, eventType) {
+		clearTimeout(dayJumpTimer);
+		dayJumpTimer = setTimeout(function() { manualEvent(el, eventType); }, 1000);
+	};
+
+
+	dayJumpAutorepeatStop = function() {
+		clearTimeout(dayJumpTimer);
+	};
+
+
   updateSelected = function() {
-    var
-		pageType = dataRetrieveObject(PREFS_STR).pagetype,
-    option_selector = this.value;
+    var pageType = dataRetrieveObject(PREFS_STR).pagetype,
+				option_selector = this.value;
     switch (pageType) {
       case PAGETYPE_TIMESHEETS: // run on to next case
       case PAGETYPE_JOBSANDCLIENTS:
@@ -2336,12 +2344,11 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 	updateDataFromWorkItemEl = function (el) {
-		var
-		days_ar, day_ob, workItem_ar,
-		isMoneyTaskChk_el, unitBigInput_el, unitSmallInput_el, clientSelect_el, jobSelect_el, notesInput_el,
-		pageType = dataRetrieveObject(PREFS_STR).pagetype,
-		day_el = el.parentNode.parentNode,
-		day_str = day_el.id;
+		var days_ar, day_ob, workItem_ar,
+				isMoneyTaskChk_el, unitBigInput_el, unitSmallInput_el, clientSelect_el, jobSelect_el, notesInput_el,
+				pageType = dataRetrieveObject(PREFS_STR).pagetype,
+				day_el = el.parentNode.parentNode,
+				day_str = day_el.id;
 		
 		isMoneyTaskChk_el = el.getElementsByClassName("isMoneyTaskChk")[0];
 		unitBigInput_el = el.getElementsByClassName("unitBig")[0];
@@ -2387,8 +2394,8 @@ uk.co.firmgently.DontDillyDally = (function() {
   
   getFirstVisibleDayElement = function() {
     var i, day,
-    scrollTop = document.getElementById("main").scrollTop,
-    days = document.getElementById(TIMESHEETCONTAINER_ID).childNodes;
+				scrollTop = document.getElementById("main").scrollTop,
+				days = document.getElementById(TIMESHEETCONTAINER_ID).childNodes;
     for (i = 0; i < days.length; i++) {
       day = days[i];
       if (day.offsetTop > scrollTop) {
