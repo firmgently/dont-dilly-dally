@@ -95,6 +95,10 @@ $ddd-maroon: #662200;
 $ddd-orange: #cc6644;
 $ddd-orangedark: #993322;
 
+$button-color: $ddd-sand;
+$button-bgcolor: $ddd-cream;
+$icon-color: $ddd-cream;
+
 $panelFgColour: $ddd-browndark;
 $panelBgColour: $ddd-sandlight;
 $panelFgColourDimmed: mix($panelFgColour, $ddd-browndark, 75%);
@@ -113,10 +117,10 @@ $buttonBgColourOver: darken($buttonBgColourOut, 25%);
 $buttonColourOut: $ddd-gold;
 $buttonColourOver: $ddd-sand;
 
-$jobInputColour: $ddd-cream;
+$jobInputColour: $ddd-sanddark;
 $jobInputBackgroundColour: $ddd-sand;
 $jobInputBackgroundColourTint: lighten($jobInputBackgroundColour, 25%);
-$moneyInputColour: $ddd-cream;
+$moneyInputColour: $ddd-sanddark;
 $moneyInputBackgroundColour: $ddd-green;
 $moneyInputBackgroundColourTint: lighten($moneyInputBackgroundColour, 25%);
 
@@ -144,7 +148,7 @@ $aboveBaseZ: 99999991;
 $aboveAboveBaseZ: 99999992;
 
 $sidebar-width: 10vw;
-$date-width: 9rem;
+$date-width: 7.5rem;
 
 $tab-fontsize-unselected: 1rem;
 $tab-fontsize-selected:   1.15rem;
@@ -192,7 +196,7 @@ aside {
     display: inline-block;
     transform-origin: 0 0;
     transform: rotate(-90deg);
-    top: 78vh; left: calc(#{$sidebar-width} - #{$extraLargePadding + $mediumPadding});
+    top: 78vh; left: calc(#{$sidebar-width} - #{(2 * $largePadding) + $mediumPadding});
     button.btnNav {
       padding: $tab-padding; margin: $tab-margin $tab-margin 0 0;
       font-size: $tab-fontsize-unselected; vertical-align: bottom;
@@ -328,6 +332,7 @@ body#jobsClients, body#config {
 
 			input.unitBig, input.unitSmall {
 				display: inline-block; width: 3rem; height: 2rem;
+				font-family: monospace;
 				font-size: $fontSizeNormal; font-weight: bold;
 				text-align: center;
 			}
@@ -355,10 +360,10 @@ body#jobsClients, body#config {
 						content: '\e801';
 						float: left; width: 1.3rem; height: 1.3rem;
 						margin: 0rem 0rem 0rem 0rem; border-radius: inherit; background: $ddd-cream;
-						color: $moneyInputColour; text-indent: -2.2rem;
+						color: $icon-color; text-indent: -2.2rem;
 					}
 
-					&:after { content: '\e800'; margin-left: 0.8rem; color: $jobInputColour; }
+					&:after { content: '\e800'; margin-left: 0.8rem; color: $icon-color; }
 				}
 
 				&:checked + div { padding-left: 2.7rem; background-position: 0 0; white-space: nowrap; }
@@ -378,10 +383,11 @@ body#jobsClients, body#config {
 
 			&.money {
 				input.unitBig, input.unitSmall {
-					background-color: $moneyInputBackgroundColour; color: $moneyInputColour;
+					background-color: $moneyInputBackgroundColour; color: $icon-color;
 					background-size: 100%;
 				}
-				input.notes { color: $moneyInputColour; background-color: $moneyInputBackgroundColour; }
+				input.notes { color: $moneyInputColour; background-color: mix($moneyInputBackgroundColour, white, 35%); }
+				.spin-button-up, .spin-button-down { background-color: $moneyInputBackgroundColour; }
 				.spinner:first-of-type {
 					&:before, &:after {
 						font-weight: bold;
@@ -401,16 +407,17 @@ body#jobsClients, body#config {
 				}
 				&.negative {
 					input.unitBig, input.unitSmall { background-color: $ddd-orange; }
-					input.notes { background-color: $ddd-orange; }
+					input.notes { background-color: mix($ddd-orange, white, 35%);}
 					input[type="checkbox"].ios-switch + div {
 						background-image: linear-gradient(90deg, $ddd-orange 50%, transparent 50%);
 					}
+					.spin-button-up, .spin-button-down { background-color: $ddd-orange; }
 				}
 			}
 
 			&.hrs {
-				input.unitBig, input.unitSmall { background-color: $jobInputBackgroundColour; color: $jobInputColour; }
-				input.notes { color: $jobInputColour; background-color: $jobInputBackgroundColour; }
+				input.unitBig, input.unitSmall { background-color: $jobInputBackgroundColour; color: $icon-color; }
+				input.notes { color: $jobInputColour; background-color: mix($jobInputBackgroundColour, white, 35%); }
 				.spinner:first-of-type {
 					&:before, &:after {
 						font-weight: bold;
@@ -420,7 +427,7 @@ body#jobsClients, body#config {
 					}
 					&:before {
 						font-size: $fontSizeTiny;
-						content: "h";
+						content: "H";
 						left: 0.3rem; top: 0.7rem;
 					}
 					&:after {
@@ -436,124 +443,16 @@ body#jobsClients, body#config {
 				height: 2rem; width: 2rem;
 				margin-left: $largePadding; padding: 0.4rem 0.5rem 0.5rem 0.5rem;
 				cursor: pointer;
-				color: $ddd-cream; background-color: $ddd-sand;
+				color: $button-color; background-color: $button-bgcolor;
 				position: absolute; bottom: 0;
 			}
-			.addTaskBtn { margin-left: -2rem }
-			.removeTaskBtn { right: 0; background-color: $ddd-orangedark; }
+			.addTaskBtn { margin-left: -3rem }
+			.removeTaskBtn { right: 1rem; color: $ddd-orangedark; }
 			&:only-child .removeTaskBtn { visibility: hidden; }
 			&:not(:last-child) .addTaskBtn { visibility: hidden; }
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-:root input[type="checkbox"] {
-  position: absolute;
-  opacity: 0;
-}
-
-:root input[type="checkbox"].ios-switch + div {
-  display: inline-block;
-  vertical-align: middle;
-  width: 4.5rem;        height: 2rem;
-  border-radius: 999px;
-  margin: 0 $mediumPadding;
-        padding: $smallPadding 0.5rem;
-  background: $jobInputBackgroundColour;
-  background-image: linear-gradient(90deg, $moneyInputBackgroundColour 50%, transparent 50%);
-  background-size: 200% 100%;
-  background-position: 100% 0;
-  background-origin: border-box;
-  background-clip: border-box;
-  overflow: hidden;
-  font-size: $fontSizeIconLarge;
-  font-family: "ddd-icons";
-  cursor: pointer;
-}
-:root input[type="checkbox"].ios-switch.negative + div {
-  background-image: linear-gradient(90deg, $ddd-orange 50%, transparent 50%);
-}
-
-:root input[type="checkbox"].ios-switch:checked + div {
-  padding-left: 2.7rem;
-  background-position: 0 0;
-  white-space: nowrap;
-}
-
-:root input[type="checkbox"].ios-switch + div:before,
-:root input[type="checkbox"].ios-switch + div:after {
-  font-size: $fontSizeIconLarge;
-}
-
-:root input[type="checkbox"].ios-switch + div:before {
-  content: '\e801';
-  float: left;
-  width: 1.3rem; height: 1.3rem;
-  margin: 0rem 0rem 0rem 0rem;
-  border-radius: inherit;
-  background: $ddd-cream;
-  color: $moneyInputColour;
-  text-indent: -2.2rem;
-}
-
-:root input[type="checkbox"].ios-switch + div:after {
-  content: '\e800';
-  margin-left: 0.8rem;
-  color: $jobInputColour;
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* FORMS */
@@ -575,10 +474,11 @@ select {
 .spinner {
   display: inline-block; position: relative;
   .spin-button-up, .spin-button-down {
+		cursor: pointer;
     position: absolute; display: inline-block;
     left: 10%; width: 40%; height: 0.5rem;
     padding: 0.1rem 0.2rem 0.55rem 0.2rem;
-    background-color: $ddd-cream; color: $ddd-sand;
+    background-color: $button-color; color: $button-bgcolor;
     text-align: center; font-size: 0.5rem;
 		&:after {
 			content:'';
@@ -587,7 +487,7 @@ select {
 		} 
 	}
   .spin-button-up {
-		bottom: -0.6em; left: 50%;
+		top: -0.6em; left: 50%;
 		@include border-radius(0.4rem 0.4rem 0 0);
 		&:after { top: -0.2rem; bottom: 0; }
 	}
@@ -620,14 +520,13 @@ select {
 /* Extraneous UI buttons */
 #miniNavForm {
 	position: fixed;
-	top: 0;
-	right: 0;
-	z-index: $zFloat;
-  p { font-size: $fontSizeSmall; font-weight: 700; color: $ddd-orangedark; display: inline; margin: 0 $largePadding}
+	top: 0; right: 0; z-index: $zFloat;
+	background-color: $ddd-sanddark; color: $button-bgcolor; 
+  p { font-size: $fontSizeSmall; font-weight: 700; display: inline; margin: 0 $largePadding}
   button:nth-of-type(2),
   button:nth-of-type(4) {
     margin-right: $extraLargePadding;
-    margin-left: $tinyPadding;
+    margin-left: $smallPadding;
   }
 }
 
@@ -648,10 +547,14 @@ select {
 #file-save,
 #file-chooser + label {
   font-size: $fontSizeSmall; font-weight: 700; text-align: center;
-  color: $ddd-cream; background-color: $ddd-orangedark;
+  color: $button-bgcolor; background-color: $button-color;
   display: inline-block;
   padding: $mediumPadding;
   cursor: pointer;
+}
+#file-save,
+#file-chooser + label {
+	width: 100%;
 }
 #miniNavForm button:focus,
 #miniNavForm button:hover,
@@ -659,7 +562,7 @@ select {
 #file-save:hover,
 #file-chooser:focus + label,
 #file-chooser + label:hover {
-  background-color: $ddd-browndark;
+  background-color: $button-color;
 }
 
 /* COLOR PICKER */

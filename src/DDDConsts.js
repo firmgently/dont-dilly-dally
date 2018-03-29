@@ -24,6 +24,8 @@ uk.co.firmgently.DDDConsts = (function() {
     APP_ID: "FGDDD",
     SAVE_FILENAME: "DontDillyDally-export",
 
+		AUTOREPEAT_RATE: 500,
+
     PAGETYPE_TIMESHEETS: "timesheets",
     PAGETYPE_CONFIG: "preferences",
     PAGETYPE_JOBSANDCLIENTS: "jobs-and-clients",
@@ -417,7 +419,7 @@ uk.co.firmgently.DDDConsts = (function() {
         }, {
           type: CONST.GUITYPE_BTN,
           class: CONST.CLASS_BTNMININAV,
-          label: "Today",
+          label: "today",
           methodPathStr: "uk.co.firmgently.DontDillyDally.todayClick",
           parent: "miniNavForm"
         }

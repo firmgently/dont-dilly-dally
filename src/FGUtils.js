@@ -16,7 +16,7 @@ uk.co.firmgently.FGUtils = (function() {
   addCSSRule, getIEVersion, isTouchDevice,
   registerEventHandler, unregisterEventHandler, stopPropagation,
   hexOpacityToRGBA, getRandomHexColor, createElementWithId,
-  removeClassname, addClassname, getStyle,
+  removeClassname, addClassname, getStyle, padString,
   treatAsUTC, daysBetween, getFormattedDate,
   getFunctionFromString, getGUID, changeSelectByOption, manualEvent,
   isEmpty, logMsg;
@@ -202,6 +202,15 @@ uk.co.firmgently.FGUtils = (function() {
   };
 
 
+  padString = function(str, pad) {
+    var return_str = str;
+    if (str.length < pad.length) {
+      return_str = pad.substr(0, (pad.length - str.length)) + str;
+    }
+    return return_str;
+  };
+
+
   getFunctionFromString = function(str) {
       var
       i,
@@ -370,6 +379,7 @@ uk.co.firmgently.FGUtils = (function() {
     getFunctionFromString: getFunctionFromString,
     getFormattedDate: getFormattedDate,
     treatAsUTC: treatAsUTC,
+    padString: padString,
     daysBetween: daysBetween,
     logMsg: logMsg,
     isEmpty: isEmpty,

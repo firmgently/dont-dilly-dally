@@ -114,7 +114,7 @@ aside {
     transform-origin: 0 0;
     transform: rotate(-90deg);
     top: 78vh;
-    left: calc(10vw - 2.6rem); }
+    left: calc(10vw - 2.2rem); }
     aside nav button.btnNav {
       padding: 0.15rem;
       margin: 0.6rem 0.6rem 0 0;
@@ -231,8 +231,8 @@ body#jobsClients #column-headings, body#config #column-headings {
     font-family: 'Lucida Console', 'Monaco', 'monospace', 'Courier';
     font-size: 0.9rem;
     font-weight: bold;
-    width: 9rem;
-    margin-right: -9.6rem;
+    width: 7.5rem;
+    margin-right: -8.1rem;
     margin-left: 0.6rem; }
     #timesheetContainer > li .date.col span {
       display: block;
@@ -282,7 +282,7 @@ body#jobsClients #column-headings, body#config #column-headings {
     margin-top: -0.8rem;
     margin-bottom: 0.8rem; }
   #timesheetContainer ul.day-data.col {
-    padding-left: 13rem;
+    padding-left: 11.5rem;
     display: inline-block;
     float: right; }
     #timesheetContainer ul.day-data.col > li {
@@ -294,6 +294,7 @@ body#jobsClients #column-headings, body#config #column-headings {
         display: inline-block;
         width: 3rem;
         height: 2rem;
+        font-family: monospace;
         font-size: 0.9rem;
         font-weight: bold;
         text-align: center; }
@@ -365,7 +366,9 @@ body#jobsClients #column-headings, body#config #column-headings {
         color: #ffeedd;
         background-size: 100%; }
       #timesheetContainer ul.day-data.col > li.money input.notes {
-        color: #ffeedd;
+        color: #776644;
+        background-color: #cfd5c9; }
+      #timesheetContainer ul.day-data.col > li.money .spin-button-up, #timesheetContainer ul.day-data.col > li.money .spin-button-down {
         background-color: #778866; }
       #timesheetContainer ul.day-data.col > li.money .spinner:first-of-type:before, #timesheetContainer ul.day-data.col > li.money .spinner:first-of-type:after {
         font-weight: bold;
@@ -383,15 +386,17 @@ body#jobsClients #column-headings, body#config #column-headings {
       #timesheetContainer ul.day-data.col > li.money.negative input.unitBig, #timesheetContainer ul.day-data.col > li.money.negative input.unitSmall {
         background-color: #cc6644; }
       #timesheetContainer ul.day-data.col > li.money.negative input.notes {
-        background-color: #cc6644; }
+        background-color: #edc9be; }
       #timesheetContainer ul.day-data.col > li.money.negative input[type="checkbox"].ios-switch + div {
         background-image: linear-gradient(90deg, #cc6644 50%, transparent 50%); }
+      #timesheetContainer ul.day-data.col > li.money.negative .spin-button-up, #timesheetContainer ul.day-data.col > li.money.negative .spin-button-down {
+        background-color: #cc6644; }
       #timesheetContainer ul.day-data.col > li.hrs input.unitBig, #timesheetContainer ul.day-data.col > li.hrs input.unitSmall {
         background-color: #aa9977;
         color: #ffeedd; }
       #timesheetContainer ul.day-data.col > li.hrs input.notes {
-        color: #ffeedd;
-        background-color: #aa9977; }
+        color: #776644;
+        background-color: #e1dbcf; }
       #timesheetContainer ul.day-data.col > li.hrs .spinner:first-of-type:before, #timesheetContainer ul.day-data.col > li.hrs .spinner:first-of-type:after {
         font-weight: bold;
         top: 0.4rem;
@@ -399,7 +404,7 @@ body#jobsClients #column-headings, body#config #column-headings {
         color: #ffeedd; }
       #timesheetContainer ul.day-data.col > li.hrs .spinner:first-of-type:before {
         font-size: 0.7rem;
-        content: "h";
+        content: "H";
         left: 0.3rem;
         top: 0.7rem; }
       #timesheetContainer ul.day-data.col > li.hrs .spinner:first-of-type:after {
@@ -415,76 +420,20 @@ body#jobsClients #column-headings, body#config #column-headings {
         margin-left: 0.8rem;
         padding: 0.4rem 0.5rem 0.5rem 0.5rem;
         cursor: pointer;
-        color: #ffeedd;
-        background-color: #aa9977;
+        color: #aa9977;
+        background-color: #ffeedd;
         position: absolute;
         bottom: 0; }
       #timesheetContainer ul.day-data.col > li .addTaskBtn {
-        margin-left: -2rem; }
+        margin-left: -3rem; }
       #timesheetContainer ul.day-data.col > li .removeTaskBtn {
-        right: 0;
-        background-color: #993322; }
+        right: 1rem;
+        color: #993322; }
       #timesheetContainer ul.day-data.col > li:only-child .removeTaskBtn {
         visibility: hidden; }
       #timesheetContainer ul.day-data.col > li:not(:last-child) .addTaskBtn {
         visibility: hidden; }
 
-/*
-:root input[type="checkbox"] {
-  position: absolute;
-  opacity: 0;
-}
-
-:root input[type="checkbox"].ios-switch + div {
-  display: inline-block;
-  vertical-align: middle;
-  width: 4.5rem;        height: 2rem;
-  border-radius: 999px;
-  margin: 0 $mediumPadding;
-        padding: $smallPadding 0.5rem;
-  background: $jobInputBackgroundColour;
-  background-image: linear-gradient(90deg, $moneyInputBackgroundColour 50%, transparent 50%);
-  background-size: 200% 100%;
-  background-position: 100% 0;
-  background-origin: border-box;
-  background-clip: border-box;
-  overflow: hidden;
-  font-size: $fontSizeIconLarge;
-  font-family: "ddd-icons";
-  cursor: pointer;
-}
-:root input[type="checkbox"].ios-switch.negative + div {
-  background-image: linear-gradient(90deg, $ddd-orange 50%, transparent 50%);
-}
-
-:root input[type="checkbox"].ios-switch:checked + div {
-  padding-left: 2.7rem;
-  background-position: 0 0;
-  white-space: nowrap;
-}
-
-:root input[type="checkbox"].ios-switch + div:before,
-:root input[type="checkbox"].ios-switch + div:after {
-  font-size: $fontSizeIconLarge;
-}
-
-:root input[type="checkbox"].ios-switch + div:before {
-  content: '\e801';
-  float: left;
-  width: 1.3rem; height: 1.3rem;
-  margin: 0rem 0rem 0rem 0rem;
-  border-radius: inherit;
-  background: $ddd-cream;
-  color: $moneyInputColour;
-  text-indent: -2.2rem;
-}
-
-:root input[type="checkbox"].ios-switch + div:after {
-  content: '\e800';
-  margin-left: 0.8rem;
-  color: $jobInputColour;
-}
-*/
 /* FORMS */
 select, input, button {
   border: none;
@@ -508,14 +457,15 @@ select {
   display: inline-block;
   position: relative; }
   .spinner .spin-button-up, .spinner .spin-button-down {
+    cursor: pointer;
     position: absolute;
     display: inline-block;
     left: 10%;
     width: 40%;
     height: 0.5rem;
     padding: 0.1rem 0.2rem 0.55rem 0.2rem;
-    background-color: #ffeedd;
-    color: #aa9977;
+    background-color: #aa9977;
+    color: #ffeedd;
     text-align: center;
     font-size: 0.5rem; }
     .spinner .spin-button-up:after, .spinner .spin-button-down:after {
@@ -524,7 +474,7 @@ select {
       left: -0.2rem;
       right: -0.2rem; }
   .spinner .spin-button-up {
-    bottom: -0.6em;
+    top: -0.6em;
     left: 50%;
     border-radius: 0.4rem 0.4rem 0 0; }
     .spinner .spin-button-up:after {
@@ -546,17 +496,18 @@ select {
   position: fixed;
   top: 0;
   right: 0;
-  z-index: 2; }
+  z-index: 2;
+  background-color: #776644;
+  color: #ffeedd; }
   #miniNavForm p {
     font-size: 0.8rem;
     font-weight: 700;
-    color: #993322;
     display: inline;
     margin: 0 0.8rem; }
   #miniNavForm button:nth-of-type(2),
   #miniNavForm button:nth-of-type(4) {
     margin-right: 2rem;
-    margin-left: 0.15rem; }
+    margin-left: 0.3rem; }
 
 .file-buttons {
   position: absolute;
@@ -580,10 +531,14 @@ select {
   font-weight: 700;
   text-align: center;
   color: #ffeedd;
-  background-color: #993322;
+  background-color: #aa9977;
   display: inline-block;
   padding: 0.6rem;
   cursor: pointer; }
+
+#file-save,
+#file-chooser + label {
+  width: 100%; }
 
 #miniNavForm button:focus,
 #miniNavForm button:hover,
@@ -591,7 +546,7 @@ select {
 #file-save:hover,
 #file-chooser:focus + label,
 #file-chooser + label:hover {
-  background-color: #221100; }
+  background-color: #aa9977; }
 
 /* COLOR PICKER */
 .color-picker {

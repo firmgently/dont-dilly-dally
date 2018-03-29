@@ -110,12 +110,11 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     addClassname(wrapper_el, "spinner");
     wrapper_el.appendChild(input_el);
 
-    if (ob.attributes) {
-      for (prop in ob.attributes) {
-        input_el.setAttribute("" + prop, "" + ob.attributes[prop]);
-      }
-    }
-    input_el.ob = ob;
+		input_el.ob = ob;
+		input_el.spin_ob = {};
+		for (prop in ob.attributes) {
+			input_el.spin_ob[prop] = ob.attributes[prop];
+		}
 
     up_el = document.createElement("button");
     up_el.innerHTML = "&#x25B2;";
@@ -163,19 +162,19 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
 
 	doSpinStep = function(spinner, dir) {
-		var valNew = parseInt(spinner.value) + (parseInt(spinner.getAttribute("step")) * dir);
+		var valNew = parseInt(spinner.value) + (parseInt(spinner.spin_ob.step) * dir);
 		if (isNaN(valNew)) { valNew = 0; }
-		if (valNew < spinner.getAttribute("min")) {
-			if (spinner.getAttribute("wrapNum")) {
-				valNew = spinner.getAttribute("max");
+		if (valNew < spinner.spin_ob.min) {
+			if (spinner.spin_ob.wrapNum) {
+				valNew = spinner.spin_ob.max;
 			} else {
-				valNew = spinner.getAttribute("min");
+				valNew = spinner.spin_ob.min;
 			}
-		} else if (valNew > spinner.getAttribute("max")) {
-			if (spinner.getAttribute("wrapNum")) {
-				valNew = spinner.getAttribute("min");
+		} else if (valNew > spinner.spin_ob.max) {
+			if (spinner.spin_ob.wrapNum) {
+				valNew = spinner.spin_ob.min;
 			} else {
-				valNew = spinner.getAttribute("max");
+				valNew = spinner.spin_ob.max;
 			}
 		}
 		spinner.value = valNew;
@@ -305,7 +304,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       radio_el.id = ob.id;
       radio_el.name = ob.id;
       radio_el.value = prop;
-			logMsg("ob.checkIfMatched: " + ob.checkIfMatched);
       if (prop === ob.checkIfMatched) { radio_el.checked = true; }
       label_el.htmlFor = ob.id;
     }

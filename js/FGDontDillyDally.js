@@ -24,6 +24,8 @@ uk.co.firmgently.DDDConsts = (function() {
     APP_ID: "FGDDD",
     SAVE_FILENAME: "DontDillyDally-export",
 
+		AUTOREPEAT_RATE: 500,
+
     PAGETYPE_TIMESHEETS: "timesheets",
     PAGETYPE_CONFIG: "preferences",
     PAGETYPE_JOBSANDCLIENTS: "jobs-and-clients",
@@ -417,7 +419,7 @@ uk.co.firmgently.DDDConsts = (function() {
         }, {
           type: CONST.GUITYPE_BTN,
           class: CONST.CLASS_BTNMININAV,
-          label: "Today",
+          label: "today",
           methodPathStr: "uk.co.firmgently.DontDillyDally.todayClick",
           parent: "miniNavForm"
         }
@@ -514,7 +516,7 @@ uk.co.firmgently.FGUtils = (function() {
   addCSSRule, getIEVersion, isTouchDevice,
   registerEventHandler, unregisterEventHandler, stopPropagation,
   hexOpacityToRGBA, getRandomHexColor, createElementWithId,
-  removeClassname, addClassname, getStyle,
+  removeClassname, addClassname, getStyle, padString,
   treatAsUTC, daysBetween, getFormattedDate,
   getFunctionFromString, getGUID, changeSelectByOption, manualEvent,
   isEmpty, logMsg;
@@ -700,6 +702,15 @@ uk.co.firmgently.FGUtils = (function() {
   };
 
 
+  padString = function(str, pad) {
+    var return_str = str;
+    if (str.length < pad.length) {
+      return_str = pad.substr(0, (pad.length - str.length)) + str;
+    }
+    return return_str;
+  };
+
+
   getFunctionFromString = function(str) {
       var
       i,
@@ -868,6 +879,7 @@ uk.co.firmgently.FGUtils = (function() {
     getFunctionFromString: getFunctionFromString,
     getFormattedDate: getFormattedDate,
     treatAsUTC: treatAsUTC,
+    padString: padString,
     daysBetween: daysBetween,
     logMsg: logMsg,
     isEmpty: isEmpty,
@@ -992,12 +1004,11 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     addClassname(wrapper_el, "spinner");
     wrapper_el.appendChild(input_el);
 
-    if (ob.attributes) {
-      for (prop in ob.attributes) {
-        input_el.setAttribute("" + prop, "" + ob.attributes[prop]);
-      }
-    }
-    input_el.ob = ob;
+		input_el.ob = ob;
+		input_el.spin_ob = {};
+		for (prop in ob.attributes) {
+			input_el.spin_ob[prop] = ob.attributes[prop];
+		}
 
     up_el = document.createElement("button");
     up_el.innerHTML = "&#x25B2;";
@@ -1045,19 +1056,19 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
 
 	doSpinStep = function(spinner, dir) {
-		var valNew = parseInt(spinner.value) + (parseInt(spinner.getAttribute("step")) * dir);
+		var valNew = parseInt(spinner.value) + (parseInt(spinner.spin_ob.step) * dir);
 		if (isNaN(valNew)) { valNew = 0; }
-		if (valNew < spinner.getAttribute("min")) {
-			if (spinner.getAttribute("wrapNum")) {
-				valNew = spinner.getAttribute("max");
+		if (valNew < spinner.spin_ob.min) {
+			if (spinner.spin_ob.wrapNum) {
+				valNew = spinner.spin_ob.max;
 			} else {
-				valNew = spinner.getAttribute("min");
+				valNew = spinner.spin_ob.min;
 			}
-		} else if (valNew > spinner.getAttribute("max")) {
-			if (spinner.getAttribute("wrapNum")) {
-				valNew = spinner.getAttribute("min");
+		} else if (valNew > spinner.spin_ob.max) {
+			if (spinner.spin_ob.wrapNum) {
+				valNew = spinner.spin_ob.min;
 			} else {
-				valNew = spinner.getAttribute("max");
+				valNew = spinner.spin_ob.max;
 			}
 		}
 		spinner.value = valNew;
@@ -1187,7 +1198,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       radio_el.id = ob.id;
       radio_el.name = ob.id;
       radio_el.value = prop;
-			logMsg("ob.checkIfMatched: " + ob.checkIfMatched);
       if (prop === ob.checkIfMatched) { radio_el.checked = true; }
       label_el.htmlFor = ob.id;
     }
@@ -1310,7 +1320,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   DONE	blank object being stored in data object results in missing day in UI
   DONE	 number spinners
   TODO  match all button styles
-  FIXME blank space appears at bottom of page (seems related to LOADING element)
+  DONE 	blank space appears at bottom of page (seems related to LOADING element)
   DONE	negative money values should attach negative classname on initial page load
   TODO  jobs and clients list existing jobs/clients
   TODO  jobs and clients proper colour picker
@@ -1319,7 +1329,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   FIXME next/prev week/month buttons not working
   TODO  all strings should be constants
   TODO  display month/week start correctly
-  TODO  month/week skip buttons should auto-repeat
+  DONE  month/week skip buttons should auto-repeat
   TODO  validate all input data
           time/money
           notes
@@ -1329,7 +1339,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   DONE	 spinners: NaN gets converted to 0
   DONE	spinners: other events should trigger mouseup to prevent stuck spin
 	FIXME	spinners: numbers should pad eg. 00:45h, £10.00
-	TODO	spinners: unit should be denoted, with £/h and ./:
+	DONE	spinners: unit should be denoted, with £/h and ./:
 	TODO	add 'wipe data' buttons with confirmation prompt
 	TODO	add privacy page/statement
 					by default all data is saved in your browser (localStorage)
@@ -1339,6 +1349,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 	FIXME	if empty or bad time/money data is stored, correct it to zero
 	DONE	'even' class wrongly being applied to child elements
 	FIXME	select client/job - day remains highlighted (eg. darker date text)
+	FIXME	£-0.77 must register as negative
   
 ---------------------------------------------------------
 */
@@ -1857,7 +1868,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       day_el = createElementWithId("li", day_str);
       if (isToday) {
         rowClassname += CLASS_TODAY + " ";
-        significance_str += "TODAYYYY";
+        significance_str += "TODAY";
       }
       if (dayCur.getDay() === weekStartDay) {
         rowClassname += "week-start ";
@@ -1990,9 +2001,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     // hours/money big units
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
-      ob_temp = { min: 0, max: 23, step: 1, wrapNum: true };
+      ob_temp = { min: 0, max: 23, step: 1, wrapNum: true, pad: "00" };
     } else {
-      ob_temp = { min: -999999999, max: 999999999, step: 1 };
+      ob_temp = { min: -999999999, max: 999999999, step: 1, pad: "    " };
     }
     el_temp = createSpinnerFromOb({
       class: "unitBig",
@@ -2012,11 +2023,12 @@ uk.co.firmgently.DontDillyDally = (function() {
 			if (parseInt(numberValue_ar[0]) < 0) {
 				addClassname(el_temp.parentNode.parentNode, "negative");
 			}
+			manualEvent(el_temp, "change");
 		}
 
     // hours/money small units
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
-      ob_temp = { min: 0, max: 59, wrapNum: true };
+      ob_temp = { min: 0, max: 59, wrapNum: true, pad: "00" };
       switch(dataRetrieveObject(PREFS_STR).minuteIncrements) {
         case MINUTEINCREMENTS_15:
           ob_temp.step = 15;
@@ -2030,7 +2042,7 @@ uk.co.firmgently.DontDillyDally = (function() {
           break;
       }
     } else {
-      ob_temp = { min: 0, max: 99, step: 1, wrapNum: true };
+      ob_temp = { min: 0, max: 99, step: 1, wrapNum: true, pad: "00" };
     }
     el_temp = createSpinnerFromOb({
       class: "unitSmall",
@@ -2046,6 +2058,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
 		if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
 			el_temp.value = numberValue_ar[1];
+			manualEvent(el_temp, "change");
 		}
 
     // job/money notes
@@ -2135,24 +2148,25 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   onFormSubmit = function(e) {
-    logMsg("FORM SUBMITTED");
     stopPropagation(e);
   };
 
 
   onUpdateInput = function(event) {
+		if (isNaN(parseInt(this.value))) { this.value = 0; }
 		if (document.body.contains(this)) {
 			// TODO needs to handle negative small unit eg. -£0.13
-			logMsg(this.className);
 			if (this.className.indexOf("unitBig") !== -1) {
-				if (this.value < 0) {
+				if (parseInt(this.value) < 0) {
 					addClassname(this.parentNode.parentNode, "negative");
 				} else {
 					removeClassname(this.parentNode.parentNode, "negative");
 				}
 			}
+			// TODO check following line still works
 			updateDataFromWorkItemEl(this.parentNode.parentNode);
 		}
+		this.value = padString(this.value, this.spin_ob.pad);
   };
 
 
@@ -2309,7 +2323,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 	eventAutoRepeat = function(el, eventType) {
 		clearTimeout(dayJumpTimer);
-		dayJumpTimer = setTimeout(function() { manualEvent(el, eventType); }, 1000);
+		dayJumpTimer = setTimeout(function() { manualEvent(el, eventType); }, AUTOREPEAT_RATE);
 	};
 
 
