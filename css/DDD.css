@@ -235,6 +235,12 @@ body#jobsClients #column-headings, body#config #column-headings {
       display: block;
       margin-bottom: 0.6rem;
       position: relative; }
+      #timesheetContainer ul.day-data.col li.negative input.unitBig.money, #timesheetContainer ul.day-data.col li.negative input.unitSmall.money {
+        background-color: #cc6644; }
+      #timesheetContainer ul.day-data.col li.negative input[type="checkbox"].ios-switch + div {
+        background-image: linear-gradient(90deg, #cc6644 50%, transparent 50%); }
+      #timesheetContainer ul.day-data.col li.negative input.notes.money {
+        background-color: #cc6644; }
     #timesheetContainer ul.day-data.col li .removeTaskBtn, #timesheetContainer ul.day-data.col li .addTaskBtn {
       font-family: "ddd-icons";
       font-size: 1.2rem;
@@ -336,7 +342,7 @@ select {
     position: absolute;
     display: inline-block;
     left: 10%;
-    width: 80%;
+    width: 40%;
     height: 0.5rem;
     padding: 0.1rem 0.2rem 0.55rem 0.2rem;
     background-color: #ffeedd;
@@ -349,13 +355,14 @@ select {
       left: -0.2rem;
       right: -0.2rem; }
   .spinner .spin-button-up {
-    top: -0.4rem;
+    bottom: -0.6em;
+    left: 50%;
     border-radius: 0.4rem 0.4rem 0 0; }
     .spinner .spin-button-up:after {
       top: -0.2rem;
       bottom: 0; }
   .spinner .spin-button-down {
-    bottom: -0.4rem;
+    bottom: -0.6em;
     border-radius: 0 0 0.4rem 0.4rem; }
     .spinner .spin-button-down:after {
       top: 0;
@@ -363,6 +370,7 @@ select {
   .spinner input.unitBig, .spinner input.unitSmall {
     display: inline-block;
     width: 3rem;
+    height: 2rem;
     font-size: 0.9rem;
     font-weight: bold;
     text-align: center; }
@@ -370,8 +378,6 @@ select {
       background-color: #778866;
       color: #ffeedd;
       background-size: 100%; }
-      .spinner input.unitBig.money.negative, .spinner input.unitSmall.money.negative {
-        background-color: #cc6644; }
     .spinner input.unitBig.hrs, .spinner input.unitSmall.hrs {
       background-color: #aa9977;
       color: #ffeedd; }
@@ -406,9 +412,6 @@ select {
   font-family: "ddd-icons";
   cursor: pointer; }
 
-:root input[type="checkbox"].ios-switch.negative + div {
-  background-image: linear-gradient(90deg, #cc6644 50%, transparent 50%); }
-
 :root input[type="checkbox"].ios-switch:checked + div {
   padding-left: 2.7rem;
   background-position: 0 0;
@@ -442,8 +445,6 @@ input.notes {
   input.notes.money {
     color: #ffeedd;
     background-color: #778866; }
-    input.notes.money.negative {
-      background-color: #cc6644; }
   input.notes.job {
     color: #ffeedd;
     background-color: #aa9977; }

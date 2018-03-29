@@ -896,11 +896,15 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 	"use strict";
 
 	var
+	SPINNER_REPEAT_RATE = 250, SPINNER_REPEAT_ACCEL = 1.04,
+
 	fillHTMLFromOb,
 	createButtonFromOb, createRadioFromOb, createCheckboxFromOb,
 	createInputFromOb, createSpinnerFromOb, createSelectFromOb,
 	createFormFromOb,
-	addLIsFromOb, createBasicElementFromOb, createColorPickerFromOb
+	addLIsFromOb, createBasicElementFromOb, createColorPickerFromOb,
+	onSpinnerStart, onSpinnerMouseUp, doSpinStep, spinnerTimer,
+	onIncreaseSpinnerMouseDown, onDecreaseSpinnerMouseDown
 	;
 
 
@@ -989,87 +993,87 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     wrapper_el.appendChild(input_el);
 
     if (ob.attributes) {
-      input_el.ob = {};
-			for (prop in ob.attributes) {
-        input_el.ob[prop] = ob.attributes[prop];
+      for (prop in ob.attributes) {
+        input_el.setAttribute("" + prop, "" + ob.attributes[prop]);
       }
     }
+    input_el.ob = ob;
 
     up_el = document.createElement("button");
     up_el.innerHTML = "&#x25B2;";
     up_el.spinner = input_el;
     addClassname(up_el, "spin-button-up");
     wrapper_el.appendChild(up_el);
-    registerEventHandler(up_el, "mousedown", function() {
-      var
-      timer, timer2,
-      spinner = this.spinner,
-      timeFunc = function() {
-        var valNew = parseInt(spinner.value) + parseInt(spinner.ob.step);
-				if (isNaN(valNew)) { valNew = 0; }
-				if (valNew > spinner.ob.max) {
-					if (spinner.ob.wrapNum) {
-						valNew = spinner.ob.min;
-					} else {
-						valNew = spinner.ob.max;
-					}
-				}
-        spinner.value = valNew;
-        if (spinner.isChanging) {
-          window.clearTimeout(timer);
-          timer = window.setTimeout(timeFunc, spinner.ob.repeatRate);
-        }
-      };
-      spinner.isChanging = true;
-      window.clearTimeout(timer2);
-      timer2 = window.setTimeout(timeFunc, spinner.ob.repeatRate);
-    });
-    registerEventHandler(up_el, "mouseup", function() {
-      this.spinner.isChanging = false;
-    });
+    registerEventHandler(up_el, "mousedown", onIncreaseSpinnerMouseDown);
+    registerEventHandler(up_el, "mouseup", onSpinnerMouseUp);
+    registerEventHandler(up_el, "mouseout", onSpinnerMouseUp);
     
     down_el = document.createElement("button");
     down_el.innerHTML = "&#x25BC;";
     down_el.spinner = input_el;
     addClassname(down_el, "spin-button-down");
     wrapper_el.appendChild(down_el);
-    registerEventHandler(down_el, "mousedown", function() {
-      var
-      timer, timer2,
-      spinner = this.spinner,
-      timeFunc = function() {
-        var valNew = parseInt(spinner.value) - parseInt(spinner.ob.step);
-				if (isNaN(valNew)) { valNew = 0; }
-        if (valNew < spinner.ob.min) {
-					if (spinner.ob.wrapNum) {
-						valNew = spinner.ob.max;
-					} else {
-						valNew = spinner.ob.min;
-					}
-				}
-        spinner.value = valNew;
-        if (spinner.isChanging) {
-          window.clearTimeout(timer2);
-          timer2 = window.setTimeout(timeFunc, spinner.ob.repeatRate);
-        }
-      };
-      spinner.isChanging = true;
-      window.clearTimeout(timer);
-      timer = window.setTimeout(timeFunc, spinner.ob.repeatRate);
-    });
-    registerEventHandler(down_el, "mouseup", function() {
-      this.spinner.isChanging = false;
-    });
+    registerEventHandler(down_el, "mousedown", onDecreaseSpinnerMouseDown);
+    registerEventHandler(down_el, "mouseup", onSpinnerMouseUp);
+    registerEventHandler(down_el, "mouseout", onSpinnerMouseUp);
 
 		return input_el;
   };
 
 
+	onIncreaseSpinnerMouseDown = function() {
+		onSpinnerStart(this.spinner, 1);
+	};
+
+
+	onDecreaseSpinnerMouseDown = function() {
+		onSpinnerStart(this.spinner, -1);
+	};
+
+
+	onSpinnerStart = function(spinner, dir) {
+		spinner.isChanging = true;
+		spinner.curRepeatRate = SPINNER_REPEAT_RATE;
+		doSpinStep(spinner, dir);
+	};
+
+
+	onSpinnerMouseUp = function() {
+		this.spinner.isChanging = false;
+		clearTimeout(spinnerTimer);
+	};
+
+
+	doSpinStep = function(spinner, dir) {
+		var valNew = parseInt(spinner.value) + (parseInt(spinner.getAttribute("step")) * dir);
+		if (isNaN(valNew)) { valNew = 0; }
+		if (valNew < spinner.getAttribute("min")) {
+			if (spinner.getAttribute("wrapNum")) {
+				valNew = spinner.getAttribute("max");
+			} else {
+				valNew = spinner.getAttribute("min");
+			}
+		} else if (valNew > spinner.getAttribute("max")) {
+			if (spinner.getAttribute("wrapNum")) {
+				valNew = spinner.getAttribute("min");
+			} else {
+				valNew = spinner.getAttribute("max");
+			}
+		}
+		spinner.value = valNew;
+		manualEvent(spinner, "change");
+		clearTimeout(spinnerTimer);
+		if (spinner.isChanging) {
+			spinner.curRepeatRate /= SPINNER_REPEAT_ACCEL;
+			spinnerTimer = setTimeout(doSpinStep, spinner.curRepeatRate, spinner, dir);
+		}
+	};
+
+
   createSelectFromOb = function(ob) {
-    var
-    i, prop, select_el, label_el, option_el, clientOrJob_ob,
-    dayPrefix, placeholderOption,
-    parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
+    var i, prop, select_el, label_el, option_el, clientOrJob_ob,
+				dayPrefix, placeholderOption,
+				parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
 
     if (ob.id) {
       if (ob.label) {
@@ -1283,6 +1287,11 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 		createSelectFromOb: createSelectFromOb,
 		createInputFromOb: createInputFromOb,
 		createSpinnerFromOb: createSpinnerFromOb,
+		onSpinnerStart: onSpinnerStart,
+		onSpinnerMouseUp: onSpinnerMouseUp,
+		onIncreaseSpinnerMouseDown: onIncreaseSpinnerMouseDown,
+		onDecreaseSpinnerMouseDown: onDecreaseSpinnerMouseDown,
+		doSpinStep: doSpinStep,
 		createRadioFromOb: createRadioFromOb,
 		createCheckboxFromOb: createCheckboxFromOb,
 		addLIsFromOb: addLIsFromOb,
@@ -1979,9 +1988,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     // hours/money big units
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
-      ob_temp = { min: 0, max: 23, step: 1, repeatRate: 200, wrapNum: true };
+      ob_temp = { min: 0, max: 23, step: 1, wrapNum: true };
     } else {
-      ob_temp = { min: -999999999, max: 999999999, step: 1, repeatRate: 200 };
+      ob_temp = { min: -999999999, max: 999999999, step: 1 };
     }
     el_temp = createSpinnerFromOb({
       class: "unitBig hrs",
@@ -1998,12 +2007,14 @@ uk.co.firmgently.DontDillyDally = (function() {
     if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
 			el_temp.value = numberValue_ar[0];
 			// TODO 'negative' class is not being added when field is pre-filled with saved data	
-		//	onUpdateInput.call(el_temp);
+			if (parseInt(numberValue_ar[0]) < 0) {
+				addClassname(el_temp.parentNode.parentNode, "negative");
+			}
 		}
 
     // hours/money small units
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
-      ob_temp = { min: 0, max: 59, repeatRate: 200, wrapNum: true };
+      ob_temp = { min: 0, max: 59, wrapNum: true };
       switch(dataRetrieveObject(PREFS_STR).minuteIncrements) {
         case MINUTEINCREMENTS_15:
           ob_temp.step = 15;
@@ -2017,7 +2028,7 @@ uk.co.firmgently.DontDillyDally = (function() {
           break;
       }
     } else {
-      ob_temp = { min: 0, max: 99, step: 1, repeatRate: 200, wrapNum: true };
+      ob_temp = { min: 0, max: 99, step: 1, wrapNum: true };
     }
     el_temp = createSpinnerFromOb({
       class: "unitSmall hrs",
@@ -2033,8 +2044,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
 		if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
 			el_temp.value = numberValue_ar[1];
-			// TODO 'negative' class is not being added when field is pre-filled with saved data	
-		//	onUpdateInput.call(el_temp);
 		}
 
     // job/money notes
@@ -2133,20 +2142,15 @@ uk.co.firmgently.DontDillyDally = (function() {
   onUpdateInput = function(event) {
 		if (document.body.contains(this)) {
 			// TODO needs to handle negative small unit eg. -£0.13
+			logMsg(this.className);
 			if (this.className.indexOf("unitBig") !== -1) {
 				if (this.value < 0) {
-					addClassname(this, "negative");
-					addClassname(this.parentNode.getElementsByClassName("unitSmall")[0], "negative");
-					addClassname(this.parentNode.getElementsByClassName("notes")[0], "negative");
-					addClassname(this.parentNode.getElementsByClassName("ios-switch")[0], "negative");
+					addClassname(this.parentNode.parentNode, "negative");
 				} else {
-					removeClassname(this, "negative");
-					removeClassname(this.parentNode.getElementsByClassName("unitSmall")[0], "negative");
-					removeClassname(this.parentNode.getElementsByClassName("notes")[0], "negative");
-					removeClassname(this.parentNode.getElementsByClassName("ios-switch")[0], "negative");
+					removeClassname(this.parentNode.parentNode, "negative");
 				}
 			}
-			updateDataFromWorkItemEl(this.parentNode);
+			updateDataFromWorkItemEl(this.parentNode.parentNode);
 		}
   };
 

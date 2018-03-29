@@ -277,6 +277,13 @@ body#jobsClients, body#config {
 			margin-bottom: $mediumPadding; $padding-left: 2rem;
       position: relative;
 //			&:first-child { margin-top: 0; }
+			&.negative {
+				input.unitBig.money, input.unitSmall.money { background-color: $ddd-orange; }
+				input[type="checkbox"].ios-switch + div {
+					background-image: linear-gradient(90deg, $ddd-orange 50%, transparent 50%);
+				}
+				input.notes.money { background-color: $ddd-orange; }
+			}
 		}
     li .removeTaskBtn, li .addTaskBtn {
       font-family: "ddd-icons"; font-size: $fontSizeIcon;
@@ -363,7 +370,7 @@ select {
   display: inline-block; position: relative;
   .spin-button-up, .spin-button-down {
     position: absolute; display: inline-block;
-    left: 10%; width: 80%; height: 0.5rem;
+    left: 10%; width: 40%; height: 0.5rem;
     padding: 0.1rem 0.2rem 0.55rem 0.2rem;
     background-color: $ddd-cream; color: $ddd-sand;
     text-align: center; font-size: 0.5rem;
@@ -374,24 +381,23 @@ select {
 		} 
 	}
   .spin-button-up {
-		top: -0.4rem;
+		bottom: -0.6em; left: 50%;
 		@include border-radius(0.4rem 0.4rem 0 0);
 		&:after { top: -0.2rem; bottom: 0; }
 	}
   .spin-button-down {
-		bottom: -0.4rem;
+		bottom: -0.6em;
 		@include border-radius(0 0 0.4rem 0.4rem);
 		&:after { top: 0; bottom: -0.2rem; }
 	}
 
   input.unitBig, input.unitSmall {
-    display: inline-block; width: 3rem;
+    display: inline-block; width: 3rem; height: 2rem;
     font-size: $fontSizeNormal; font-weight: bold;
     text-align: center;
     &.money {
       background-color: $moneyInputBackgroundColour; color: $moneyInputColour;
       background-size: 100%;
-      &.negative { background-color: $ddd-orange; }
     }
     &.hrs { background-color: $jobInputBackgroundColour; color: $jobInputColour; }
   }
@@ -429,9 +435,6 @@ select {
   font-size: $fontSizeIconLarge;
   font-family: "ddd-icons";
   cursor: pointer;
-}
-:root input[type="checkbox"].ios-switch.negative + div {
-  background-image: linear-gradient(90deg, $ddd-orange 50%, transparent 50%);
 }
 
 :root input[type="checkbox"].ios-switch:checked + div {
@@ -474,7 +477,6 @@ input.notes {
   width: calc(100vw - 56rem);
   &.money {
     color: $moneyInputColour; background-color: $moneyInputBackgroundColour;
-    &.negative { background-color: $ddd-orange; }
   }
   &.job { color: $jobInputColour; background-color: $jobInputBackgroundColour; }
 	@include border-radius($mediumPadding);

@@ -686,9 +686,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     // hours/money big units
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
-      ob_temp = { min: 0, max: 23, step: 1, repeatRate: 200, wrapNum: true };
+      ob_temp = { min: 0, max: 23, step: 1, wrapNum: true };
     } else {
-      ob_temp = { min: -999999999, max: 999999999, step: 1, repeatRate: 200 };
+      ob_temp = { min: -999999999, max: 999999999, step: 1 };
     }
     el_temp = createSpinnerFromOb({
       class: "unitBig hrs",
@@ -705,12 +705,14 @@ uk.co.firmgently.DontDillyDally = (function() {
     if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
 			el_temp.value = numberValue_ar[0];
 			// TODO 'negative' class is not being added when field is pre-filled with saved data	
-		//	onUpdateInput.call(el_temp);
+			if (parseInt(numberValue_ar[0]) < 0) {
+				addClassname(el_temp.parentNode.parentNode, "negative");
+			}
 		}
 
     // hours/money small units
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
-      ob_temp = { min: 0, max: 59, repeatRate: 200, wrapNum: true };
+      ob_temp = { min: 0, max: 59, wrapNum: true };
       switch(dataRetrieveObject(PREFS_STR).minuteIncrements) {
         case MINUTEINCREMENTS_15:
           ob_temp.step = 15;
@@ -724,7 +726,7 @@ uk.co.firmgently.DontDillyDally = (function() {
           break;
       }
     } else {
-      ob_temp = { min: 0, max: 99, step: 1, repeatRate: 200, wrapNum: true };
+      ob_temp = { min: 0, max: 99, step: 1, wrapNum: true };
     }
     el_temp = createSpinnerFromOb({
       class: "unitSmall hrs",
@@ -740,8 +742,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
 		if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
 			el_temp.value = numberValue_ar[1];
-			// TODO 'negative' class is not being added when field is pre-filled with saved data	
-		//	onUpdateInput.call(el_temp);
 		}
 
     // job/money notes
@@ -840,20 +840,15 @@ uk.co.firmgently.DontDillyDally = (function() {
   onUpdateInput = function(event) {
 		if (document.body.contains(this)) {
 			// TODO needs to handle negative small unit eg. -£0.13
+			logMsg(this.className);
 			if (this.className.indexOf("unitBig") !== -1) {
 				if (this.value < 0) {
-					addClassname(this, "negative");
-					addClassname(this.parentNode.getElementsByClassName("unitSmall")[0], "negative");
-					addClassname(this.parentNode.getElementsByClassName("notes")[0], "negative");
-					addClassname(this.parentNode.getElementsByClassName("ios-switch")[0], "negative");
+					addClassname(this.parentNode.parentNode, "negative");
 				} else {
-					removeClassname(this, "negative");
-					removeClassname(this.parentNode.getElementsByClassName("unitSmall")[0], "negative");
-					removeClassname(this.parentNode.getElementsByClassName("notes")[0], "negative");
-					removeClassname(this.parentNode.getElementsByClassName("ios-switch")[0], "negative");
+					removeClassname(this.parentNode.parentNode, "negative");
 				}
 			}
-			updateDataFromWorkItemEl(this.parentNode);
+			updateDataFromWorkItemEl(this.parentNode.parentNode);
 		}
   };
 
