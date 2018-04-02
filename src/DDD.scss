@@ -269,7 +269,7 @@ body#jobsClients, body#config {
 
 // Timesheets
 
-#timesheetContainer {
+#timesheetContainer, #clientsExistingRow, #jobsExistingRow {
   z-index: $zNormal;
   display: block;
 
@@ -321,7 +321,7 @@ body#jobsClients, body#config {
     }
 	}
 
-  ul.day-data.col {
+  ul.day-data.col, ul.clients, ul.jobs {
     padding-left: $date-width + $extraLargePadding + 2rem;
     display: inline-block; float: right; 
 
@@ -567,7 +567,12 @@ select {
 
 /* COLOR PICKER */
 
-.color-picker { display: inline-block; width: 50px; height: 50px; background-color: #efefef}
+.color-picker {
+  cursor: pointer;
+  display: inline-block; width: 1rem; height: 1rem; background-color: #efefef;
+  &.fg { margin-left: -0.5rem; }
+  &.bg { margin-left: 1.5rem; margin-bottom: -0.5rem; }
+}
 
 
 /* TEXT */

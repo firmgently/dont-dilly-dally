@@ -224,17 +224,17 @@ body#jobsClients #column-headings, body#config #column-headings {
   background-color: #cc6644;
   text-align: center; }
 
-#timesheetContainer {
+#timesheetContainer, #clientsExistingRow, #jobsExistingRow {
   z-index: 1;
   display: block; }
-  #timesheetContainer > li .date.col {
+  #timesheetContainer > li .date.col, #clientsExistingRow > li .date.col, #jobsExistingRow > li .date.col {
     font-family: 'Lucida Console', 'Monaco', 'monospace', 'Courier';
     font-size: 0.9rem;
     font-weight: bold;
     width: 7.5rem;
     margin-right: -8.1rem;
     margin-left: 0.6rem; }
-    #timesheetContainer > li .date.col span {
+    #timesheetContainer > li .date.col span, #clientsExistingRow > li .date.col span, #jobsExistingRow > li .date.col span {
       display: block;
       font-size: 0.7rem;
       text-align: right;
@@ -242,7 +242,7 @@ body#jobsClients #column-headings, body#config #column-headings {
       margin-top: -0.5rem;
       margin-right: 0.5rem;
       color: #993322; }
-  #timesheetContainer > li em {
+  #timesheetContainer > li em, #clientsExistingRow > li em, #jobsExistingRow > li em {
     background-color: #f3ede1;
     padding: 0.8rem;
     top: 0;
@@ -250,47 +250,47 @@ body#jobsClients #column-headings, body#config #column-headings {
     position: relative;
     display: inline-block;
     font-weight: normal; }
-  #timesheetContainer > li.day {
+  #timesheetContainer > li.day, #clientsExistingRow > li.day, #jobsExistingRow > li.day {
     display: block;
     padding: 0.8rem 0.15rem;
     color: #aa9977;
     background-color: #ece2ce; }
-    #timesheetContainer > li.day:hover, #timesheetContainer > li.day:focus-within {
+    #timesheetContainer > li.day:hover, #timesheetContainer > li.day:focus-within, #clientsExistingRow > li.day:hover, #clientsExistingRow > li.day:focus-within, #jobsExistingRow > li.day:hover, #jobsExistingRow > li.day:focus-within {
       color: #44331e;
       background-color: #e3d8c3; }
-  #timesheetContainer > li:nth-of-type(even) {
+  #timesheetContainer > li:nth-of-type(even), #clientsExistingRow > li:nth-of-type(even), #jobsExistingRow > li:nth-of-type(even) {
     background-color: #f3ede1; }
-    #timesheetContainer > li:nth-of-type(even) em {
+    #timesheetContainer > li:nth-of-type(even) em, #clientsExistingRow > li:nth-of-type(even) em, #jobsExistingRow > li:nth-of-type(even) em {
       background-color: #ece2ce; }
-    #timesheetContainer > li:nth-of-type(even) select {
+    #timesheetContainer > li:nth-of-type(even) select, #clientsExistingRow > li:nth-of-type(even) select, #jobsExistingRow > li:nth-of-type(even) select {
       background-color: #ece2ce; }
-    #timesheetContainer > li:nth-of-type(even):hover, #timesheetContainer > li:nth-of-type(even):focus-within {
+    #timesheetContainer > li:nth-of-type(even):hover, #timesheetContainer > li:nth-of-type(even):focus-within, #clientsExistingRow > li:nth-of-type(even):hover, #clientsExistingRow > li:nth-of-type(even):focus-within, #jobsExistingRow > li:nth-of-type(even):hover, #jobsExistingRow > li:nth-of-type(even):focus-within {
       background-color: #f6f2e9; }
-  #timesheetContainer > li.today .date.col {
+  #timesheetContainer > li.today .date.col, #clientsExistingRow > li.today .date.col, #jobsExistingRow > li.today .date.col {
     margin-top: -0.5rem; }
-    #timesheetContainer > li.today .date.col em {
+    #timesheetContainer > li.today .date.col em, #clientsExistingRow > li.today .date.col em, #jobsExistingRow > li.today .date.col em {
       top: 0.5rem;
       background-color: #cc6644;
       color: #ffeedd; }
-  #timesheetContainer > li.week-start {
+  #timesheetContainer > li.week-start, #clientsExistingRow > li.week-start, #jobsExistingRow > li.week-start {
     margin-top: 0.3rem; }
-  #timesheetContainer > li.month-start h4 {
+  #timesheetContainer > li.month-start h4, #clientsExistingRow > li.month-start h4, #jobsExistingRow > li.month-start h4 {
     display: block;
     font-size: 0.9rem;
     background-color: white;
     padding: 0.8rem;
     margin-top: -0.8rem;
     margin-bottom: 0.8rem; }
-  #timesheetContainer ul.day-data.col {
+  #timesheetContainer ul.day-data.col, #timesheetContainer ul.clients, #timesheetContainer ul.jobs, #clientsExistingRow ul.day-data.col, #clientsExistingRow ul.clients, #clientsExistingRow ul.jobs, #jobsExistingRow ul.day-data.col, #jobsExistingRow ul.clients, #jobsExistingRow ul.jobs {
     padding-left: 11.5rem;
     display: inline-block;
     float: right; }
-    #timesheetContainer ul.day-data.col > li {
+    #timesheetContainer ul.day-data.col > li, #timesheetContainer ul.clients > li, #timesheetContainer ul.jobs > li, #clientsExistingRow ul.day-data.col > li, #clientsExistingRow ul.clients > li, #clientsExistingRow ul.jobs > li, #jobsExistingRow ul.day-data.col > li, #jobsExistingRow ul.clients > li, #jobsExistingRow ul.jobs > li {
       /* WORK ITEM */
       display: block;
       margin-bottom: 0.6rem;
       position: relative; }
-      #timesheetContainer ul.day-data.col > li input.unitBig, #timesheetContainer ul.day-data.col > li input.unitSmall {
+      #timesheetContainer ul.day-data.col > li input.unitBig, #timesheetContainer ul.day-data.col > li input.unitSmall, #timesheetContainer ul.clients > li input.unitBig, #timesheetContainer ul.clients > li input.unitSmall, #timesheetContainer ul.jobs > li input.unitBig, #timesheetContainer ul.jobs > li input.unitSmall, #clientsExistingRow ul.day-data.col > li input.unitBig, #clientsExistingRow ul.day-data.col > li input.unitSmall, #clientsExistingRow ul.clients > li input.unitBig, #clientsExistingRow ul.clients > li input.unitSmall, #clientsExistingRow ul.jobs > li input.unitBig, #clientsExistingRow ul.jobs > li input.unitSmall, #jobsExistingRow ul.day-data.col > li input.unitBig, #jobsExistingRow ul.day-data.col > li input.unitSmall, #jobsExistingRow ul.clients > li input.unitBig, #jobsExistingRow ul.clients > li input.unitSmall, #jobsExistingRow ul.jobs > li input.unitBig, #jobsExistingRow ul.jobs > li input.unitSmall {
         display: inline-block;
         width: 3rem;
         height: 2rem;
@@ -298,10 +298,10 @@ body#jobsClients #column-headings, body#config #column-headings {
         font-size: 0.9rem;
         font-weight: bold;
         text-align: center; }
-      #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch {
+      #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch, #clientsExistingRow ul.day-data.col > li input[type="checkbox"].ios-switch, #clientsExistingRow ul.clients > li input[type="checkbox"].ios-switch, #clientsExistingRow ul.jobs > li input[type="checkbox"].ios-switch, #jobsExistingRow ul.day-data.col > li input[type="checkbox"].ios-switch, #jobsExistingRow ul.clients > li input[type="checkbox"].ios-switch, #jobsExistingRow ul.jobs > li input[type="checkbox"].ios-switch {
         position: absolute;
         opacity: 0; }
-        #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div {
+        #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div, #clientsExistingRow ul.day-data.col > li input[type="checkbox"].ios-switch + div, #clientsExistingRow ul.clients > li input[type="checkbox"].ios-switch + div, #clientsExistingRow ul.jobs > li input[type="checkbox"].ios-switch + div, #jobsExistingRow ul.day-data.col > li input[type="checkbox"].ios-switch + div, #jobsExistingRow ul.clients > li input[type="checkbox"].ios-switch + div, #jobsExistingRow ul.jobs > li input[type="checkbox"].ios-switch + div {
           display: inline-block;
           vertical-align: middle;
           width: 4.5rem;
@@ -319,9 +319,9 @@ body#jobsClients #column-headings, body#config #column-headings {
           font-size: 1.5rem;
           font-family: "ddd-icons";
           cursor: pointer; }
-          #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:after {
+          #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:after, #clientsExistingRow ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #clientsExistingRow ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #clientsExistingRow ul.clients > li input[type="checkbox"].ios-switch + div:before, #clientsExistingRow ul.clients > li input[type="checkbox"].ios-switch + div:after, #clientsExistingRow ul.jobs > li input[type="checkbox"].ios-switch + div:before, #clientsExistingRow ul.jobs > li input[type="checkbox"].ios-switch + div:after, #jobsExistingRow ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #jobsExistingRow ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #jobsExistingRow ul.clients > li input[type="checkbox"].ios-switch + div:before, #jobsExistingRow ul.clients > li input[type="checkbox"].ios-switch + div:after, #jobsExistingRow ul.jobs > li input[type="checkbox"].ios-switch + div:before, #jobsExistingRow ul.jobs > li input[type="checkbox"].ios-switch + div:after {
             font-size: 1.5rem; }
-          #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:before {
+          #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:before, #clientsExistingRow ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #clientsExistingRow ul.clients > li input[type="checkbox"].ios-switch + div:before, #clientsExistingRow ul.jobs > li input[type="checkbox"].ios-switch + div:before, #jobsExistingRow ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #jobsExistingRow ul.clients > li input[type="checkbox"].ios-switch + div:before, #jobsExistingRow ul.jobs > li input[type="checkbox"].ios-switch + div:before {
             content: '\e801';
             float: left;
             width: 1.3rem;
@@ -331,86 +331,86 @@ body#jobsClients #column-headings, body#config #column-headings {
             background: #ffeedd;
             color: #ffeedd;
             text-indent: -2.2rem; }
-          #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:after {
+          #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:after, #clientsExistingRow ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #clientsExistingRow ul.clients > li input[type="checkbox"].ios-switch + div:after, #clientsExistingRow ul.jobs > li input[type="checkbox"].ios-switch + div:after, #jobsExistingRow ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #jobsExistingRow ul.clients > li input[type="checkbox"].ios-switch + div:after, #jobsExistingRow ul.jobs > li input[type="checkbox"].ios-switch + div:after {
             content: '\e800';
             margin-left: 0.8rem;
             color: #ffeedd; }
-        #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch:checked + div {
+        #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch:checked + div, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch:checked + div, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch:checked + div, #clientsExistingRow ul.day-data.col > li input[type="checkbox"].ios-switch:checked + div, #clientsExistingRow ul.clients > li input[type="checkbox"].ios-switch:checked + div, #clientsExistingRow ul.jobs > li input[type="checkbox"].ios-switch:checked + div, #jobsExistingRow ul.day-data.col > li input[type="checkbox"].ios-switch:checked + div, #jobsExistingRow ul.clients > li input[type="checkbox"].ios-switch:checked + div, #jobsExistingRow ul.jobs > li input[type="checkbox"].ios-switch:checked + div {
           padding-left: 2.7rem;
           background-position: 0 0;
           white-space: nowrap; }
-      #timesheetContainer ul.day-data.col > li input.notes {
+      #timesheetContainer ul.day-data.col > li input.notes, #timesheetContainer ul.clients > li input.notes, #timesheetContainer ul.jobs > li input.notes, #clientsExistingRow ul.day-data.col > li input.notes, #clientsExistingRow ul.clients > li input.notes, #clientsExistingRow ul.jobs > li input.notes, #jobsExistingRow ul.day-data.col > li input.notes, #jobsExistingRow ul.clients > li input.notes, #jobsExistingRow ul.jobs > li input.notes {
         width: calc(100vw - 10vw - 50rem);
         max-width: 50em;
         border-radius: 0.6rem;
         margin-left: 0.8rem;
         padding: 0.6rem 0.6rem 0.6rem 0.8rem; }
-        #timesheetContainer ul.day-data.col > li input.notes::-webkit-input-placeholder {
+        #timesheetContainer ul.day-data.col > li input.notes::-webkit-input-placeholder, #timesheetContainer ul.clients > li input.notes::-webkit-input-placeholder, #timesheetContainer ul.jobs > li input.notes::-webkit-input-placeholder, #clientsExistingRow ul.day-data.col > li input.notes::-webkit-input-placeholder, #clientsExistingRow ul.clients > li input.notes::-webkit-input-placeholder, #clientsExistingRow ul.jobs > li input.notes::-webkit-input-placeholder, #jobsExistingRow ul.day-data.col > li input.notes::-webkit-input-placeholder, #jobsExistingRow ul.clients > li input.notes::-webkit-input-placeholder, #jobsExistingRow ul.jobs > li input.notes::-webkit-input-placeholder {
           color: inherit;
           opacity: 1;
           font-style: italic; }
-        #timesheetContainer ul.day-data.col > li input.notes::-moz-placeholder {
+        #timesheetContainer ul.day-data.col > li input.notes::-moz-placeholder, #timesheetContainer ul.clients > li input.notes::-moz-placeholder, #timesheetContainer ul.jobs > li input.notes::-moz-placeholder, #clientsExistingRow ul.day-data.col > li input.notes::-moz-placeholder, #clientsExistingRow ul.clients > li input.notes::-moz-placeholder, #clientsExistingRow ul.jobs > li input.notes::-moz-placeholder, #jobsExistingRow ul.day-data.col > li input.notes::-moz-placeholder, #jobsExistingRow ul.clients > li input.notes::-moz-placeholder, #jobsExistingRow ul.jobs > li input.notes::-moz-placeholder {
           color: inherit;
           opacity: 1;
           font-style: italic; }
-        #timesheetContainer ul.day-data.col > li input.notes:-ms-input-placeholder {
+        #timesheetContainer ul.day-data.col > li input.notes:-ms-input-placeholder, #timesheetContainer ul.clients > li input.notes:-ms-input-placeholder, #timesheetContainer ul.jobs > li input.notes:-ms-input-placeholder, #clientsExistingRow ul.day-data.col > li input.notes:-ms-input-placeholder, #clientsExistingRow ul.clients > li input.notes:-ms-input-placeholder, #clientsExistingRow ul.jobs > li input.notes:-ms-input-placeholder, #jobsExistingRow ul.day-data.col > li input.notes:-ms-input-placeholder, #jobsExistingRow ul.clients > li input.notes:-ms-input-placeholder, #jobsExistingRow ul.jobs > li input.notes:-ms-input-placeholder {
           color: inherit;
           opacity: 1;
           font-style: italic; }
-        #timesheetContainer ul.day-data.col > li input.notes:-moz-placeholder {
+        #timesheetContainer ul.day-data.col > li input.notes:-moz-placeholder, #timesheetContainer ul.clients > li input.notes:-moz-placeholder, #timesheetContainer ul.jobs > li input.notes:-moz-placeholder, #clientsExistingRow ul.day-data.col > li input.notes:-moz-placeholder, #clientsExistingRow ul.clients > li input.notes:-moz-placeholder, #clientsExistingRow ul.jobs > li input.notes:-moz-placeholder, #jobsExistingRow ul.day-data.col > li input.notes:-moz-placeholder, #jobsExistingRow ul.clients > li input.notes:-moz-placeholder, #jobsExistingRow ul.jobs > li input.notes:-moz-placeholder {
           color: inherit;
           opacity: 1;
           font-style: italic; }
-      #timesheetContainer ul.day-data.col > li.money input.unitBig, #timesheetContainer ul.day-data.col > li.money input.unitSmall {
+      #timesheetContainer ul.day-data.col > li.money input.unitBig, #timesheetContainer ul.day-data.col > li.money input.unitSmall, #timesheetContainer ul.clients > li.money input.unitBig, #timesheetContainer ul.clients > li.money input.unitSmall, #timesheetContainer ul.jobs > li.money input.unitBig, #timesheetContainer ul.jobs > li.money input.unitSmall, #clientsExistingRow ul.day-data.col > li.money input.unitBig, #clientsExistingRow ul.day-data.col > li.money input.unitSmall, #clientsExistingRow ul.clients > li.money input.unitBig, #clientsExistingRow ul.clients > li.money input.unitSmall, #clientsExistingRow ul.jobs > li.money input.unitBig, #clientsExistingRow ul.jobs > li.money input.unitSmall, #jobsExistingRow ul.day-data.col > li.money input.unitBig, #jobsExistingRow ul.day-data.col > li.money input.unitSmall, #jobsExistingRow ul.clients > li.money input.unitBig, #jobsExistingRow ul.clients > li.money input.unitSmall, #jobsExistingRow ul.jobs > li.money input.unitBig, #jobsExistingRow ul.jobs > li.money input.unitSmall {
         background-color: #778866;
         color: #ffeedd;
         background-size: 100%; }
-      #timesheetContainer ul.day-data.col > li.money input.notes {
+      #timesheetContainer ul.day-data.col > li.money input.notes, #timesheetContainer ul.clients > li.money input.notes, #timesheetContainer ul.jobs > li.money input.notes, #clientsExistingRow ul.day-data.col > li.money input.notes, #clientsExistingRow ul.clients > li.money input.notes, #clientsExistingRow ul.jobs > li.money input.notes, #jobsExistingRow ul.day-data.col > li.money input.notes, #jobsExistingRow ul.clients > li.money input.notes, #jobsExistingRow ul.jobs > li.money input.notes {
         color: #776644;
         background-color: #cfd5c9; }
-      #timesheetContainer ul.day-data.col > li.money .spin-button-up, #timesheetContainer ul.day-data.col > li.money .spin-button-down {
+      #timesheetContainer ul.day-data.col > li.money .spin-button-up, #timesheetContainer ul.day-data.col > li.money .spin-button-down, #timesheetContainer ul.clients > li.money .spin-button-up, #timesheetContainer ul.clients > li.money .spin-button-down, #timesheetContainer ul.jobs > li.money .spin-button-up, #timesheetContainer ul.jobs > li.money .spin-button-down, #clientsExistingRow ul.day-data.col > li.money .spin-button-up, #clientsExistingRow ul.day-data.col > li.money .spin-button-down, #clientsExistingRow ul.clients > li.money .spin-button-up, #clientsExistingRow ul.clients > li.money .spin-button-down, #clientsExistingRow ul.jobs > li.money .spin-button-up, #clientsExistingRow ul.jobs > li.money .spin-button-down, #jobsExistingRow ul.day-data.col > li.money .spin-button-up, #jobsExistingRow ul.day-data.col > li.money .spin-button-down, #jobsExistingRow ul.clients > li.money .spin-button-up, #jobsExistingRow ul.clients > li.money .spin-button-down, #jobsExistingRow ul.jobs > li.money .spin-button-up, #jobsExistingRow ul.jobs > li.money .spin-button-down {
         background-color: #778866; }
-      #timesheetContainer ul.day-data.col > li.money .spinner:first-of-type:before, #timesheetContainer ul.day-data.col > li.money .spinner:first-of-type:after {
+      #timesheetContainer ul.day-data.col > li.money .spinner:first-of-type:before, #timesheetContainer ul.day-data.col > li.money .spinner:first-of-type:after, #timesheetContainer ul.clients > li.money .spinner:first-of-type:before, #timesheetContainer ul.clients > li.money .spinner:first-of-type:after, #timesheetContainer ul.jobs > li.money .spinner:first-of-type:before, #timesheetContainer ul.jobs > li.money .spinner:first-of-type:after, #clientsExistingRow ul.day-data.col > li.money .spinner:first-of-type:before, #clientsExistingRow ul.day-data.col > li.money .spinner:first-of-type:after, #clientsExistingRow ul.clients > li.money .spinner:first-of-type:before, #clientsExistingRow ul.clients > li.money .spinner:first-of-type:after, #clientsExistingRow ul.jobs > li.money .spinner:first-of-type:before, #clientsExistingRow ul.jobs > li.money .spinner:first-of-type:after, #jobsExistingRow ul.day-data.col > li.money .spinner:first-of-type:before, #jobsExistingRow ul.day-data.col > li.money .spinner:first-of-type:after, #jobsExistingRow ul.clients > li.money .spinner:first-of-type:before, #jobsExistingRow ul.clients > li.money .spinner:first-of-type:after, #jobsExistingRow ul.jobs > li.money .spinner:first-of-type:before, #jobsExistingRow ul.jobs > li.money .spinner:first-of-type:after {
         font-weight: bold;
         top: 0.4rem;
         position: absolute;
         color: #ffeedd; }
-      #timesheetContainer ul.day-data.col > li.money .spinner:first-of-type:before {
+      #timesheetContainer ul.day-data.col > li.money .spinner:first-of-type:before, #timesheetContainer ul.clients > li.money .spinner:first-of-type:before, #timesheetContainer ul.jobs > li.money .spinner:first-of-type:before, #clientsExistingRow ul.day-data.col > li.money .spinner:first-of-type:before, #clientsExistingRow ul.clients > li.money .spinner:first-of-type:before, #clientsExistingRow ul.jobs > li.money .spinner:first-of-type:before, #jobsExistingRow ul.day-data.col > li.money .spinner:first-of-type:before, #jobsExistingRow ul.clients > li.money .spinner:first-of-type:before, #jobsExistingRow ul.jobs > li.money .spinner:first-of-type:before {
         font-size: 0.7rem;
         content: "£";
         left: 0.3rem;
         top: 0.7rem; }
-      #timesheetContainer ul.day-data.col > li.money .spinner:first-of-type:after {
+      #timesheetContainer ul.day-data.col > li.money .spinner:first-of-type:after, #timesheetContainer ul.clients > li.money .spinner:first-of-type:after, #timesheetContainer ul.jobs > li.money .spinner:first-of-type:after, #clientsExistingRow ul.day-data.col > li.money .spinner:first-of-type:after, #clientsExistingRow ul.clients > li.money .spinner:first-of-type:after, #clientsExistingRow ul.jobs > li.money .spinner:first-of-type:after, #jobsExistingRow ul.day-data.col > li.money .spinner:first-of-type:after, #jobsExistingRow ul.clients > li.money .spinner:first-of-type:after, #jobsExistingRow ul.jobs > li.money .spinner:first-of-type:after {
         content: ".";
         right: 0rem; }
-      #timesheetContainer ul.day-data.col > li.money.negative input.unitBig, #timesheetContainer ul.day-data.col > li.money.negative input.unitSmall {
+      #timesheetContainer ul.day-data.col > li.money.negative input.unitBig, #timesheetContainer ul.day-data.col > li.money.negative input.unitSmall, #timesheetContainer ul.clients > li.money.negative input.unitBig, #timesheetContainer ul.clients > li.money.negative input.unitSmall, #timesheetContainer ul.jobs > li.money.negative input.unitBig, #timesheetContainer ul.jobs > li.money.negative input.unitSmall, #clientsExistingRow ul.day-data.col > li.money.negative input.unitBig, #clientsExistingRow ul.day-data.col > li.money.negative input.unitSmall, #clientsExistingRow ul.clients > li.money.negative input.unitBig, #clientsExistingRow ul.clients > li.money.negative input.unitSmall, #clientsExistingRow ul.jobs > li.money.negative input.unitBig, #clientsExistingRow ul.jobs > li.money.negative input.unitSmall, #jobsExistingRow ul.day-data.col > li.money.negative input.unitBig, #jobsExistingRow ul.day-data.col > li.money.negative input.unitSmall, #jobsExistingRow ul.clients > li.money.negative input.unitBig, #jobsExistingRow ul.clients > li.money.negative input.unitSmall, #jobsExistingRow ul.jobs > li.money.negative input.unitBig, #jobsExistingRow ul.jobs > li.money.negative input.unitSmall {
         background-color: #cc6644; }
-      #timesheetContainer ul.day-data.col > li.money.negative input.notes {
+      #timesheetContainer ul.day-data.col > li.money.negative input.notes, #timesheetContainer ul.clients > li.money.negative input.notes, #timesheetContainer ul.jobs > li.money.negative input.notes, #clientsExistingRow ul.day-data.col > li.money.negative input.notes, #clientsExistingRow ul.clients > li.money.negative input.notes, #clientsExistingRow ul.jobs > li.money.negative input.notes, #jobsExistingRow ul.day-data.col > li.money.negative input.notes, #jobsExistingRow ul.clients > li.money.negative input.notes, #jobsExistingRow ul.jobs > li.money.negative input.notes {
         background-color: #edc9be; }
-      #timesheetContainer ul.day-data.col > li.money.negative input[type="checkbox"].ios-switch + div {
+      #timesheetContainer ul.day-data.col > li.money.negative input[type="checkbox"].ios-switch + div, #timesheetContainer ul.clients > li.money.negative input[type="checkbox"].ios-switch + div, #timesheetContainer ul.jobs > li.money.negative input[type="checkbox"].ios-switch + div, #clientsExistingRow ul.day-data.col > li.money.negative input[type="checkbox"].ios-switch + div, #clientsExistingRow ul.clients > li.money.negative input[type="checkbox"].ios-switch + div, #clientsExistingRow ul.jobs > li.money.negative input[type="checkbox"].ios-switch + div, #jobsExistingRow ul.day-data.col > li.money.negative input[type="checkbox"].ios-switch + div, #jobsExistingRow ul.clients > li.money.negative input[type="checkbox"].ios-switch + div, #jobsExistingRow ul.jobs > li.money.negative input[type="checkbox"].ios-switch + div {
         background-image: linear-gradient(90deg, #cc6644 50%, transparent 50%); }
-      #timesheetContainer ul.day-data.col > li.money.negative .spin-button-up, #timesheetContainer ul.day-data.col > li.money.negative .spin-button-down {
+      #timesheetContainer ul.day-data.col > li.money.negative .spin-button-up, #timesheetContainer ul.day-data.col > li.money.negative .spin-button-down, #timesheetContainer ul.clients > li.money.negative .spin-button-up, #timesheetContainer ul.clients > li.money.negative .spin-button-down, #timesheetContainer ul.jobs > li.money.negative .spin-button-up, #timesheetContainer ul.jobs > li.money.negative .spin-button-down, #clientsExistingRow ul.day-data.col > li.money.negative .spin-button-up, #clientsExistingRow ul.day-data.col > li.money.negative .spin-button-down, #clientsExistingRow ul.clients > li.money.negative .spin-button-up, #clientsExistingRow ul.clients > li.money.negative .spin-button-down, #clientsExistingRow ul.jobs > li.money.negative .spin-button-up, #clientsExistingRow ul.jobs > li.money.negative .spin-button-down, #jobsExistingRow ul.day-data.col > li.money.negative .spin-button-up, #jobsExistingRow ul.day-data.col > li.money.negative .spin-button-down, #jobsExistingRow ul.clients > li.money.negative .spin-button-up, #jobsExistingRow ul.clients > li.money.negative .spin-button-down, #jobsExistingRow ul.jobs > li.money.negative .spin-button-up, #jobsExistingRow ul.jobs > li.money.negative .spin-button-down {
         background-color: #cc6644; }
-      #timesheetContainer ul.day-data.col > li.hrs input.unitBig, #timesheetContainer ul.day-data.col > li.hrs input.unitSmall {
+      #timesheetContainer ul.day-data.col > li.hrs input.unitBig, #timesheetContainer ul.day-data.col > li.hrs input.unitSmall, #timesheetContainer ul.clients > li.hrs input.unitBig, #timesheetContainer ul.clients > li.hrs input.unitSmall, #timesheetContainer ul.jobs > li.hrs input.unitBig, #timesheetContainer ul.jobs > li.hrs input.unitSmall, #clientsExistingRow ul.day-data.col > li.hrs input.unitBig, #clientsExistingRow ul.day-data.col > li.hrs input.unitSmall, #clientsExistingRow ul.clients > li.hrs input.unitBig, #clientsExistingRow ul.clients > li.hrs input.unitSmall, #clientsExistingRow ul.jobs > li.hrs input.unitBig, #clientsExistingRow ul.jobs > li.hrs input.unitSmall, #jobsExistingRow ul.day-data.col > li.hrs input.unitBig, #jobsExistingRow ul.day-data.col > li.hrs input.unitSmall, #jobsExistingRow ul.clients > li.hrs input.unitBig, #jobsExistingRow ul.clients > li.hrs input.unitSmall, #jobsExistingRow ul.jobs > li.hrs input.unitBig, #jobsExistingRow ul.jobs > li.hrs input.unitSmall {
         background-color: #aa9977;
         color: #ffeedd; }
-      #timesheetContainer ul.day-data.col > li.hrs input.notes {
+      #timesheetContainer ul.day-data.col > li.hrs input.notes, #timesheetContainer ul.clients > li.hrs input.notes, #timesheetContainer ul.jobs > li.hrs input.notes, #clientsExistingRow ul.day-data.col > li.hrs input.notes, #clientsExistingRow ul.clients > li.hrs input.notes, #clientsExistingRow ul.jobs > li.hrs input.notes, #jobsExistingRow ul.day-data.col > li.hrs input.notes, #jobsExistingRow ul.clients > li.hrs input.notes, #jobsExistingRow ul.jobs > li.hrs input.notes {
         color: #776644;
         background-color: #e1dbcf; }
-      #timesheetContainer ul.day-data.col > li.hrs .spinner:first-of-type:before, #timesheetContainer ul.day-data.col > li.hrs .spinner:first-of-type:after {
+      #timesheetContainer ul.day-data.col > li.hrs .spinner:first-of-type:before, #timesheetContainer ul.day-data.col > li.hrs .spinner:first-of-type:after, #timesheetContainer ul.clients > li.hrs .spinner:first-of-type:before, #timesheetContainer ul.clients > li.hrs .spinner:first-of-type:after, #timesheetContainer ul.jobs > li.hrs .spinner:first-of-type:before, #timesheetContainer ul.jobs > li.hrs .spinner:first-of-type:after, #clientsExistingRow ul.day-data.col > li.hrs .spinner:first-of-type:before, #clientsExistingRow ul.day-data.col > li.hrs .spinner:first-of-type:after, #clientsExistingRow ul.clients > li.hrs .spinner:first-of-type:before, #clientsExistingRow ul.clients > li.hrs .spinner:first-of-type:after, #clientsExistingRow ul.jobs > li.hrs .spinner:first-of-type:before, #clientsExistingRow ul.jobs > li.hrs .spinner:first-of-type:after, #jobsExistingRow ul.day-data.col > li.hrs .spinner:first-of-type:before, #jobsExistingRow ul.day-data.col > li.hrs .spinner:first-of-type:after, #jobsExistingRow ul.clients > li.hrs .spinner:first-of-type:before, #jobsExistingRow ul.clients > li.hrs .spinner:first-of-type:after, #jobsExistingRow ul.jobs > li.hrs .spinner:first-of-type:before, #jobsExistingRow ul.jobs > li.hrs .spinner:first-of-type:after {
         font-weight: bold;
         top: 0.4rem;
         position: absolute;
         color: #ffeedd; }
-      #timesheetContainer ul.day-data.col > li.hrs .spinner:first-of-type:before {
+      #timesheetContainer ul.day-data.col > li.hrs .spinner:first-of-type:before, #timesheetContainer ul.clients > li.hrs .spinner:first-of-type:before, #timesheetContainer ul.jobs > li.hrs .spinner:first-of-type:before, #clientsExistingRow ul.day-data.col > li.hrs .spinner:first-of-type:before, #clientsExistingRow ul.clients > li.hrs .spinner:first-of-type:before, #clientsExistingRow ul.jobs > li.hrs .spinner:first-of-type:before, #jobsExistingRow ul.day-data.col > li.hrs .spinner:first-of-type:before, #jobsExistingRow ul.clients > li.hrs .spinner:first-of-type:before, #jobsExistingRow ul.jobs > li.hrs .spinner:first-of-type:before {
         font-size: 0.7rem;
         content: "H";
         left: 0.3rem;
         top: 0.7rem; }
-      #timesheetContainer ul.day-data.col > li.hrs .spinner:first-of-type:after {
+      #timesheetContainer ul.day-data.col > li.hrs .spinner:first-of-type:after, #timesheetContainer ul.clients > li.hrs .spinner:first-of-type:after, #timesheetContainer ul.jobs > li.hrs .spinner:first-of-type:after, #clientsExistingRow ul.day-data.col > li.hrs .spinner:first-of-type:after, #clientsExistingRow ul.clients > li.hrs .spinner:first-of-type:after, #clientsExistingRow ul.jobs > li.hrs .spinner:first-of-type:after, #jobsExistingRow ul.day-data.col > li.hrs .spinner:first-of-type:after, #jobsExistingRow ul.clients > li.hrs .spinner:first-of-type:after, #jobsExistingRow ul.jobs > li.hrs .spinner:first-of-type:after {
         content: ":";
         right: 0rem; }
-      #timesheetContainer ul.day-data.col > li .removeTaskBtn, #timesheetContainer ul.day-data.col > li .addTaskBtn {
+      #timesheetContainer ul.day-data.col > li .removeTaskBtn, #timesheetContainer ul.day-data.col > li .addTaskBtn, #timesheetContainer ul.clients > li .removeTaskBtn, #timesheetContainer ul.clients > li .addTaskBtn, #timesheetContainer ul.jobs > li .removeTaskBtn, #timesheetContainer ul.jobs > li .addTaskBtn, #clientsExistingRow ul.day-data.col > li .removeTaskBtn, #clientsExistingRow ul.day-data.col > li .addTaskBtn, #clientsExistingRow ul.clients > li .removeTaskBtn, #clientsExistingRow ul.clients > li .addTaskBtn, #clientsExistingRow ul.jobs > li .removeTaskBtn, #clientsExistingRow ul.jobs > li .addTaskBtn, #jobsExistingRow ul.day-data.col > li .removeTaskBtn, #jobsExistingRow ul.day-data.col > li .addTaskBtn, #jobsExistingRow ul.clients > li .removeTaskBtn, #jobsExistingRow ul.clients > li .addTaskBtn, #jobsExistingRow ul.jobs > li .removeTaskBtn, #jobsExistingRow ul.jobs > li .addTaskBtn {
         font-family: "ddd-icons";
         font-size: 1.2rem;
         border-radius: 1rem;
@@ -424,14 +424,14 @@ body#jobsClients #column-headings, body#config #column-headings {
         background-color: #ffeedd;
         position: absolute;
         bottom: 0; }
-      #timesheetContainer ul.day-data.col > li .addTaskBtn {
+      #timesheetContainer ul.day-data.col > li .addTaskBtn, #timesheetContainer ul.clients > li .addTaskBtn, #timesheetContainer ul.jobs > li .addTaskBtn, #clientsExistingRow ul.day-data.col > li .addTaskBtn, #clientsExistingRow ul.clients > li .addTaskBtn, #clientsExistingRow ul.jobs > li .addTaskBtn, #jobsExistingRow ul.day-data.col > li .addTaskBtn, #jobsExistingRow ul.clients > li .addTaskBtn, #jobsExistingRow ul.jobs > li .addTaskBtn {
         margin-left: -3rem; }
-      #timesheetContainer ul.day-data.col > li .removeTaskBtn {
+      #timesheetContainer ul.day-data.col > li .removeTaskBtn, #timesheetContainer ul.clients > li .removeTaskBtn, #timesheetContainer ul.jobs > li .removeTaskBtn, #clientsExistingRow ul.day-data.col > li .removeTaskBtn, #clientsExistingRow ul.clients > li .removeTaskBtn, #clientsExistingRow ul.jobs > li .removeTaskBtn, #jobsExistingRow ul.day-data.col > li .removeTaskBtn, #jobsExistingRow ul.clients > li .removeTaskBtn, #jobsExistingRow ul.jobs > li .removeTaskBtn {
         right: 1rem;
         color: #993322; }
-      #timesheetContainer ul.day-data.col > li:only-child .removeTaskBtn {
+      #timesheetContainer ul.day-data.col > li:only-child .removeTaskBtn, #timesheetContainer ul.clients > li:only-child .removeTaskBtn, #timesheetContainer ul.jobs > li:only-child .removeTaskBtn, #clientsExistingRow ul.day-data.col > li:only-child .removeTaskBtn, #clientsExistingRow ul.clients > li:only-child .removeTaskBtn, #clientsExistingRow ul.jobs > li:only-child .removeTaskBtn, #jobsExistingRow ul.day-data.col > li:only-child .removeTaskBtn, #jobsExistingRow ul.clients > li:only-child .removeTaskBtn, #jobsExistingRow ul.jobs > li:only-child .removeTaskBtn {
         visibility: hidden; }
-      #timesheetContainer ul.day-data.col > li:not(:last-child) .addTaskBtn {
+      #timesheetContainer ul.day-data.col > li:not(:last-child) .addTaskBtn, #timesheetContainer ul.clients > li:not(:last-child) .addTaskBtn, #timesheetContainer ul.jobs > li:not(:last-child) .addTaskBtn, #clientsExistingRow ul.day-data.col > li:not(:last-child) .addTaskBtn, #clientsExistingRow ul.clients > li:not(:last-child) .addTaskBtn, #clientsExistingRow ul.jobs > li:not(:last-child) .addTaskBtn, #jobsExistingRow ul.day-data.col > li:not(:last-child) .addTaskBtn, #jobsExistingRow ul.clients > li:not(:last-child) .addTaskBtn, #jobsExistingRow ul.jobs > li:not(:last-child) .addTaskBtn {
         visibility: hidden; }
 
 /* FORMS */
@@ -550,10 +550,16 @@ select {
 
 /* COLOR PICKER */
 .color-picker {
+  cursor: pointer;
   display: inline-block;
-  width: 50px;
-  height: 50px;
+  width: 1rem;
+  height: 1rem;
   background-color: #efefef; }
+  .color-picker.fg {
+    margin-left: -0.5rem; }
+  .color-picker.bg {
+    margin-left: 1.5rem;
+    margin-bottom: -0.5rem; }
 
 /* TEXT */
 @font-face {

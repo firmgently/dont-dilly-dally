@@ -221,59 +221,9 @@ uk.co.firmgently.DDDConsts = (function() {
       el_ar: [
         {
           type: CONST.GUITYPE_ROW,
-          id: "clientNewRow",
-          class: CONST.CLASS_ROW,
-          parent: "createClientForm",
-        }, {
-          type: CONST.GUITYPE_ROW,
           id: "clientsExistingRow",
           class: CONST.CLASS_ROW,
           parent: "createClientForm",
-        }, {
-          type: CONST.GUITYPE_BTN,
-          label: "Create new",
-          id: "createNewClientBtn",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.newClientCreate",
-          args: [],
-          scopeID: "createClientForm",
-          parent: "clientNewRow"
-        }, {
-          type: CONST.GUITYPE_TEXTINPUT,
-          id: CONST.EL_ID_CLIENTNAMEIN,
-          label: "Client name",
-          parent: "clientNewRow",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.onClientTyped",
-          args: [],
-          scopeID: "createClientForm",
-          attributes: { "type": "text" }
-        }, {
-          type: CONST.GUITYPE_BTN,
-          label: "Save",
-          id: CONST.EL_ID_CLIENTSAVEBTN,
-          methodPathStr: "uk.co.firmgently.DontDillyDally.newClientFormSave",
-          args: [],
-          scopeID: "createClientForm",
-          parent: "clientNewRow",
-          disabled: true
-        }, {
-          type: CONST.GUITYPE_COLORPICKER,
-          id: CONST.CLIENT_FG_COLPICK,
-          class: "color-picker",
-          parent: "clientsExistingRow"
-        }, {
-          type: CONST.GUITYPE_COLORPICKER,
-          id: CONST.CLIENT_BG_COLPICK,
-          class: "color-picker",
-          parent: "clientsExistingRow"
-        }, {
-          type: CONST.GUITYPE_SELECT,
-          label: "Existing clients",
-          args: [],
-          scopeID: "createClientForm",
-          parent: "clientsExistingRow",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected",
-          id: CONST.EL_ID_SELECTCLIENT,
-          contentType: CONST.CONTENTTYPE_CLIENTS
         }
       ]
     }, {
@@ -291,58 +241,15 @@ uk.co.firmgently.DDDConsts = (function() {
       el_ar: [
         {
           type: CONST.GUITYPE_ROW,
-          id: "jobNewRow",
-          class: CONST.CLASS_ROW,
-          parent: "createJobForm",
-        }, {
-          type: CONST.GUITYPE_ROW,
           id: "jobsExistingRow",
           class: CONST.CLASS_ROW,
           parent: "createJobForm",
-        }, {
-          type: CONST.GUITYPE_BTN,
-          label: "Create new",
-          id: "createNewJobBtn",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.newJobCreate",
-          scopeID: "createJobForm",
-          args: [],
-          parent: "jobNewRow"
-        }, {
-          type: CONST.GUITYPE_TEXTINPUT,
-          id: CONST.EL_ID_JOBNAMEIN,
-          label: "Job name",
-          parent: "jobNewRow",
-          attributes: { "type": "text" }
-        }, {
-          type: CONST.GUITYPE_BTN,
-          label: "Save",
-          id: CONST.EL_ID_JOBSAVEBTN,
-          methodPathStr: "uk.co.firmgently.DontDillyDally.newJobFormSave",
-          scopeID: "createJobForm",
-          args: [],
-          parent: "jobNewRow",
-          disabled: true
-        }, {
-          type: CONST.GUITYPE_COLORPICKER,
-          id: CONST.JOB_FG_COLPICK,
-          class: "color-picker",
-          parent: "jobsExistingRow"
-        }, {
-          type: CONST.GUITYPE_COLORPICKER,
-          id: CONST.JOB_BG_COLPICK,
-          class: "color-picker",
-          parent: "jobsExistingRow"
-        }, {
-          type: CONST.GUITYPE_SELECT,
-          label: "Existing jobs",
-          args: [],
-          scopeID: "createJobForm",
-          parent: "jobsExistingRow",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected",
-          id: "selectJob",
-          contentType: CONST.CONTENTTYPE_JOBS
         }
       ]
+    }, {
+      type: CONST.GUITYPE_METHODCALL,
+      methodPathStr: "uk.co.firmgently.DontDillyDally.drawJobsAndClients",
+      scopeID: "main"
     }
   ];
 
@@ -519,6 +426,7 @@ uk.co.firmgently.FGUtils = (function() {
   removeClassname, addClassname, getStyle, padString,
   treatAsUTC, daysBetween, getFormattedDate,
   getFunctionFromString, getGUID, changeSelectByOption, manualEvent,
+  updateSelectOptionList,
   isEmpty, logMsg;
 
 
@@ -837,6 +745,19 @@ uk.co.firmgently.FGUtils = (function() {
 	};
 
 
+  updateSelectOptionList = function(el, optionsData) {
+    var option, option_el;
+
+    while (el.options.length) {
+      el.options.remove(el.options.length -1);
+    }
+    for (option in optionsData) {
+      option_el = el.options[el.options.length] = new Option(optionsData[option].name, optionsData[option].class);
+      addClassname(option_el, optionsData[option].class);
+    }
+  };
+
+
 	changeSelectByOption = function(el, option) {
 		var i, options = el.options;
 		for (i = 0; i < options.length; i++) {
@@ -887,6 +808,7 @@ uk.co.firmgently.FGUtils = (function() {
     getStyle: getStyle,
     isTouchDevice: isTouchDevice,
 		changeSelectByOption: changeSelectByOption,
+		updateSelectOptionList: updateSelectOptionList,
 		manualEvent: manualEvent,
 		getGUID: getGUID
   };
@@ -1374,10 +1296,12 @@ uk.co.firmgently.DontDillyDally = (function() {
 	// methods
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
 	eventAutoRepeat, dayJumpAutorepeatStop,
-  createFormFromOb, addTask, removeTask,
+  createFormFromOb,
+  addTask, removeTask, addClient, removeClientOrJob, addJob,
   callMethodFromObOnElement, callMethodFromOb,
 	onFormClick, onScroll,
-  drawTimesheets, getNextID, newClientCreate, newJobCreate,
+  drawTimesheets, drawJobsAndClients, drawClientOrJobFromOb,
+  getNextID, newClientCreate, newJobCreate,
   navClick, todayClick, weekNextClick, weekPrevClick, monthNextClick, monthPrevClick,
 	onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
 	onSaveBtnClick,
@@ -1387,8 +1311,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 	getJobOrClientIDFromElement, updateDataFromWorkItemEl,
   getFirstVisibleDayElement,
   newClientFormSave, newJobFormSave, clientInputWasLastEmpty,
-	handleFileSelect,
-  updateLayoutRefs, updateSelected, addUIWorkItem, removeWorkItem 
+	handleFileSelect, updateColoursFromPickers, updatePickerFromColours,
+  updateLayoutRefs, updateSelected, drawUIWorkItem, removeWorkItem 
 	;
 
 
@@ -1629,8 +1553,6 @@ uk.co.firmgently.DontDillyDally = (function() {
           }
           break;
         case GUITYPE_RADIOBTN:
-          // TODO this checkIfMatched should not be added here it should
-          // be included in main data higher up
           ob.checkIfMatched = dataRetrieveObject(PREFS_STR)[ob.id];
           el_temp = createRadioFromOb(ob);
           if (ob.methodPathStr) {
@@ -1685,7 +1607,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   // addTask is called from the scope of the 'add task' button
   addTask = function() {
-    addUIWorkItem(this.parentNode);
+    drawUIWorkItem(this.parentNode);
   };
 
 	removeTask = function() {
@@ -1827,6 +1749,89 @@ uk.co.firmgently.DontDillyDally = (function() {
 		page drawing methods
 	--------------------------------------------------------------------------- */
 
+
+  drawJobsAndClients = function() {
+    var ul_el, li_el, temp_el, prop, item, item_ar;
+
+    // TODO remove old UL
+    item_ar = dataRetrieveObject(CLIENTS_STR);
+    ul_el = document.createElement("ul");
+    addClassname(ul_el, CLIENTS_STR);
+    for (prop in item_ar) {
+      drawClientOrJobFromOb(prop, item_ar[prop], ul_el, CLIENTS_STR);
+    }
+    document.getElementById("clientsExistingRow").appendChild(ul_el);
+
+    item_ar = dataRetrieveObject(JOBS_STR);
+    ul_el = document.createElement("ul");
+    addClassname(ul_el, JOBS_STR);
+    for (prop in item_ar) {
+      drawClientOrJobFromOb(prop, item_ar[prop], ul_el, JOBS_STR);
+    }
+    document.getElementById("jobsExistingRow").appendChild(ul_el);
+  };
+
+
+  drawClientOrJobFromOb = function(id, item, ul_el, type_str) {
+    var li_el, temp_el, removeMethodPath, addMethodPath;
+
+    li_el = createElementWithId("li", id);
+    ul_el.appendChild(li_el);
+
+    if (type_str === CLIENTS_STR) {
+      addMethodPath = "uk.co.firmgently.DontDillyDally.addClient";
+    } else if (type_str === JOBS_STR) {
+      addMethodPath = "uk.co.firmgently.DontDillyDally.addJob";
+    }
+    removeMethodPath = "uk.co.firmgently.DontDillyDally.removeClientOrJob";
+
+    // 'add task' button
+    temp_el = createButtonFromOb({
+      class: "addTaskBtn",
+      label: "&#xe821;",
+      parent: li_el,
+      methodPathStr: addMethodPath,
+      scopeID: id
+    });
+    registerEventHandler(temp_el, "mousedown", callMethodFromObOnElement);
+
+    temp_el = createInputFromOb({
+      class: id,
+      parent: li_el,
+      attributes: { "type": "text", "value": item.name },
+      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput", // TODO use correct method
+      scopeID: id
+    });
+    temp_el.ob.scope = temp_el;
+    registerEventHandler(temp_el, "change", callMethodFromObOnElement);
+    registerEventHandler(temp_el, "keyup", callMethodFromObOnElement);
+    registerEventHandler(temp_el, "paste", callMethodFromObOnElement);
+    registerEventHandler(temp_el, "input", callMethodFromObOnElement);
+
+    temp_el = createColorPickerFromOb({
+      parent: li_el,
+      class: "color-picker bg"
+    });
+    temp_el.style.backgroundColor = item.bgcolor;
+
+    temp_el = createColorPickerFromOb({
+      parent: li_el,
+      class: "color-picker fg"
+    });
+    temp_el.style.backgroundColor = item.color;
+
+    // 'remove task' button
+    temp_el = createButtonFromOb({
+      class: "removeTaskBtn",
+      label: "&#xe83d;",
+      parent: li_el,
+      methodPathStr: removeMethodPath,
+      scopeID: id
+    });
+    registerEventHandler(temp_el, "mousedown", callMethodFromObOnElement);
+  };
+
+
   drawTimesheets = function() {
     var i, j, daysToDraw, weekdayCur, day_str,
 				isToday, significance_str, rowClassname,
@@ -1907,10 +1912,10 @@ uk.co.firmgently.DontDillyDally = (function() {
 
       dayWorkItems = allWorkItems[day_str];
       if (dayWorkItems === undefined || isEmpty(dayWorkItems)) {
-        addUIWorkItem(dayDataContainer_el);
+        drawUIWorkItem(dayDataContainer_el);
       } else {
 				for (workItem in dayWorkItems) {
-          addUIWorkItem(dayDataContainer_el, workItem, dayWorkItems[workItem]);
+          drawUIWorkItem(dayDataContainer_el, workItem, dayWorkItems[workItem]);
         }
       }
     }
@@ -1919,7 +1924,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  addUIWorkItem = function(dayDataContainer_el, itemID, itemData_ob) {
+  drawUIWorkItem = function(dayDataContainer_el, itemID, itemData_ob) {
     var hrs_el, money_el, ob_temp, el_temp, item_el, wrappedCheckbox_el, numberValue_ar,
 				day_el = dayDataContainer_el.parentNode;
 
@@ -2094,6 +2099,23 @@ uk.co.firmgently.DontDillyDally = (function() {
 		}
   };
 
+
+	removeClientOrJob = function() {
+		var data_ob, type_str;
+
+    if (this.id.indexOf(CLIENT_STR) !== -1) {
+      type_str = CLIENTS_STR;
+    } else if (this.id.indexOf(JOB_STR) !== -1) {
+      type_str = JOBS_STR;
+    }
+      
+    data_ob = dataRetrieveObject(type_str);
+		delete data_ob[this.id];
+		this.parentNode.removeChild(this);
+		dataStoreObject(type_str, data_ob);
+	};
+
+
 	removeWorkItem = function(item_el) {
 		var days_ar = dataRetrieveObject(DAYS_STR),
 				day_ob = days_ar[item_el.parentNode.parentNode.id];
@@ -2103,11 +2125,23 @@ uk.co.firmgently.DontDillyDally = (function() {
 		dataStoreObject(DAYS_STR, days_ar);
 	};
 
-/*  updateColoursFromPickers = function(type, fgCol, bgCol) {
+
+  updateColoursFromPickers = function(type, fgCol, bgCol) {
 
   };
 
-*/
+
+  updatePickerFromColours = function(type, fgCol, bgCol) {
+    logMsg(fgCol + "/" + bgCol);
+    if (type === CLIENTS_STR) {
+      colPickClientBG_el.style.backgroundColor = bgCol;
+      colPickClientFG_el.style.backgroundColor = fgCol;
+    } else if (type === JOBS_STR) {
+      colPickJobBG_el.style.backgroundColor = bgCol;
+      colPickJobFG_el.style.backgroundColor = fgCol;
+    }
+  };
+
 
   updateLayoutRefs = function() {
     clientNameInput_el = document.getElementById(EL_ID_CLIENTNAMEIN);
@@ -2153,20 +2187,30 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   onUpdateInput = function(event) {
-		if (isNaN(parseInt(this.value))) { this.value = 0; }
-		if (document.body.contains(this)) {
-			// TODO needs to handle negative small unit eg. -£0.13
-			if (this.className.indexOf("unitBig") !== -1) {
-				if (parseInt(this.value) < 0) {
-					addClassname(this.parentNode.parentNode, "negative");
-				} else {
-					removeClassname(this.parentNode.parentNode, "negative");
-				}
-			}
-			// TODO check following line still works
-			updateDataFromWorkItemEl(this.parentNode.parentNode);
-		}
-		this.value = padString(this.value, this.spin_ob.pad);
+    switch (dataRetrieveObject(PREFS_STR).pagetype) {
+      case PAGETYPE_TIMESHEETS:
+        if (isNaN(parseInt(this.value))) { this.value = 0; }
+        if (document.body.contains(this)) {
+          // TODO needs to handle negative small unit eg. -£0.13
+          if (this.className.indexOf("unitBig") !== -1) {
+            if (parseInt(this.value) < 0) {
+              addClassname(this.parentNode.parentNode, "negative");
+            } else {
+              removeClassname(this.parentNode.parentNode, "negative");
+            }
+          }
+          // TODO check following line still works
+          updateDataFromWorkItemEl(this.parentNode.parentNode);
+        }
+        this.value = padString(this.value, this.spin_ob.pad);
+        break;
+      case PAGETYPE_CONFIG:
+        break;
+      case PAGETYPE_JOBSANDCLIENTS:
+        break;
+      default:
+        break;
+    }
   };
 
 
@@ -2221,7 +2265,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       color: getStyle(colPickClientFG_el, "background-color"),
       bgcolor: getStyle(colPickClientBG_el, "background-color")
     }, DATATYPE_CLIENT);
-    drawPage();
+    updateSelectOptionList(document.getElementById("selectClient"), dataRetrieveObject(CLIENTS_STR));
   };
 
 
@@ -2231,7 +2275,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       color: getStyle(colPickJobFG_el, "background-color"),
       bgcolor: getStyle(colPickJobBG_el, "background-color")
     }, DATATYPE_JOB);
-    drawPage();
+    updateSelectOptionList(document.getElementById("selectJob"), dataRetrieveObject(JOBS_STR));
   };
 
 
@@ -2335,6 +2379,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   updateSelected = function() {
     var pageType = dataRetrieveObject(PREFS_STR).pagetype,
 				option_selector = this.value;
+
     switch (pageType) {
       case PAGETYPE_TIMESHEETS: // run on to next case
       case PAGETYPE_JOBSANDCLIENTS:
@@ -2349,11 +2394,21 @@ uk.co.firmgently.DontDillyDally = (function() {
       default:
         break;
     }
+
     if (pageType === PAGETYPE_TIMESHEETS) {
 			if (document.body.contains(this)) {
 				updateDataFromWorkItemEl(this.parentNode);
 			}
-    }
+    } /*else if (pageType === PAGETYPE_JOBSANDCLIENTS) {
+      logMsg(this);
+      logMsg(this.style);
+      logMsg(this.style.color);
+      if (this.id === "selectClient") {
+        updatePickerFromColours(CLIENTS_STR, getStyle(this, "color"), getStyle(this, "background-color"));
+      } else if (this.id === "selectJob") {
+        updatePickerFromColours(JOBS_STR, getStyle(this, "color"), getStyle(this, "background-color"));
+      }
+    }*/
   };
 
 
@@ -2427,8 +2482,12 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   return {
     drawTimesheets: drawTimesheets,
+    drawJobsAndClients: drawJobsAndClients,
     addTask: addTask,
     removeTask: removeTask,
+    addJob: addJob,
+    removeClientOrJob: removeClientOrJob,
+    addClient: addClient,
     navClick: navClick,
     todayClick: todayClick,
     weekNextClick: weekNextClick,

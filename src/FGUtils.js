@@ -19,6 +19,7 @@ uk.co.firmgently.FGUtils = (function() {
   removeClassname, addClassname, getStyle, padString,
   treatAsUTC, daysBetween, getFormattedDate,
   getFunctionFromString, getGUID, changeSelectByOption, manualEvent,
+  updateSelectOptionList,
   isEmpty, logMsg;
 
 
@@ -337,6 +338,19 @@ uk.co.firmgently.FGUtils = (function() {
 	};
 
 
+  updateSelectOptionList = function(el, optionsData) {
+    var option, option_el;
+
+    while (el.options.length) {
+      el.options.remove(el.options.length -1);
+    }
+    for (option in optionsData) {
+      option_el = el.options[el.options.length] = new Option(optionsData[option].name, optionsData[option].class);
+      addClassname(option_el, optionsData[option].class);
+    }
+  };
+
+
 	changeSelectByOption = function(el, option) {
 		var i, options = el.options;
 		for (i = 0; i < options.length; i++) {
@@ -387,6 +401,7 @@ uk.co.firmgently.FGUtils = (function() {
     getStyle: getStyle,
     isTouchDevice: isTouchDevice,
 		changeSelectByOption: changeSelectByOption,
+		updateSelectOptionList: updateSelectOptionList,
 		manualEvent: manualEvent,
 		getGUID: getGUID
   };

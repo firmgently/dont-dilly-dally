@@ -221,59 +221,9 @@ uk.co.firmgently.DDDConsts = (function() {
       el_ar: [
         {
           type: CONST.GUITYPE_ROW,
-          id: "clientNewRow",
-          class: CONST.CLASS_ROW,
-          parent: "createClientForm",
-        }, {
-          type: CONST.GUITYPE_ROW,
           id: "clientsExistingRow",
           class: CONST.CLASS_ROW,
           parent: "createClientForm",
-        }, {
-          type: CONST.GUITYPE_BTN,
-          label: "Create new",
-          id: "createNewClientBtn",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.newClientCreate",
-          args: [],
-          scopeID: "createClientForm",
-          parent: "clientNewRow"
-        }, {
-          type: CONST.GUITYPE_TEXTINPUT,
-          id: CONST.EL_ID_CLIENTNAMEIN,
-          label: "Client name",
-          parent: "clientNewRow",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.onClientTyped",
-          args: [],
-          scopeID: "createClientForm",
-          attributes: { "type": "text" }
-        }, {
-          type: CONST.GUITYPE_BTN,
-          label: "Save",
-          id: CONST.EL_ID_CLIENTSAVEBTN,
-          methodPathStr: "uk.co.firmgently.DontDillyDally.newClientFormSave",
-          args: [],
-          scopeID: "createClientForm",
-          parent: "clientNewRow",
-          disabled: true
-        }, {
-          type: CONST.GUITYPE_COLORPICKER,
-          id: CONST.CLIENT_FG_COLPICK,
-          class: "color-picker",
-          parent: "clientsExistingRow"
-        }, {
-          type: CONST.GUITYPE_COLORPICKER,
-          id: CONST.CLIENT_BG_COLPICK,
-          class: "color-picker",
-          parent: "clientsExistingRow"
-        }, {
-          type: CONST.GUITYPE_SELECT,
-          label: "Existing clients",
-          args: [],
-          scopeID: "createClientForm",
-          parent: "clientsExistingRow",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected",
-          id: CONST.EL_ID_SELECTCLIENT,
-          contentType: CONST.CONTENTTYPE_CLIENTS
         }
       ]
     }, {
@@ -291,58 +241,15 @@ uk.co.firmgently.DDDConsts = (function() {
       el_ar: [
         {
           type: CONST.GUITYPE_ROW,
-          id: "jobNewRow",
-          class: CONST.CLASS_ROW,
-          parent: "createJobForm",
-        }, {
-          type: CONST.GUITYPE_ROW,
           id: "jobsExistingRow",
           class: CONST.CLASS_ROW,
           parent: "createJobForm",
-        }, {
-          type: CONST.GUITYPE_BTN,
-          label: "Create new",
-          id: "createNewJobBtn",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.newJobCreate",
-          scopeID: "createJobForm",
-          args: [],
-          parent: "jobNewRow"
-        }, {
-          type: CONST.GUITYPE_TEXTINPUT,
-          id: CONST.EL_ID_JOBNAMEIN,
-          label: "Job name",
-          parent: "jobNewRow",
-          attributes: { "type": "text" }
-        }, {
-          type: CONST.GUITYPE_BTN,
-          label: "Save",
-          id: CONST.EL_ID_JOBSAVEBTN,
-          methodPathStr: "uk.co.firmgently.DontDillyDally.newJobFormSave",
-          scopeID: "createJobForm",
-          args: [],
-          parent: "jobNewRow",
-          disabled: true
-        }, {
-          type: CONST.GUITYPE_COLORPICKER,
-          id: CONST.JOB_FG_COLPICK,
-          class: "color-picker",
-          parent: "jobsExistingRow"
-        }, {
-          type: CONST.GUITYPE_COLORPICKER,
-          id: CONST.JOB_BG_COLPICK,
-          class: "color-picker",
-          parent: "jobsExistingRow"
-        }, {
-          type: CONST.GUITYPE_SELECT,
-          label: "Existing jobs",
-          args: [],
-          scopeID: "createJobForm",
-          parent: "jobsExistingRow",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected",
-          id: "selectJob",
-          contentType: CONST.CONTENTTYPE_JOBS
         }
       ]
+    }, {
+      type: CONST.GUITYPE_METHODCALL,
+      methodPathStr: "uk.co.firmgently.DontDillyDally.drawJobsAndClients",
+      scopeID: "main"
     }
   ];
 
