@@ -431,8 +431,17 @@ body#jobsClients #column-headings, body#config #column-headings {
         color: #993322; }
       #timesheetContainer ul.day-data.col > li:only-child .removeTaskBtn, #timesheetContainer ul.clients > li:only-child .removeTaskBtn, #timesheetContainer ul.jobs > li:only-child .removeTaskBtn, #clientsExistingRow ul.day-data.col > li:only-child .removeTaskBtn, #clientsExistingRow ul.clients > li:only-child .removeTaskBtn, #clientsExistingRow ul.jobs > li:only-child .removeTaskBtn, #jobsExistingRow ul.day-data.col > li:only-child .removeTaskBtn, #jobsExistingRow ul.clients > li:only-child .removeTaskBtn, #jobsExistingRow ul.jobs > li:only-child .removeTaskBtn {
         visibility: hidden; }
-      #timesheetContainer ul.day-data.col > li:not(:last-child) .addTaskBtn, #timesheetContainer ul.clients > li:not(:last-child) .addTaskBtn, #timesheetContainer ul.jobs > li:not(:last-child) .addTaskBtn, #clientsExistingRow ul.day-data.col > li:not(:last-child) .addTaskBtn, #clientsExistingRow ul.clients > li:not(:last-child) .addTaskBtn, #clientsExistingRow ul.jobs > li:not(:last-child) .addTaskBtn, #jobsExistingRow ul.day-data.col > li:not(:last-child) .addTaskBtn, #jobsExistingRow ul.clients > li:not(:last-child) .addTaskBtn, #jobsExistingRow ul.jobs > li:not(:last-child) .addTaskBtn {
+      #timesheetContainer ul.day-data.col > li:not(:first-child) .addTaskBtn, #timesheetContainer ul.clients > li:not(:first-child) .addTaskBtn, #timesheetContainer ul.jobs > li:not(:first-child) .addTaskBtn, #clientsExistingRow ul.day-data.col > li:not(:first-child) .addTaskBtn, #clientsExistingRow ul.clients > li:not(:first-child) .addTaskBtn, #clientsExistingRow ul.jobs > li:not(:first-child) .addTaskBtn, #jobsExistingRow ul.day-data.col > li:not(:first-child) .addTaskBtn, #jobsExistingRow ul.clients > li:not(:first-child) .addTaskBtn, #jobsExistingRow ul.jobs > li:not(:first-child) .addTaskBtn {
         visibility: hidden; }
+
+#clientsExistingRow ul.clients, #clientsExistingRow ul.jobs, #jobsExistingRow ul.clients, #jobsExistingRow ul.jobs {
+  float: none;
+  padding-left: 4rem; }
+  #clientsExistingRow ul.clients > li input, #clientsExistingRow ul.jobs > li input, #jobsExistingRow ul.clients > li input, #jobsExistingRow ul.jobs > li input {
+    border-radius: 0.6rem;
+    font-weight: bold; }
+  #clientsExistingRow ul.clients > li .removeTaskBtn, #clientsExistingRow ul.jobs > li .removeTaskBtn, #jobsExistingRow ul.clients > li .removeTaskBtn, #jobsExistingRow ul.jobs > li .removeTaskBtn {
+    right: auto; }
 
 /* FORMS */
 select, input, button {
@@ -550,16 +559,32 @@ select {
 
 /* COLOR PICKER */
 .color-picker {
-  cursor: pointer;
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  background-color: #efefef; }
-  .color-picker.fg {
+  display: none; }
+  .color-picker.fg + label {
     margin-left: -0.5rem; }
-  .color-picker.bg {
+  .color-picker.bg + label {
     margin-left: 1.5rem;
     margin-bottom: -0.5rem; }
+  .color-picker:checked + label:after {
+    display: inline-block; }
+  .color-picker + label {
+    padding: 0;
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-color: #efefef;
+    cursor: pointer; }
+    .color-picker + label:after {
+      content: "";
+      background-image: url(/images/wheel.png);
+      background-repeat: no-repeat;
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 2;
+      display: none; }
 
 /* TEXT */
 @font-face {

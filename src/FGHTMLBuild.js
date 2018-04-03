@@ -374,15 +374,17 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
   createColorPickerFromOb = function(ob) {
     var
-    el,
+    el, label_el,
     parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
-    if (ob.id) {
-      el = createElementWithId("span", ob.id);
-    } else {
-      el = document.createElement("span");
-    }
+    el = createElementWithId("input", ob.id);
+    el.type = "checkbox";
     parent_el.appendChild(el);
     if (ob.class) { addClassname(el, ob.class); }
+
+    label_el = document.createElement("label");
+    label_el.htmlFor = ob.id;
+    label_el.style.backgroundColor = ob.color;
+    parent_el.appendChild(label_el);
 
 		return el;
   };

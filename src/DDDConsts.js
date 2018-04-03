@@ -113,7 +113,7 @@ uk.co.firmgently.DDDConsts = (function() {
 
     PAGEDATA_JOBSANDCLIENTS: {
       pageTitle: "Jobs and Clients",
-      intro: "Add, delete or edit jobs and clients."
+      intro: "Add, delete or edit jobs and clients. Click the squares to edit colours."
     },
     PAGEDATA_TIMESHEETS: {
       pageTitle: "Timesheets",
@@ -216,7 +216,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_FORM,
       id: "createClientForm",
       class: CONST.CLASS_FORMMAIN,
-      title: "Fill in client details",
+      title: "Clients",
       parent: "editClientCol",
       el_ar: [
         {
@@ -235,7 +235,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_FORM,
       id: "createJobForm",
       class: CONST.CLASS_FORMMAIN,
-      title: "Fill in job details",
+      title: "Jobs",
       parent: "editJobCol",
       hidden: false,
       el_ar: [

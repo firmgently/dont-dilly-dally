@@ -113,7 +113,7 @@ uk.co.firmgently.DDDConsts = (function() {
 
     PAGEDATA_JOBSANDCLIENTS: {
       pageTitle: "Jobs and Clients",
-      intro: "Add, delete or edit jobs and clients."
+      intro: "Add, delete or edit jobs and clients. Click the squares to edit colours."
     },
     PAGEDATA_TIMESHEETS: {
       pageTitle: "Timesheets",
@@ -216,7 +216,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_FORM,
       id: "createClientForm",
       class: CONST.CLASS_FORMMAIN,
-      title: "Fill in client details",
+      title: "Clients",
       parent: "editClientCol",
       el_ar: [
         {
@@ -235,7 +235,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_FORM,
       id: "createJobForm",
       class: CONST.CLASS_FORMMAIN,
-      title: "Fill in job details",
+      title: "Jobs",
       parent: "editJobCol",
       hidden: false,
       el_ar: [
@@ -1190,15 +1190,17 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
   createColorPickerFromOb = function(ob) {
     var
-    el,
+    el, label_el,
     parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
-    if (ob.id) {
-      el = createElementWithId("span", ob.id);
-    } else {
-      el = document.createElement("span");
-    }
+    el = createElementWithId("input", ob.id);
+    el.type = "checkbox";
     parent_el.appendChild(el);
     if (ob.class) { addClassname(el, ob.class); }
+
+    label_el = document.createElement("label");
+    label_el.htmlFor = ob.id;
+    label_el.style.backgroundColor = ob.color;
+    parent_el.appendChild(label_el);
 
 		return el;
   };
@@ -1239,6 +1241,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   Mark Mayes 2018
 
   FIXME timesheet container not getting scroll focus
+  TODO  add ARIA attributes (eg. hide up/down spinner buttons)
+  TODO  delete job/client check if any records are referencing them, prompt if so
   DONE	blank object being stored in data object results in missing day in UI
   DONE	 number spinners
   TODO  match all button styles
@@ -1268,7 +1272,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 					you can wipe your data at any time
 					you can export your data to a file (in JSON format) and import it into another browser or device
 					we don't see any of your personal data
-	FIXME	if empty or bad time/money data is stored, correct it to zero
+	FIXME	if empty or bad time/money data is **stored in JSON**, correct it to zero
 	DONE	'even' class wrongly being applied to child elements
 	FIXME	select client/job - day remains highlighted (eg. darker date text)
 	FIXME	£-0.77 must register as negative
@@ -1810,15 +1814,17 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     temp_el = createColorPickerFromOb({
       parent: li_el,
-      class: "color-picker bg"
+      class: "color-picker bg",
+      id: "cpbg-" + id,
+      color: item.bgcolor
     });
-    temp_el.style.backgroundColor = item.bgcolor;
 
     temp_el = createColorPickerFromOb({
       parent: li_el,
-      class: "color-picker fg"
+      class: "color-picker fg",
+      id: "cpfg-" + id,
+      color: item.color
     });
-    temp_el.style.backgroundColor = item.color;
 
     // 'remove task' button
     temp_el = createButtonFromOb({
@@ -1931,7 +1937,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 		if (itemID === undefined) { itemID = getGUID(); }
 
     item_el = createElementWithId("li", itemID);
-    dayDataContainer_el.appendChild(item_el);
+    //dayDataContainer_el.appendChild(item_el);
+    dayDataContainer_el.insertBefore(item_el, dayDataContainer_el.firstChild);
 
     // 'add task' button
     el_temp = createButtonFromOb({
@@ -2189,20 +2196,26 @@ uk.co.firmgently.DontDillyDally = (function() {
   onUpdateInput = function(event) {
     switch (dataRetrieveObject(PREFS_STR).pagetype) {
       case PAGETYPE_TIMESHEETS:
-        if (isNaN(parseInt(this.value))) { this.value = 0; }
         if (document.body.contains(this)) {
-          // TODO needs to handle negative small unit eg. -£0.13
-          if (this.className.indexOf("unitBig") !== -1) {
-            if (parseInt(this.value) < 0) {
-              addClassname(this.parentNode.parentNode, "negative");
-            } else {
-              removeClassname(this.parentNode.parentNode, "negative");
+          if (this.className.indexOf("notes") !== -1) {
+            // TODO validate notes input
+            updateDataFromWorkItemEl(this.parentNode.parentNode);
+          } else {
+            if (isNaN(parseInt(this.value))) { this.value = 0; }
+
+            // TODO needs to handle negative small unit eg. -£0.13
+            if (this.className.indexOf("unitBig") !== -1) {
+              if (parseInt(this.value) < 0) {
+                addClassname(this.parentNode.parentNode, "negative");
+              } else {
+                removeClassname(this.parentNode.parentNode, "negative");
+              }
             }
+            // TODO check following line still works
+            updateDataFromWorkItemEl(this.parentNode.parentNode);
+            this.value = padString(this.value, this.spin_ob.pad);
           }
-          // TODO check following line still works
-          updateDataFromWorkItemEl(this.parentNode.parentNode);
         }
-        this.value = padString(this.value, this.spin_ob.pad);
         break;
       case PAGETYPE_CONFIG:
         break;
