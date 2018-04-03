@@ -561,7 +561,8 @@ select {
 #color-picker-canvas {
   position: absolute;
   z-index: 2;
-  display: none; }
+  display: none;
+  border-radius: 0.6rem; }
 
 .color-picker {
   display: none; }

@@ -581,6 +581,8 @@ select {
 #color-picker-canvas {
   position: absolute; z-index: $zFloat;
   display: none;
+  //border: solid $mediumPadding $ddd-sand;
+  @include border-radius($mediumPadding);
 }
 .color-picker {
   display: none;
