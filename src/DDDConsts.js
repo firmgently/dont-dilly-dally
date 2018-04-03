@@ -23,6 +23,8 @@ uk.co.firmgently.DDDConsts = (function() {
 	var CONST = {
     APP_ID: "FGDDD",
     SAVE_FILENAME: "DontDillyDally-export",
+    COLORPICKER_CHANGEEVENT_ID: "colorpickerchange",
+    COLORPICKER_CONFIRMEVENT_ID: "colorpickerconfirm",
 
 		AUTOREPEAT_RATE: 500,
 

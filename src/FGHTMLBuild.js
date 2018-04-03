@@ -15,14 +15,21 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
 	var
 	SPINNER_REPEAT_RATE = 250, SPINNER_REPEAT_ACCEL = 1.04,
+  SPINNER_CLASSNAME = "spinner", SPINNER_UPBTN_CLASSNAME = "spin-button-up", SPINNER_DOWNBTN_CLASSNAME = "spin-button-down",
+
+  COLORPICKER_IMG_ID = "color-picker-img", COLORPICKER_CANVAS_ID = "color-picker-canvas", COLORPICKER_IMG_PATH = "/images/wheel.png",
 
 	fillHTMLFromOb,
 	createButtonFromOb, createRadioFromOb, createCheckboxFromOb,
 	createInputFromOb, createSpinnerFromOb, createSelectFromOb,
 	createFormFromOb,
 	addLIsFromOb, createBasicElementFromOb, createColorPickerFromOb,
+
 	onSpinnerStart, onSpinnerMouseUp, doSpinStep, spinnerTimer,
-	onIncreaseSpinnerMouseDown, onDecreaseSpinnerMouseDown
+	onIncreaseSpinnerMouseDown, onDecreaseSpinnerMouseDown,
+
+  onColorPickerClick, onColorPickerCanvasClick, onColorPickerCanvasMoveOver, onColorPickerImageLoad, colorPickerImage, colorPickerCanvas,
+  colorPickerSelectedCurrent
 	;
 
 
@@ -107,7 +114,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     input_el = document.createElement("input");
     if (ob.class) { addClassname(input_el, ob.class); }
 
-    addClassname(wrapper_el, "spinner");
+    addClassname(wrapper_el, SPINNER_CLASSNAME);
     wrapper_el.appendChild(input_el);
 
 		input_el.ob = ob;
@@ -119,7 +126,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     up_el = document.createElement("button");
     up_el.innerHTML = "&#x25B2;";
     up_el.spinner = input_el;
-    addClassname(up_el, "spin-button-up");
+    addClassname(up_el, SPINNER_UPBTN_CLASSNAME);
     wrapper_el.appendChild(up_el);
     registerEventHandler(up_el, "mousedown", onIncreaseSpinnerMouseDown);
     registerEventHandler(up_el, "mouseup", onSpinnerMouseUp);
@@ -128,7 +135,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     down_el = document.createElement("button");
     down_el.innerHTML = "&#x25BC;";
     down_el.spinner = input_el;
-    addClassname(down_el, "spin-button-down");
+    addClassname(down_el, SPINNER_DOWNBTN_CLASSNAME);
     wrapper_el.appendChild(down_el);
     registerEventHandler(down_el, "mousedown", onDecreaseSpinnerMouseDown);
     registerEventHandler(down_el, "mouseup", onSpinnerMouseUp);
@@ -374,7 +381,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
   createColorPickerFromOb = function(ob) {
     var
-    el, label_el,
+    el, label_el, 
     parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
     el = createElementWithId("input", ob.id);
     el.type = "checkbox";
@@ -386,9 +393,55 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     label_el.style.backgroundColor = ob.color;
     parent_el.appendChild(label_el);
 
+    if (!colorPickerImage) {
+      colorPickerImage = createElementWithId("img", COLORPICKER_IMG_ID);
+      colorPickerImage.src = COLORPICKER_IMG_PATH;
+      registerEventHandler(colorPickerImage, "load", onColorPickerImageLoad);
+    }
+
+    label_el.colorPickerCanvas = colorPickerCanvas;
+    registerEventHandler(label_el, "click", onColorPickerClick);
+
 		return el;
   };
 
+
+  onColorPickerImageLoad = function() {
+    colorPickerCanvas = createElementWithId("canvas", COLORPICKER_CANVAS_ID);
+    colorPickerCanvas.width = colorPickerImage.width;
+    colorPickerCanvas.height = colorPickerImage.height;
+    colorPickerCanvas.getContext('2d').drawImage(colorPickerImage, 0, 0, colorPickerImage.width, colorPickerImage.height);
+    registerEventHandler(colorPickerCanvas, "click", onColorPickerCanvasClick);
+    registerEventHandler(colorPickerCanvas, "mousemove", onColorPickerCanvasMoveOver);
+    document.body.appendChild(colorPickerCanvas);
+  };
+
+
+  onColorPickerClick = function(event) {
+    colorPickerSelectedCurrent = event.currentTarget;
+    logMsg(colorPickerSelectedCurrent);
+    colorPickerCanvas.style.display = "inline-block";
+    colorPickerCanvas.style.left = event.clientX + "px";
+    colorPickerCanvas.style.top = event.clientY + "px";
+  };
+
+
+  onColorPickerCanvasClick = function(event) {
+    colorPickerCanvas.style.display = "none";
+    manualEvent(colorPickerSelectedCurrent.parentNode, COLORPICKER_CONFIRMEVENT_ID);
+  };
+
+
+  onColorPickerCanvasMoveOver = function(event) {
+    var pixelData = colorPickerCanvas.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data;
+    colorPickerSelectedCurrent.style.backgroundColor = "#" + rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
+    manualEvent(colorPickerSelectedCurrent.parentNode, COLORPICKER_CHANGEEVENT_ID);
+    if (pixelData[3] > 0) {
+      colorPickerCanvas.style.cursor = "pointer";
+    } else {
+      colorPickerCanvas.style.cursor = "default";
+    }
+  };
 
 
 

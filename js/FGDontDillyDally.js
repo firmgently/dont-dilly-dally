@@ -23,6 +23,8 @@ uk.co.firmgently.DDDConsts = (function() {
 	var CONST = {
     APP_ID: "FGDDD",
     SAVE_FILENAME: "DontDillyDally-export",
+    COLORPICKER_CHANGEEVENT_ID: "colorpickerchange",
+    COLORPICKER_CONFIRMEVENT_ID: "colorpickerconfirm",
 
 		AUTOREPEAT_RATE: 500,
 
@@ -422,7 +424,7 @@ uk.co.firmgently.FGUtils = (function() {
   var
   addCSSRule, getIEVersion, isTouchDevice,
   registerEventHandler, unregisterEventHandler, stopPropagation,
-  hexOpacityToRGBA, getRandomHexColor, createElementWithId,
+  hexOpacityToRGBA, rgbToHex, getRandomHexColor, createElementWithId,
   removeClassname, addClassname, getStyle, padString,
   treatAsUTC, daysBetween, getFormattedDate,
   getFunctionFromString, getGUID, changeSelectByOption, manualEvent,
@@ -546,6 +548,10 @@ uk.co.firmgently.FGUtils = (function() {
     } else {
       node.detachEvent("on" + event, handler);
     }
+  };
+
+  rgbToHex = function(r, g, b) {
+    return ((r << 16) | (g << 8) | b).toString(16);
   };
 
 
@@ -795,6 +801,7 @@ uk.co.firmgently.FGUtils = (function() {
     addClassname: addClassname,
     addCSSRule: addCSSRule,
     hexOpacityToRGBA: hexOpacityToRGBA,
+    rgbToHex: rgbToHex,
     getRandomHexColor: getRandomHexColor,
     createElementWithId: createElementWithId,
     getFunctionFromString: getFunctionFromString,
@@ -831,14 +838,21 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
 	var
 	SPINNER_REPEAT_RATE = 250, SPINNER_REPEAT_ACCEL = 1.04,
+  SPINNER_CLASSNAME = "spinner", SPINNER_UPBTN_CLASSNAME = "spin-button-up", SPINNER_DOWNBTN_CLASSNAME = "spin-button-down",
+
+  COLORPICKER_IMG_ID = "color-picker-img", COLORPICKER_CANVAS_ID = "color-picker-canvas", COLORPICKER_IMG_PATH = "/images/wheel.png",
 
 	fillHTMLFromOb,
 	createButtonFromOb, createRadioFromOb, createCheckboxFromOb,
 	createInputFromOb, createSpinnerFromOb, createSelectFromOb,
 	createFormFromOb,
 	addLIsFromOb, createBasicElementFromOb, createColorPickerFromOb,
+
 	onSpinnerStart, onSpinnerMouseUp, doSpinStep, spinnerTimer,
-	onIncreaseSpinnerMouseDown, onDecreaseSpinnerMouseDown
+	onIncreaseSpinnerMouseDown, onDecreaseSpinnerMouseDown,
+
+  onColorPickerClick, onColorPickerCanvasClick, onColorPickerCanvasMoveOver, onColorPickerImageLoad, colorPickerImage, colorPickerCanvas,
+  colorPickerSelectedCurrent
 	;
 
 
@@ -923,7 +937,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     input_el = document.createElement("input");
     if (ob.class) { addClassname(input_el, ob.class); }
 
-    addClassname(wrapper_el, "spinner");
+    addClassname(wrapper_el, SPINNER_CLASSNAME);
     wrapper_el.appendChild(input_el);
 
 		input_el.ob = ob;
@@ -935,7 +949,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     up_el = document.createElement("button");
     up_el.innerHTML = "&#x25B2;";
     up_el.spinner = input_el;
-    addClassname(up_el, "spin-button-up");
+    addClassname(up_el, SPINNER_UPBTN_CLASSNAME);
     wrapper_el.appendChild(up_el);
     registerEventHandler(up_el, "mousedown", onIncreaseSpinnerMouseDown);
     registerEventHandler(up_el, "mouseup", onSpinnerMouseUp);
@@ -944,7 +958,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     down_el = document.createElement("button");
     down_el.innerHTML = "&#x25BC;";
     down_el.spinner = input_el;
-    addClassname(down_el, "spin-button-down");
+    addClassname(down_el, SPINNER_DOWNBTN_CLASSNAME);
     wrapper_el.appendChild(down_el);
     registerEventHandler(down_el, "mousedown", onDecreaseSpinnerMouseDown);
     registerEventHandler(down_el, "mouseup", onSpinnerMouseUp);
@@ -1190,7 +1204,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
   createColorPickerFromOb = function(ob) {
     var
-    el, label_el,
+    el, label_el, 
     parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
     el = createElementWithId("input", ob.id);
     el.type = "checkbox";
@@ -1202,9 +1216,55 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     label_el.style.backgroundColor = ob.color;
     parent_el.appendChild(label_el);
 
+    if (!colorPickerImage) {
+      colorPickerImage = createElementWithId("img", COLORPICKER_IMG_ID);
+      colorPickerImage.src = COLORPICKER_IMG_PATH;
+      registerEventHandler(colorPickerImage, "load", onColorPickerImageLoad);
+    }
+
+    label_el.colorPickerCanvas = colorPickerCanvas;
+    registerEventHandler(label_el, "click", onColorPickerClick);
+
 		return el;
   };
 
+
+  onColorPickerImageLoad = function() {
+    colorPickerCanvas = createElementWithId("canvas", COLORPICKER_CANVAS_ID);
+    colorPickerCanvas.width = colorPickerImage.width;
+    colorPickerCanvas.height = colorPickerImage.height;
+    colorPickerCanvas.getContext('2d').drawImage(colorPickerImage, 0, 0, colorPickerImage.width, colorPickerImage.height);
+    registerEventHandler(colorPickerCanvas, "click", onColorPickerCanvasClick);
+    registerEventHandler(colorPickerCanvas, "mousemove", onColorPickerCanvasMoveOver);
+    document.body.appendChild(colorPickerCanvas);
+  };
+
+
+  onColorPickerClick = function(event) {
+    colorPickerSelectedCurrent = event.currentTarget;
+    logMsg(colorPickerSelectedCurrent);
+    colorPickerCanvas.style.display = "inline-block";
+    colorPickerCanvas.style.left = event.clientX + "px";
+    colorPickerCanvas.style.top = event.clientY + "px";
+  };
+
+
+  onColorPickerCanvasClick = function(event) {
+    colorPickerCanvas.style.display = "none";
+    manualEvent(colorPickerSelectedCurrent.parentNode, COLORPICKER_CONFIRMEVENT_ID);
+  };
+
+
+  onColorPickerCanvasMoveOver = function(event) {
+    var pixelData = colorPickerCanvas.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data;
+    colorPickerSelectedCurrent.style.backgroundColor = "#" + rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
+    manualEvent(colorPickerSelectedCurrent.parentNode, COLORPICKER_CHANGEEVENT_ID);
+    if (pixelData[3] > 0) {
+      colorPickerCanvas.style.cursor = "pointer";
+    } else {
+      colorPickerCanvas.style.cursor = "default";
+    }
+  };
 
 
 
@@ -1308,11 +1368,11 @@ uk.co.firmgently.DontDillyDally = (function() {
   getNextID, newClientCreate, newJobCreate,
   navClick, todayClick, weekNextClick, weekPrevClick, monthNextClick, monthPrevClick,
 	onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
-	onSaveBtnClick,
+	onSaveBtnClick, onColorChangeConfirm,
   dataStoragePossible, initData,
 	dataStoreObject, dataRetrieveObject, dataUpdateObject,
 	clientAndJobStyleSheet, createClientOrJobFromOb, createCSSForClientOrJobFromOb,
-	getJobOrClientIDFromElement, updateDataFromWorkItemEl,
+	getJobOrClientIDFromElement, updateDataFromWorkItemEl, updateDataFromClientOrJobEl,
   getFirstVisibleDayElement,
   newClientFormSave, newJobFormSave, clientInputWasLastEmpty,
 	handleFileSelect, updateColoursFromPickers, updatePickerFromColours,
@@ -1720,6 +1780,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  // TODO delete this function and all refs to it
   onClientTyped = function() {
     clientSaveBtn_el.disabled = clientNameInput_el.value.isEmpty();
   };
@@ -1727,6 +1788,11 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   onJobTyped = function() {
     jobSaveBtn_el.disabled = jobNameInput_el.value.isEmpty();
+  };
+
+
+  onColorChangeConfirm = function(event) {
+    updateDataFromClientOrJobEl(this);
   };
 
 
@@ -1780,6 +1846,8 @@ uk.co.firmgently.DontDillyDally = (function() {
     var li_el, temp_el, removeMethodPath, addMethodPath;
 
     li_el = createElementWithId("li", id);
+    registerEventHandler(li_el, COLORPICKER_CHANGEEVENT_ID, updateColoursFromPickers);
+    registerEventHandler(li_el, COLORPICKER_CONFIRMEVENT_ID, onColorChangeConfirm);
     ul_el.appendChild(li_el);
 
     if (type_str === CLIENTS_STR) {
@@ -2133,13 +2201,29 @@ uk.co.firmgently.DontDillyDally = (function() {
 	};
 
 
-  updateColoursFromPickers = function(type, fgCol, bgCol) {
-
+  updateColoursFromPickers = function(event) {
+    var i, inputNodes, currentNode, fg_el, bg_el, textInput_el;
+    
+    inputNodes = this.getElementsByTagName("INPUT");
+    for (i = 0; i < inputNodes.length; i++) {
+      currentNode = inputNodes[i];
+      if (currentNode.type === "text") {
+        textInput_el = currentNode;
+      } else if (currentNode.className.indexOf("color-picker") !== -1) {
+        if (currentNode.className.indexOf("bg") !== -1) {
+          bg_el = currentNode.nextSibling;
+        } else if (currentNode.className.indexOf("fg") !== -1) {
+          fg_el = currentNode.nextSibling;
+        }
+      }
+    }
+    textInput_el.className = "";
+    textInput_el.style.color = getStyle(fg_el, "background-color");
+    textInput_el.style.backgroundColor = getStyle(bg_el, "background-color");
   };
 
 
   updatePickerFromColours = function(type, fgCol, bgCol) {
-    logMsg(fgCol + "/" + bgCol);
     if (type === CLIENTS_STR) {
       colPickClientBG_el.style.backgroundColor = bgCol;
       colPickClientFG_el.style.backgroundColor = fgCol;
@@ -2458,6 +2542,50 @@ uk.co.firmgently.DontDillyDally = (function() {
 		days_ar[day_str] = day_ob; // write updated day
 		dataStoreObject(DAYS_STR, days_ar);
 	};
+
+
+  updateDataFromClientOrJobEl = function(el) {
+    var i, inputNodes, currentNode, fg_el, bg_el, textInput_el,
+        items_ob, itemType, update_ob;
+    
+    inputNodes = el.getElementsByTagName("INPUT");
+    for (i = 0; i < inputNodes.length; i++) {
+      currentNode = inputNodes[i];
+      if (currentNode.type === "text") {
+        textInput_el = currentNode;
+      } else if (currentNode.className.indexOf("color-picker") !== -1) {
+        if (currentNode.className.indexOf("bg") !== -1) {
+          bg_el = currentNode.nextSibling;
+        } else if (currentNode.className.indexOf("fg") !== -1) {
+          fg_el = currentNode.nextSibling;
+        }
+      }
+    }
+
+    if (el.id.indexOf(CLIENT_STR) !== -1) {
+      itemType = CLIENTS_STR;
+    } else if (el.id.indexOf(JOB_STR) !== -1) {
+      itemType = JOBS_STR;
+    }
+    items_ob = dataRetrieveObject(itemType);
+
+    update_ob = {
+      id: el.id,
+      class: el.id,
+      name: textInput_el.value, // TODO  validate input
+      color: getStyle(fg_el, "background-color"),
+      bgcolor: getStyle(bg_el, "background-color")
+    }
+
+    logMsg(el.id);
+    logMsg(el.className);
+    logMsg(itemType);
+    logMsg(items_ob);
+    logMsg(update_ob);
+
+    items_ob[el.id] = update_ob;
+    dataStoreObject(itemType, items_ob);
+  };
 
 
 	getJobOrClientIDFromElement = function(el) {

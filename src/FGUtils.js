@@ -15,7 +15,7 @@ uk.co.firmgently.FGUtils = (function() {
   var
   addCSSRule, getIEVersion, isTouchDevice,
   registerEventHandler, unregisterEventHandler, stopPropagation,
-  hexOpacityToRGBA, getRandomHexColor, createElementWithId,
+  hexOpacityToRGBA, rgbToHex, getRandomHexColor, createElementWithId,
   removeClassname, addClassname, getStyle, padString,
   treatAsUTC, daysBetween, getFormattedDate,
   getFunctionFromString, getGUID, changeSelectByOption, manualEvent,
@@ -139,6 +139,10 @@ uk.co.firmgently.FGUtils = (function() {
     } else {
       node.detachEvent("on" + event, handler);
     }
+  };
+
+  rgbToHex = function(r, g, b) {
+    return ((r << 16) | (g << 8) | b).toString(16);
   };
 
 
@@ -388,6 +392,7 @@ uk.co.firmgently.FGUtils = (function() {
     addClassname: addClassname,
     addCSSRule: addCSSRule,
     hexOpacityToRGBA: hexOpacityToRGBA,
+    rgbToHex: rgbToHex,
     getRandomHexColor: getRandomHexColor,
     createElementWithId: createElementWithId,
     getFunctionFromString: getFunctionFromString,

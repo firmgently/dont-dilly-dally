@@ -72,11 +72,11 @@ uk.co.firmgently.DontDillyDally = (function() {
   getNextID, newClientCreate, newJobCreate,
   navClick, todayClick, weekNextClick, weekPrevClick, monthNextClick, monthPrevClick,
 	onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
-	onSaveBtnClick,
+	onSaveBtnClick, onColorChangeConfirm,
   dataStoragePossible, initData,
 	dataStoreObject, dataRetrieveObject, dataUpdateObject,
 	clientAndJobStyleSheet, createClientOrJobFromOb, createCSSForClientOrJobFromOb,
-	getJobOrClientIDFromElement, updateDataFromWorkItemEl,
+	getJobOrClientIDFromElement, updateDataFromWorkItemEl, updateDataFromClientOrJobEl,
   getFirstVisibleDayElement,
   newClientFormSave, newJobFormSave, clientInputWasLastEmpty,
 	handleFileSelect, updateColoursFromPickers, updatePickerFromColours,
@@ -484,6 +484,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  // TODO delete this function and all refs to it
   onClientTyped = function() {
     clientSaveBtn_el.disabled = clientNameInput_el.value.isEmpty();
   };
@@ -491,6 +492,11 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   onJobTyped = function() {
     jobSaveBtn_el.disabled = jobNameInput_el.value.isEmpty();
+  };
+
+
+  onColorChangeConfirm = function(event) {
+    updateDataFromClientOrJobEl(this);
   };
 
 
@@ -544,6 +550,8 @@ uk.co.firmgently.DontDillyDally = (function() {
     var li_el, temp_el, removeMethodPath, addMethodPath;
 
     li_el = createElementWithId("li", id);
+    registerEventHandler(li_el, COLORPICKER_CHANGEEVENT_ID, updateColoursFromPickers);
+    registerEventHandler(li_el, COLORPICKER_CONFIRMEVENT_ID, onColorChangeConfirm);
     ul_el.appendChild(li_el);
 
     if (type_str === CLIENTS_STR) {
@@ -897,13 +905,29 @@ uk.co.firmgently.DontDillyDally = (function() {
 	};
 
 
-  updateColoursFromPickers = function(type, fgCol, bgCol) {
-
+  updateColoursFromPickers = function(event) {
+    var i, inputNodes, currentNode, fg_el, bg_el, textInput_el;
+    
+    inputNodes = this.getElementsByTagName("INPUT");
+    for (i = 0; i < inputNodes.length; i++) {
+      currentNode = inputNodes[i];
+      if (currentNode.type === "text") {
+        textInput_el = currentNode;
+      } else if (currentNode.className.indexOf("color-picker") !== -1) {
+        if (currentNode.className.indexOf("bg") !== -1) {
+          bg_el = currentNode.nextSibling;
+        } else if (currentNode.className.indexOf("fg") !== -1) {
+          fg_el = currentNode.nextSibling;
+        }
+      }
+    }
+    textInput_el.className = "";
+    textInput_el.style.color = getStyle(fg_el, "background-color");
+    textInput_el.style.backgroundColor = getStyle(bg_el, "background-color");
   };
 
 
   updatePickerFromColours = function(type, fgCol, bgCol) {
-    logMsg(fgCol + "/" + bgCol);
     if (type === CLIENTS_STR) {
       colPickClientBG_el.style.backgroundColor = bgCol;
       colPickClientFG_el.style.backgroundColor = fgCol;
@@ -1222,6 +1246,50 @@ uk.co.firmgently.DontDillyDally = (function() {
 		days_ar[day_str] = day_ob; // write updated day
 		dataStoreObject(DAYS_STR, days_ar);
 	};
+
+
+  updateDataFromClientOrJobEl = function(el) {
+    var i, inputNodes, currentNode, fg_el, bg_el, textInput_el,
+        items_ob, itemType, update_ob;
+    
+    inputNodes = el.getElementsByTagName("INPUT");
+    for (i = 0; i < inputNodes.length; i++) {
+      currentNode = inputNodes[i];
+      if (currentNode.type === "text") {
+        textInput_el = currentNode;
+      } else if (currentNode.className.indexOf("color-picker") !== -1) {
+        if (currentNode.className.indexOf("bg") !== -1) {
+          bg_el = currentNode.nextSibling;
+        } else if (currentNode.className.indexOf("fg") !== -1) {
+          fg_el = currentNode.nextSibling;
+        }
+      }
+    }
+
+    if (el.id.indexOf(CLIENT_STR) !== -1) {
+      itemType = CLIENTS_STR;
+    } else if (el.id.indexOf(JOB_STR) !== -1) {
+      itemType = JOBS_STR;
+    }
+    items_ob = dataRetrieveObject(itemType);
+
+    update_ob = {
+      id: el.id,
+      class: el.id,
+      name: textInput_el.value, // TODO  validate input
+      color: getStyle(fg_el, "background-color"),
+      bgcolor: getStyle(bg_el, "background-color")
+    }
+
+    logMsg(el.id);
+    logMsg(el.className);
+    logMsg(itemType);
+    logMsg(items_ob);
+    logMsg(update_ob);
+
+    items_ob[el.id] = update_ob;
+    dataStoreObject(itemType, items_ob);
+  };
 
 
 	getJobOrClientIDFromElement = function(el) {

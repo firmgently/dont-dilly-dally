@@ -578,6 +578,10 @@ select {
 
 /* COLOR PICKER */
 
+#color-picker-canvas {
+  position: absolute; z-index: $zFloat;
+  display: none;
+}
 .color-picker {
   display: none;
   &.fg {
@@ -592,14 +596,14 @@ select {
   }
   &:checked {
     + label {
-      &:after { display: inline-block; }
+      //&:after { display: inline-block; }
     }
   }
   + label {
     padding: 0;
     display: inline-block; width: 1rem; height: 1rem; background-color: #efefef;
     cursor: pointer;
-    &:after {
+   /* &:after {
       content: "";
       background-image: url(/images/wheel.png);
       background-repeat: no-repeat;
@@ -609,7 +613,7 @@ select {
       left: 0; right: 0; top: 0; bottom: 0;
       z-index: $zFloat;
       display: none;
-    }
+    }*/
   }
 }
 
