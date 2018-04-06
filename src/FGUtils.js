@@ -15,7 +15,9 @@ uk.co.firmgently.FGUtils = (function() {
   var
   addCSSRule, getIEVersion, isTouchDevice,
   registerEventHandler, unregisterEventHandler, stopPropagation,
-  hexOpacityToRGBA, rgbToHex, getRandomHexColor, createElementWithId,
+  hexOpacityToRGBA, rgbToHex, getRandomHexColor, getRandomContrastingHexColor,
+  hexToRGB_ar, getBrightnessFromRGBAr,
+  createElementWithId,
   removeClassname, addClassname, getStyle, padString,
   treatAsUTC, daysBetween, getFormattedDate,
   getFunctionFromString, getGUID, changeSelectByOption, manualEvent,
@@ -89,6 +91,7 @@ uk.co.firmgently.FGUtils = (function() {
 
       return ret;
   };
+  
 
   // https://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php
   Date.prototype.getWeekNumber = function(){
@@ -155,6 +158,30 @@ uk.co.firmgently.FGUtils = (function() {
   };
 
 
+  hexToRGB_ar = function(hex) {
+    var bigint;
+
+    // trim leading hash
+    if (hex.substr(0, 1) === "#") { hex = hex.substr(1); }
+      
+    bigint = parseInt(hex, 16);
+
+    logMsg(hex);
+    logMsg(bigint);
+    return [
+      (bigint >> 16) & 255,
+      (bigint >> 8) & 255,
+      bigint & 255,
+    ];
+  };
+
+
+  getBrightnessFromRGBAr = function(ar) {
+    //return ((299 * ar[0]) + (587 * ar[1]) + (114 * ar[2])) / 1000;
+    return (ar[0]+ar[0]+ar[2]+ar[1]+ar[1]+ar[1])/6;
+  };
+
+
   getRandomHexColor = function(tone) {
     // Based on http://www.paulirish.com/2009/random-hex-color-code-snippets/
     var full = 16777215, third = 5592405, smalln = 1864135, hexString;
@@ -166,6 +193,24 @@ uk.co.firmgently.FGUtils = (function() {
       hexString = '#' + Math.floor(Math.random()*smalln).toString(16);
     }
     return hexString;
+  };
+
+  
+  getRandomContrastingHexColor = function(hexColor, minContrast) {
+    var brightness1, brightness2, c1RGB_ar, hexContrasting,
+        c2RGB_ar = hexToRGB_ar(hexColor),
+        brightness2 = getBrightnessFromRGBAr(c2RGB_ar);
+    logMsg("brightness2: " + brightness2);
+    logMsg("c2RGB_ar: " + c2RGB_ar);
+    do {
+      hexContrasting = getRandomHexColor();
+      c1RGB_ar = hexToRGB_ar(hexContrasting);
+      brightness1 = getBrightnessFromRGBAr(c1RGB_ar);
+      logMsg("brightness1: " + brightness1);
+      logMsg((brightness1 + 0.05) / brightness2 + 0.05);
+    } while (Math.abs(brightness1 - brightness2) < minContrast);
+
+    return hexContrasting;
   };
 
 
@@ -394,6 +439,9 @@ uk.co.firmgently.FGUtils = (function() {
     hexOpacityToRGBA: hexOpacityToRGBA,
     rgbToHex: rgbToHex,
     getRandomHexColor: getRandomHexColor,
+    getRandomContrastingHexColor: getRandomContrastingHexColor,
+    getBrightnessFromRGBAr: getBrightnessFromRGBAr,
+    hexToRGB_ar: hexToRGB_ar,
     createElementWithId: createElementWithId,
     getFunctionFromString: getFunctionFromString,
     getFormattedDate: getFormattedDate,

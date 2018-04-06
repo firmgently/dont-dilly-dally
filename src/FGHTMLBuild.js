@@ -19,10 +19,12 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
   COLORPICKER_IMG_ID = "color-picker-img", COLORPICKER_CANVAS_ID = "color-picker-canvas", COLORPICKER_IMG_PATH = "/images/wheel.png",
 
+  HELPITEM_CLASSNAME = "helpItem",
+
 	fillHTMLFromOb,
 	createButtonFromOb, createRadioFromOb, createCheckboxFromOb,
 	createInputFromOb, createSpinnerFromOb, createSelectFromOb,
-	createFormFromOb,
+	createFormFromOb, createHelpItemFromOb,
 	addLIsFromOb, createBasicElementFromOb, createColorPickerFromOb,
 
 	onSpinnerStart, onSpinnerMouseUp, doSpinStep, spinnerTimer,
@@ -399,7 +401,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       registerEventHandler(colorPickerImage, "load", onColorPickerImageLoad);
     }
 
-    label_el.colorPickerCanvas = colorPickerCanvas;
     registerEventHandler(label_el, "click", onColorPickerClick);
 
 		return el;
@@ -419,7 +420,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
   onColorPickerClick = function(event) {
     colorPickerSelectedCurrent = event.currentTarget;
-    logMsg(colorPickerSelectedCurrent);
     colorPickerCanvas.style.display = "inline-block";
     colorPickerCanvas.style.left = event.clientX + "px";
     colorPickerCanvas.style.top = event.clientY + "px";
@@ -437,13 +437,31 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     colorPickerSelectedCurrent.style.backgroundColor = "#" + rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
     manualEvent(colorPickerSelectedCurrent.parentNode, COLORPICKER_CHANGEEVENT_ID);
     if (pixelData[3] > 0) {
-      colorPickerCanvas.style.cursor = "pointer";
+      colorPickerCanvas.style.cursor = "crosshair";
     } else {
       colorPickerCanvas.style.cursor = "default";
     }
   };
 
 
+  createHelpItemFromOb = function(ob) {
+    var i, el, temp_el, for_el;
+    logMsg(ob);
+    el = createElementWithId("div", ob.id);
+    document.body.appendChild(el);
+    addClassname(el, HELPITEM_CLASSNAME);
+
+    for (i = 0; i < ob.items.length; i++) {
+      temp_el = document.createElement("span");
+      temp_el.innerHTML = ob.items[i].text;
+      el.appendChild(temp_el);
+    }
+    temp_el = document.createElement("div");
+    addClassname(temp_el, "cover-left");
+
+
+		return el;
+  };
 
 
 
@@ -467,7 +485,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 		createCheckboxFromOb: createCheckboxFromOb,
 		addLIsFromOb: addLIsFromOb,
 		createBasicElementFromOb: createBasicElementFromOb,
-		createColorPickerFromOb: createColorPickerFromOb
+		createColorPickerFromOb: createColorPickerFromOb,
+    createHelpItemFromOb: createHelpItemFromOb
 	};
 
 }());

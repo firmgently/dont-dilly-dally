@@ -52,6 +52,7 @@ uk.co.firmgently.DDDConsts = (function() {
     GUITYPE_SECTION: "GUITypeSection",
     GUITYPE_METHODCALL: "GUITypeMethodCall",
     GUITYPE_UL: "GUITypeUL",
+    GUITYPE_HELP: "GUITypeHelp",
 
     CLASS_BTNNAV: "btnNav",
     CLASS_BTNMININAV: "btnMiniNav",
@@ -400,7 +401,7 @@ uk.co.firmgently.DDDConsts = (function() {
            disabled: true
          }
       ]
-    },
+    }
   ];
 
 

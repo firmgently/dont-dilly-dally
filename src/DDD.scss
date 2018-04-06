@@ -519,7 +519,21 @@ select {
 
 
 
+/* help system */
 
+.helpItem {
+  position: fixed; z-index: $zFloat;
+  top: 0; left: 0;
+  span { color: white; }
+  .cover-left, .cover-right, .cover-top, .cover-bottom {
+    position: fixed;
+    background-color: rgba(50, 20, 20, 0.5);
+  }
+  .cover-left { top: 0; left: 0; bottom: 0; }
+  .cover-right { top: 0; right: 0; bottom: 0; }
+  .cover-top: { top: 0; }
+  .cover-bottom { bottom: 0; }
+}
 
 
 
@@ -581,41 +595,24 @@ select {
 #color-picker-canvas {
   position: absolute; z-index: $zFloat;
   display: none;
-  //border: solid $mediumPadding $ddd-sand;
   @include border-radius($mediumPadding);
 }
 .color-picker {
   display: none;
   &.fg {
     + label {
-      margin-left: -0.5rem;
+      margin-left: 0.5rem;
     }
   }
   &.bg {
     + label {
-      margin-left: 1.5rem; margin-bottom: -0.5rem;
-    }
-  }
-  &:checked {
-    + label {
-      //&:after { display: inline-block; }
+      margin-left: 1rem;
     }
   }
   + label {
     padding: 0;
     display: inline-block; width: 1rem; height: 1rem; background-color: #efefef;
     cursor: pointer;
-   /* &:after {
-      content: "";
-      background-image: url(/images/wheel.png);
-      background-repeat: no-repeat;
-      //width: 200px;
-      //height: 200px;
-      position: fixed;
-      left: 0; right: 0; top: 0; bottom: 0;
-      z-index: $zFloat;
-      display: none;
-    }*/
   }
 }
 

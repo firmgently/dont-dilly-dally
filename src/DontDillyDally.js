@@ -4,43 +4,48 @@
   DontDillyDally
   Mark Mayes 2018
 
+  TODO  file load isn't loading data yet
+  TODO  remove unnecessary form from clients/job page
+  TODO  add week/month/year calculations
+  TODO  add 'year start date' preference
+  TODO  ensure big/small units update min/max/step when changing from money to hours or viceversa
   FIXME timesheet container not getting scroll focus
-  DONE  after updating client/job, styles are not universally updating
   TODO  add ARIA attributes (eg. hide up/down spinner buttons)
   TODO  delete job/client check if any records are referencing them, prompt if so
-  DONE	blank object being stored in data object results in missing day in UI
-  DONE	 number spinners
-  TODO  match all button styles
-  DONE 	blank space appears at bottom of page (seems related to LOADING element)
-  DONE	negative money values should attach negative classname on initial page load
-  DONE   jobs and clients list existing jobs/clients
-  DONE   jobs and clients proper colour picker
-  DONE	 minify JS on save
-  TODO  delete temporary <a> created when file is saved
+	TODO	add 'wipe data' buttons with confirmation prompt
+	FIXME	spinners: numbers should pad eg. 00:45h, £10.00
   FIXME next/prev week/month buttons not working
   TODO  all strings should be constants
   TODO  display month/week start correctly
-  DONE  month/week skip buttons should auto-repeat
   TODO  validate all input data
           time/money
-          notes
+          notes - max length
           client/job names in clients/jobs page
-  TODO  ensure big/small units update min/max/step when changing from money to hours or viceversa
-  DONE	 spinners: hour/minute units can wrap
-  DONE	 spinners: NaN gets converted to 0
-  DONE	spinners: other events should trigger mouseup to prevent stuck spin
-	FIXME	spinners: numbers should pad eg. 00:45h, £10.00
-	DONE	spinners: unit should be denoted, with £/h and ./:
-	TODO	add 'wipe data' buttons with confirmation prompt
+  FIXME tab nav - position wrong while page is loading (gap)
 	TODO	add privacy page/statement
 					by default all data is saved in your browser (localStorage)
 					you can wipe your data at any time
 					you can export your data to a file (in JSON format) and import it into another browser or device
 					we don't see any of your personal data
 	FIXME	if empty or bad time/money data is **stored in JSON**, correct it to zero
-	DONE	'even' class wrongly being applied to child elements
 	FIXME	select client/job - day remains highlighted (eg. darker date text)
 	FIXME	£-0.77 must register as negative
+  DONE	blank object being stored in data object results in missing day in UI
+  DONE  after updating client/job, styles are not universally updating
+  DONE	 number spinners
+  DONE  match all button styles
+  DONE 	blank space appears at bottom of page (seems related to LOADING element)
+  DONE	negative money values should attach negative classname on initial page load
+  DONE   jobs and clients list existing jobs/clients
+  DONE   jobs and clients proper colour picker
+  DONE	 minify JS on save
+  DONE  delete temporary <a> created when file is saved
+	DONE	'even' class wrongly being applied to child elements
+  DONE  month/week skip buttons should auto-repeat
+  DONE	 spinners: hour/minute units can wrap
+  DONE	 spinners: NaN gets converted to 0
+  DONE	spinners: other events should trigger mouseup to prevent stuck spin
+	DONE	spinners: unit should be denoted, with £/h and ./:
   
 ---------------------------------------------------------
 */
@@ -66,6 +71,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
 	eventAutoRepeat, dayJumpAutorepeatStop,
   createFormFromOb,
+  calculateTotalsFromDateSpan,
   addTask, removeTask, addClient, removeClientOrJob, addJob,
   callMethodFromObOnElement, callMethodFromOb,
 	onFormClick, onScroll,
@@ -351,10 +357,62 @@ uk.co.firmgently.DontDillyDally = (function() {
         case GUITYPE_METHODCALL:
           callMethodFromOb(ob);
           break;
+        case GUITYPE_HELP:
+          createHelpItemFromOb(ob);
+          break;
         default:
           break;
       }
     }
+  };
+
+
+  calculateTotalsFromDateSpan = function(dateEnd, timeSpan) {
+    var i, j, daysToDraw, dayCur, day_str,
+				dayWorkItems, workItem, itemCur, daysInPrevMonth,
+        dateStart,
+        return_ob = {
+          moneyTotal: 0,
+          timeTotal: 0
+        },
+				allWorkItems = dataRetrieveObject(DAYS_STR);
+    
+    dateStart = new Date(dateEnd.getTime());
+
+    switch (timeSpan) {
+      case TIMESPAN_WEEK:
+        dateStart.setDate(dateStart.getDate() - DAYSINWEEK);
+        break;
+      case TIMESPAN_MONTH:
+        daysInPrevMonth = new Date(dateStart.getDate() - 1).monthDays();
+        dateStart.setDate(dateStart.getDate() - daysInPrevMonth);
+        break;
+      case TIMESPAN_YEAR:
+        dateStart.setDate(dateStart.getDate() - DAYSINYEAR);
+        break;
+      default:
+        break;
+    };
+    //logMsg(timeSpan);
+    //logMsg(dateStart + " -> " + dateEnd);
+    daysToDraw = daysBetween(dateStart, dateEnd);
+    dayCur = dateStart;
+    for (i = 0; i < daysToDraw; i++) {
+      day_str = dayCur.getShortISO();
+      dayWorkItems = allWorkItems[day_str];
+      if (dayWorkItems) {
+				for (workItem in dayWorkItems) {
+          itemCur = dayWorkItems[workItem];
+          if (itemCur[DATAINDICES.itemType] === ITEMTYPE_MONEY) {
+            return_ob.moneyTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
+          } else if (itemCur[DATAINDICES.itemType] === ITEMTYPE_TIME) {
+            return_ob.timeTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
+          }
+        }
+      }
+      dayCur.setDate(dayCur.getDate() + 1);
+    }
+    //logMsg(return_ob);
   };
 
 
@@ -650,12 +708,14 @@ uk.co.firmgently.DontDillyDally = (function() {
         if (dayCur.getWeekNumber() === 1 && dayCur.getMonth() === 11) {
           significance_str += " (" + (dayCur.getFullYear() + 1) + ")";
         }
+        calculateTotalsFromDateSpan(new Date(dayCur.getTime()), TIMESPAN_WEEK);
       }
       if (dayCur.getDate() === 1) {
         rowClassname += "month-start ";
 				monthHeader_el = document.createElement("h4");
 				monthHeader_el.innerHTML = MONTH_NAMES[dayCur.getMonth()];
 				day_el.appendChild(monthHeader_el);
+        calculateTotalsFromDateSpan(new Date(dayCur.getTime()), TIMESPAN_MONTH);
       }
       addClassname(day_el, rowClassname);
       // create days in documentFragment to avoid unneccessary reflows
@@ -687,6 +747,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         }
       }
     }
+    calculateTotalsFromDateSpan(new Date(dayCur.getTime()), TIMESPAN_YEAR);
 
     parent_el.appendChild(workingFragment);
   };
@@ -798,7 +859,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 				addClassname(el_temp.parentNode.parentNode, "negative");
 			}
 			manualEvent(el_temp, "change");
-		}
+		} else {
+      el_temp.value = "00";
+    } 
 
     // hours/money small units
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
@@ -833,7 +896,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 		if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
 			el_temp.value = numberValue_ar[1];
 			manualEvent(el_temp, "change");
-		}
+		} else {
+      el_temp.value = "00";
+    }
 
     // job/money notes
     el_temp = createInputFromOb({
@@ -971,25 +1036,27 @@ uk.co.firmgently.DontDillyDally = (function() {
   onUpdateInput = function(event) {
     switch (dataRetrieveObject(PREFS_STR).pagetype) {
       case PAGETYPE_TIMESHEETS:
-        if (document.body.contains(this)) {
-          if (this.className.indexOf("notes") !== -1) {
-            // TODO validate notes input
-            updateDataFromWorkItemEl(this.parentNode.parentNode);
-          } else {
-            if (isNaN(parseInt(this.value))) { this.value = 0; }
+        if (this.className.indexOf("notes") !== -1) {
+          // TODO validate notes input
+          logMsg(this);
+          logMsg(this.parentNode);
+          updateDataFromWorkItemEl(this.parentNode);
+        } else {
+          if (isNaN(parseInt(this.value))) { this.value = 0; }
 
-            // TODO needs to handle negative small unit eg. -£0.13
-            if (this.className.indexOf("unitBig") !== -1) {
-              if (parseInt(this.value) < 0) {
-                addClassname(this.parentNode.parentNode, "negative");
-              } else {
-                removeClassname(this.parentNode.parentNode, "negative");
-              }
+          // TODO needs to handle negative small unit eg. -£0.13
+          if (this.className.indexOf("unitBig") !== -1) {
+            if (parseInt(this.value) < 0) {
+              addClassname(this.parentNode.parentNode, "negative");
+            } else {
+              removeClassname(this.parentNode.parentNode, "negative");
             }
-            // TODO check following line still works
-            updateDataFromWorkItemEl(this.parentNode.parentNode);
-            this.value = padString(this.value, this.spin_ob.pad);
           }
+          // TODO check following line still works
+          if (document.body.contains(this)) {
+            updateDataFromWorkItemEl(this.parentNode.parentNode);
+          }
+          this.value = padString(this.value, this.spin_ob.pad);
         }
         break;
       case PAGETYPE_CONFIG:
@@ -1194,6 +1261,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 		workItem_ar[DATAINDICES.jobID] = getJobOrClientIDFromElement(jobSelect_el);
 		workItem_ar[DATAINDICES.notes] = notesInput_el.value;
 
+    logMsg("\tel.id: " + el.id);
 		day_ob[el.id] = workItem_ar; // write work item to day
 		days_ar[day_str] = day_ob; // write updated day
 		dataStoreObject(DAYS_STR, days_ar);
