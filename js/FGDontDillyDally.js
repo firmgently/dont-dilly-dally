@@ -1445,7 +1445,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   addTask, removeTask, addClient, removeClientOrJob, addJob,
   callMethodFromObOnElement, callMethodFromOb,
 	onFormClick, onScroll,
-  drawTimesheets, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
+  drawTimesheets, drawDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
   getNextID, getNewClient, getNewJob,
   navClick, todayClick, weekNextClick, weekPrevClick, monthNextClick, monthPrevClick,
 	onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
@@ -1799,7 +1799,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   calculateTotalsFromDateSpan = function(dateEnd, timeSpan) {
     var i, j, daysToDraw, dayCur, day_str, tempVal,
-				dayWorkItems, workItem, itemCur, daysInPrevMonth,
+				dayWorkItems, itemID, itemCur, daysInPrevMonth,
         dateStart,
         return_ob = {
           timeTotal: 0,
@@ -1830,8 +1830,8 @@ uk.co.firmgently.DontDillyDally = (function() {
       day_str = dayCur.getShortISO();
       dayWorkItems = allWorkItems[day_str];
       if (dayWorkItems) {
-				for (workItem in dayWorkItems) {
-          itemCur = dayWorkItems[workItem];
+				for (itemID in dayWorkItems) {
+          itemCur = dayWorkItems[itemID];
           if (itemCur[DATAINDICES.itemType] === ITEMTYPE_MONEY) {
             tempVal = parseInt(itemCur[DATAINDICES.numberValue], 10);
             if (tempVal < 0) {
@@ -2092,19 +2092,98 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  drawTimesheets = function() {
-    var i, j, daysToDraw, weekdayCur, day_str,
+  drawDay = function(dayCur, parent_el) {
+    var day_str,
 				isToday, significance_str, rowClassname,
 				monthHeader_el, day_el, date_el, dayDataContainer_el, totals_el,
-				hrs_el, client_el, job_el,
-				ob_temp, dayWorkItems, workItem,
+				dayWorkItems, itemID,
 				weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
+				allWorkItems = dataRetrieveObject(DAYS_STR);
+
+    day_str = dayCur.getShortISO();
+    day_el = createElementWithId("li", day_str);
+    parent_el.appendChild(day_el);
+
+    // work out what special info is attached to this day (eg. first of week/month etc)
+    rowClassname = "day row ";
+    significance_str = "";
+    isToday = !Math.round(daysBetween(dayCur, dateToday));
+    if (isToday) {
+      rowClassname += CLASS_TODAY + " ";
+      significance_str += "TODAY";
+    }
+    if (dayCur.getDay() === weekStartDay) {
+      rowClassname += "week-start ";
+      significance_str += "week " + dayCur.getWeekNumber();
+      // if this is week 1 and month is December, must be week 1 of next year
+      if (dayCur.getWeekNumber() === 1 && dayCur.getMonth() === 11) {
+        significance_str += " (" + (dayCur.getFullYear() + 1) + ")";
+      }
+      if (dayCur.getWeekNumber() > 1) {
+        totals_el = createElementWithId("li", "totals-week-" + (dayCur.getWeekNumber() - 1));
+        parent_el.appendChild(totals_el);
+        drawTotalsContainer({
+          heading: "week " + (dayCur.getWeekNumber() - 1) + " totals",
+          parent_el: totals_el,
+          endDate: new Date(dayCur.getTime()),
+          timeSpan: TIMESPAN_WEEK
+        });
+      }
+    }
+    if (dayCur.getDate() === 1) {
+      rowClassname += "month-start ";
+      monthHeader_el = document.createElement("h4");
+      monthHeader_el.innerHTML = MONTH_NAMES[dayCur.getMonth()];
+      day_el.appendChild(monthHeader_el);
+      totals_el = createElementWithId("li", "totals-month-" + (dayCur.getMonth() - 1));
+      if (dayCur.getMonth() > 0) {
+        parent_el.appendChild(totals_el);
+        drawTotalsContainer({
+          heading: MONTH_NAMES[dayCur.getMonth() - 1] + " totals",
+          parent_el: totals_el,
+          endDate: new Date(dayCur.getTime()),
+          timeSpan: TIMESPAN_MONTH
+        });
+      }
+    }
+    addClassname(day_el, rowClassname);
+
+    // add date
+    date_el = document.createElement("p");
+    addClassname(date_el, "date col");
+    // TODO DATETYPE_DEFAULT being used here is that correct?
+    if (significance_str !== "") {
+    //if (isToday) {
+      date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label) + "<span>" + significance_str + "</span>";
+    } else {
+      date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
+    }
+    day_el.appendChild(date_el);
+
+    // add day data (work/money etc)
+    dayDataContainer_el = document.createElement("ul");
+    addClassname(dayDataContainer_el, "day-data col");
+    day_el.appendChild(dayDataContainer_el);
+    
+    dayWorkItems = allWorkItems[day_str];
+    if (dayWorkItems === undefined || isEmpty(dayWorkItems)) {
+      drawUIWorkItem(dayDataContainer_el);
+    } else {
+      for (itemID in dayWorkItems) {
+        drawUIWorkItem(dayDataContainer_el, itemID, dayWorkItems[itemID]);
+      }
+    }
+  };
+
+
+  drawTimesheets = function() {
+    var i, j, daysToDraw, weekdayCur,
+				totals_el, weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
 				parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
-				// TODO timesheet should be <ul>
-				workingFragment = document.createDocumentFragment(),
-				allWorkItems = dataRetrieveObject(DAYS_STR),
+				workingFragment = document.createDocumentFragment(), // work in a fragment to improve performance
 				dayCur = new Date();
 
+    // how many days do we want to draw?
     switch(dataRetrieveObject(PREFS_STR).timespan) {
       case TIMESPAN_WEEK:
         weekdayCur = dayCur.getDay(); // 0 = Sunday, 1 = Monday etc
@@ -2125,104 +2204,34 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
     }
 
+    // draw days
     for (i = 0; i < daysToDraw; i++) {
-      significance_str = "";
-      day_str = dayCur.getShortISO();
-      rowClassname = "day row ";
-      isToday = !Math.round(daysBetween(dayCur, dateToday));
-      day_el = createElementWithId("li", day_str);
-      if (isToday) {
-        rowClassname += CLASS_TODAY + " ";
-        significance_str += "TODAY";
-      }
-      if (dayCur.getDay() === weekStartDay) {
-        rowClassname += "week-start ";
-        significance_str += "week " + dayCur.getWeekNumber();
-        // if this is week 1 and month is December, must be week 1 of next year
-        if (dayCur.getWeekNumber() === 1 && dayCur.getMonth() === 11) {
-          significance_str += " (" + (dayCur.getFullYear() + 1) + ")";
-        }
-        if (dayCur.getWeekNumber() > 1) {
-          totals_el = createElementWithId("li", "totals-week-" + (dayCur.getWeekNumber() - 1));
-          workingFragment.appendChild(totals_el);
-          drawTotalsContainer({
-            heading: "week " + (dayCur.getWeekNumber() - 1) + " totals",
-            parent_el: totals_el,
-            endDate: new Date(dayCur.getTime()),
-            timeSpan: TIMESPAN_WEEK
-          });
-          //calculateTotalsFromDateSpan(new Date(dayCur.getTime()), TIMESPAN_WEEK);
-        }
-      }
-      if (dayCur.getDate() === 1) {
-        rowClassname += "month-start ";
-				monthHeader_el = document.createElement("h4");
-				monthHeader_el.innerHTML = MONTH_NAMES[dayCur.getMonth()];
-				day_el.appendChild(monthHeader_el);
-        totals_el = createElementWithId("li", "totals-month-" + (dayCur.getMonth() - 1));
-        if (dayCur.getMonth() > 0) {
-          workingFragment.appendChild(totals_el);
-          drawTotalsContainer({
-            heading: MONTH_NAMES[dayCur.getMonth() - 1] + " totals",
-            parent_el: totals_el,
-            endDate: new Date(dayCur.getTime()),
-            timeSpan: TIMESPAN_MONTH
-          });
-          //calculateTotalsFromDateSpan(new Date(dayCur.getTime()), TIMESPAN_MONTH);
-        }
-      }
-      addClassname(day_el, rowClassname);
-      // create days in documentFragment to avoid unneccessary reflows
-      workingFragment.appendChild(day_el);
-
-      // date
-      date_el = document.createElement("p");
-      addClassname(date_el, "date col");
-      // TODO DATETYPE_DEFAULT being used here is that correct?
-      if (significance_str !== "") {
-      //if (isToday) {
-        date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label) + "<span>" + significance_str + "</span>";
-      } else {
-        date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
-      }
+      drawDay(dayCur, workingFragment);
       dayCur.setDate(dayCur.getDate() + 1);
-      day_el.appendChild(date_el);
-
-      dayDataContainer_el = document.createElement("ul");
-      addClassname(dayDataContainer_el, "day-data col");
-      day_el.appendChild(dayDataContainer_el);
-
-      dayWorkItems = allWorkItems[day_str];
-      if (dayWorkItems === undefined || isEmpty(dayWorkItems)) {
-        drawUIWorkItem(dayDataContainer_el);
-      } else {
-				for (workItem in dayWorkItems) {
-          drawUIWorkItem(dayDataContainer_el, workItem, dayWorkItems[workItem]);
-        }
-      }
     }
+
+    // add year totals
     totals_el = createElementWithId("li", "totals-year");
-    workingFragment.appendChild(totals_el);
     drawTotalsContainer({
       heading: (dayCur.getFullYear() - 1) + " totals",
       parent_el: totals_el,
       endDate: new Date(dayCur.getTime()),
       timeSpan: TIMESPAN_YEAR
     });
-    //calculateTotalsFromDateSpan(new Date(dayCur.getTime()), TIMESPAN_YEAR);
+    workingFragment.appendChild(totals_el);
 
+    // add fragment to DOM
     parent_el.appendChild(workingFragment);
   };
 
 
   drawUIWorkItem = function(dayDataContainer_el, itemID, itemData_ob) {
-    var hrs_el, money_el, ob_temp, el_temp, item_el, wrappedCheckbox_el, numberValue_ar,
+    var money_el, ob_temp, el_temp, item_el, wrappedCheckbox_el, numberValue_ar,
 				day_el = dayDataContainer_el.parentNode;
 
 		if (itemID === undefined) { itemID = getGUID(); }
 
     item_el = createElementWithId("li", itemID);
-    //dayDataContainer_el.appendChild(item_el);
     dayDataContainer_el.insertBefore(item_el, dayDataContainer_el.firstChild);
 
     // 'add task' button
