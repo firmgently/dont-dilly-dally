@@ -1435,7 +1435,8 @@ uk.co.firmgently.DontDillyDally = (function() {
   prop, dateDisplayStart, dateDisplaySelected, dateToday, //timespanDisplay,
   clientNameInput_el, jobNameInput_el, clientSaveBtn_el, jobSaveBtn_el,
   colPickClientFG_el, colPickClientBG_el, colPickJobFG_el, colPickJobBG_el,
-	dayJumpTimer,
+	dayJumpTimer, timesheetDrawDayTimer,
+  tsDaysToDraw, curDrawnDay, tsWorkingFragment,
 
 	// methods
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
@@ -1445,7 +1446,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   addTask, removeTask, addClient, removeClientOrJob, addJob,
   callMethodFromObOnElement, callMethodFromOb,
 	onFormClick, onScroll,
-  drawTimesheets, drawDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
+  drawTimesheets, drawNextDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
   getNextID, getNewClient, getNewJob,
   navClick, todayClick, weekNextClick, weekPrevClick, monthNextClick, monthPrevClick,
 	onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
@@ -1662,17 +1663,18 @@ uk.co.firmgently.DontDillyDally = (function() {
         document.body.id = BODYID_CONFIG;
         fillHTMLFromOb(PAGEDATA_CONFIG);
         drawGUIFromAr(GUIDATA_CONFIG);
+        addClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
         break;
       case PAGETYPE_JOBSANDCLIENTS:
         document.body.id = BODYID_JOBSANDCLIENTS;
         fillHTMLFromOb(PAGEDATA_JOBSANDCLIENTS);
         drawGUIFromAr(GUIDATA_JOBSANDCLIENTS);
+        addClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
         break;
       default:
         break;
     }
     updateLayoutRefs();
-    addClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
   };
 
 
@@ -1798,7 +1800,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   calculateTotalsFromDateSpan = function(dateEnd, timeSpan) {
-    var i, j, daysToDraw, dayCur, day_str, tempVal,
+    var i, j, daysToCalculate, dayCur, day_str, tempVal,
 				dayWorkItems, itemID, itemCur, daysInPrevMonth,
         dateStart,
         return_ob = {
@@ -1824,9 +1826,9 @@ uk.co.firmgently.DontDillyDally = (function() {
       default:
         break;
     };
-    daysToDraw = daysBetween(dateStart, dateEnd);
+    daysToCalculate = daysBetween(dateStart, dateEnd);
     dayCur = dateStart;
-    for (i = 0; i < daysToDraw; i++) {
+    for (i = 0; i < daysToCalculate; i++) {
       day_str = dayCur.getShortISO();
       dayWorkItems = allWorkItems[day_str];
       if (dayWorkItems) {
@@ -2092,7 +2094,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  drawDay = function(dayCur, parent_el) {
+  drawNextDay = function() {
     var day_str,
 				isToday, significance_str, rowClassname,
 				monthHeader_el, day_el, date_el, dayDataContainer_el, totals_el,
@@ -2100,48 +2102,48 @@ uk.co.firmgently.DontDillyDally = (function() {
 				weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
 				allWorkItems = dataRetrieveObject(DAYS_STR);
 
-    day_str = dayCur.getShortISO();
+    day_str = curDrawnDay.getShortISO();
     day_el = createElementWithId("li", day_str);
-    parent_el.appendChild(day_el);
+    tsWorkingFragment.appendChild(day_el);
 
     // work out what special info is attached to this day (eg. first of week/month etc)
     rowClassname = "day row ";
     significance_str = "";
-    isToday = !Math.round(daysBetween(dayCur, dateToday));
+    isToday = !Math.round(daysBetween(curDrawnDay, dateToday));
     if (isToday) {
       rowClassname += CLASS_TODAY + " ";
       significance_str += "TODAY";
     }
-    if (dayCur.getDay() === weekStartDay) {
+    if (curDrawnDay.getDay() === weekStartDay) {
       rowClassname += "week-start ";
-      significance_str += "week " + dayCur.getWeekNumber();
+      significance_str += "week " + curDrawnDay.getWeekNumber();
       // if this is week 1 and month is December, must be week 1 of next year
-      if (dayCur.getWeekNumber() === 1 && dayCur.getMonth() === 11) {
-        significance_str += " (" + (dayCur.getFullYear() + 1) + ")";
+      if (curDrawnDay.getWeekNumber() === 1 && curDrawnDay.getMonth() === 11) {
+        significance_str += " (" + (curDrawnDay.getFullYear() + 1) + ")";
       }
-      if (dayCur.getWeekNumber() > 1) {
-        totals_el = createElementWithId("li", "totals-week-" + (dayCur.getWeekNumber() - 1));
-        parent_el.appendChild(totals_el);
+      if (curDrawnDay.getWeekNumber() > 1) {
+        totals_el = createElementWithId("li", "totals-week-" + (curDrawnDay.getWeekNumber() - 1));
+        tsWorkingFragment.appendChild(totals_el);
         drawTotalsContainer({
-          heading: "week " + (dayCur.getWeekNumber() - 1) + " totals",
+          heading: "week " + (curDrawnDay.getWeekNumber() - 1) + " totals",
           parent_el: totals_el,
-          endDate: new Date(dayCur.getTime()),
+          endDate: new Date(curDrawnDay.getTime()),
           timeSpan: TIMESPAN_WEEK
         });
       }
     }
-    if (dayCur.getDate() === 1) {
+    if (curDrawnDay.getDate() === 1) {
       rowClassname += "month-start ";
       monthHeader_el = document.createElement("h4");
-      monthHeader_el.innerHTML = MONTH_NAMES[dayCur.getMonth()];
+      monthHeader_el.innerHTML = MONTH_NAMES[curDrawnDay.getMonth()];
       day_el.appendChild(monthHeader_el);
-      totals_el = createElementWithId("li", "totals-month-" + (dayCur.getMonth() - 1));
-      if (dayCur.getMonth() > 0) {
-        parent_el.appendChild(totals_el);
+      totals_el = createElementWithId("li", "totals-month-" + (curDrawnDay.getMonth() - 1));
+      if (curDrawnDay.getMonth() > 0) {
+        tsWorkingFragment.appendChild(totals_el);
         drawTotalsContainer({
-          heading: MONTH_NAMES[dayCur.getMonth() - 1] + " totals",
+          heading: MONTH_NAMES[curDrawnDay.getMonth() - 1] + " totals",
           parent_el: totals_el,
-          endDate: new Date(dayCur.getTime()),
+          endDate: new Date(curDrawnDay.getTime()),
           timeSpan: TIMESPAN_MONTH
         });
       }
@@ -2154,9 +2156,9 @@ uk.co.firmgently.DontDillyDally = (function() {
     // TODO DATETYPE_DEFAULT being used here is that correct?
     if (significance_str !== "") {
     //if (isToday) {
-      date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label) + "<span>" + significance_str + "</span>";
+      date_el.innerHTML = "<em>" + curDrawnDay.getWeekDay(1) + "</em>" + getFormattedDate(curDrawnDay, DATETYPE_DEFAULT.label) + "<span>" + significance_str + "</span>";
     } else {
-      date_el.innerHTML = "<em>" + dayCur.getWeekDay(1) + "</em>" + getFormattedDate(dayCur, DATETYPE_DEFAULT.label);
+      date_el.innerHTML = "<em>" + curDrawnDay.getWeekDay(1) + "</em>" + getFormattedDate(curDrawnDay, DATETYPE_DEFAULT.label);
     }
     day_el.appendChild(date_el);
 
@@ -2173,55 +2175,62 @@ uk.co.firmgently.DontDillyDally = (function() {
         drawUIWorkItem(dayDataContainer_el, itemID, dayWorkItems[itemID]);
       }
     }
+
+    if (tsDaysToDraw > 0) {
+      document.getElementById(LOADINGINDICATOR_ID).innerHTML = "days left to draw: " + tsDaysToDraw;
+      curDrawnDay.setDate(curDrawnDay.getDate() + 1);
+      tsDaysToDraw --;
+      timesheetDrawDayTimer = setTimeout(drawNextDay, 0);
+    } else {
+      // add year totals
+      totals_el = createElementWithId("li", "totals-year");
+      drawTotalsContainer({
+        heading: (curDrawnDay.getFullYear() - 1) + " totals",
+        parent_el: totals_el,
+        endDate: new Date(curDrawnDay.getTime()),
+        timeSpan: TIMESPAN_YEAR
+      });
+      tsWorkingFragment.appendChild(totals_el);
+
+      // add fragment to DOM
+      document.getElementById(TIMESHEETCONTAINER_ID).appendChild(tsWorkingFragment);
+      addClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
+    }
   };
 
 
   drawTimesheets = function() {
-    var i, j, daysToDraw, weekdayCur,
-				totals_el, weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
-				parent_el = document.getElementById(TIMESHEETCONTAINER_ID),
-				workingFragment = document.createDocumentFragment(), // work in a fragment to improve performance
-				dayCur = new Date();
+    var i, j, weekdayCur,
+				totals_el, weekStartDay = 1; // 0 = Sunday, 1 = Monday etc
+		
+    
+    tsWorkingFragment = document.createDocumentFragment(); // work in a fragment to improve performance
+    curDrawnDay = new Date();
 
     // how many days do we want to draw?
     switch(dataRetrieveObject(PREFS_STR).timespan) {
       case TIMESPAN_WEEK:
-        weekdayCur = dayCur.getDay(); // 0 = Sunday, 1 = Monday etc
-        dayCur.setDate(dayCur.getDate() - weekdayCur + weekStartDay); // first day of week
-        daysToDraw = DAYSINWEEK;
+        weekdayCur = curDrawnDay.getDay(); // 0 = Sunday, 1 = Monday etc
+        curDrawnDay.setDate(curDrawnDay.getDate() - weekdayCur + weekStartDay); // first day of week
+        tsDaysToDraw = DAYSINWEEK;
         break;
       case TIMESPAN_MONTH:
-        dayCur.setDate(1);
-        daysToDraw = dayCur.monthDays();
+        curDrawnDay.setDate(1);
+        tsDaysToDraw = curDrawnDay.monthDays();
         break;
       case TIMESPAN_YEAR:
-        dayCur.setMonth(0);
-        dayCur.setDate(1);
-        daysToDraw = DAYSINYEAR;
-        if (dayCur.isLeapYear()) { daysToDraw += 1; }
+        curDrawnDay.setMonth(0);
+        curDrawnDay.setDate(1);
+        tsDaysToDraw = DAYSINYEAR;
+        if (curDrawnDay.isLeapYear()) { tsDaysToDraw += 1; }
         break;
       default:
         break;
     }
 
-    // draw days
-    for (i = 0; i < daysToDraw; i++) {
-      drawDay(dayCur, workingFragment);
-      dayCur.setDate(dayCur.getDate() + 1);
-    }
-
-    // add year totals
-    totals_el = createElementWithId("li", "totals-year");
-    drawTotalsContainer({
-      heading: (dayCur.getFullYear() - 1) + " totals",
-      parent_el: totals_el,
-      endDate: new Date(dayCur.getTime()),
-      timeSpan: TIMESPAN_YEAR
-    });
-    workingFragment.appendChild(totals_el);
-
-    // add fragment to DOM
-    parent_el.appendChild(workingFragment);
+    // draw days asynchronously with a timer
+    // to enable us to give UI feedback on progress
+    timesheetDrawDayTimer = setTimeout(drawNextDay, 0);
   };
 
 
