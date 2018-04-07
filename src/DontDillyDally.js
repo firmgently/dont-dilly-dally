@@ -71,11 +71,11 @@ uk.co.firmgently.DontDillyDally = (function() {
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
 	eventAutoRepeat, dayJumpAutorepeatStop,
   createFormFromOb,
-  calculateTotalsFromDateSpan,
+  recalculateAllTotals, calculateTotalsFromDateSpan,
   addTask, removeTask, addClient, removeClientOrJob, addJob,
   callMethodFromObOnElement, callMethodFromOb,
 	onFormClick, onScroll,
-  drawTimesheets, drawJobsAndClients, drawClientOrJobFromOb,
+  drawTimesheets, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
   getNextID, getNewClient, getNewJob,
   navClick, todayClick, weekNextClick, weekPrevClick, monthNextClick, monthPrevClick,
 	onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
@@ -367,13 +367,74 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  drawTotalsContainer = function(data_ob) {
+    var row_el, cell_el,
+        table_el = document.createElement("table");
+
+    addClassname(table_el, "totals-container");
+    table_el.endDate = data_ob.endDate;
+    table_el.timeSpan = data_ob.timeSpan;
+
+    row_el = table_el.appendChild(document.createElement("tr"));
+    cell_el = row_el.appendChild(document.createElement("th"));
+    cell_el.colspan = "2";
+    cell_el.innerHTML = data_ob.heading; 
+
+    row_el = table_el.appendChild(document.createElement("tr"));
+    cell_el = row_el.appendChild(document.createElement("td"));
+    cell_el.innerHTML = INCOME_STR; 
+    cell_el = row_el.appendChild(document.createElement("td"));
+    cell_el.innerHTML = "00:00";
+    addClassname(cell_el, "total-income");
+
+    row_el = table_el.appendChild(document.createElement("tr"));
+    cell_el = row_el.appendChild(document.createElement("td"));
+    cell_el.innerHTML = EXPENDITURE_STR; 
+    cell_el = row_el.appendChild(document.createElement("td"));
+    cell_el.innerHTML = "00:00"; 
+    addClassname(cell_el, "total-spend");
+
+    row_el = table_el.appendChild(document.createElement("tr"));
+    cell_el = row_el.appendChild(document.createElement("td"));
+    cell_el.innerHTML = HOURSWORKED_STR; 
+    cell_el = row_el.appendChild(document.createElement("td"));
+    cell_el.innerHTML = "00:00"; 
+    addClassname(cell_el, "total-hoursworked");
+
+    row_el = table_el.appendChild(document.createElement("tr"));
+    cell_el = row_el.appendChild(document.createElement("td"));
+    cell_el.innerHTML = PROFIT_STR; 
+    cell_el = row_el.appendChild(document.createElement("td"));
+    cell_el.innerHTML = "00:00"; 
+    addClassname(cell_el, "total-profit");
+
+    data_ob.parent_el.appendChild(table_el);
+  };
+
+
+  recalculateAllTotals = function() {
+    var i, curContainer, curTotalsData,
+        totalsContainers = document.getElementById(TIMESHEETCONTAINER_ID).getElementsByClassName("totals-container");
+
+    for (i = 0; i < totalsContainers.length; i++) {
+      curContainer = totalsContainers[i];
+      curTotalsData = calculateTotalsFromDateSpan(curContainer.endDate, curContainer.timeSpan);
+      curContainer.getElementsByClassName("total-income")[0].innerHTML = curTotalsData.incomeTotal;
+      curContainer.getElementsByClassName("total-spend")[0].innerHTML = curTotalsData.spendTotal;
+      curContainer.getElementsByClassName("total-hoursworked")[0].innerHTML = curTotalsData.timeTotal;
+      curContainer.getElementsByClassName("total-profit")[0].innerHTML = curTotalsData.incomeTotal + curTotalsData.spendTotal; // spendTotal is a negative value
+    }
+  };
+
+
   calculateTotalsFromDateSpan = function(dateEnd, timeSpan) {
-    var i, j, daysToDraw, dayCur, day_str,
+    var i, j, daysToDraw, dayCur, day_str, tempVal,
 				dayWorkItems, workItem, itemCur, daysInPrevMonth,
         dateStart,
         return_ob = {
-          moneyTotal: 0,
-          timeTotal: 0
+          timeTotal: 0,
+          incomeTotal: 0,
+          spendTotal: 0
         },
 				allWorkItems = dataRetrieveObject(DAYS_STR);
     
@@ -393,8 +454,6 @@ uk.co.firmgently.DontDillyDally = (function() {
       default:
         break;
     };
-    //logMsg(timeSpan);
-    //logMsg(dateStart + " -> " + dateEnd);
     daysToDraw = daysBetween(dateStart, dateEnd);
     dayCur = dateStart;
     for (i = 0; i < daysToDraw; i++) {
@@ -404,7 +463,12 @@ uk.co.firmgently.DontDillyDally = (function() {
 				for (workItem in dayWorkItems) {
           itemCur = dayWorkItems[workItem];
           if (itemCur[DATAINDICES.itemType] === ITEMTYPE_MONEY) {
-            return_ob.moneyTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
+            tempVal = parseInt(itemCur[DATAINDICES.numberValue], 10);
+            if (tempVal < 0) {
+              return_ob.spendTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
+            } else {
+              return_ob.incomeTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
+            }
           } else if (itemCur[DATAINDICES.itemType] === ITEMTYPE_TIME) {
             return_ob.timeTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
           }
@@ -412,7 +476,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
       dayCur.setDate(dayCur.getDate() + 1);
     }
-    //logMsg(return_ob);
+    return return_ob;
   };
 
 
@@ -661,7 +725,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   drawTimesheets = function() {
     var i, j, daysToDraw, weekdayCur, day_str,
 				isToday, significance_str, rowClassname,
-				monthHeader_el, day_el, date_el, dayDataContainer_el,
+				monthHeader_el, day_el, date_el, dayDataContainer_el, totals_el,
 				hrs_el, client_el, job_el,
 				ob_temp, dayWorkItems, workItem,
 				weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
@@ -708,14 +772,34 @@ uk.co.firmgently.DontDillyDally = (function() {
         if (dayCur.getWeekNumber() === 1 && dayCur.getMonth() === 11) {
           significance_str += " (" + (dayCur.getFullYear() + 1) + ")";
         }
-        calculateTotalsFromDateSpan(new Date(dayCur.getTime()), TIMESPAN_WEEK);
+        if (dayCur.getWeekNumber() > 1) {
+          totals_el = createElementWithId("li", "totals-week-" + (dayCur.getWeekNumber() - 1));
+          workingFragment.appendChild(totals_el);
+          drawTotalsContainer({
+            heading: "week " + (dayCur.getWeekNumber() - 1) + " totals",
+            parent_el: totals_el,
+            endDate: new Date(dayCur.getTime()),
+            timeSpan: TIMESPAN_WEEK
+          });
+          //calculateTotalsFromDateSpan(new Date(dayCur.getTime()), TIMESPAN_WEEK);
+        }
       }
       if (dayCur.getDate() === 1) {
         rowClassname += "month-start ";
 				monthHeader_el = document.createElement("h4");
 				monthHeader_el.innerHTML = MONTH_NAMES[dayCur.getMonth()];
 				day_el.appendChild(monthHeader_el);
-        calculateTotalsFromDateSpan(new Date(dayCur.getTime()), TIMESPAN_MONTH);
+        totals_el = createElementWithId("li", "totals-month-" + (dayCur.getMonth() - 1));
+        if (dayCur.getMonth() > 0) {
+          workingFragment.appendChild(totals_el);
+          drawTotalsContainer({
+            heading: MONTH_NAMES[dayCur.getMonth() - 1] + " totals",
+            parent_el: totals_el,
+            endDate: new Date(dayCur.getTime()),
+            timeSpan: TIMESPAN_MONTH
+          });
+          //calculateTotalsFromDateSpan(new Date(dayCur.getTime()), TIMESPAN_MONTH);
+        }
       }
       addClassname(day_el, rowClassname);
       // create days in documentFragment to avoid unneccessary reflows
@@ -747,7 +831,15 @@ uk.co.firmgently.DontDillyDally = (function() {
         }
       }
     }
-    calculateTotalsFromDateSpan(new Date(dayCur.getTime()), TIMESPAN_YEAR);
+    totals_el = createElementWithId("li", "totals-year");
+    workingFragment.appendChild(totals_el);
+    drawTotalsContainer({
+      heading: (dayCur.getFullYear() - 1) + " totals",
+      parent_el: totals_el,
+      endDate: new Date(dayCur.getTime()),
+      timeSpan: TIMESPAN_YEAR
+    });
+    //calculateTotalsFromDateSpan(new Date(dayCur.getTime()), TIMESPAN_YEAR);
 
     parent_el.appendChild(workingFragment);
   };
@@ -1057,6 +1149,7 @@ uk.co.firmgently.DontDillyDally = (function() {
             updateDataFromWorkItemEl(this.parentNode.parentNode);
           }
           this.value = padString(this.value, this.spin_ob.pad);
+          recalculateAllTotals();
         }
         break;
       case PAGETYPE_CONFIG:

@@ -63,6 +63,12 @@ uk.co.firmgently.DDDConsts = (function() {
     CLASS_JOBSELECT: "select-job",
 		CLASS_TODAY: "today",
 
+    TURNOVER_STR: "Turnover",
+    PROFIT_STR: "Profit",
+    EXPENDITURE_STR: "Expenditure",
+    INCOME_STR: "Income",
+    HOURSWORKED_STR: "Hours worked",
+
     TOTAL_STR: "Total",
     DAY_STR: "day",
     CLIENT_STR: "client",
