@@ -94,28 +94,29 @@ $ddd-browndark: #221100;
 $ddd-maroon: #662200;
 $ddd-orange: #cc6644;
 $ddd-orangedark: #993322;
+$ddd-grey-darker: #222222;
+$ddd-grey-dark: #444444;
+$ddd-grey-mid: #888888;
+$ddd-grey-light: #AAAAAA;
+$ddd-grey-lighter: #CCCCCC;
 
-$button-color: $ddd-sand;
+$button-color: $ddd-grey-mid;
 $button-bgcolor: $ddd-cream;
 $icon-color: $ddd-cream;
 
-$panelFgColour: $ddd-browndark;
-$panelBgColour: $ddd-sandlight;
-$panelFgColourDimmed: mix($panelFgColour, $ddd-browndark, 75%);
-$panelBgColourDimmed: mix($panelBgColour, $ddd-browndark, 75%);
-$panelBgColourTint: mix($panelBgColour, white, 75%);
-$panelBgColourShade: mix($panelBgColour, black, 75%);
-$panelBgColour1: lighten($ddd-sandlight, 25%);
-$panelBgColour2: lighten($ddd-sandlight, 15%);
-$panelBgColour3: lighten($ddd-sandlight, 10%);
-$panelBgColourImportant: mix($panelBgColour2, $ddd-orangedark, 80%);
-$panelBgColourAltered: mix($panelBgColour1, $ddd-orangedark, 95%);
-$panelBgColourTrans: fade($panelBgColour1, 80%);
+$panelFgColour: $ddd-grey-lighter;
+$panelBgColour: $ddd-grey-dark;
+$panelFgColourDimmed: mix($panelFgColour, $ddd-grey-darker, 75%);
+$panelBgColourDimmed: mix($panelBgColour, $ddd-grey-darker, 75%);
+$panelBgColourTint: mix($panelFgColour, white, 75%);
+$panelBgColour1: lighten($panelBgColour, 25%);
+$panelBgColour2: lighten($panelBgColour, 15%);
+$panelBgColour3: lighten($panelBgColour, 10%);
 
 $buttonBgColourOut: $ddd-maroon;
 $buttonBgColourOver: darken($buttonBgColourOut, 25%);
 $buttonColourOut: $ddd-gold;
-$buttonColourOver: $ddd-sand;
+$buttonColourOver: $ddd-grey-mid;
 
 $jobInputColour: $ddd-sanddark;
 $jobInputBackgroundColour: $ddd-sand;
@@ -123,11 +124,6 @@ $jobInputBackgroundColourTint: lighten($jobInputBackgroundColour, 25%);
 $moneyInputColour: $ddd-sanddark;
 $moneyInputBackgroundColour: $ddd-green;
 $moneyInputBackgroundColourTint: lighten($moneyInputBackgroundColour, 25%);
-
-$darkHeadingBgColour: $ddd-brown;
-$darkerHeadingBgColour: mix($darkHeadingBgColour, $ddd-browndark, 70%);
-$darkHeadingColour: $ddd-cream;
-$midHeadingBgColour: mix($darkHeadingBgColour, $ddd-cream, 70%);
 
 $tinyPadding: 0.15rem;
 $smallPadding: 0.3rem;
@@ -142,10 +138,6 @@ $fontSizeSmall: 0.8rem;
 $fontSizeTiny: 0.7rem;
 $fontSizeIcon: 1.2rem;
 $fontSizeIconLarge: 1.5rem;
-
-$baseZ: 99999990;
-$aboveBaseZ: 99999991;
-$aboveAboveBaseZ: 99999992;
 
 $sidebar-width: 10vw;
 $date-width: 7.5rem;
@@ -174,17 +166,17 @@ $tab-margin: $mediumPadding;
 
 body {
   font-family: $normal-font-family;
-	background-color: $ddd-sandlight;
+	background-color: $panelFgColourDimmed;
 }
 
 aside {
   display: inline-block; 
-  background-color: $ddd-sanddark;
+  background-color: $panelBgColour3;
   img { height: 8vh; margin: 1vh 1vh 0 1vh; display: inline-block; }
   h1 {
     width: $sidebar-width;
     text-align: center;
-    font-size: 3vh; color: $ddd-sand;
+    font-size: 3vh; color: $panelBgColour2;
     text-transform: lowercase;
 		letter-spacing: 0.07rem;
 		margin-bottom: 0.1rem;
@@ -240,11 +232,11 @@ body#jobsClients, body#config {
   position: absolute; z-index: $zNormal;
   top: 0; bottom: 0; left: $sidebar-width; right: 0;
   overflow: scroll;
-  background-color: $ddd-sandlight;
+  background-color: $panelFgColourDimmed;
   h1, h2 { padding: $largePadding $mediumPadding $largePadding $extraLargePadding; }
 }
 
-#editClientCol, #editJobCol { width: 50%; display: inline-block; padding: $largePadding}
+#jobsExisting, #clientsExisting { width: 50%; display: inline-block; padding: $largePadding}
 
 #createNewClientBtn, #createNewJobBtn,
 #saveNewClientBtn, #saveNewJobBtn,
@@ -260,7 +252,7 @@ body#jobsClients, body#config {
 .sidebar-info { background-color: $panelBgColour; position: relative; padding: $largePadding 0 0 $largePadding; }
 #loading-indicator {
   position: fixed; z-index: $zCover; top: 0; left: $sidebar-width; bottom: 0; right: 0;
-  padding: 45% 0;
+  padding: 20vh 0;
   color: $ddd-cream;
   font-weight: bold; 
   text-transform: lowercase;
@@ -269,7 +261,7 @@ body#jobsClients, body#config {
 
 // Timesheets
 
-#timesheetContainer, #clientsExistingRow, #jobsExistingRow {
+#timesheetContainer, #clientsExisting, #jobsExisting {
   z-index: $zNormal;
   display: block;
 
@@ -294,10 +286,10 @@ body#jobsClients, body#config {
     &.day {
       display: block;
       padding: $largePadding $tinyPadding;
-      color: $ddd-sand; background-color: $panelBgColour3;
+      color: $panelBgColour1; background-color: $panelBgColour3;
       &:hover, &:focus-within {
-        color: mix($ddd-sand, $ddd-browndark, 25%);
-        background-color: mix($panelBgColour3, $ddd-sanddark, 92%);
+        color: mix($panelBgColour3, $ddd-browndark, 25%);
+        background-color: mix($panelBgColour3, $ddd-grey-dark, 92%);
       }
     }
     &:nth-of-type(even) {
@@ -452,8 +444,20 @@ body#jobsClients, body#config {
 			&:not(:first-child) .addTaskBtn { visibility: hidden; }
 		}
 	}
+
+  > li.totals-week, > li.totals-month, > li.totals-year,
+  > li.totals-week:hover, > li.totals-month:hover, > li.totals-year:hover {
+    padding: $mediumPadding;
+    background-color: $panelFgColourDimmed;
+    vertical-align: top;
+    h4, table {
+      display: inline-block;
+    }
+    h4 { width: $date-width + $extraLargePadding + 2rem; }
+  }
+
 }
-#clientsExistingRow, #jobsExistingRow {
+#clientsExisting, #jobsExisting {
   ul.clients, ul.jobs {
     float: none; padding-left: 4rem;
     > li {
@@ -471,7 +475,7 @@ select, input, button { border: none; padding: $smallPadding $smallPadding $smal
 select {
   font-family: $bold-font-family;
   appearance: none; -webkit-appearance: none; -moz-appearance: none;
-  background-color: $ddd-cream; color: $ddd-sanddark;
+  background-color: $ddd-cream; color: $ddd-grey-dark;
 	&:first-of-type { margin-right: $largePadding; } 
 }
 #configForm {
@@ -546,7 +550,7 @@ select {
 #miniNavForm {
 	position: fixed;
 	top: 0; right: 0; z-index: $zFloat;
-	background-color: $ddd-sanddark; color: $button-bgcolor; 
+	background-color: $ddd-grey-dark; color: $button-bgcolor; 
   p { font-size: $fontSizeSmall; font-weight: 700; display: inline; margin: 0 $largePadding}
   button:nth-of-type(2),
   button:nth-of-type(4) {

@@ -27,13 +27,16 @@ uk.co.firmgently.DDDConsts = (function() {
     COLORPICKER_CONFIRMEVENT_ID: "colorpickerconfirm",
 
 		AUTOREPEAT_RATE: 500,
+    RECALCULATETOTALS_DELAY: 500,
 
     PAGETYPE_TIMESHEETS: "timesheets",
     PAGETYPE_CONFIG: "preferences",
     PAGETYPE_JOBSANDCLIENTS: "jobs-and-clients",
+    PAGETYPE_PRIVACY: "privacy",
     BODYID_TIMESHEETS: "timesheets",
     BODYID_CONFIG: "config",
     BODYID_JOBSANDCLIENTS: "jobsClients",
+    BODYID_PRIVACY: "privacy",
 
     MONTH_NAMES: [
       "January", "February", "March", "April", "May", "June",
@@ -132,6 +135,10 @@ uk.co.firmgently.DDDConsts = (function() {
       pageTitle: "Preferences",
       intro: "Show and hide things and customise settings."
     },
+    PAGEDATA_PRIVACY: {
+      pageTitle: "Privacy",
+      intro: "Info about data you create with this application."
+    },
 
     DATETYPE_YYMMDD: {
       label: "yy/mm/dd"
@@ -215,46 +222,58 @@ uk.co.firmgently.DDDConsts = (function() {
     until the object has been defined)
 	--------------------------------------------------------------------------- */
 
+  CONST.GUIDATA_PRIVACY = [
+    {
+      type: CONST.GUITYPE_ROW,
+      id: "privacyInfo",
+      class: CONST.CLASS_ROW,
+      parent: "main",
+      text: "Basic information"
+    }, {
+      type: CONST.GUITYPE_UL,
+      id: "privacyMainPoints",
+      class: CONST.CLASS_ROW,
+      parent: "main",
+      ar: [
+        "All data you create and your preference settings are saved in your browser, nothing is sent across the internet or stored on any servers.",
+        "It is expected that you'll save (export) and load (import) files in the same way as you'd use traditional office software.",
+        "When you export your data to a file, it will be saved on your device in a plain text format.",
+        "If you want to share data between devices you can manually move an exported file or save it to your choice of cloud storage.",
+        "You can wipe your data at any time by using the 'wipe data' button or clearing your browser cache."
+      ]
+    }, {
+      type: CONST.GUITYPE_ROW,
+      id: "privacyTechInfo",
+      class: CONST.CLASS_ROW,
+      parent: "main",
+      text: "Technical information"
+    }, {
+      type: CONST.GUITYPE_UL,
+      id: "privacyTechPoints",
+      class: CONST.CLASS_ROW,
+      parent: "main",
+      ar: [
+        "Data is stored using the localStorage API. It is stored as plain, unencrypted text in JSON format.",
+        "You can view currently stored data by using the developer tools built into eg. desktop versions of Firefox or Chrome.",
+        "If you clear your browser cache, depending on your settings localStorage may be cleared in which case you'll lose any unsaved data.",
+        "CSS/JS has been minified but not obfuscated - you can read it in developer tools. It will be easier if you prettify it first.",
+        "No 3rd-party scripts are loaded on this site. No tracking or advertising is carried out."
+      ]
+    }
+  ];
+
+
   CONST.GUIDATA_JOBSANDCLIENTS = [
     {
       type: CONST.GUITYPE_COL,
-      id: "editClientCol",
+      id: "clientsExisting",
       class: CONST.CLASS_COL,
       parent: "main",
-    }, {
-      type: CONST.GUITYPE_FORM,
-      id: "createClientForm",
-      class: CONST.CLASS_FORMMAIN,
-      title: "Clients",
-      parent: "editClientCol",
-      el_ar: [
-        {
-          type: CONST.GUITYPE_ROW,
-          id: "clientsExistingRow",
-          class: CONST.CLASS_ROW,
-          parent: "createClientForm",
-        }
-      ]
     }, {
       type: CONST.GUITYPE_COL,
-      id: "editJobCol",
+      id: "jobsExisting",
       class: CONST.CLASS_COL,
       parent: "main",
-    }, {
-      type: CONST.GUITYPE_FORM,
-      id: "createJobForm",
-      class: CONST.CLASS_FORMMAIN,
-      title: "Jobs",
-      parent: "editJobCol",
-      hidden: false,
-      el_ar: [
-        {
-          type: CONST.GUITYPE_ROW,
-          id: "jobsExistingRow",
-          class: CONST.CLASS_ROW,
-          parent: "createJobForm",
-        }
-      ]
     }, {
       type: CONST.GUITYPE_METHODCALL,
       methodPathStr: "uk.co.firmgently.DontDillyDally.drawJobsAndClients",
@@ -267,13 +286,13 @@ uk.co.firmgently.DDDConsts = (function() {
     {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
-      id: CONST.BODYID_JOBSANDCLIENTS,
-      label: "Jobs & Clients",
+      id: CONST.BODYID_PRIVACY,
+      label: "Privacy",
       methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      args: [CONST.PAGETYPE_JOBSANDCLIENTS],
+      args: [CONST.PAGETYPE_PRIVACY],
       scopeID: "main",
       parent: "nav-main"
-   }, {
+    }, {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_CONFIG,
@@ -282,7 +301,16 @@ uk.co.firmgently.DDDConsts = (function() {
       args: [CONST.PAGETYPE_CONFIG],
       scopeID: "main",
       parent: "nav-main"
-     }, {
+    }, {
+      type: CONST.GUITYPE_BTN,
+      class: CONST.CLASS_BTNNAV,
+      id: CONST.BODYID_JOBSANDCLIENTS,
+      label: "Jobs & Clients",
+      methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+      args: [CONST.PAGETYPE_JOBSANDCLIENTS],
+      scopeID: "main",
+      parent: "nav-main"
+    }, {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_TIMESHEETS,
@@ -1375,8 +1403,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   Mark Mayes 2018
 
   TODO  file load isn't loading data yet
-  TODO  remove unnecessary form from clients/job page
-  TODO  add week/month/year calculations
   TODO  add 'year start date' preference
   TODO  ensure big/small units update min/max/step when changing from money to hours or viceversa
   FIXME timesheet container not getting scroll focus
@@ -1392,15 +1418,19 @@ uk.co.firmgently.FGHTMLBuild = (function() {
           notes - max length
           client/job names in clients/jobs page
   FIXME tab nav - position wrong while page is loading (gap)
-	TODO	add privacy page/statement
+	FIXME	if empty or bad time/money data is **stored in JSON**, correct it to zero
+	FIXME	select client/job - day remains highlighted (eg. darker date text)
+	FIXME	£-0.77 must register as negative
+  TODO  test everything on touchscreen
+  TODO  test everything on narrow (phone) layout
+	DONE	add privacy page/statement
 					by default all data is saved in your browser (localStorage)
 					you can wipe your data at any time
 					you can export your data to a file (in JSON format) and import it into another browser or device
 					we don't see any of your personal data
-	FIXME	if empty or bad time/money data is **stored in JSON**, correct it to zero
-	FIXME	select client/job - day remains highlighted (eg. darker date text)
-	FIXME	£-0.77 must register as negative
+  DONE  remove unnecessary form from clients/job page
   DONE	blank object being stored in data object results in missing day in UI
+  DONE  add week/month/year calculations
   DONE  after updating client/job, styles are not universally updating
   DONE	 number spinners
   DONE  match all button styles
@@ -1435,7 +1465,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   prop, dateDisplayStart, dateDisplaySelected, dateToday, //timespanDisplay,
   clientNameInput_el, jobNameInput_el, clientSaveBtn_el, jobSaveBtn_el,
   colPickClientFG_el, colPickClientBG_el, colPickJobFG_el, colPickJobBG_el,
-	dayJumpTimer, timesheetDrawDayTimer,
+	dayJumpTimer, timesheetDrawDayTimer, recalculateTotalsTimer,
   tsDaysToDraw, curDrawnDay, tsWorkingFragment,
 
 	// methods
@@ -1449,7 +1479,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   drawTimesheets, drawNextDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
   getNextID, getNewClient, getNewJob,
   navClick, todayClick, weekNextClick, weekPrevClick, monthNextClick, monthPrevClick,
-	onClientTyped, onJobTyped, onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
+	onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
 	onSaveBtnClick, onColorChangeConfirm,
   dataStoragePossible, initData,
 	dataStoreObject, dataRetrieveObject, dataUpdateObject,
@@ -1485,8 +1515,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 
+
   /* -----------------------------------------------------------------------------
-    data storage methods
+    data access/storage related
   ----------------------------------------------------------------------------- */
 
   dataStoragePossible = function() {
@@ -1496,6 +1527,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       return true;
     }
   };
+
 
 	// TODO ensure defaults are still being created on first run
   initData = function() {
@@ -1589,58 +1621,119 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-	onSaveBtnClick = function(event) {
-		var obj = {}, data, el;
-		obj[PREFS_STR] = dataRetrieveObject(PREFS_STR);
-		obj[JOBS_STR] = dataRetrieveObject(JOBS_STR);
-		obj[JOBSTOTAL_STR] = dataRetrieveObject(JOBSTOTAL_STR);
-		obj[CLIENTS_STR] = dataRetrieveObject(CLIENTS_STR);
-		obj[CLIENTSTOTAL_STR] = dataRetrieveObject(CLIENTSTOTAL_STR);
-		obj[DAYS_STR] = dataRetrieveObject(DAYS_STR);
+	updateDataFromWorkItemEl = function (el) {
+		var days_ar, day_ob, workItem_ar,
+				isMoneyTaskChk_el, unitBigInput_el, unitSmallInput_el, clientSelect_el, jobSelect_el, notesInput_el,
+				pageType = dataRetrieveObject(PREFS_STR).pagetype,
+				day_el = el.parentNode.parentNode,
+				day_str = day_el.id;
+		
+		isMoneyTaskChk_el = el.getElementsByClassName("isMoneyTaskChk")[0];
+		unitBigInput_el = el.getElementsByClassName("unitBig")[0];
+		unitSmallInput_el = el.getElementsByClassName("unitSmall")[0];
+		clientSelect_el = el.getElementsByClassName(CLASS_CLIENTSELECT)[0];
+		jobSelect_el = el.getElementsByClassName(CLASS_JOBSELECT)[0];
+		notesInput_el = el.getElementsByClassName("notes")[0]; 
+		days_ar = dataRetrieveObject(DAYS_STR);
+		day_ob = days_ar[day_str];
+		if (day_ob === undefined) { day_ob = {}; }
 
-		data  = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+		workItem_ar = [];
+		if (isMoneyTaskChk_el && isMoneyTaskChk_el.checked) {
+			workItem_ar[DATAINDICES.itemType] = ITEMTYPE_MONEY;
+      workItem_ar[DATAINDICES.numberValue] = unitBigInput_el.value + SEPARATOR_CASH + unitSmallInput_el.value;
+		} else {
+			workItem_ar[DATAINDICES.itemType] = ITEMTYPE_TIME;
+      workItem_ar[DATAINDICES.numberValue] = unitBigInput_el.value + SEPARATOR_TIME + unitSmallInput_el.value;
+		}
+		workItem_ar[DATAINDICES.clientID] = getJobOrClientIDFromElement(clientSelect_el);
+		workItem_ar[DATAINDICES.jobID] = getJobOrClientIDFromElement(jobSelect_el);
+		workItem_ar[DATAINDICES.notes] = notesInput_el.value;
 
-		el       = document.createElement("a");
-		el.href      = "data:" + data;
-		el.download  = SAVE_FILENAME + ".txt";
-		el.innerHTML = "download .txt file of json";
-
-		document.body.appendChild(el);
-		el.click();
-    document.body.removeChild(el);
+    logMsg("\tel.id: " + el.id);
+		day_ob[el.id] = workItem_ar; // write work item to day
+		days_ar[day_str] = day_ob; // write updated day
+		dataStoreObject(DAYS_STR, days_ar);
 	};
 
 
-
-  /* -----------------------------------------------------------------------------
-    setup methods
-  ----------------------------------------------------------------------------- */
-
-  doSetup = function() {
-    dateDisplayStart = new Date();
-    dateDisplaySelected = new Date();
-    dateToday = new Date();
-    if(dataStoragePossible()) {
-      initData();
-      drawGUIFromAr(GUIDATA_NAVMAIN);
-      if (location.hash) {
-        selectPage(decodeURIComponent(location.hash.substring(1)));
-      } else {
-        selectPage(dataRetrieveObject(PREFS_STR).pagetype);
+  updateDataFromClientOrJobEl = function(el) {
+    var i, inputNodes, currentNode, fg_el, bg_el, textInput_el,
+        items_ob, itemType, dataType, update_ob;
+    
+    inputNodes = el.getElementsByTagName("INPUT");
+    for (i = 0; i < inputNodes.length; i++) {
+      currentNode = inputNodes[i];
+      if (currentNode.type === "text") {
+        textInput_el = currentNode;
+      } else if (currentNode.className.indexOf("color-picker") !== -1) {
+        if (currentNode.className.indexOf("bg") !== -1) {
+          bg_el = currentNode.nextSibling;
+        } else if (currentNode.className.indexOf("fg") !== -1) {
+          fg_el = currentNode.nextSibling;
+        }
       }
     }
-		registerEventHandler(document.getElementById("file-chooser"), "change", handleFileSelect, false);
-		registerEventHandler(document.getElementById("file-save"), "click", onSaveBtnClick, false);
-  //  registerEventHandler(window, "scroll", onScroll);
+
+    if (el.id.indexOf(CLIENT_STR) !== -1) {
+      itemType = CLIENTS_STR;
+      dataType = DATATYPE_CLIENT;
+    } else if (el.id.indexOf(JOB_STR) !== -1) {
+      itemType = JOBS_STR;
+      dataType = DATATYPE_JOB;
+    }
+    items_ob = dataRetrieveObject(itemType);
+
+    update_ob = {
+      id: el.id,
+      class: el.id,
+      name: textInput_el.value, // TODO  validate input
+      color: getStyle(fg_el, "background-color"),
+      bgcolor: getStyle(bg_el, "background-color")
+    }
+
+    items_ob[el.id] = update_ob;
+    dataStoreObject(itemType, items_ob);
+    createCSSForClientOrJobFromOb(update_ob, dataType);
   };
 
 
+
+
+  /* ---------------------------------------------------------------------------
+		page drawing methods
+	--------------------------------------------------------------------------- */
+  
   selectPage = function(pagetype) {
     dataUpdateObject(PREFS_STR, "pagetype", pagetype);
     location.hash = pagetype;
 		document.body.id = "";
     clearPage();
     setTimeout(drawPage, 1); // on timer to force reflow after clearPage()
+  };
+
+
+  createFormFromOb = function(ob) {
+    var i, form_el,
+				parent_el = document.getElementById(ob.parent);
+
+    if (ob.id) {
+      form_el = createElementWithId("form", ob.id);
+    } else {
+      form_el = document.createElement("form");
+    }
+    parent_el.appendChild(form_el);
+
+    if (ob.class) { addClassname(form_el, ob.class); }
+    if (ob.title) { form_el.innerHTML = "<h2>" + ob.title + "</h2>"; }
+    if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
+    if (ob.hidden) { form_el.style.display = "none"; }
+
+    form_el.ob = ob;
+    registerEventHandler(form_el, "submit", onFormSubmit);
+    registerEventHandler(form_el, "click", onFormClick);
+
+		return form_el;
   };
 
 
@@ -1669,6 +1762,12 @@ uk.co.firmgently.DontDillyDally = (function() {
         document.body.id = BODYID_JOBSANDCLIENTS;
         fillHTMLFromOb(PAGEDATA_JOBSANDCLIENTS);
         drawGUIFromAr(GUIDATA_JOBSANDCLIENTS);
+        addClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
+        break;
+      case PAGETYPE_PRIVACY:
+        document.body.id = BODYID_PRIVACY;
+        fillHTMLFromOb(PAGEDATA_PRIVACY);
+        drawGUIFromAr(GUIDATA_PRIVACY);
         addClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
         break;
       default:
@@ -1741,16 +1840,15 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   drawTotalsContainer = function(data_ob) {
     var row_el, cell_el,
+        heading_el = document.createElement("h4"),
         table_el = document.createElement("table");
 
     addClassname(table_el, "totals-container");
     table_el.endDate = data_ob.endDate;
     table_el.timeSpan = data_ob.timeSpan;
 
-    row_el = table_el.appendChild(document.createElement("tr"));
-    cell_el = row_el.appendChild(document.createElement("th"));
-    cell_el.colspan = "2";
-    cell_el.innerHTML = data_ob.heading; 
+    heading_el.innerHTML = data_ob.heading;
+    data_ob.parent_el.appendChild(heading_el);
 
     row_el = table_el.appendChild(document.createElement("tr"));
     cell_el = row_el.appendChild(document.createElement("td"));
@@ -1784,226 +1882,6 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  recalculateAllTotals = function() {
-    var i, curContainer, curTotalsData,
-        totalsContainers = document.getElementById(TIMESHEETCONTAINER_ID).getElementsByClassName("totals-container");
-
-    for (i = 0; i < totalsContainers.length; i++) {
-      curContainer = totalsContainers[i];
-      curTotalsData = calculateTotalsFromDateSpan(curContainer.endDate, curContainer.timeSpan);
-      curContainer.getElementsByClassName("total-income")[0].innerHTML = curTotalsData.incomeTotal;
-      curContainer.getElementsByClassName("total-spend")[0].innerHTML = curTotalsData.spendTotal;
-      curContainer.getElementsByClassName("total-hoursworked")[0].innerHTML = curTotalsData.timeTotal;
-      curContainer.getElementsByClassName("total-profit")[0].innerHTML = curTotalsData.incomeTotal + curTotalsData.spendTotal; // spendTotal is a negative value
-    }
-  };
-
-
-  calculateTotalsFromDateSpan = function(dateEnd, timeSpan) {
-    var i, j, daysToCalculate, dayCur, day_str, tempVal,
-				dayWorkItems, itemID, itemCur, daysInPrevMonth,
-        dateStart,
-        return_ob = {
-          timeTotal: 0,
-          incomeTotal: 0,
-          spendTotal: 0
-        },
-				allWorkItems = dataRetrieveObject(DAYS_STR);
-    
-    dateStart = new Date(dateEnd.getTime());
-
-    switch (timeSpan) {
-      case TIMESPAN_WEEK:
-        dateStart.setDate(dateStart.getDate() - DAYSINWEEK);
-        break;
-      case TIMESPAN_MONTH:
-        daysInPrevMonth = new Date(dateStart.getDate() - 1).monthDays();
-        dateStart.setDate(dateStart.getDate() - daysInPrevMonth);
-        break;
-      case TIMESPAN_YEAR:
-        dateStart.setDate(dateStart.getDate() - DAYSINYEAR);
-        break;
-      default:
-        break;
-    };
-    daysToCalculate = daysBetween(dateStart, dateEnd);
-    dayCur = dateStart;
-    for (i = 0; i < daysToCalculate; i++) {
-      day_str = dayCur.getShortISO();
-      dayWorkItems = allWorkItems[day_str];
-      if (dayWorkItems) {
-				for (itemID in dayWorkItems) {
-          itemCur = dayWorkItems[itemID];
-          if (itemCur[DATAINDICES.itemType] === ITEMTYPE_MONEY) {
-            tempVal = parseInt(itemCur[DATAINDICES.numberValue], 10);
-            if (tempVal < 0) {
-              return_ob.spendTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
-            } else {
-              return_ob.incomeTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
-            }
-          } else if (itemCur[DATAINDICES.itemType] === ITEMTYPE_TIME) {
-            return_ob.timeTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
-          }
-        }
-      }
-      dayCur.setDate(dayCur.getDate() + 1);
-    }
-    return return_ob;
-  };
-
-
-  createFormFromOb = function(ob) {
-    var i, form_el,
-				parent_el = document.getElementById(ob.parent);
-
-    if (ob.id) {
-      form_el = createElementWithId("form", ob.id);
-    } else {
-      form_el = document.createElement("form");
-    }
-    parent_el.appendChild(form_el);
-
-    if (ob.class) { addClassname(form_el, ob.class); }
-    if (ob.title) { form_el.innerHTML = "<h2>" + ob.title + "</h2>"; }
-    if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
-    if (ob.hidden) { form_el.style.display = "none"; }
-
-    form_el.ob = ob;
-    registerEventHandler(form_el, "submit", onFormSubmit);
-    registerEventHandler(form_el, "click", onFormClick);
-
-		return form_el;
-  };
-
-
-  // addTask is called from the scope of the 'add task' button
-  addTask = function() {
-    drawUIWorkItem(this.parentNode);
-  };
-
-	removeTask = function() {
-		removeWorkItem(this);
-	};
-
-
-  addClient = function() {
-    var ob = getNewClient();
-    createClientOrJobFromOb(ob, DATATYPE_CLIENT);
-    drawClientOrJobFromOb(ob);
-  };
-
-
-  addJob = function() {
-    var ob = getNewJob();
-    createClientOrJobFromOb(ob, DATATYPE_JOB);
-    drawClientOrJobFromOb(ob);
-  };
-
-
-	// get next available ID for job or client
-  getNextID = function(type) {
-		var prefix, name, n;
-		if (type === DATATYPE_JOB) {
-			n = 0 + (dataRetrieveObject(JOBSTOTAL_STR)) + 1;
-			dataStoreObject(JOBSTOTAL_STR, n);
-			prefix = JOB_STR;
-		} else if (type === DATATYPE_CLIENT) {
-			n = 0 + (dataRetrieveObject(CLIENTSTOTAL_STR)) + 1;
-			dataStoreObject(CLIENTSTOTAL_STR, n);
-			prefix = CLIENT_STR;
-		}
-		return prefix + n;
-  };
-
-
-
-  /* ---------------------------------------------------------------------------
-
-	--------------------------------------------------------------------------- */
-
-  createClientOrJobFromOb = function(ob, dataType) {
-    var id, ar, n, containerObjectName, input_el;
-
-		// create unique identifier for this job or client
-    if (dataType === DATATYPE_CLIENT) {
-      containerObjectName = CLIENTS_STR;
-    } else if (dataType === DATATYPE_JOB) {
-      containerObjectName = JOBS_STR;
-    }
-    ar = dataRetrieveObject(containerObjectName);
-    ar[ob.id] = ob;
-    dataStoreObject(containerObjectName, ar);
-
-		createCSSForClientOrJobFromOb(ob, dataType);
-  };
-
-
-	createCSSForClientOrJobFromOb = function(ob, dataType) {
-    var selector =	"." + ob.class + ", " +
-										"." + ob.class + ":hover, " +
-										"." + ob.class + ":active",
-				colorPickerFGSelector, colorPickerBGSelector;
-
-		// add main CSS for eg. timesheets page
-    if (dataType === DATATYPE_CLIENT || dataType === DATATYPE_JOB) {
-      addCSSRule(selector, "color", ob.color + " !important");
-      addCSSRule(selector, "background-color", ob.bgcolor + " !important");
-    } else {
-      addCSSRule(selector, "color", ob.color);
-      addCSSRule(selector, "background-color", ob.bgcolor);
-    }
-	};
-
-
-  callMethodFromObOnElement = function(event) {
-    callMethodFromOb(event.target.ob, event);
-  };
-
-
-  callMethodFromOb = function(ob, event) {
-    var scope;
-
-    if (ob.scope) {
-      scope = ob.scope;
-    } else if (ob.scopeID) {
-      scope = document.getElementById(ob.scopeID);
-    } else {
-      scope = undefined;
-    }
-
-    if (event) {
-      if (ob.args) {
-        ob.args.push(event);
-      } else {
-        ob.args = [event];
-      }
-    }
-
-    getFunctionFromString(ob.methodPathStr).apply(scope, ob.args);
-  };
-
-
-  // TODO delete this function and all refs to it
-  onClientTyped = function() {
-    clientSaveBtn_el.disabled = clientNameInput_el.value.isEmpty();
-  };
-
-
-  onJobTyped = function() {
-    jobSaveBtn_el.disabled = jobNameInput_el.value.isEmpty();
-  };
-
-
-  onColorChangeConfirm = function(event) {
-    updateDataFromClientOrJobEl(this);
-  };
-
-
-
-  /* ---------------------------------------------------------------------------
-		page drawing methods
-	--------------------------------------------------------------------------- */
-
   drawJobsAndClients = function() {
     var ul_el, li_el, temp_el, prop, item, item_ar;
 
@@ -2011,7 +1889,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     item_ar = dataRetrieveObject(CLIENTS_STR);
     ul_el = document.createElement("ul");
     addClassname(ul_el, CLIENTS_STR);
-    document.getElementById("clientsExistingRow").appendChild(ul_el);
+    document.getElementById("clientsExisting").appendChild(ul_el);
     for (prop in item_ar) {
       drawClientOrJobFromOb(item_ar[prop]);
     }
@@ -2019,7 +1897,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     item_ar = dataRetrieveObject(JOBS_STR);
     ul_el = document.createElement("ul");
     addClassname(ul_el, JOBS_STR);
-    document.getElementById("jobsExistingRow").appendChild(ul_el);
+    document.getElementById("jobsExisting").appendChild(ul_el);
     for (prop in item_ar) {
       drawClientOrJobFromOb(item_ar[prop]);
     }
@@ -2035,10 +1913,10 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     if (item.id.indexOf(CLIENT_STR) !== -1) {
       addMethodPath = "uk.co.firmgently.DontDillyDally.addClient";
-      parent_el = document.getElementById("clientsExistingRow").getElementsByTagName("UL")[0];
+      parent_el = document.getElementById("clientsExisting").getElementsByTagName("UL")[0];
     } else if (item.id.indexOf(JOB_STR) !== -1) {
       addMethodPath = "uk.co.firmgently.DontDillyDally.addJob";
-      parent_el = document.getElementById("jobsExistingRow").getElementsByTagName("UL")[0];
+      parent_el = document.getElementById("jobsExisting").getElementsByTagName("UL")[0];
     }
     parent_el.appendChild(li_el);
     removeMethodPath = "uk.co.firmgently.DontDillyDally.removeClientOrJob";
@@ -2104,7 +1982,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     day_str = curDrawnDay.getShortISO();
     day_el = createElementWithId("li", day_str);
-    tsWorkingFragment.appendChild(day_el);
 
     // work out what special info is attached to this day (eg. first of week/month etc)
     rowClassname = "day row ";
@@ -2123,6 +2000,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
       if (curDrawnDay.getWeekNumber() > 1) {
         totals_el = createElementWithId("li", "totals-week-" + (curDrawnDay.getWeekNumber() - 1));
+        addClassname(totals_el, "totals-week");
         tsWorkingFragment.appendChild(totals_el);
         drawTotalsContainer({
           heading: "week " + (curDrawnDay.getWeekNumber() - 1) + " totals",
@@ -2138,6 +2016,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       monthHeader_el.innerHTML = MONTH_NAMES[curDrawnDay.getMonth()];
       day_el.appendChild(monthHeader_el);
       totals_el = createElementWithId("li", "totals-month-" + (curDrawnDay.getMonth() - 1));
+      addClassname(totals_el, "totals-month");
       if (curDrawnDay.getMonth() > 0) {
         tsWorkingFragment.appendChild(totals_el);
         drawTotalsContainer({
@@ -2149,6 +2028,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
     }
     addClassname(day_el, rowClassname);
+    tsWorkingFragment.appendChild(day_el);
 
     // add date
     date_el = document.createElement("p");
@@ -2178,12 +2058,13 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     if (tsDaysToDraw > 0) {
       document.getElementById(LOADINGINDICATOR_ID).innerHTML = "days left to draw: " + tsDaysToDraw;
+      timesheetDrawDayTimer = setTimeout(drawNextDay, 0);
       curDrawnDay.setDate(curDrawnDay.getDate() + 1);
       tsDaysToDraw --;
-      timesheetDrawDayTimer = setTimeout(drawNextDay, 0);
     } else {
       // add year totals
       totals_el = createElementWithId("li", "totals-year");
+      addClassname(totals_el, "totals-year");
       drawTotalsContainer({
         heading: (curDrawnDay.getFullYear() - 1) + " totals",
         parent_el: totals_el,
@@ -2195,6 +2076,8 @@ uk.co.firmgently.DontDillyDally = (function() {
       // add fragment to DOM
       document.getElementById(TIMESHEETCONTAINER_ID).appendChild(tsWorkingFragment);
       addClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
+
+      recalculateAllTotals();
     }
   };
 
@@ -2202,7 +2085,6 @@ uk.co.firmgently.DontDillyDally = (function() {
   drawTimesheets = function() {
     var i, j, weekdayCur,
 				totals_el, weekStartDay = 1; // 0 = Sunday, 1 = Monday etc
-		
     
     tsWorkingFragment = document.createDocumentFragment(); // work in a fragment to improve performance
     curDrawnDay = new Date();
@@ -2473,22 +2355,38 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  updateLayoutRefs = function() {
-    clientNameInput_el = document.getElementById(EL_ID_CLIENTNAMEIN);
-    clientSaveBtn_el = document.getElementById(EL_ID_CLIENTSAVEBTN);
-    colPickClientFG_el = document.getElementById(CLIENT_FG_COLPICK);
-    colPickClientBG_el = document.getElementById(CLIENT_BG_COLPICK);
-    jobNameInput_el = document.getElementById(EL_ID_JOBNAMEIN);
-    jobSaveBtn_el = document.getElementById(EL_ID_JOBSAVEBTN);
-    colPickJobFG_el = document.getElementById(JOB_FG_COLPICK);
-    colPickJobBG_el = document.getElementById(JOB_BG_COLPICK);
-  };
-
 
 
   /* ---------------------------------------------------------------------------
-		FORMS
+		callbacks/event handlers
 	--------------------------------------------------------------------------- */
+
+  onColorChangeConfirm = function(event) {
+    updateDataFromClientOrJobEl(this);
+  };
+
+
+	onSaveBtnClick = function(event) {
+		var obj = {}, data, el;
+		obj[PREFS_STR] = dataRetrieveObject(PREFS_STR);
+		obj[JOBS_STR] = dataRetrieveObject(JOBS_STR);
+		obj[JOBSTOTAL_STR] = dataRetrieveObject(JOBSTOTAL_STR);
+		obj[CLIENTS_STR] = dataRetrieveObject(CLIENTS_STR);
+		obj[CLIENTSTOTAL_STR] = dataRetrieveObject(CLIENTSTOTAL_STR);
+		obj[DAYS_STR] = dataRetrieveObject(DAYS_STR);
+
+		data  = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+
+		el       = document.createElement("a");
+		el.href      = "data:" + data;
+		el.download  = SAVE_FILENAME + ".txt";
+		el.innerHTML = "download .txt file of json";
+
+		document.body.appendChild(el);
+		el.click();
+    document.body.removeChild(el);
+	};
+
 
   onFormClick = function(e) {
     var form = e.target.form;
@@ -2537,7 +2435,8 @@ uk.co.firmgently.DontDillyDally = (function() {
             updateDataFromWorkItemEl(this.parentNode.parentNode);
           }
           this.value = padString(this.value, this.spin_ob.pad);
-          recalculateAllTotals();
+          clearTimeout(recalculateTotalsTimer);
+          recalculateTotalsTimer = setTimeout(recalculateAllTotals, RECALCULATETOTALS_DELAY);
         }
         break;
       case PAGETYPE_CONFIG:
@@ -2567,6 +2466,281 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+
+
+  /* ---------------------------------------------------------------------------
+    housekeeping/calculations
+	--------------------------------------------------------------------------- */
+
+	getJobOrClientIDFromElement = function(el) {
+		var i, id, curClass, class_ar;
+		if (el) {
+			class_ar = el.className.split(" ");
+			for (i =0; i < class_ar.length; i++) {
+				curClass = class_ar[i];
+				if (curClass !== CLASS_JOBSELECT && curClass !== CLASS_CLIENTSELECT) {
+					return curClass;
+				}
+			}
+		}
+	};
+
+  
+  getFirstVisibleDayElement = function() {
+    var i, day,
+				scrollTop = document.getElementById("main").scrollTop,
+				days = document.getElementById(TIMESHEETCONTAINER_ID).childNodes;
+    for (i = 0; i < days.length; i++) {
+      day = days[i];
+      if (day.offsetTop > scrollTop) {
+        return day;
+      }
+    }
+  };
+
+
+  recalculateAllTotals = function() {
+    var i, curContainer, curTotalsData,
+        totalsContainers = document.getElementById(TIMESHEETCONTAINER_ID).getElementsByClassName("totals-container");
+
+    for (i = 0; i < totalsContainers.length; i++) {
+      curContainer = totalsContainers[i];
+      curTotalsData = calculateTotalsFromDateSpan(curContainer.endDate, curContainer.timeSpan);
+      curContainer.getElementsByClassName("total-income")[0].innerHTML = curTotalsData.incomeTotal;
+      curContainer.getElementsByClassName("total-spend")[0].innerHTML = curTotalsData.spendTotal;
+      curContainer.getElementsByClassName("total-hoursworked")[0].innerHTML = curTotalsData.timeTotal;
+      curContainer.getElementsByClassName("total-profit")[0].innerHTML = curTotalsData.incomeTotal + curTotalsData.spendTotal; // spendTotal is a negative value
+    }
+  };
+
+
+  calculateTotalsFromDateSpan = function(dateEnd, timeSpan) {
+    var i, j, daysToCalculate, dayCur, day_str, tempVal,
+				dayWorkItems, itemID, itemCur, daysInPrevMonth,
+        dateStart,
+        return_ob = {
+          timeTotal: 0,
+          incomeTotal: 0,
+          spendTotal: 0
+        },
+				allWorkItems = dataRetrieveObject(DAYS_STR);
+    
+    dateStart = new Date(dateEnd.getTime());
+
+    switch (timeSpan) {
+      case TIMESPAN_WEEK:
+        dateStart.setDate(dateStart.getDate() - DAYSINWEEK);
+        break;
+      case TIMESPAN_MONTH:
+        daysInPrevMonth = new Date(dateStart.getDate() - 1).monthDays();
+        dateStart.setDate(dateStart.getDate() - daysInPrevMonth);
+        break;
+      case TIMESPAN_YEAR:
+        dateStart.setDate(dateStart.getDate() - DAYSINYEAR);
+        break;
+      default:
+        break;
+    };
+    daysToCalculate = daysBetween(dateStart, dateEnd);
+    dayCur = dateStart;
+    for (i = 0; i < daysToCalculate; i++) {
+      day_str = dayCur.getShortISO();
+      dayWorkItems = allWorkItems[day_str];
+      if (dayWorkItems) {
+				for (itemID in dayWorkItems) {
+          itemCur = dayWorkItems[itemID];
+          if (itemCur[DATAINDICES.itemType] === ITEMTYPE_MONEY) {
+            tempVal = parseInt(itemCur[DATAINDICES.numberValue], 10);
+            if (tempVal < 0) {
+              return_ob.spendTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
+            } else {
+              return_ob.incomeTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
+            }
+          } else if (itemCur[DATAINDICES.itemType] === ITEMTYPE_TIME) {
+            return_ob.timeTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
+          }
+        }
+      }
+      dayCur.setDate(dayCur.getDate() + 1);
+    }
+    return return_ob;
+  };
+
+
+  // addTask is called from the scope of the 'add task' button
+  addTask = function() {
+    drawUIWorkItem(this.parentNode);
+  };
+
+
+	removeTask = function() {
+		removeWorkItem(this);
+	};
+
+
+  addClient = function() {
+    var ob = getNewClient();
+    createClientOrJobFromOb(ob, DATATYPE_CLIENT);
+    drawClientOrJobFromOb(ob);
+  };
+
+
+  addJob = function() {
+    var ob = getNewJob();
+    createClientOrJobFromOb(ob, DATATYPE_JOB);
+    drawClientOrJobFromOb(ob);
+  };
+
+
+	// get next available ID for job or client
+  getNextID = function(type) {
+		var prefix, name, n;
+		if (type === DATATYPE_JOB) {
+			n = 0 + (dataRetrieveObject(JOBSTOTAL_STR)) + 1;
+			dataStoreObject(JOBSTOTAL_STR, n);
+			prefix = JOB_STR;
+		} else if (type === DATATYPE_CLIENT) {
+			n = 0 + (dataRetrieveObject(CLIENTSTOTAL_STR)) + 1;
+			dataStoreObject(CLIENTSTOTAL_STR, n);
+			prefix = CLIENT_STR;
+		}
+		return prefix + n;
+  };
+
+  createClientOrJobFromOb = function(ob, dataType) {
+    var id, ar, n, containerObjectName, input_el;
+
+		// create unique identifier for this job or client
+    if (dataType === DATATYPE_CLIENT) {
+      containerObjectName = CLIENTS_STR;
+    } else if (dataType === DATATYPE_JOB) {
+      containerObjectName = JOBS_STR;
+    }
+    ar = dataRetrieveObject(containerObjectName);
+    ar[ob.id] = ob;
+    dataStoreObject(containerObjectName, ar);
+
+		createCSSForClientOrJobFromOb(ob, dataType);
+  };
+
+
+	createCSSForClientOrJobFromOb = function(ob, dataType) {
+    var selector =	"." + ob.class + ", " +
+										"." + ob.class + ":hover, " +
+										"." + ob.class + ":active",
+				colorPickerFGSelector, colorPickerBGSelector;
+
+		// add main CSS for eg. timesheets page
+    if (dataType === DATATYPE_CLIENT || dataType === DATATYPE_JOB) {
+      addCSSRule(selector, "color", ob.color + " !important");
+      addCSSRule(selector, "background-color", ob.bgcolor + " !important");
+    } else {
+      addCSSRule(selector, "color", ob.color);
+      addCSSRule(selector, "background-color", ob.bgcolor);
+    }
+	};
+
+
+  callMethodFromObOnElement = function(event) {
+    callMethodFromOb(event.target.ob, event);
+  };
+
+
+  callMethodFromOb = function(ob, event) {
+    var scope;
+
+    if (ob.scope) {
+      scope = ob.scope;
+    } else if (ob.scopeID) {
+      scope = document.getElementById(ob.scopeID);
+    } else {
+      scope = undefined;
+    }
+
+    if (event) {
+      if (ob.args) {
+        ob.args.push(event);
+      } else {
+        ob.args = [event];
+      }
+    }
+
+    getFunctionFromString(ob.methodPathStr).apply(scope, ob.args);
+  };
+
+  createClientOrJobFromOb = function(ob, dataType) {
+    var id, ar, n, containerObjectName, input_el;
+
+		// create unique identifier for this job or client
+    if (dataType === DATATYPE_CLIENT) {
+      containerObjectName = CLIENTS_STR;
+    } else if (dataType === DATATYPE_JOB) {
+      containerObjectName = JOBS_STR;
+    }
+    ar = dataRetrieveObject(containerObjectName);
+    ar[ob.id] = ob;
+    dataStoreObject(containerObjectName, ar);
+
+		createCSSForClientOrJobFromOb(ob, dataType);
+  };
+
+
+	createCSSForClientOrJobFromOb = function(ob, dataType) {
+    var selector =	"." + ob.class + ", " +
+										"." + ob.class + ":hover, " +
+										"." + ob.class + ":active",
+				colorPickerFGSelector, colorPickerBGSelector;
+
+		// add main CSS for eg. timesheets page
+    if (dataType === DATATYPE_CLIENT || dataType === DATATYPE_JOB) {
+      addCSSRule(selector, "color", ob.color + " !important");
+      addCSSRule(selector, "background-color", ob.bgcolor + " !important");
+    } else {
+      addCSSRule(selector, "color", ob.color);
+      addCSSRule(selector, "background-color", ob.bgcolor);
+    }
+	};
+
+
+  callMethodFromObOnElement = function(event) {
+    callMethodFromOb(event.target.ob, event);
+  };
+
+
+  callMethodFromOb = function(ob, event) {
+    var scope;
+
+    if (ob.scope) {
+      scope = ob.scope;
+    } else if (ob.scopeID) {
+      scope = document.getElementById(ob.scopeID);
+    } else {
+      scope = undefined;
+    }
+
+    if (event) {
+      if (ob.args) {
+        ob.args.push(event);
+      } else {
+        ob.args = [event];
+      }
+    }
+
+    getFunctionFromString(ob.methodPathStr).apply(scope, ob.args);
+  };
+
+  updateLayoutRefs = function() {
+    clientNameInput_el = document.getElementById(EL_ID_CLIENTNAMEIN);
+    clientSaveBtn_el = document.getElementById(EL_ID_CLIENTSAVEBTN);
+    colPickClientFG_el = document.getElementById(CLIENT_FG_COLPICK);
+    colPickClientBG_el = document.getElementById(CLIENT_BG_COLPICK);
+    jobNameInput_el = document.getElementById(EL_ID_JOBNAMEIN);
+    jobSaveBtn_el = document.getElementById(EL_ID_JOBSAVEBTN);
+    colPickJobFG_el = document.getElementById(JOB_FG_COLPICK);
+    colPickJobBG_el = document.getElementById(JOB_BG_COLPICK);
+  };
+
+
   getNewClient = function() {
     var id = getNextID(DATATYPE_CLIENT);
     return {
@@ -2592,8 +2766,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 
-  /* ---------------------------------------------------------------------------
 
+  /* ---------------------------------------------------------------------------
+    UI click handlers
 	--------------------------------------------------------------------------- */
 
 
@@ -2713,115 +2888,33 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-	updateDataFromWorkItemEl = function (el) {
-		var days_ar, day_ob, workItem_ar,
-				isMoneyTaskChk_el, unitBigInput_el, unitSmallInput_el, clientSelect_el, jobSelect_el, notesInput_el,
-				pageType = dataRetrieveObject(PREFS_STR).pagetype,
-				day_el = el.parentNode.parentNode,
-				day_str = day_el.id;
-		
-		isMoneyTaskChk_el = el.getElementsByClassName("isMoneyTaskChk")[0];
-		unitBigInput_el = el.getElementsByClassName("unitBig")[0];
-		unitSmallInput_el = el.getElementsByClassName("unitSmall")[0];
-		clientSelect_el = el.getElementsByClassName(CLASS_CLIENTSELECT)[0];
-		jobSelect_el = el.getElementsByClassName(CLASS_JOBSELECT)[0];
-		notesInput_el = el.getElementsByClassName("notes")[0]; 
-		days_ar = dataRetrieveObject(DAYS_STR);
-		day_ob = days_ar[day_str];
-		if (day_ob === undefined) { day_ob = {}; }
-
-		workItem_ar = [];
-		if (isMoneyTaskChk_el && isMoneyTaskChk_el.checked) {
-			workItem_ar[DATAINDICES.itemType] = ITEMTYPE_MONEY;
-      workItem_ar[DATAINDICES.numberValue] = unitBigInput_el.value + SEPARATOR_CASH + unitSmallInput_el.value;
-		} else {
-			workItem_ar[DATAINDICES.itemType] = ITEMTYPE_TIME;
-      workItem_ar[DATAINDICES.numberValue] = unitBigInput_el.value + SEPARATOR_TIME + unitSmallInput_el.value;
-		}
-		workItem_ar[DATAINDICES.clientID] = getJobOrClientIDFromElement(clientSelect_el);
-		workItem_ar[DATAINDICES.jobID] = getJobOrClientIDFromElement(jobSelect_el);
-		workItem_ar[DATAINDICES.notes] = notesInput_el.value;
-
-    logMsg("\tel.id: " + el.id);
-		day_ob[el.id] = workItem_ar; // write work item to day
-		days_ar[day_str] = day_ob; // write updated day
-		dataStoreObject(DAYS_STR, days_ar);
-	};
-
-
-  updateDataFromClientOrJobEl = function(el) {
-    var i, inputNodes, currentNode, fg_el, bg_el, textInput_el,
-        items_ob, itemType, dataType, update_ob;
-    
-    inputNodes = el.getElementsByTagName("INPUT");
-    for (i = 0; i < inputNodes.length; i++) {
-      currentNode = inputNodes[i];
-      if (currentNode.type === "text") {
-        textInput_el = currentNode;
-      } else if (currentNode.className.indexOf("color-picker") !== -1) {
-        if (currentNode.className.indexOf("bg") !== -1) {
-          bg_el = currentNode.nextSibling;
-        } else if (currentNode.className.indexOf("fg") !== -1) {
-          fg_el = currentNode.nextSibling;
-        }
-      }
-    }
-
-    if (el.id.indexOf(CLIENT_STR) !== -1) {
-      itemType = CLIENTS_STR;
-      dataType = DATATYPE_CLIENT;
-    } else if (el.id.indexOf(JOB_STR) !== -1) {
-      itemType = JOBS_STR;
-      dataType = DATATYPE_JOB;
-    }
-    items_ob = dataRetrieveObject(itemType);
-
-    update_ob = {
-      id: el.id,
-      class: el.id,
-      name: textInput_el.value, // TODO  validate input
-      color: getStyle(fg_el, "background-color"),
-      bgcolor: getStyle(bg_el, "background-color")
-    }
-
-    items_ob[el.id] = update_ob;
-    dataStoreObject(itemType, items_ob);
-    createCSSForClientOrJobFromOb(update_ob, dataType);
-  };
-
-
-	getJobOrClientIDFromElement = function(el) {
-		var i, id, curClass, class_ar;
-		if (el) {
-			class_ar = el.className.split(" ");
-			for (i =0; i < class_ar.length; i++) {
-				curClass = class_ar[i];
-				if (curClass !== CLASS_JOBSELECT && curClass !== CLASS_CLIENTSELECT) {
-					return curClass;
-				}
-			}
-		}
-	};
-
-  
-  getFirstVisibleDayElement = function() {
-    var i, day,
-				scrollTop = document.getElementById("main").scrollTop,
-				days = document.getElementById(TIMESHEETCONTAINER_ID).childNodes;
-    for (i = 0; i < days.length; i++) {
-      day = days[i];
-      if (day.offsetTop > scrollTop) {
-        return day;
-      }
-    }
-  };
 
 
 	/* ---------------------------------------------------------------------------
 		BEGIN...
 	--------------------------------------------------------------------------- */
+  
+  doSetup = function() {
+    dateDisplayStart = new Date();
+    dateDisplaySelected = new Date();
+    dateToday = new Date();
+    if(dataStoragePossible()) {
+      initData();
+      drawGUIFromAr(GUIDATA_NAVMAIN);
+      if (location.hash) {
+        selectPage(decodeURIComponent(location.hash.substring(1)));
+      } else {
+        selectPage(dataRetrieveObject(PREFS_STR).pagetype);
+      }
+    }
+		registerEventHandler(document.getElementById("file-chooser"), "change", handleFileSelect, false);
+		registerEventHandler(document.getElementById("file-save"), "click", onSaveBtnClick, false);
+  //  registerEventHandler(window, "scroll", onScroll);
+  };
+
 
   doSetup();
+
 
   return {
     drawTimesheets: drawTimesheets,
@@ -2841,8 +2934,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     getNewJob: getNewJob,
     updateSelected: updateSelected,
     onUpdateInput: onUpdateInput,
-    onIsMoneyTaskChkChange: onIsMoneyTaskChkChange,
-    onClientTyped: onClientTyped
+    onIsMoneyTaskChkChange: onIsMoneyTaskChkChange
   };
 
 

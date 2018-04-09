@@ -27,13 +27,16 @@ uk.co.firmgently.DDDConsts = (function() {
     COLORPICKER_CONFIRMEVENT_ID: "colorpickerconfirm",
 
 		AUTOREPEAT_RATE: 500,
+    RECALCULATETOTALS_DELAY: 500,
 
     PAGETYPE_TIMESHEETS: "timesheets",
     PAGETYPE_CONFIG: "preferences",
     PAGETYPE_JOBSANDCLIENTS: "jobs-and-clients",
+    PAGETYPE_PRIVACY: "privacy",
     BODYID_TIMESHEETS: "timesheets",
     BODYID_CONFIG: "config",
     BODYID_JOBSANDCLIENTS: "jobsClients",
+    BODYID_PRIVACY: "privacy",
 
     MONTH_NAMES: [
       "January", "February", "March", "April", "May", "June",
@@ -132,6 +135,10 @@ uk.co.firmgently.DDDConsts = (function() {
       pageTitle: "Preferences",
       intro: "Show and hide things and customise settings."
     },
+    PAGEDATA_PRIVACY: {
+      pageTitle: "Privacy",
+      intro: "Info about data you create with this application."
+    },
 
     DATETYPE_YYMMDD: {
       label: "yy/mm/dd"
@@ -215,46 +222,58 @@ uk.co.firmgently.DDDConsts = (function() {
     until the object has been defined)
 	--------------------------------------------------------------------------- */
 
+  CONST.GUIDATA_PRIVACY = [
+    {
+      type: CONST.GUITYPE_ROW,
+      id: "privacyInfo",
+      class: CONST.CLASS_ROW,
+      parent: "main",
+      text: "Basic information"
+    }, {
+      type: CONST.GUITYPE_UL,
+      id: "privacyMainPoints",
+      class: CONST.CLASS_ROW,
+      parent: "main",
+      ar: [
+        "All data you create and your preference settings are saved in your browser, nothing is sent across the internet or stored on any servers.",
+        "It is expected that you'll save (export) and load (import) files in the same way as you'd use traditional office software.",
+        "When you export your data to a file, it will be saved on your device in a plain text format.",
+        "If you want to share data between devices you can manually move an exported file or save it to your choice of cloud storage.",
+        "You can wipe your data at any time by using the 'wipe data' button or clearing your browser cache."
+      ]
+    }, {
+      type: CONST.GUITYPE_ROW,
+      id: "privacyTechInfo",
+      class: CONST.CLASS_ROW,
+      parent: "main",
+      text: "Technical information"
+    }, {
+      type: CONST.GUITYPE_UL,
+      id: "privacyTechPoints",
+      class: CONST.CLASS_ROW,
+      parent: "main",
+      ar: [
+        "Data is stored using the localStorage API. It is stored as plain, unencrypted text in JSON format.",
+        "You can view currently stored data by using the developer tools built into eg. desktop versions of Firefox or Chrome.",
+        "If you clear your browser cache, depending on your settings localStorage may be cleared in which case you'll lose any unsaved data.",
+        "CSS/JS has been minified but not obfuscated - you can read it in developer tools. It will be easier if you prettify it first.",
+        "No 3rd-party scripts are loaded on this site. No tracking or advertising is carried out."
+      ]
+    }
+  ];
+
+
   CONST.GUIDATA_JOBSANDCLIENTS = [
     {
       type: CONST.GUITYPE_COL,
-      id: "editClientCol",
+      id: "clientsExisting",
       class: CONST.CLASS_COL,
       parent: "main",
-    }, {
-      type: CONST.GUITYPE_FORM,
-      id: "createClientForm",
-      class: CONST.CLASS_FORMMAIN,
-      title: "Clients",
-      parent: "editClientCol",
-      el_ar: [
-        {
-          type: CONST.GUITYPE_ROW,
-          id: "clientsExistingRow",
-          class: CONST.CLASS_ROW,
-          parent: "createClientForm",
-        }
-      ]
     }, {
       type: CONST.GUITYPE_COL,
-      id: "editJobCol",
+      id: "jobsExisting",
       class: CONST.CLASS_COL,
       parent: "main",
-    }, {
-      type: CONST.GUITYPE_FORM,
-      id: "createJobForm",
-      class: CONST.CLASS_FORMMAIN,
-      title: "Jobs",
-      parent: "editJobCol",
-      hidden: false,
-      el_ar: [
-        {
-          type: CONST.GUITYPE_ROW,
-          id: "jobsExistingRow",
-          class: CONST.CLASS_ROW,
-          parent: "createJobForm",
-        }
-      ]
     }, {
       type: CONST.GUITYPE_METHODCALL,
       methodPathStr: "uk.co.firmgently.DontDillyDally.drawJobsAndClients",
@@ -267,13 +286,13 @@ uk.co.firmgently.DDDConsts = (function() {
     {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
-      id: CONST.BODYID_JOBSANDCLIENTS,
-      label: "Jobs & Clients",
+      id: CONST.BODYID_PRIVACY,
+      label: "Privacy",
       methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      args: [CONST.PAGETYPE_JOBSANDCLIENTS],
+      args: [CONST.PAGETYPE_PRIVACY],
       scopeID: "main",
       parent: "nav-main"
-   }, {
+    }, {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_CONFIG,
@@ -282,7 +301,16 @@ uk.co.firmgently.DDDConsts = (function() {
       args: [CONST.PAGETYPE_CONFIG],
       scopeID: "main",
       parent: "nav-main"
-     }, {
+    }, {
+      type: CONST.GUITYPE_BTN,
+      class: CONST.CLASS_BTNNAV,
+      id: CONST.BODYID_JOBSANDCLIENTS,
+      label: "Jobs & Clients",
+      methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+      args: [CONST.PAGETYPE_JOBSANDCLIENTS],
+      scopeID: "main",
+      parent: "nav-main"
+    }, {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_TIMESHEETS,
