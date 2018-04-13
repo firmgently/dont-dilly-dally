@@ -79,8 +79,10 @@ $zNormal: 1;
 $zFloat: 2;
 $zCover: 3;
 
-$bold-font-family: "FG_Bold", Tahoma, Arial, Helvetica;
-$normal-font-family: "FG_Medium", Tahoma, Arial, Helvetica;
+//$bold-font-family: "FG_Bold", Tahoma, Arial, Helvetica;
+//$normal-font-family: "FG_Medium", Tahoma, Arial, Helvetica;
+$bold-font-family: Tahoma, Arial, Helvetica;
+$normal-font-family: Tahoma, Arial, Helvetica;
 
 $ddd-green: #778866;
 $ddd-greendark: #445533;
@@ -94,29 +96,28 @@ $ddd-browndark: #221100;
 $ddd-maroon: #662200;
 $ddd-orange: #cc6644;
 $ddd-orangedark: #993322;
-$ddd-grey-darker: #222222;
-$ddd-grey-dark: #444444;
-$ddd-grey-mid: #888888;
-$ddd-grey-light: #AAAAAA;
-$ddd-grey-lighter: #CCCCCC;
 
-$button-color: $ddd-grey-mid;
+$ddd-grey-darker: #797777;
+$ddd-grey-dark: #DFDDDD;
+$ddd-grey-mid: #F0EEEE;
+$ddd-grey-light: #F2F0F0;
+$ddd-grey-lighter: #F8F6F6;
+
+$button-color: $ddd-sanddark;
 $button-bgcolor: $ddd-cream;
-$icon-color: $ddd-cream;
+$button-color-over: darken($button-color, 10%);
+$button-bgcolor-over: lighten($button-bgcolor, 10%);
+$icon-color: $ddd-grey-dark;
 
-$panelFgColour: $ddd-grey-lighter;
-$panelBgColour: $ddd-grey-dark;
-$panelFgColourDimmed: mix($panelFgColour, $ddd-grey-darker, 75%);
+$panelFgColour: $ddd-grey-darker;
+$panelBgColour: $ddd-grey-light;
+
+$panelFgColourDimmed: mix($panelFgColour, $ddd-grey-light, 75%);
 $panelBgColourDimmed: mix($panelBgColour, $ddd-grey-darker, 75%);
 $panelBgColourTint: mix($panelFgColour, white, 75%);
-$panelBgColour1: lighten($panelBgColour, 25%);
-$panelBgColour2: lighten($panelBgColour, 15%);
-$panelBgColour3: lighten($panelBgColour, 10%);
-
-$buttonBgColourOut: $ddd-maroon;
-$buttonBgColourOver: darken($buttonBgColourOut, 25%);
-$buttonColourOut: $ddd-gold;
-$buttonColourOver: $ddd-grey-mid;
+$panelBgColour1: darken($panelBgColour, 25%);
+$panelBgColour2: darken($panelBgColour, 15%);
+$panelBgColour3: darken($panelBgColour, 10%);
 
 $jobInputColour: $ddd-sanddark;
 $jobInputBackgroundColour: $ddd-sand;
@@ -124,6 +125,23 @@ $jobInputBackgroundColourTint: lighten($jobInputBackgroundColour, 25%);
 $moneyInputColour: $ddd-sanddark;
 $moneyInputBackgroundColour: $ddd-green;
 $moneyInputBackgroundColourTint: lighten($moneyInputBackgroundColour, 25%);
+
+$oddDayBgColour: lighten($panelBgColour, 2%);
+$oddDayFgColour: darken($panelFgColour, 5%);
+$oddDayBtnBgColour: darken($button-bgcolor, 11%);
+$oddDayBtnFgColour: lighten($button-color, 5%);
+$oddDayBgColourHover: darken($panelBgColour, 2%);
+$oddDayFgColourHover: lighten($panelFgColour, 15%);
+
+$evenDayBgColour: lighten($panelBgColour, 4%);
+$evenDayFgColour: darken($panelFgColour, 5%);
+$evenDayBtnBgColour: lighten($button-bgcolor, 11%);
+$evenDayBtnFgColour: darken($button-color, 15%);
+$evenDayBgColourHover: lighten($panelBgColour, 15%);
+$evenDayFgColourHover: darken($panelFgColour, 25%);
+
+
+
 
 $tinyPadding: 0.15rem;
 $smallPadding: 0.3rem;
@@ -203,6 +221,7 @@ aside {
 }
 body#jobsClients aside nav button#jobsClients.btnNav,
 body#timesheets aside nav button#timesheets.btnNav,
+body#privacy aside nav button#privacy.btnNav,
 body#config aside nav button#config.btnNav {
 	width: 19vh;
   font-size: $tab-fontsize-selected; @include topCurve($mediumPadding);
@@ -232,7 +251,8 @@ body#jobsClients, body#config {
   position: absolute; z-index: $zNormal;
   top: 0; bottom: 0; left: $sidebar-width; right: 0;
   overflow: scroll;
-  background-color: $panelFgColourDimmed;
+  padding: $extraLargePadding;
+  background-color: $panelBgColour;
   h1, h2 { padding: $largePadding $mediumPadding $largePadding $extraLargePadding; }
 }
 
@@ -286,17 +306,18 @@ body#jobsClients, body#config {
     &.day {
       display: block;
       padding: $largePadding $tinyPadding;
-      color: $panelBgColour1; background-color: $panelBgColour3;
+      color: $oddDayFgColour; background-color: $oddDayBgColour;
       &:hover, &:focus-within {
-        color: mix($panelBgColour3, $ddd-browndark, 25%);
-        background-color: mix($panelBgColour3, $ddd-grey-dark, 92%);
+        color: $oddDayFgColourHover;
+        background-color: $oddDayBgColourHover;
       }
     }
     &:nth-of-type(even) {
-			background-color: $panelBgColour2;
+			background-color: $evenDayBgColour;
+      color: $evenDayFgColour;
 			em { background-color: $panelBgColour3; }
-      select { background-color: $panelBgColour3; }
-      &:hover, &:focus-within { background-color: mix($panelBgColour2, white, 73%); }
+      //select { background-color: $evenDayBtnBgColour; color: $evenDayBtnFgColour; }
+      &:hover, &:focus-within { color: $evenDayFgColourHover; background-color: $evenDayBgColourHover; }
 		}
     &.today {
       .date.col {
@@ -307,7 +328,7 @@ body#jobsClients, body#config {
     &.week-start { margin-top: $smallPadding; }
     &.month-start {
 			h4 {
-				display: block; font-size: $fontSizeNormal; background-color: $panelBgColour1;
+				display: block; font-size: $fontSizeNormal; color: $panelBgColour3; background-color: $panelBgColour1;
 				padding: $largePadding; margin-top: -$largePadding; margin-bottom: $largePadding;
 			}
     }
@@ -429,7 +450,7 @@ body#jobsClients, body#config {
 				}
 			}
 			
-			.removeTaskBtn, .addTaskBtn {
+			.removeItemBtn, .addItemBtn {
 				font-family: "ddd-icons"; font-size: $fontSizeIcon;
 				@include border-radius(1rem); border: none;
 				height: 2rem; width: 2rem;
@@ -437,23 +458,27 @@ body#jobsClients, body#config {
 				cursor: pointer;
 				color: $button-color; background-color: $button-bgcolor;
 				position: absolute; bottom: 0;
+        &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; }
 			}
-			.addTaskBtn { margin-left: -3rem }
-			.removeTaskBtn { right: 1rem; color: $ddd-orangedark; }
-			&:only-child .removeTaskBtn { visibility: hidden; }
-			&:not(:first-child) .addTaskBtn { visibility: hidden; }
+			.addItemBtn { margin-left: -3rem }
+			.removeItemBtn { right: 1rem; color: $ddd-orangedark; }
+			&:only-child .removeItemBtn { visibility: hidden; }
+			&:not(:first-child) .addItemBtn { visibility: hidden; }
 		}
 	}
 
   > li.totals-week, > li.totals-month, > li.totals-year,
   > li.totals-week:hover, > li.totals-month:hover, > li.totals-year:hover {
     padding: $mediumPadding;
-    background-color: $panelFgColourDimmed;
+    background-color: $panelBgColour2;
     vertical-align: top;
     h4, table {
       display: inline-block;
     }
     h4 { width: $date-width + $extraLargePadding + 2rem; }
+  }
+  > li.totals-month, > li.totals-month:hover, {
+    background-color: $panelBgColour3;
   }
 
 }
@@ -465,7 +490,7 @@ body#jobsClients, body#config {
         @include border-radius($mediumPadding);
         font-weight: bold;
       }
-      .removeTaskBtn { right: auto; }
+      .removeItemBtn { right: auto; }
     }
   }
 }
@@ -475,7 +500,9 @@ select, input, button { border: none; padding: $smallPadding $smallPadding $smal
 select {
   font-family: $bold-font-family;
   appearance: none; -webkit-appearance: none; -moz-appearance: none;
-  background-color: $ddd-cream; color: $ddd-grey-dark;
+  background-color: $button-bgcolor; color: $button-color;
+  cursor: pointer;
+  &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; }
 	&:first-of-type { margin-right: $largePadding; } 
 }
 #configForm {
@@ -493,8 +520,9 @@ select {
     position: absolute; display: inline-block;
     left: 10%; width: 40%; height: 0.5rem;
     padding: 0.1rem 0.2rem 0.55rem 0.2rem;
-    background-color: $button-color; color: $button-bgcolor;
+    background-color: $button-bgcolor; color: $button-color;
     text-align: center; font-size: 0.5rem;
+    &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; }
 		&:after {
 			content:'';
 			position:absolute;
@@ -550,7 +578,8 @@ select {
 #miniNavForm {
 	position: fixed;
 	top: 0; right: 0; z-index: $zFloat;
-	background-color: $ddd-grey-dark; color: $button-bgcolor; 
+//	background-color: $button-bgcolor; color: $button-color; 
+//  &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; }
   p { font-size: $fontSizeSmall; font-weight: 700; display: inline; margin: 0 $largePadding}
   button:nth-of-type(2),
   button:nth-of-type(4) {
@@ -576,7 +605,7 @@ select {
 #file-save,
 #file-chooser + label {
   font-size: $fontSizeSmall; font-weight: 700; text-align: center;
-  color: $button-bgcolor; background-color: $button-color;
+  color: $button-color; background-color: $button-bgcolor;
   display: inline-block;
   padding: $mediumPadding;
   cursor: pointer;
@@ -591,7 +620,7 @@ select {
 #file-save:hover,
 #file-chooser:focus + label,
 #file-chooser + label:hover {
-  background-color: $button-color;
+  &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; }
 }
 
 /* COLOR PICKER */
@@ -633,9 +662,10 @@ select {
   url('/fonts/ddd-icons.svg?48170321#ddd-icons') format('svg');
   font-weight: normal;
   font-style: normal;
+  font-display: block;
 }
 
-
+/*
 @font-face {
   font-family: 'FG_Bold';
   src: 	url('/fonts/NotoSans-Bold-webfont.eot?') format('eot'),
@@ -652,3 +682,4 @@ select {
   // url('/fonts/NotoSans-Regular-webfont.svg#NotoSansRegular') format('svg'),
   url('/fonts/NotoSans-Regular-webfont.ttf') format('truetype');
 }
+*/

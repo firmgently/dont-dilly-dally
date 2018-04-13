@@ -26,6 +26,8 @@ uk.co.firmgently.DDDConsts = (function() {
     COLORPICKER_CHANGEEVENT_ID: "colorpickerchange",
     COLORPICKER_CONFIRMEVENT_ID: "colorpickerconfirm",
 
+    DATASTORE_CATEGORY_PREFIX: "_",
+
 		AUTOREPEAT_RATE: 500,
     RECALCULATETOTALS_DELAY: 500,
 
@@ -65,6 +67,14 @@ uk.co.firmgently.DDDConsts = (function() {
     CLASS_CLIENTSELECT: "select-client",
     CLASS_JOBSELECT: "select-job",
 		CLASS_TODAY: "today",
+    CLASS_SPINNER_UNITBIG: "unitBig",
+    CLASS_SPINNER_UNITSMALL: "unitSmall",
+    CLASS_NOTESINPUT: "notes",
+    CLASS_NEGATIVE: "negative",
+    CLASS_HIDDEN: "hidden",
+    CLASS_TOTALSWEEK: "totals-week",
+    CLASS_TOTALSMONTH: "totals-month",
+    CLASS_TOTALSYEAR: "totals-year",
 
     TURNOVER_STR: "Turnover",
     PROFIT_STR: "Profit",
@@ -1465,28 +1475,29 @@ uk.co.firmgently.DontDillyDally = (function() {
   prop, dateDisplayStart, dateDisplaySelected, dateToday, //timespanDisplay,
   clientNameInput_el, jobNameInput_el, clientSaveBtn_el, jobSaveBtn_el,
   colPickClientFG_el, colPickClientBG_el, colPickJobFG_el, colPickJobBG_el,
-	dayJumpTimer, timesheetDrawDayTimer, recalculateTotalsTimer,
-  tsDaysToDraw, curDrawnDay, tsWorkingFragment,
+	eventAutoRepeatTimer, timesheetDrawDayTimer, recalculateTotalsTimer,
+  tsDaysToDraw, tsDaysToDrawTotal, curDrawnDay, tsWorkingFragment,
 
 	// methods
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
-	eventAutoRepeat, dayJumpAutorepeatStop,
+	eventAutoRepeat, eventAutoRepeatStop,
   createFormFromOb,
   recalculateAllTotals, calculateTotalsFromDateSpan,
   addTask, removeTask, addClient, removeClientOrJob, addJob,
   callMethodFromObOnElement, callMethodFromOb,
-	onFormClick, onScroll,
   drawTimesheets, drawNextDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
   getNextID, getNewClient, getNewJob,
   navClick, todayClick, weekNextClick, weekPrevClick, monthNextClick, monthPrevClick,
-	onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
+
+  onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
 	onSaveBtnClick, onColorChangeConfirm,
+	onFormClick, onScroll,
+  
   dataStoragePossible, initData,
 	dataStoreObject, dataRetrieveObject, dataUpdateObject,
 	clientAndJobStyleSheet, createClientOrJobFromOb, createCSSForClientOrJobFromOb,
 	getJobOrClientIDFromElement, updateDataFromWorkItemEl, updateDataFromClientOrJobEl,
   getFirstVisibleDayElement,
-  clientInputWasLastEmpty,
 	handleFileSelect, updateColoursFromPickers, updatePickerFromColours,
   updateLayoutRefs, updateSelected, drawUIWorkItem, removeWorkItem 
 	;
@@ -1529,7 +1540,6 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-	// TODO ensure defaults are still being created on first run
   initData = function() {
 		var item, container, temp_ob, temp_id;
     // if no preferences are stored create some defaults
@@ -1556,7 +1566,6 @@ uk.co.firmgently.DontDillyDally = (function() {
         temp_ob = CLIENT_DEFAULTS[item];
         temp_ob.id = temp_id;
         temp_ob.class = temp_id;
-        // TODO copy object and change its id/class based on getNextID
         createClientOrJobFromOb(temp_ob, DATATYPE_CLIENT);
       }
 
@@ -1588,12 +1597,12 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   dataStoreObject = function(category, ob) {
-    localStorage.setItem(APP_ID + "_" + category, JSON.stringify(ob));
+    localStorage.setItem(APP_ID + DATASTORE_CATEGORY_PREFIX + category, JSON.stringify(ob));
   };
 
 
   dataRetrieveObject = function(category) {
-    return JSON.parse(localStorage.getItem(APP_ID + "_" + category));
+    return JSON.parse(localStorage.getItem(APP_ID + DATASTORE_CATEGORY_PREFIX + category));
   };
 
 
@@ -1629,11 +1638,11 @@ uk.co.firmgently.DontDillyDally = (function() {
 				day_str = day_el.id;
 		
 		isMoneyTaskChk_el = el.getElementsByClassName("isMoneyTaskChk")[0];
-		unitBigInput_el = el.getElementsByClassName("unitBig")[0];
-		unitSmallInput_el = el.getElementsByClassName("unitSmall")[0];
+		unitBigInput_el = el.getElementsByClassName(CLASS_SPINNER_UNITBIG)[0];
+		unitSmallInput_el = el.getElementsByClassName(CLASS_SPINNER_UNITSMALL)[0];
 		clientSelect_el = el.getElementsByClassName(CLASS_CLIENTSELECT)[0];
 		jobSelect_el = el.getElementsByClassName(CLASS_JOBSELECT)[0];
-		notesInput_el = el.getElementsByClassName("notes")[0]; 
+		notesInput_el = el.getElementsByClassName(CLASS_NOTESINPUT)[0]; 
 		days_ar = dataRetrieveObject(DAYS_STR);
 		day_ob = days_ar[day_str];
 		if (day_ob === undefined) { day_ob = {}; }
@@ -1738,7 +1747,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   clearPage = function() {
-    removeClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
+    removeClassname(document.getElementById(LOADINGINDICATOR_ID), CLASS_HIDDEN);
     document.getElementById("main").innerHTML = "";
   };
 
@@ -1756,19 +1765,19 @@ uk.co.firmgently.DontDillyDally = (function() {
         document.body.id = BODYID_CONFIG;
         fillHTMLFromOb(PAGEDATA_CONFIG);
         drawGUIFromAr(GUIDATA_CONFIG);
-        addClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
+        addClassname(document.getElementById(LOADINGINDICATOR_ID), CLASS_HIDDEN);
         break;
       case PAGETYPE_JOBSANDCLIENTS:
         document.body.id = BODYID_JOBSANDCLIENTS;
         fillHTMLFromOb(PAGEDATA_JOBSANDCLIENTS);
         drawGUIFromAr(GUIDATA_JOBSANDCLIENTS);
-        addClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
+        addClassname(document.getElementById(LOADINGINDICATOR_ID), CLASS_HIDDEN);
         break;
       case PAGETYPE_PRIVACY:
         document.body.id = BODYID_PRIVACY;
         fillHTMLFromOb(PAGEDATA_PRIVACY);
         drawGUIFromAr(GUIDATA_PRIVACY);
-        addClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
+        addClassname(document.getElementById(LOADINGINDICATOR_ID), CLASS_HIDDEN);
         break;
       default:
         break;
@@ -1885,7 +1894,6 @@ uk.co.firmgently.DontDillyDally = (function() {
   drawJobsAndClients = function() {
     var ul_el, li_el, temp_el, prop, item, item_ar;
 
-    // TODO remove old UL
     item_ar = dataRetrieveObject(CLIENTS_STR);
     ul_el = document.createElement("ul");
     addClassname(ul_el, CLIENTS_STR);
@@ -1923,19 +1931,19 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     // 'add task' button
     temp_el = createButtonFromOb({
-      class: "addTaskBtn",
+      class: "addItemBtn",
       label: "&#xe821;",
       parent: li_el,
       methodPathStr: addMethodPath,
       scopeID: item.id
     });
-    registerEventHandler(temp_el, "mousedown", callMethodFromObOnElement);
+    registerEventHandler(temp_el, "click", callMethodFromObOnElement);
 
     temp_el = createInputFromOb({
       class: item.id,
       parent: li_el,
       attributes: { "type": "text", "value": item.name },
-      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput", // TODO use correct method
+      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput", 
       scopeID: item.id
     });
     temp_el.ob.scope = temp_el;
@@ -1960,13 +1968,13 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     // 'remove task' button
     temp_el = createButtonFromOb({
-      class: "removeTaskBtn",
+      class: "removeItemBtn",
       label: "&#xe83d;",
       parent: li_el,
       methodPathStr: removeMethodPath,
       scopeID: item.id
     });
-    registerEventHandler(temp_el, "mousedown", callMethodFromObOnElement);
+    registerEventHandler(temp_el, "click", callMethodFromObOnElement);
 
     manualEvent(li_el, COLORPICKER_CHANGEEVENT_ID); // ensure input's colours are updated
   };
@@ -1999,8 +2007,8 @@ uk.co.firmgently.DontDillyDally = (function() {
         significance_str += " (" + (curDrawnDay.getFullYear() + 1) + ")";
       }
       if (curDrawnDay.getWeekNumber() > 1) {
-        totals_el = createElementWithId("li", "totals-week-" + (curDrawnDay.getWeekNumber() - 1));
-        addClassname(totals_el, "totals-week");
+        totals_el = document.createElement("li");
+        addClassname(totals_el, CLASS_TOTALSWEEK);
         tsWorkingFragment.appendChild(totals_el);
         drawTotalsContainer({
           heading: "week " + (curDrawnDay.getWeekNumber() - 1) + " totals",
@@ -2015,8 +2023,8 @@ uk.co.firmgently.DontDillyDally = (function() {
       monthHeader_el = document.createElement("h4");
       monthHeader_el.innerHTML = MONTH_NAMES[curDrawnDay.getMonth()];
       day_el.appendChild(monthHeader_el);
-      totals_el = createElementWithId("li", "totals-month-" + (curDrawnDay.getMonth() - 1));
-      addClassname(totals_el, "totals-month");
+      totals_el = document.createElement("li");
+      addClassname(totals_el, CLASS_TOTALSMONTH);
       if (curDrawnDay.getMonth() > 0) {
         tsWorkingFragment.appendChild(totals_el);
         drawTotalsContainer({
@@ -2057,14 +2065,14 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
 
     if (tsDaysToDraw > 0) {
-      document.getElementById(LOADINGINDICATOR_ID).innerHTML = "days left to draw: " + tsDaysToDraw;
+      document.getElementById(LOADINGINDICATOR_ID).innerHTML = "creating day " + (tsDaysToDrawTotal - tsDaysToDraw) + "/" + tsDaysToDrawTotal;
       timesheetDrawDayTimer = setTimeout(drawNextDay, 0);
       curDrawnDay.setDate(curDrawnDay.getDate() + 1);
       tsDaysToDraw --;
     } else {
       // add year totals
-      totals_el = createElementWithId("li", "totals-year");
-      addClassname(totals_el, "totals-year");
+      totals_el = document.createElement("li");
+      addClassname(totals_el, CLASS_TOTALSYEAR);
       drawTotalsContainer({
         heading: (curDrawnDay.getFullYear() - 1) + " totals",
         parent_el: totals_el,
@@ -2075,7 +2083,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
       // add fragment to DOM
       document.getElementById(TIMESHEETCONTAINER_ID).appendChild(tsWorkingFragment);
-      addClassname(document.getElementById(LOADINGINDICATOR_ID), "hidden");
+      addClassname(document.getElementById(LOADINGINDICATOR_ID), CLASS_HIDDEN);
 
       recalculateAllTotals();
     }
@@ -2090,7 +2098,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     curDrawnDay = new Date();
 
     // how many days do we want to draw?
-    switch(dataRetrieveObject(PREFS_STR).timespan) {
+   switch(dataRetrieveObject(PREFS_STR).timespan) {
       case TIMESPAN_WEEK:
         weekdayCur = curDrawnDay.getDay(); // 0 = Sunday, 1 = Monday etc
         curDrawnDay.setDate(curDrawnDay.getDate() - weekdayCur + weekStartDay); // first day of week
@@ -2110,6 +2118,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
     }
 
+    tsDaysToDrawTotal = tsDaysToDraw;
     // draw days asynchronously with a timer
     // to enable us to give UI feedback on progress
     timesheetDrawDayTimer = setTimeout(drawNextDay, 0);
@@ -2125,15 +2134,15 @@ uk.co.firmgently.DontDillyDally = (function() {
     item_el = createElementWithId("li", itemID);
     dayDataContainer_el.insertBefore(item_el, dayDataContainer_el.firstChild);
 
-    // 'add task' button
+    // 'add item' button
     el_temp = createButtonFromOb({
-      class: "addTaskBtn",
+      class: "addItemBtn",
       label: "&#xe821;",
       parent: item_el,
       methodPathStr: "uk.co.firmgently.DontDillyDally.addTask",
       scopeID: itemID
     });
-    registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "click", callMethodFromObOnElement);
 
     // client select/dropdown
     el_temp = createSelectFromOb({
@@ -2194,7 +2203,6 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
 			addClassname(item_el, "hrs");
     }
-		// TODO remove unnecessary specific classnames hrs/money
 
     // hours/money big units
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
@@ -2203,7 +2211,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       ob_temp = { min: -999999999, max: 999999999, step: 1, pad: "    " };
     }
     el_temp = createSpinnerFromOb({
-      class: "unitBig",
+      class: CLASS_SPINNER_UNITBIG,
       parent: item_el,
       attributes: ob_temp,
       methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
@@ -2216,9 +2224,8 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
     if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
 			el_temp.value = numberValue_ar[0];
-			// TODO 'negative' class is not being added when field is pre-filled with saved data	
 			if (parseInt(numberValue_ar[0]) < 0) {
-				addClassname(el_temp.parentNode.parentNode, "negative");
+				addClassname(el_temp.parentNode.parentNode, CLASS_NEGATIVE);
 			}
 			manualEvent(el_temp, "change");
 		} else {
@@ -2244,7 +2251,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       ob_temp = { min: 0, max: 99, step: 1, wrapNum: true, pad: "00" };
     }
     el_temp = createSpinnerFromOb({
-      class: "unitSmall",
+      class: CLASS_SPINNER_UNITSMALL,
       parent: item_el,
       attributes: ob_temp,
       methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
@@ -2264,7 +2271,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     // job/money notes
     el_temp = createInputFromOb({
-      class: "notes",
+      class: CLASS_NOTESINPUT,
       parent: item_el,
       attributes: { "type": "text", "placeholder": JOBNOTES_PLACEHOLDER },
       methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
@@ -2277,15 +2284,15 @@ uk.co.firmgently.DontDillyDally = (function() {
     registerEventHandler(el_temp, "input", callMethodFromObOnElement);
 		if (itemData_ob && itemData_ob[DATAINDICES.notes]) { el_temp.value = itemData_ob[DATAINDICES.notes]; }
 
-    // 'remove task' button
+    // 'remove item' button
     el_temp = createButtonFromOb({
-      class: "removeTaskBtn",
+      class: "removeItemBtn",
       label: "&#xe83d;",
       parent: item_el,
       methodPathStr: "uk.co.firmgently.DontDillyDally.removeTask",
       scopeID: itemID
     });
-    registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
+    registerEventHandler(el_temp, "click", callMethodFromObOnElement);
 		
 		// if this item is being filled with stored data,
 		// and the money checkbox is checked, we have to call the onChange function here
@@ -2414,20 +2421,18 @@ uk.co.firmgently.DontDillyDally = (function() {
   onUpdateInput = function(event) {
     switch (dataRetrieveObject(PREFS_STR).pagetype) {
       case PAGETYPE_TIMESHEETS:
-        if (this.className.indexOf("notes") !== -1) {
+        if (this.className.indexOf(CLASS_NOTESINPUT) !== -1) {
           // TODO validate notes input
-          logMsg(this);
-          logMsg(this.parentNode);
           updateDataFromWorkItemEl(this.parentNode);
         } else {
           if (isNaN(parseInt(this.value))) { this.value = 0; }
 
           // TODO needs to handle negative small unit eg. -£0.13
-          if (this.className.indexOf("unitBig") !== -1) {
+          if (this.className.indexOf(CLASS_SPINNER_UNITBIG) !== -1) {
             if (parseInt(this.value) < 0) {
-              addClassname(this.parentNode.parentNode, "negative");
+              addClassname(this.parentNode.parentNode, CLASS_NEGATIVE);
             } else {
-              removeClassname(this.parentNode.parentNode, "negative");
+              removeClassname(this.parentNode.parentNode, CLASS_NEGATIVE);
             }
           }
           // TODO check following line still works
@@ -2452,7 +2457,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   onIsMoneyTaskChkChange = function() {
     var checkbox = this.getElementsByClassName("isMoneyTaskChk")[0],
-				notesInput = this.getElementsByClassName("notes")[0];
+				notesInput = this.getElementsByClassName(CLASS_NOTESINPUT)[0];
     if (checkbox.checked) {
 			addClassname(this, "money");
 			removeClassname(this, "hrs");
@@ -2730,14 +2735,15 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
   updateLayoutRefs = function() {
-    clientNameInput_el = document.getElementById(EL_ID_CLIENTNAMEIN);
+  /*  clientNameInput_el = document.getElementById(EL_ID_CLIENTNAMEIN);
     clientSaveBtn_el = document.getElementById(EL_ID_CLIENTSAVEBTN);
     colPickClientFG_el = document.getElementById(CLIENT_FG_COLPICK);
     colPickClientBG_el = document.getElementById(CLIENT_BG_COLPICK);
     jobNameInput_el = document.getElementById(EL_ID_JOBNAMEIN);
     jobSaveBtn_el = document.getElementById(EL_ID_JOBSAVEBTN);
     colPickJobFG_el = document.getElementById(JOB_FG_COLPICK);
-    colPickJobBG_el = document.getElementById(JOB_BG_COLPICK);
+    colPickJobBG_el = document.getElementById(JOB_BG_COLPICK); */
+    TIMESHEETCONTAINER_ID
   };
 
 
@@ -2789,8 +2795,8 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
     }
 		eventAutoRepeat(e.target, e.type);
-		registerEventHandler(e.target, "mouseup", dayJumpAutorepeatStop);
-		registerEventHandler(e.target, "mouseout", dayJumpAutorepeatStop);
+		registerEventHandler(e.target, "mouseup", eventAutoRepeatStop);
+		registerEventHandler(e.target, "mouseout", eventAutoRepeatStop);
 	};
 
 
@@ -2806,8 +2812,8 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
     }
 		eventAutoRepeat(e.target, e.type);
-		registerEventHandler(e.target, "mouseup", dayJumpAutorepeatStop);
-		registerEventHandler(e.target, "mouseout", dayJumpAutorepeatStop);
+		registerEventHandler(e.target, "mouseup", eventAutoRepeatStop);
+		registerEventHandler(e.target, "mouseout", eventAutoRepeatStop);
 	};
 
 
@@ -2823,8 +2829,8 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
     }
 		eventAutoRepeat(e.target, e.type);
-		registerEventHandler(e.target, "mouseup", dayJumpAutorepeatStop);
-		registerEventHandler(e.target, "mouseout", dayJumpAutorepeatStop);
+		registerEventHandler(e.target, "mouseup", eventAutoRepeatStop);
+		registerEventHandler(e.target, "mouseout", eventAutoRepeatStop);
 	};
 
 
@@ -2840,8 +2846,8 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
     }
 		eventAutoRepeat(e.target, e.type);
-		registerEventHandler(e.target, "mouseup", dayJumpAutorepeatStop);
-		registerEventHandler(e.target, "mouseout", dayJumpAutorepeatStop);
+		registerEventHandler(e.target, "mouseup", eventAutoRepeatStop);
+		registerEventHandler(e.target, "mouseout", eventAutoRepeatStop);
 	};
 
 
@@ -2851,13 +2857,13 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 	eventAutoRepeat = function(el, eventType) {
-		clearTimeout(dayJumpTimer);
-		dayJumpTimer = setTimeout(function() { manualEvent(el, eventType); }, AUTOREPEAT_RATE);
+		clearTimeout(eventAutoRepeatTimer);
+		eventAutoRepeatTimer = setTimeout(function() { manualEvent(el, eventType); }, AUTOREPEAT_RATE);
 	};
 
 
-	dayJumpAutorepeatStop = function() {
-		clearTimeout(dayJumpTimer);
+	eventAutoRepeatStop = function() {
+		clearTimeout(eventAutoRepeatTimer);
 	};
 
 

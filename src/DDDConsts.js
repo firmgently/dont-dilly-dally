@@ -26,6 +26,8 @@ uk.co.firmgently.DDDConsts = (function() {
     COLORPICKER_CHANGEEVENT_ID: "colorpickerchange",
     COLORPICKER_CONFIRMEVENT_ID: "colorpickerconfirm",
 
+    DATASTORE_CATEGORY_PREFIX: "_",
+
 		AUTOREPEAT_RATE: 500,
     RECALCULATETOTALS_DELAY: 500,
 
@@ -65,6 +67,14 @@ uk.co.firmgently.DDDConsts = (function() {
     CLASS_CLIENTSELECT: "select-client",
     CLASS_JOBSELECT: "select-job",
 		CLASS_TODAY: "today",
+    CLASS_SPINNER_UNITBIG: "unitBig",
+    CLASS_SPINNER_UNITSMALL: "unitSmall",
+    CLASS_NOTESINPUT: "notes",
+    CLASS_NEGATIVE: "negative",
+    CLASS_HIDDEN: "hidden",
+    CLASS_TOTALSWEEK: "totals-week",
+    CLASS_TOTALSMONTH: "totals-month",
+    CLASS_TOTALSYEAR: "totals-year",
 
     TURNOVER_STR: "Turnover",
     PROFIT_STR: "Profit",
