@@ -29,7 +29,7 @@ uk.co.firmgently.DDDConsts = (function() {
     DATASTORE_CATEGORY_PREFIX: "_",
 
 		AUTOREPEAT_RATE: 500,
-    RECALCULATETOTALS_DELAY: 500,
+    RECALCULATETOTALS_DELAY: 1000,
 
     PAGETYPE_TIMESHEETS: "timesheets",
     PAGETYPE_CONFIG: "preferences",
@@ -399,11 +399,21 @@ uk.co.firmgently.DDDConsts = (function() {
       parent: "main",
       hidden: false,
       el_ar: [
-         {
+    {
+      type: CONST.GUITYPE_COL,
+      id: "configCol1",
+      class: CONST.CLASS_COL,
+      parent: "configForm"
+    }, {
+      type: CONST.GUITYPE_COL,
+      id: "configCol2",
+      class: CONST.CLASS_COL,
+      parent: "configForm"
+    }, {
            type: CONST.GUITYPE_RADIOBTN,
            id: "dateFormat",
-           label: "Format used to show dates",
-           parent: "configForm",
+           label: "Date display format:",
+           parent: "configCol1",
            options: {
              DATETYPE_DDMMYY: "dd/mm/yy",
              DATETYPE_MMDDYY: "mm/dd/yy",
@@ -413,8 +423,8 @@ uk.co.firmgently.DDDConsts = (function() {
          }, {
            type: CONST.GUITYPE_RADIOBTN,
            id: "timespan",
-           label: "Choose how many days you want to show on the timesheet page",
-           parent: "configForm",
+           label: "Timespan shown on the timesheet page:",
+           parent: "configCol1",
            options: {
              timespanWeek: "A week",
              timespanMonth: "A month",
@@ -424,8 +434,8 @@ uk.co.firmgently.DDDConsts = (function() {
          }, {
            type: CONST.GUITYPE_RADIOBTN,
            id: "totalsToShow",
-           label: "Choose which totals you want totted up and displayed",
-           parent: "configForm",
+           label: "Which totals should be calculated and displayed:",
+           parent: "configCol2",
            options: {
              showTotalsWeek: "Show weekly totals",
              showTotalsMonth: "Show monthly totals",
@@ -435,8 +445,8 @@ uk.co.firmgently.DDDConsts = (function() {
          }, {
            type: CONST.GUITYPE_RADIOBTN,
            id: "minuteIncrements",
-           label: "The shortest length of a time entry",
-           parent: "configForm",
+           label: "Time entry increments:",
+           parent: "configCol2",
            options: {
              minuteIncrement1: "1 minute",
              minuteIncrement15: "15 minutes",
@@ -1207,7 +1217,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
   createRadioFromOb = function(ob) {
     var
-    prop, description_el, radio_el, label_el,
+    prop, description_el, radio_el, label_el, optionID,
+    optionCount = 0,
     parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
 
     if (ob.label) {
@@ -1217,6 +1228,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     }
 
     for (prop in ob.options) {
+      optionID = ob.id + optionCount;
+      optionCount ++;
+
       label_el = document.createElement("label");
       label_el.innerHTML = ob.options[prop];
       parent_el.appendChild(label_el);
@@ -1226,11 +1240,11 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       parent_el.appendChild(radio_el);
 
       radio_el.setAttribute("type", "radio");
-      radio_el.id = ob.id;
+      radio_el.id = optionID;
       radio_el.name = ob.id;
       radio_el.value = prop;
       if (prop === ob.checkIfMatched) { radio_el.checked = true; }
-      label_el.htmlFor = ob.id;
+      label_el.htmlFor = optionID;
     }
 
 		return radio_el;
@@ -1472,7 +1486,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 	--------------------------------------------------------------------------- */
 	var
   // variables
-  prop, dateDisplayStart, dateDisplaySelected, dateToday, //timespanDisplay,
+  prop, dateDisplayStart, dateDisplaySelected, dateToday, 
   clientNameInput_el, jobNameInput_el, clientSaveBtn_el, jobSaveBtn_el,
   colPickClientFG_el, colPickClientBG_el, colPickJobFG_el, colPickJobBG_el,
 	eventAutoRepeatTimer, timesheetDrawDayTimer, recalculateTotalsTimer,
@@ -1497,9 +1511,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 	dataStoreObject, dataRetrieveObject, dataUpdateObject,
 	clientAndJobStyleSheet, createClientOrJobFromOb, createCSSForClientOrJobFromOb,
 	getJobOrClientIDFromElement, updateDataFromWorkItemEl, updateDataFromClientOrJobEl,
-  getFirstVisibleDayElement,
-	handleFileSelect, updateColoursFromPickers, updatePickerFromColours,
-  updateLayoutRefs, updateSelected, drawUIWorkItem, removeWorkItem 
+	handleFileSelect, updateColoursFromPickers, 
+  updateSelected, drawUIWorkItem, removeWorkItem 
 	;
 
 
@@ -1782,7 +1795,6 @@ uk.co.firmgently.DontDillyDally = (function() {
       default:
         break;
     }
-    updateLayoutRefs();
   };
 
 
@@ -2351,17 +2363,6 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  updatePickerFromColours = function(type, fgCol, bgCol) {
-    if (type === CLIENTS_STR) {
-      colPickClientBG_el.style.backgroundColor = bgCol;
-      colPickClientFG_el.style.backgroundColor = fgCol;
-    } else if (type === JOBS_STR) {
-      colPickJobBG_el.style.backgroundColor = bgCol;
-      colPickJobFG_el.style.backgroundColor = fgCol;
-    }
-  };
-
-
 
 
   /* ---------------------------------------------------------------------------
@@ -2489,19 +2490,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 			}
 		}
 	};
-
-  
-  getFirstVisibleDayElement = function() {
-    var i, day,
-				scrollTop = document.getElementById("main").scrollTop,
-				days = document.getElementById(TIMESHEETCONTAINER_ID).childNodes;
-    for (i = 0; i < days.length; i++) {
-      day = days[i];
-      if (day.offsetTop > scrollTop) {
-        return day;
-      }
-    }
-  };
 
 
   recalculateAllTotals = function() {
@@ -2654,9 +2642,9 @@ uk.co.firmgently.DontDillyDally = (function() {
   callMethodFromOb = function(ob, event) {
     var scope;
 
-    if (ob.scope) {
+    if (ob && ob.scope) {
       scope = ob.scope;
-    } else if (ob.scopeID) {
+    } else if (ob && ob.scopeID) {
       scope = document.getElementById(ob.scopeID);
     } else {
       scope = undefined;
@@ -2732,18 +2720,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
 
     getFunctionFromString(ob.methodPathStr).apply(scope, ob.args);
-  };
-
-  updateLayoutRefs = function() {
-  /*  clientNameInput_el = document.getElementById(EL_ID_CLIENTNAMEIN);
-    clientSaveBtn_el = document.getElementById(EL_ID_CLIENTSAVEBTN);
-    colPickClientFG_el = document.getElementById(CLIENT_FG_COLPICK);
-    colPickClientBG_el = document.getElementById(CLIENT_BG_COLPICK);
-    jobNameInput_el = document.getElementById(EL_ID_JOBNAMEIN);
-    jobSaveBtn_el = document.getElementById(EL_ID_JOBSAVEBTN);
-    colPickJobFG_el = document.getElementById(JOB_FG_COLPICK);
-    colPickJobBG_el = document.getElementById(JOB_BG_COLPICK); */
-    TIMESHEETCONTAINER_ID
   };
 
 
@@ -2915,7 +2891,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
 		registerEventHandler(document.getElementById("file-chooser"), "change", handleFileSelect, false);
 		registerEventHandler(document.getElementById("file-save"), "click", onSaveBtnClick, false);
-  //  registerEventHandler(window, "scroll", onScroll);
   };
 
 

@@ -64,7 +64,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 	--------------------------------------------------------------------------- */
 	var
   // variables
-  prop, dateDisplayStart, dateDisplaySelected, dateToday, //timespanDisplay,
+  prop, dateDisplayStart, dateDisplaySelected, dateToday, 
   clientNameInput_el, jobNameInput_el, clientSaveBtn_el, jobSaveBtn_el,
   colPickClientFG_el, colPickClientBG_el, colPickJobFG_el, colPickJobBG_el,
 	eventAutoRepeatTimer, timesheetDrawDayTimer, recalculateTotalsTimer,
@@ -89,9 +89,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 	dataStoreObject, dataRetrieveObject, dataUpdateObject,
 	clientAndJobStyleSheet, createClientOrJobFromOb, createCSSForClientOrJobFromOb,
 	getJobOrClientIDFromElement, updateDataFromWorkItemEl, updateDataFromClientOrJobEl,
-  getFirstVisibleDayElement,
-	handleFileSelect, updateColoursFromPickers, updatePickerFromColours,
-  updateLayoutRefs, updateSelected, drawUIWorkItem, removeWorkItem 
+	handleFileSelect, updateColoursFromPickers, 
+  updateSelected, drawUIWorkItem, removeWorkItem 
 	;
 
 
@@ -374,7 +373,6 @@ uk.co.firmgently.DontDillyDally = (function() {
       default:
         break;
     }
-    updateLayoutRefs();
   };
 
 
@@ -943,17 +941,6 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  updatePickerFromColours = function(type, fgCol, bgCol) {
-    if (type === CLIENTS_STR) {
-      colPickClientBG_el.style.backgroundColor = bgCol;
-      colPickClientFG_el.style.backgroundColor = fgCol;
-    } else if (type === JOBS_STR) {
-      colPickJobBG_el.style.backgroundColor = bgCol;
-      colPickJobFG_el.style.backgroundColor = fgCol;
-    }
-  };
-
-
 
 
   /* ---------------------------------------------------------------------------
@@ -1081,19 +1068,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 			}
 		}
 	};
-
-  
-  getFirstVisibleDayElement = function() {
-    var i, day,
-				scrollTop = document.getElementById("main").scrollTop,
-				days = document.getElementById(TIMESHEETCONTAINER_ID).childNodes;
-    for (i = 0; i < days.length; i++) {
-      day = days[i];
-      if (day.offsetTop > scrollTop) {
-        return day;
-      }
-    }
-  };
 
 
   recalculateAllTotals = function() {
@@ -1246,9 +1220,9 @@ uk.co.firmgently.DontDillyDally = (function() {
   callMethodFromOb = function(ob, event) {
     var scope;
 
-    if (ob.scope) {
+    if (ob && ob.scope) {
       scope = ob.scope;
-    } else if (ob.scopeID) {
+    } else if (ob && ob.scopeID) {
       scope = document.getElementById(ob.scopeID);
     } else {
       scope = undefined;
@@ -1324,18 +1298,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
 
     getFunctionFromString(ob.methodPathStr).apply(scope, ob.args);
-  };
-
-  updateLayoutRefs = function() {
-  /*  clientNameInput_el = document.getElementById(EL_ID_CLIENTNAMEIN);
-    clientSaveBtn_el = document.getElementById(EL_ID_CLIENTSAVEBTN);
-    colPickClientFG_el = document.getElementById(CLIENT_FG_COLPICK);
-    colPickClientBG_el = document.getElementById(CLIENT_BG_COLPICK);
-    jobNameInput_el = document.getElementById(EL_ID_JOBNAMEIN);
-    jobSaveBtn_el = document.getElementById(EL_ID_JOBSAVEBTN);
-    colPickJobFG_el = document.getElementById(JOB_FG_COLPICK);
-    colPickJobBG_el = document.getElementById(JOB_BG_COLPICK); */
-    TIMESHEETCONTAINER_ID
   };
 
 
@@ -1507,7 +1469,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
 		registerEventHandler(document.getElementById("file-chooser"), "change", handleFileSelect, false);
 		registerEventHandler(document.getElementById("file-save"), "click", onSaveBtnClick, false);
-  //  registerEventHandler(window, "scroll", onScroll);
   };
 
 

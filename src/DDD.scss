@@ -231,22 +231,6 @@ body#config aside nav button#config.btnNav {
 .hidden { visibility: hidden; }
 
 
-#column-headings {
-  position: absolute; bottom: 0;
-  li { display: inline; text-align: center; background-color: orange; margin: $smallPadding; }
-  li:nth-child(1) { width: 8rem; }
-  li:nth-child(2) { width: 2rem; }
-  li:nth-child(3) { width: 6rem; }
-  li:nth-child(4) { width: 6rem; }
-  li:nth-child(5) { width: 10rem; }
-  li:nth-child(6) { width: 2.5rem; }
-  li:nth-child(7) { width: 10rem; }
-}
-
-body#jobsClients, body#config {
-  #column-headings { display: none; }
-}
-
 #main {
   position: absolute; z-index: $zNormal;
   top: 0; bottom: 0; left: $sidebar-width; right: 0;
@@ -256,20 +240,15 @@ body#jobsClients, body#config {
   h1, h2 { padding: $largePadding $mediumPadding $largePadding $extraLargePadding; }
 }
 
-#jobsExisting, #clientsExisting { width: 50%; display: inline-block; padding: $largePadding}
-
-#createNewClientBtn, #createNewJobBtn,
-#saveNewClientBtn, #saveNewJobBtn,
-#clientNameIn, #jobNameIn {
-  font-family: $bold-font-family;
+#jobsExisting, #clientsExisting, #configCol1, #configCol2 {
+  width: 50%; display: inline-block; padding: $largePadding;
+  p { margin-top: $extraLargePadding; margin-bottom: $largePadding; }
 }
-
 
 #sidebar-main {
   position: absolute;
   left: 0; right: (100vw - $sidebar-width); top: 0; bottom: 0;
 }
-.sidebar-info { background-color: $panelBgColour; position: relative; padding: $largePadding 0 0 $largePadding; }
 #loading-indicator {
   position: fixed; z-index: $zCover; top: 0; left: $sidebar-width; bottom: 0; right: 0;
   padding: 20vh 0;
@@ -551,35 +530,12 @@ select {
 
 
 
-/* help system */
-
-.helpItem {
-  position: fixed; z-index: $zFloat;
-  top: 0; left: 0;
-  span { color: white; }
-  .cover-left, .cover-right, .cover-top, .cover-bottom {
-    position: fixed;
-    background-color: rgba(50, 20, 20, 0.5);
-  }
-  .cover-left { top: 0; left: 0; bottom: 0; }
-  .cover-right { top: 0; right: 0; bottom: 0; }
-  .cover-top: { top: 0; }
-  .cover-bottom { bottom: 0; }
-}
-
-
-
-
-
-
 
 
 /* Extraneous UI buttons */
 #miniNavForm {
 	position: fixed;
 	top: 0; right: 0; z-index: $zFloat;
-//	background-color: $button-bgcolor; color: $button-color; 
-//  &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; }
   p { font-size: $fontSizeSmall; font-weight: 700; display: inline; margin: 0 $largePadding}
   button:nth-of-type(2),
   button:nth-of-type(4) {

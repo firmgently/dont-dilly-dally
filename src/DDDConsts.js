@@ -29,7 +29,7 @@ uk.co.firmgently.DDDConsts = (function() {
     DATASTORE_CATEGORY_PREFIX: "_",
 
 		AUTOREPEAT_RATE: 500,
-    RECALCULATETOTALS_DELAY: 500,
+    RECALCULATETOTALS_DELAY: 1000,
 
     PAGETYPE_TIMESHEETS: "timesheets",
     PAGETYPE_CONFIG: "preferences",
@@ -399,11 +399,21 @@ uk.co.firmgently.DDDConsts = (function() {
       parent: "main",
       hidden: false,
       el_ar: [
-         {
+    {
+      type: CONST.GUITYPE_COL,
+      id: "configCol1",
+      class: CONST.CLASS_COL,
+      parent: "configForm"
+    }, {
+      type: CONST.GUITYPE_COL,
+      id: "configCol2",
+      class: CONST.CLASS_COL,
+      parent: "configForm"
+    }, {
            type: CONST.GUITYPE_RADIOBTN,
            id: "dateFormat",
-           label: "Format used to show dates",
-           parent: "configForm",
+           label: "Date display format:",
+           parent: "configCol1",
            options: {
              DATETYPE_DDMMYY: "dd/mm/yy",
              DATETYPE_MMDDYY: "mm/dd/yy",
@@ -413,8 +423,8 @@ uk.co.firmgently.DDDConsts = (function() {
          }, {
            type: CONST.GUITYPE_RADIOBTN,
            id: "timespan",
-           label: "Choose how many days you want to show on the timesheet page",
-           parent: "configForm",
+           label: "Timespan shown on the timesheet page:",
+           parent: "configCol1",
            options: {
              timespanWeek: "A week",
              timespanMonth: "A month",
@@ -424,8 +434,8 @@ uk.co.firmgently.DDDConsts = (function() {
          }, {
            type: CONST.GUITYPE_RADIOBTN,
            id: "totalsToShow",
-           label: "Choose which totals you want totted up and displayed",
-           parent: "configForm",
+           label: "Which totals should be calculated and displayed:",
+           parent: "configCol2",
            options: {
              showTotalsWeek: "Show weekly totals",
              showTotalsMonth: "Show monthly totals",
@@ -435,8 +445,8 @@ uk.co.firmgently.DDDConsts = (function() {
          }, {
            type: CONST.GUITYPE_RADIOBTN,
            id: "minuteIncrements",
-           label: "The shortest length of a time entry",
-           parent: "configForm",
+           label: "Time entry increments:",
+           parent: "configCol2",
            options: {
              minuteIncrement1: "1 minute",
              minuteIncrement15: "15 minutes",

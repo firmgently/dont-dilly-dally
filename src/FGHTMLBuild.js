@@ -291,7 +291,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
   createRadioFromOb = function(ob) {
     var
-    prop, description_el, radio_el, label_el,
+    prop, description_el, radio_el, label_el, optionID,
+    optionCount = 0,
     parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
 
     if (ob.label) {
@@ -301,6 +302,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     }
 
     for (prop in ob.options) {
+      optionID = ob.id + optionCount;
+      optionCount ++;
+
       label_el = document.createElement("label");
       label_el.innerHTML = ob.options[prop];
       parent_el.appendChild(label_el);
@@ -310,11 +314,11 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       parent_el.appendChild(radio_el);
 
       radio_el.setAttribute("type", "radio");
-      radio_el.id = ob.id;
+      radio_el.id = optionID;
       radio_el.name = ob.id;
       radio_el.value = prop;
       if (prop === ob.checkIfMatched) { radio_el.checked = true; }
-      label_el.htmlFor = ob.id;
+      label_el.htmlFor = optionID;
     }
 
 		return radio_el;

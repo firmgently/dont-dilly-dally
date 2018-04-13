@@ -151,32 +151,6 @@ body#config aside nav button#config.btnNav {
 .hidden {
   visibility: hidden; }
 
-#column-headings {
-  position: absolute;
-  bottom: 0; }
-  #column-headings li {
-    display: inline;
-    text-align: center;
-    background-color: orange;
-    margin: 0.3rem; }
-  #column-headings li:nth-child(1) {
-    width: 8rem; }
-  #column-headings li:nth-child(2) {
-    width: 2rem; }
-  #column-headings li:nth-child(3) {
-    width: 6rem; }
-  #column-headings li:nth-child(4) {
-    width: 6rem; }
-  #column-headings li:nth-child(5) {
-    width: 10rem; }
-  #column-headings li:nth-child(6) {
-    width: 2.5rem; }
-  #column-headings li:nth-child(7) {
-    width: 10rem; }
-
-body#jobsClients #column-headings, body#config #column-headings {
-  display: none; }
-
 #main {
   position: absolute;
   z-index: 1;
@@ -190,15 +164,13 @@ body#jobsClients #column-headings, body#config #column-headings {
   #main h1, #main h2 {
     padding: 0.8rem 0.6rem 0.8rem 2rem; }
 
-#jobsExisting, #clientsExisting {
+#jobsExisting, #clientsExisting, #configCol1, #configCol2 {
   width: 50%;
   display: inline-block;
   padding: 0.8rem; }
-
-#createNewClientBtn, #createNewJobBtn,
-#saveNewClientBtn, #saveNewJobBtn,
-#clientNameIn, #jobNameIn {
-  font-family: Tahoma, Arial, Helvetica; }
+  #jobsExisting p, #clientsExisting p, #configCol1 p, #configCol2 p {
+    margin-top: 2rem;
+    margin-bottom: 0.8rem; }
 
 #sidebar-main {
   position: absolute;
@@ -206,11 +178,6 @@ body#jobsClients #column-headings, body#config #column-headings {
   right: 90vw;
   top: 0;
   bottom: 0; }
-
-.sidebar-info {
-  background-color: #F2F0F0;
-  position: relative;
-  padding: 0.8rem 0 0 0.8rem; }
 
 #loading-indicator {
   position: fixed;
@@ -534,29 +501,6 @@ select {
     border-radius: 0.6rem 0 0 0.6rem; }
   .spinner input.unitSmall {
     border-radius: 0 0.6rem 0.6rem 0; }
-
-/* help system */
-.helpItem {
-  position: fixed;
-  z-index: 2;
-  top: 0;
-  left: 0;
-  .cover-top-top: 0; }
-  .helpItem span {
-    color: white; }
-  .helpItem .cover-left, .helpItem .cover-right, .helpItem .cover-top, .helpItem .cover-bottom {
-    position: fixed;
-    background-color: rgba(50, 20, 20, 0.5); }
-  .helpItem .cover-left {
-    top: 0;
-    left: 0;
-    bottom: 0; }
-  .helpItem .cover-right {
-    top: 0;
-    right: 0;
-    bottom: 0; }
-  .helpItem .cover-bottom {
-    bottom: 0; }
 
 /* Extraneous UI buttons */
 #miniNavForm {
