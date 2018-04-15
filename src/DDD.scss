@@ -105,8 +105,8 @@ $ddd-grey-lighter: #F8F6F6;
 
 $button-color: $ddd-sanddark;
 $button-bgcolor: $ddd-cream;
-$button-color-over: darken($button-color, 10%);
-$button-bgcolor-over: lighten($button-bgcolor, 10%);
+$button-color-over: lighten($button-color, 10%);
+$button-bgcolor-over: darken($button-bgcolor, 10%);
 $icon-color: $ddd-grey-dark;
 
 $panelFgColour: $ddd-grey-darker;
@@ -165,7 +165,13 @@ $tab-fontsize-selected:   1.15rem;
 $tab-padding: $tinyPadding;
 $tab-margin: $mediumPadding;
 
-
+@mixin transition($args...) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transition: $args;
+  -o-transition: $args;
+  transition: $args;
+}
 
 @mixin border-radius($args...) {
   border-radius: $args;
@@ -351,11 +357,15 @@ body#config aside nav button#config.btnNav {
 					&:before {
 						content: '\e801';
 						float: left; width: 1.3rem; height: 1.3rem;
-						margin: 0rem 0rem 0rem 0rem; border-radius: inherit; background: $ddd-cream;
+						margin: 0rem 0rem 0rem 0rem; border-radius: inherit; background: $button-bgcolor;
 						color: $icon-color; text-indent: -2.2rem;
 					}
 
 					&:after { content: '\e800'; margin-left: 0.8rem; color: $icon-color; }
+					
+					&:hover {
+						&:before	{ background-color: $button-bgcolor-over; }
+					}
 				}
 
 				&:checked + div { padding-left: 2.7rem; background-position: 0 0; white-space: nowrap; }
@@ -379,7 +389,7 @@ body#config aside nav button#config.btnNav {
 					background-size: 100%;
 				}
 				input.notes { color: $moneyInputColour; background-color: mix($moneyInputBackgroundColour, white, 35%); }
-				.spin-button-up, .spin-button-down { background-color: $moneyInputBackgroundColour; }
+			//	.spin-button-up, .spin-button-down { background-color: $moneyInputBackgroundColour; }
 				.spinner:first-of-type {
 					&:before, &:after {
 						font-weight: bold;
@@ -403,7 +413,7 @@ body#config aside nav button#config.btnNav {
 					input[type="checkbox"].ios-switch + div {
 						background-image: linear-gradient(90deg, $ddd-orange 50%, transparent 50%);
 					}
-					.spin-button-up, .spin-button-down { background-color: $ddd-orange; }
+				//	.spin-button-up, .spin-button-down { background-color: $ddd-orange; }
 				}
 			}
 
@@ -446,7 +456,7 @@ body#config aside nav button#config.btnNav {
 
       &:focus-within,
       .spinner:hover {
-        .spin-button-up, .spin-button-down { display: inline-block; }
+        .spin-button-up, .spin-button-down {  opacity: 1; }
       }
 		}
 	}
@@ -501,9 +511,10 @@ select {
   display: inline-block; position: relative;
   .spin-button-up, .spin-button-down {
 		cursor: pointer;
-    position: absolute; display: none;
-    left: 10%; width: 40%; height: 0.5rem;
-    padding: 0.1rem 0.2rem 0.55rem 0.2rem;
+    position: absolute;
+		display: inline-block; opacity: 0; @include transition(opacity 0.2s ease);
+    left: 15%; width: 70%; height: 0.5rem;
+    padding: 0.2rem 0.3rem 0.7rem 0.3rem;
     background-color: $button-bgcolor; color: $button-color;
     text-align: center; font-size: 0.5rem;
     &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; }
@@ -514,12 +525,12 @@ select {
 		} 
 	}
   .spin-button-up {
-		top: -0.6em; left: 50%;
+		top: -0.5rem;
 		@include border-radius(0.4rem 0.4rem 0 0);
 		&:after { top: -0.2rem; bottom: 0; }
 	}
   .spin-button-down {
-		bottom: -0.6em;
+		bottom: -0.5rem;
 		@include border-radius(0 0 0.4rem 0.4rem);
 		&:after { top: 0; bottom: -0.2rem; }
 	}

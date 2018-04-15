@@ -16,6 +16,15 @@
 	FIXME	spinners: numbers should pad eg. 00:45h, £10.00
   TODO  all strings should be constants
   TODO  display month/week start correctly
+  FIXME press/hold to jump back through months, page reloads with ? in querystring
+  TODO  borders around inputs and colorpickers on clients/jobs page
+  TODO  month/week should flash briefly after day jump
+  TODO  number spinners should fade up quickly with short delay (to avoid flickering on 'remove item' etc)
+  FIXME number spinners inconsistent colours
+  TODO  loading bar
+  TODO  fix widths of client/job selects on timesheets page, use text-overflow: ellipsis
+  TODO  use spritesheet png instead of fonts??
+  TODO  only show month/week jump buttons if they make sense
   TODO  validate all input data
           time/money
           notes - max length
@@ -26,6 +35,7 @@
 	FIXME	£-0.77 must register as negative
   TODO  test everything on touchscreen
   TODO  test everything on narrow (phone) layout
+  FIXME if page is changed while timesheets are being drawn, bugs out (clear timeout)
   DONE  use updatefrequency to refresh "days drawn" only on % === 0
   DONE  refactor month/week click etc to all use 1 function
   DONE next/prev week/month buttons not working
@@ -77,10 +87,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 	// methods
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
 	eventAutoRepeat, eventAutoRepeatStop,
-  createFormFromOb,
   recalculateAllTotals, calculateTotalsFromDateSpan,
   addTask, removeTask, addClient, removeClientOrJob, addJob,
-  callMethodFromObOnElement, callMethodFromOb,
+  attachEventArrayToElement, callMethodsFromObOnElement, callMethodFromOb,
   drawTimesheets, drawNextDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
   getNextID, getNewClient, getNewJob,
   navClick, todayClick, dayJumpClick, 
@@ -100,6 +109,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   /* ---------------------------------------------------------------------------
     create local references to public members from external sources
+    (import)
 	--------------------------------------------------------------------------- */
 
   // constants
@@ -254,7 +264,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 		workItem_ar[DATAINDICES.jobID] = getJobOrClientIDFromElement(jobSelect_el);
 		workItem_ar[DATAINDICES.notes] = notesInput_el.value;
 
-    logMsg("\tel.id: " + el.id);
 		day_ob[el.id] = workItem_ar; // write work item to day
 		days_ar[day_str] = day_ob; // write updated day
 		dataStoreObject(DAYS_STR, days_ar);
@@ -317,30 +326,6 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  createFormFromOb = function(ob) {
-    var i, form_el,
-				parent_el = document.getElementById(ob.parent);
-
-    if (ob.id) {
-      form_el = createElementWithId("form", ob.id);
-    } else {
-      form_el = document.createElement("form");
-    }
-    parent_el.appendChild(form_el);
-
-    if (ob.class) { addClassname(form_el, ob.class); }
-    if (ob.title) { form_el.innerHTML = "<h2>" + ob.title + "</h2>"; }
-    if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
-    if (ob.hidden) { form_el.style.display = "none"; }
-
-    form_el.ob = ob;
-    registerEventHandler(form_el, "submit", onFormSubmit);
-    registerEventHandler(form_el, "click", onFormClick);
-
-		return form_el;
-  };
-
-
   clearPage = function() {
     removeClassname(loadingIndicator_el, CLASS_HIDDEN);
     document.getElementById("main").innerHTML = "";
@@ -381,62 +366,53 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   drawGUIFromAr = function(ar) {
-    var i, ob, el_temp;
+    var i, j, ob, eventToAdd_ob, eventToAddCur, tmp_el;
     for (i = 0; i < ar.length; i++) {
       ob = ar[i];
       switch (ob.type) {
         case GUITYPE_BTN:
-          el_temp = createButtonFromOb(ob);
-          if (ob.methodPathStr) {
-            registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
-            registerEventHandler(el_temp, "touchstart", callMethodFromObOnElement);
-          }
+          tmp_el = createButtonFromOb(ob);
           break;
         case GUITYPE_FORM:
-          createFormFromOb(ob);
+          tmp_el = createFormFromOb(ob);
           break;
         case GUITYPE_TEXTINPUT:
-          el_temp = createInputFromOb(ob);
-          if (ob.methodPathStr) {
-            registerEventHandler(el_temp, "change", callMethodFromObOnElement);
-            registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
-            registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
-            registerEventHandler(el_temp, "input", callMethodFromObOnElement);
-          }
+          tmp_el = createInputFromOb(ob);
           break;
         case GUITYPE_SELECT:
-          el_temp = createSelectFromOb(ob);
-          if (ob.methodPathStr) {
-            registerEventHandler(el_temp, "change", callMethodFromObOnElement);
-          }
+          tmp_el = createSelectFromOb(ob);
           break;
         case GUITYPE_RADIOBTN:
           ob.checkIfMatched = dataRetrieveObject(PREFS_STR)[ob.id];
-          el_temp = createRadioFromOb(ob);
-          if (ob.methodPathStr) {
-            registerEventHandler(el_temp, "change", callMethodFromObOnElement);
-          }
+          tmp_el = createRadioFromOb(ob);
           break;
         case GUITYPE_UL:
-          addLIsFromOb(ob);
+          tmp_el = addLIsFromOb(ob);
           break;
         case GUITYPE_PARA: // intentional rollthrough
         case GUITYPE_SECTION: // intentional rollthrough
         case GUITYPE_COL: // intentional rollthrough
         case GUITYPE_ROW:
-          createBasicElementFromOb(ob);
+          tmp_el = createBasicElementFromOb(ob);
           break;
         case GUITYPE_COLORPICKER:
-          createColorPickerFromOb(ob);
+          tmp_el = createColorPickerFromOb(ob);
           break;
         case GUITYPE_METHODCALL:
           callMethodFromOb(ob);
           break;
         case GUITYPE_HELP:
-          createHelpItemFromOb(ob);
+          tmp_el = createHelpItemFromOb(ob);
           break;
         default:
           break;
+      }
+
+      if (ob.event_ar) { // contains an array of objects
+        for (j = 0; j < ob.event_ar.length; j++) {
+          eventToAdd_ob = ob.event_ar[j];
+          registerEventHandler(tmp_el, eventToAdd_ob.eventType, callMethodsFromObOnElement);
+        }
       }
     }
   };
@@ -487,7 +463,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   drawJobsAndClients = function() {
-    var ul_el, li_el, temp_el, prop, item, item_ar;
+    var ul_el, li_el, tmp_el, prop, item, item_ar;
 
     item_ar = dataRetrieveObject(CLIENTS_STR);
     ul_el = document.createElement("ul");
@@ -508,7 +484,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   drawClientOrJobFromOb = function(item) {
-    var li_el, temp_el, parent_el, removeMethodPath, addMethodPath;
+    var li_el, tmp_el, parent_el, removeMethodPath, addMethodPath;
 
     li_el = createElementWithId("li", item.id);
     registerEventHandler(li_el, COLORPICKER_CHANGEEVENT_ID, updateColoursFromPickers);
@@ -525,36 +501,52 @@ uk.co.firmgently.DontDillyDally = (function() {
     removeMethodPath = "uk.co.firmgently.DontDillyDally.removeClientOrJob";
 
     // 'add task' button
-    temp_el = createButtonFromOb({
+    tmp_el = createButtonFromOb({
       class: "addItemBtn",
       label: "&#xe821;",
       parent: li_el,
-      methodPathStr: addMethodPath,
-      scopeID: item.id
     });
-    registerEventHandler(temp_el, "click", callMethodFromObOnElement);
+    attachEventArrayToElement(tmp_el, [
+        {
+          eventType: "click",
+          methodPathStr: addMethodPath,
+          scopeID: item.id
+        }
+    ]);
 
-    temp_el = createInputFromOb({
+    tmp_el = createInputFromOb({
       class: item.id,
       parent: li_el,
       attributes: { "type": "text", "value": item.name },
-      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput", 
-      scopeID: item.id
     });
-    temp_el.ob.scope = temp_el;
-    registerEventHandler(temp_el, "change", callMethodFromObOnElement);
-    registerEventHandler(temp_el, "keyup", callMethodFromObOnElement);
-    registerEventHandler(temp_el, "paste", callMethodFromObOnElement);
-    registerEventHandler(temp_el, "input", callMethodFromObOnElement);
+    attachEventArrayToElement(tmp_el, [
+      {
+        eventType: "change",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }, {
+        eventType: "keyup",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }, {
+        eventType: "paste",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }, {
+        eventType: "input",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }
+    ]);
 
-    temp_el = createColorPickerFromOb({
+    tmp_el = createColorPickerFromOb({
       parent: li_el,
       class: "color-picker bg",
       id: "cpbg-" + item.id,
       color: item.bgcolor
     });
 
-    temp_el = createColorPickerFromOb({
+    tmp_el = createColorPickerFromOb({
       parent: li_el,
       class: "color-picker fg",
       id: "cpfg-" + item.id,
@@ -562,14 +554,18 @@ uk.co.firmgently.DontDillyDally = (function() {
     });
 
     // 'remove task' button
-    temp_el = createButtonFromOb({
+    tmp_el = createButtonFromOb({
       class: "removeItemBtn",
       label: "&#xe83d;",
       parent: li_el,
-      methodPathStr: removeMethodPath,
-      scopeID: item.id
     });
-    registerEventHandler(temp_el, "click", callMethodFromObOnElement);
+    attachEventArrayToElement(tmp_el, [
+        {
+          eventType: "click",
+          methodPathStr: removeMethodPath,
+          scopeID: item.id
+        }
+    ]);
 
     manualEvent(li_el, COLORPICKER_CHANGEEVENT_ID); // ensure input's colours are updated
   };
@@ -723,7 +719,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   drawUIWorkItem = function(dayDataContainer_el, itemID, itemData_ob) {
-    var money_el, ob_temp, el_temp, item_el, wrappedCheckbox_el, numberValue_ar,
+    var money_el, ob_temp, tmp_el, item_el, wrappedCheckbox_el, numberValue_ar,
 				day_el = dayDataContainer_el.parentNode;
 
 		if (itemID === undefined) { itemID = getGUID(); }
@@ -732,63 +728,78 @@ uk.co.firmgently.DontDillyDally = (function() {
     dayDataContainer_el.insertBefore(item_el, dayDataContainer_el.firstChild);
 
     // 'add item' button
-    el_temp = createButtonFromOb({
+    tmp_el = createButtonFromOb({
       class: "addItemBtn",
       label: "&#xe821;",
       parent: item_el,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.addTask",
-      scopeID: itemID
     });
-    registerEventHandler(el_temp, "click", callMethodFromObOnElement);
+    attachEventArrayToElement(tmp_el, [
+        {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.addTask",
+          scopeID: itemID
+        }
+    ]);
 
     // client select/dropdown
-    el_temp = createSelectFromOb({
+    tmp_el = createSelectFromOb({
       contentType: CONTENTTYPE_CLIENTS,
       placeholderText: CLIENT_SELECT_PLACEHOLDER,
       options: dataRetrieveObject(CLIENTS_STR),
       parent: item_el,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected",
     });
-    el_temp.ob.scope = el_temp;
-    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+    attachEventArrayToElement(tmp_el, [
+        {
+        eventType: "change",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected",
+        scope: tmp_el
+        }
+    ]);
 		if (itemData_ob && itemData_ob[DATAINDICES.clientID]
 		&& itemData_ob[DATAINDICES.clientID].length > 0) {
-			changeSelectByOption(el_temp, itemData_ob[DATAINDICES.clientID]);
-			manualEvent(el_temp, "change");
+			changeSelectByOption(tmp_el, itemData_ob[DATAINDICES.clientID]);
+			manualEvent(tmp_el, "change");
 		}
 
     // job select/dropdown
-    el_temp = createSelectFromOb({
+    tmp_el = createSelectFromOb({
       contentType: CONTENTTYPE_JOBS,
       placeholderText: JOB_SELECT_PLACEHOLDER,
       options: dataRetrieveObject(JOBS_STR),
       parent: item_el,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected"
     });
-    el_temp.ob.scope = el_temp;
-    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
-		if (itemData_ob && itemData_ob[DATAINDICES.jobID]
-		&& itemData_ob[DATAINDICES.jobID].length > 0) {
-			changeSelectByOption(el_temp, itemData_ob[DATAINDICES.jobID]);
-			manualEvent(el_temp, "change");
+    attachEventArrayToElement(tmp_el, [
+        {
+        eventType: "change",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected",
+        scope: tmp_el
+        }
+    ]);
+		if (itemData_ob && itemData_ob[DATAINDICES.jobID] && itemData_ob[DATAINDICES.jobID].length > 0) {
+			changeSelectByOption(tmp_el, itemData_ob[DATAINDICES.jobID]);
+			manualEvent(tmp_el, "change");
 		}
     
 		// 'money/task' checkbox
-    el_temp = createCheckboxFromOb({
+    tmp_el = createCheckboxFromOb({
       class: "ios-switch isMoneyTaskChk",
       label: " ", // a label is needed for wrapLabel/addDivToLabel to work
 			wrapLabel: true,
 			addDivToLabel: true,
       parent: item_el,
       checked: false,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.onIsMoneyTaskChkChange",
-      scopeID: itemID
     });
-		registerEventHandler(el_temp, "change", callMethodFromObOnElement);
+    attachEventArrayToElement(tmp_el, [
+        {
+          eventType: "change",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.onIsMoneyTaskChkChange",
+          scopeID: itemID
+        }
+    ]);
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_MONEY) {
 			// after checking this box its onChange method has to be called, but not yet
 			// as it depends on other elements added below... see bottom of this function
-			el_temp.checked = true;
+			tmp_el.checked = true;
       //
       if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
         numberValue_ar = itemData_ob[DATAINDICES.numberValue].split(SEPARATOR_CASH);
@@ -807,26 +818,38 @@ uk.co.firmgently.DontDillyDally = (function() {
     } else {
       ob_temp = { min: -999999999, max: 999999999, step: 1, pad: "    " };
     }
-    el_temp = createSpinnerFromOb({
+    tmp_el = createSpinnerFromOb({
       class: CLASS_SPINNER_UNITBIG,
       parent: item_el,
       attributes: ob_temp,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
-      scopeID: itemID
     });
-    el_temp.ob.scope = el_temp;
-    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+    attachEventArrayToElement(tmp_el, [
+      {
+        eventType: "change",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }, {
+        eventType: "keyup",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }, {
+        eventType: "paste",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }, {
+        eventType: "input",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }
+    ]);
     if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
-			el_temp.value = numberValue_ar[0];
+			tmp_el.value = numberValue_ar[0];
 			if (parseInt(numberValue_ar[0]) < 0) {
-				addClassname(el_temp.parentNode.parentNode, CLASS_NEGATIVE);
+				addClassname(tmp_el.parentNode.parentNode, CLASS_NEGATIVE);
 			}
-			manualEvent(el_temp, "change");
+			manualEvent(tmp_el, "change");
 		} else {
-      el_temp.value = "00";
+      tmp_el.value = "00";
     } 
 
     // hours/money small units
@@ -847,49 +870,77 @@ uk.co.firmgently.DontDillyDally = (function() {
     } else {
       ob_temp = { min: 0, max: 99, step: 1, wrapNum: true, pad: "00" };
     }
-    el_temp = createSpinnerFromOb({
+    tmp_el = createSpinnerFromOb({
       class: CLASS_SPINNER_UNITSMALL,
       parent: item_el,
       attributes: ob_temp,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
-      scopeID: itemID
     });
-    el_temp.ob.scope = el_temp;
-    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "input", callMethodFromObOnElement);
+    attachEventArrayToElement(tmp_el, [
+      {
+        eventType: "change",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }, {
+        eventType: "keyup",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }, {
+        eventType: "paste",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }, {
+        eventType: "input",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }
+    ]);
 		if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
-			el_temp.value = numberValue_ar[1];
-			manualEvent(el_temp, "change");
+			tmp_el.value = numberValue_ar[1];
+			manualEvent(tmp_el, "change");
 		} else {
-      el_temp.value = "00";
+      tmp_el.value = "00";
     }
 
     // job/money notes
-    el_temp = createInputFromOb({
+    tmp_el = createInputFromOb({
       class: CLASS_NOTESINPUT,
       parent: item_el,
       attributes: { "type": "text", "placeholder": JOBNOTES_PLACEHOLDER },
-      methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
-      scopeID: itemID
     });
-    el_temp.ob.scope = el_temp;
-    registerEventHandler(el_temp, "change", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "keyup", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "paste", callMethodFromObOnElement);
-    registerEventHandler(el_temp, "input", callMethodFromObOnElement);
-		if (itemData_ob && itemData_ob[DATAINDICES.notes]) { el_temp.value = itemData_ob[DATAINDICES.notes]; }
+    attachEventArrayToElement(tmp_el, [
+      {
+        eventType: "change",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }, {
+        eventType: "keyup",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }, {
+        eventType: "paste",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }, {
+        eventType: "input",
+        methodPathStr: "uk.co.firmgently.DontDillyDally.onUpdateInput",
+        scope: tmp_el
+      }
+    ]);
+		if (itemData_ob && itemData_ob[DATAINDICES.notes]) { tmp_el.value = itemData_ob[DATAINDICES.notes]; }
 
     // 'remove item' button
-    el_temp = createButtonFromOb({
+    tmp_el = createButtonFromOb({
       class: "removeItemBtn",
       label: "&#xe83d;",
       parent: item_el,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.removeTask",
-      scopeID: itemID
     });
-    registerEventHandler(el_temp, "click", callMethodFromObOnElement);
+    attachEventArrayToElement(tmp_el, [
+        {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.removeTask",
+          scopeID: itemID
+        }
+    ]);
 		
 		// if this item is being filled with stored data,
 		// and the money checkbox is checked, we have to call the onChange function here
@@ -981,9 +1032,12 @@ uk.co.firmgently.DontDillyDally = (function() {
 	};
 
 
-  onFormClick = function(e) {
-    var form = e.target.form;
+  onFormClick = function(event) {
+    //logMsg("onFormClick(" + this + ")");
+    var form = this;
+    //logMsg("HELLO");
     if (form && form.id) {
+      //logMsg(form.id);
       switch (form.id) {
         case "configForm":
           dataUpdateObject(PREFS_STR, "timespan", form.timespan.value);
@@ -999,8 +1053,8 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  onFormSubmit = function(e) {
-    stopPropagation(e);
+  onFormSubmit = function(event) {
+    stopPropagation(event);
   };
 
 
@@ -1203,10 +1257,10 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 	createCSSForClientOrJobFromOb = function(ob, dataType) {
-    var selector =	"." + ob.class + ", " +
+		var colorPickerFGSelector, colorPickerBGSelector,
+        selector =	"." + ob.class + ", " +
 										"." + ob.class + ":hover, " +
-										"." + ob.class + ":active",
-				colorPickerFGSelector, colorPickerBGSelector;
+										"." + ob.class + ":active";
 
 		// add main CSS for eg. timesheets page
     if (dataType === DATATYPE_CLIENT || dataType === DATATYPE_JOB) {
@@ -1218,33 +1272,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
 	};
 
-
-  callMethodFromObOnElement = function(event) {
-    callMethodFromOb(event.target.ob, event);
-  };
-
-
-  callMethodFromOb = function(ob, event) {
-    var scope;
-
-    if (ob && ob.scope) {
-      scope = ob.scope;
-    } else if (ob && ob.scopeID) {
-      scope = document.getElementById(ob.scopeID);
-    } else {
-      scope = undefined;
-    }
-
-    if (event) {
-      if (ob.args) {
-        ob.args.push(event);
-      } else {
-        ob.args = [event];
-      }
-    }
-
-    getFunctionFromString(ob.methodPathStr).apply(scope, ob.args);
-  };
 
   createClientOrJobFromOb = function(ob, dataType) {
     var id, ar, n, containerObjectName, input_el;
@@ -1280,34 +1307,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 	};
 
 
-  callMethodFromObOnElement = function(event) {
-    callMethodFromOb(event.target.ob, event);
-  };
-
-
-  callMethodFromOb = function(ob, event) {
-    var scope;
-
-    if (ob.scope) {
-      scope = ob.scope;
-    } else if (ob.scopeID) {
-      scope = document.getElementById(ob.scopeID);
-    } else {
-      scope = undefined;
-    }
-
-    if (event) {
-      if (ob.args) {
-        ob.args.push(event);
-      } else {
-        ob.args = [event];
-      }
-    }
-
-    getFunctionFromString(ob.methodPathStr).apply(scope, ob.args);
-  };
-
-
   getNewClient = function() {
     var id = getNextID(DATATYPE_CLIENT);
     return {
@@ -1335,11 +1334,79 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   /* ---------------------------------------------------------------------------
+    Special event handling.
+    In order to allow event handlers to be attached to elements and
+    methods which may not have been defined at the time of creation
+    the following methods are used
+	--------------------------------------------------------------------------- */
+
+  // attaches an array of objects defining event handlers to an element
+  // and sets up a generic handler for each event type (eg. click, touchstart)
+  attachEventArrayToElement = function(el, ar) {
+    var i;
+
+    if (!el.ob) { el.ob = {}; }
+    if (!el.ob.event_ar) { el.ob.event_ar = [] ; }
+
+    for (i = 0; i < ar.length; i++) {
+      el.ob.event_ar.push(ar[i]);
+      registerEventHandler(el, ar[i].eventType, callMethodsFromObOnElement);
+    }
+  };
+
+
+  // calls all methods of a certain type (eg. click) which have been
+  // attached to an element previously via its ob.event_ar
+  // bubbles up through parents if 'ob' data object isn't found
+  callMethodsFromObOnElement = function(event) {
+    var i, node, event_ar;
+
+    node = event.target;
+    // TODO make sure this loop cant get infinite
+    while (!node.ob) {
+      node = node.parentNode;
+    }
+
+    event_ar = node.ob.event_ar;
+    for (i = 0; i < event_ar.length; i++) {
+      if (event_ar[i].eventType === event.type) {
+        callMethodFromOb(event_ar[i], event);
+      }
+    }
+  };
+
+
+  // calls a method based on a data object which defines
+  // the method name, scope and optional arguments
+  callMethodFromOb = function(ob) {
+    var scope;
+
+    if (ob && ob.scope) { // ob.scope is an element
+      scope = ob.scope;
+    } else if (ob && ob.scopeID) { // ob.scope is an ID string
+      scope = document.getElementById(ob.scopeID);
+    } else {
+      scope = undefined;
+    }
+
+    if (ob.eventType) {
+      if (ob.args) {
+        ob.args.push(event);
+      } else {
+        ob.args = [event];
+      }
+    }
+    getFunctionFromString(ob.methodPathStr).apply(scope, ob.args);
+  };
+
+
+
+
+  /* ---------------------------------------------------------------------------
     UI click handlers
 	--------------------------------------------------------------------------- */
 
-
-  navClick = function(e) {
+  navClick = function(event) {
     selectPage(arguments[0]);
   };
 
@@ -1389,7 +1456,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-	todayClick = function(e) {
+	todayClick = function(event) {
 		document.getElementsByClassName(CLASS_TODAY)[0].scrollIntoView();
 	};
 
@@ -1406,16 +1473,15 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   updateSelected = function() {
-    var pageType = dataRetrieveObject(PREFS_STR).pagetype,
-				option_selector = this.value;
+    var pageType = dataRetrieveObject(PREFS_STR).pagetype;
 
     switch (pageType) {
       case PAGETYPE_TIMESHEETS: // run on to next case
       case PAGETYPE_JOBSANDCLIENTS:
 				if (this.className.indexOf(CLASS_CLIENTSELECT) !== -1) {
-					this.className = CLASS_CLIENTSELECT + " " + option_selector;
+					this.className = CLASS_CLIENTSELECT + " " + this.value;
 				} else if (this.className.indexOf(CLASS_JOBSELECT) !== -1) {
-					this.className = CLASS_JOBSELECT + " " + option_selector;
+					this.className = CLASS_JOBSELECT + " " + this.value;
 				}
         break;
       case PAGETYPE_CONFIG:
@@ -1472,6 +1538,8 @@ uk.co.firmgently.DontDillyDally = (function() {
     todayClick: todayClick,
     dayJumpClick: dayJumpClick,
     getNewClient: getNewClient,
+    onFormClick: onFormClick,
+    onFormSubmit: onFormSubmit,
     getNewJob: getNewJob,
     updateSelected: updateSelected,
     onUpdateInput: onUpdateInput,

@@ -389,6 +389,30 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   };
 
 
+  createFormFromOb = function(ob) {
+    var i, form_el,
+				parent_el = document.getElementById(ob.parent);
+
+    if (ob.id) {
+      form_el = createElementWithId("form", ob.id);
+    } else {
+      form_el = document.createElement("form");
+    }
+    parent_el.appendChild(form_el);
+
+    if (ob.class) { addClassname(form_el, ob.class); }
+    if (ob.title) { form_el.innerHTML = "<h2>" + ob.title + "</h2>"; }
+//    if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
+    if (ob.hidden) { form_el.style.display = "none"; }
+
+    form_el.ob = ob;
+    //registerEventHandler(form_el, "submit", onFormSubmit);
+    //registerEventHandler(form_el, "click", onFormClick);
+
+		return form_el;
+  };
+
+
   createColorPickerFromOb = function(ob) {
     var
     el, label_el, 
@@ -483,6 +507,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 		createButtonFromOb: createButtonFromOb,
 		createSelectFromOb: createSelectFromOb,
 		createInputFromOb: createInputFromOb,
+		createFormFromOb: createFormFromOb,
 		createSpinnerFromOb: createSpinnerFromOb,
 		onSpinnerStart: onSpinnerStart,
 		onSpinnerMouseUp: onSpinnerMouseUp,

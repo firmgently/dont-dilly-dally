@@ -303,90 +303,168 @@ uk.co.firmgently.DDDConsts = (function() {
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_PRIVACY,
       label: "Privacy",
-      methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      args: [CONST.PAGETYPE_PRIVACY],
-      scopeID: "main",
+      //methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+      //args: [CONST.PAGETYPE_PRIVACY],
+      //scopeID: "main",
+      event_ar: [
+        {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+          args: [CONST.PAGETYPE_PRIVACY],
+          scopeID: "main"
+        }
+      ],
       parent: "nav-main"
     }, {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_CONFIG,
       label: "Preferences",
-      methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      args: [CONST.PAGETYPE_CONFIG],
-      scopeID: "main",
+      //methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+      //args: [CONST.PAGETYPE_CONFIG],
+      //scopeID: "main",
+      event_ar: [
+        {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+          args: [CONST.PAGETYPE_CONFIG],
+          scopeID: "main"
+        }
+      ],
       parent: "nav-main"
     }, {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_JOBSANDCLIENTS,
       label: "Jobs & Clients",
-      methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      args: [CONST.PAGETYPE_JOBSANDCLIENTS],
-      scopeID: "main",
+      //methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+      //args: [CONST.PAGETYPE_JOBSANDCLIENTS],
+      //scopeID: "main",
+      event_ar: [
+        {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+          args: [CONST.PAGETYPE_JOBSANDCLIENTS],
+          scopeID: "main"
+        }
+      ],
       parent: "nav-main"
     }, {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_TIMESHEETS,
       label: "Timesheets",
-      methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      args: [CONST.PAGETYPE_TIMESHEETS],
-      scopeID: "main",
+      //methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+      //args: [CONST.PAGETYPE_TIMESHEETS],
+      //scopeID: "main",
+      event_ar: [
+        {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+          args: [CONST.PAGETYPE_TIMESHEETS],
+          scopeID: "main"
+        }
+      ],
       parent: "nav-main"
     }
   ];
 
 
   CONST.GUIDATA_TIMESHEETS = [
-    { type: CONST.GUITYPE_FORM,
+    {
+      type: CONST.GUITYPE_FORM,
       id: "miniNavForm",
       parent: "main",
-      el_ar: [
+      event_ar: [
         {
-          type: CONST.GUITYPE_PARA,
-          text: "month",
-          parent: "miniNavForm"
+          eventType: "submit",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.onFormSubmit",
+          scopeID: "miniNavForm"
         }, {
-          type: CONST.GUITYPE_BTN,
-          id: CONST.EL_ID_MONTHPREVBTN,
-          class: CONST.CLASS_BTNMININAV,
-          label: "&#x25B2;",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
-          parent: "miniNavForm"
-        }, {
-          type: CONST.GUITYPE_BTN,
-          id: CONST.EL_ID_MONTHNEXTBTN,
-          class: CONST.CLASS_BTNMININAV,
-          label: "&#x25BC;",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
-          parent: "miniNavForm"
-        }, {
-          type: CONST.GUITYPE_PARA,
-          text: "week",
-          parent: "miniNavForm"
-        }, {
-          type: CONST.GUITYPE_BTN,
-          id: CONST.EL_ID_WEEKPREVBTN,
-          class: CONST.CLASS_BTNMININAV,
-          label: "&#x25B2;",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
-          parent: "miniNavForm"
-        }, {
-          type: CONST.GUITYPE_BTN,
-          id: CONST.EL_ID_WEEKNEXTBTN,
-          class: CONST.CLASS_BTNMININAV,
-          label: "&#x25BC;",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
-          parent: "miniNavForm"
-        }, {
-          type: CONST.GUITYPE_BTN,
-          class: CONST.CLASS_BTNMININAV,
-          label: "today",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.todayClick",
-          parent: "miniNavForm"
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.onFormClick",
+          scopeID: "miniNavForm"
         }
       ]
+    },  {
+      type: CONST.GUITYPE_PARA,
+      text: "month",
+      parent: "miniNavForm"
+    }, {
+      type: CONST.GUITYPE_BTN,
+      id: CONST.EL_ID_MONTHPREVBTN,
+      class: CONST.CLASS_BTNMININAV,
+      label: "&#x25B2;",
+      event_ar: [
+        {
+          eventType: "mousedown",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+        }, {
+          eventType: "touchstart",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+        }
+      ],
+      parent: "miniNavForm"
+    }, {
+      type: CONST.GUITYPE_BTN,
+      id: CONST.EL_ID_MONTHNEXTBTN,
+      class: CONST.CLASS_BTNMININAV,
+      label: "&#x25BC;",
+      event_ar: [
+        {
+          eventType: "mousedown",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+        }, {
+          eventType: "touchstart",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+        }
+      ],
+      parent: "miniNavForm"
+    }, {
+      type: CONST.GUITYPE_PARA,
+      text: "week",
+      parent: "miniNavForm"
+    }, {
+      type: CONST.GUITYPE_BTN,
+      id: CONST.EL_ID_WEEKPREVBTN,
+      class: CONST.CLASS_BTNMININAV,
+      label: "&#x25B2;",
+      event_ar: [
+        {
+          eventType: "mousedown",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+        }, {
+          eventType: "touchstart",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+        }
+      ],
+      parent: "miniNavForm"
+    }, {
+      type: CONST.GUITYPE_BTN,
+      id: CONST.EL_ID_WEEKNEXTBTN,
+      class: CONST.CLASS_BTNMININAV,
+      label: "&#x25BC;",
+      event_ar: [
+        {
+          eventType: "mousedown",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+        }, {
+          eventType: "touchstart",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+        }
+      ],
+      parent: "miniNavForm"
+    }, {
+      type: CONST.GUITYPE_BTN,
+      class: CONST.CLASS_BTNMININAV,
+      label: "today",
+      event_ar: [
+        {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.todayClick",
+        }
+      ],
+      parent: "miniNavForm"
     }, {
       type: CONST.GUITYPE_UL,
       id: CONST.TIMESHEETCONTAINER_ID,
@@ -407,8 +485,18 @@ uk.co.firmgently.DDDConsts = (function() {
       title: "Set your preferences here",
       parent: "main",
       hidden: false,
-      el_ar: [
-    {
+      event_ar: [
+        {
+          eventType: "submit",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.onFormSubmit",
+          scopeID: "configForm"
+        }, {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.onFormClick",
+          scopeID: "configForm"
+        }
+      ]
+    }, {
       type: CONST.GUITYPE_COL,
       id: "configCol1",
       class: CONST.CLASS_COL,
@@ -419,51 +507,49 @@ uk.co.firmgently.DDDConsts = (function() {
       class: CONST.CLASS_COL,
       parent: "configForm"
     }, {
-           type: CONST.GUITYPE_RADIOBTN,
-           id: "dateFormat",
-           label: "Date display format:",
-           parent: "configCol1",
-           options: {
-             DATETYPE_DDMMYY: "dd/mm/yy",
-             DATETYPE_MMDDYY: "mm/dd/yy",
-             DATETYPE_YYMMDD: "yy/mm/dd"
-           },
-           disabled: true
-         }, {
-           type: CONST.GUITYPE_RADIOBTN,
-           id: "timespan",
-           label: "Timespan shown on the timesheet page:",
-           parent: "configCol1",
-           options: {
-             timespanWeek: "A week",
-             timespanMonth: "A month",
-             timespanYear: "A year"
-           },
-           disabled: true
-         }, {
-           type: CONST.GUITYPE_RADIOBTN,
-           id: "totalsToShow",
-           label: "Which totals should be calculated and displayed:",
-           parent: "configCol2",
-           options: {
-             showTotalsWeek: "Show weekly totals",
-             showTotalsMonth: "Show monthly totals",
-             showTotalsWeekAndMonth: "Show both weekly and monthly totals"
-           },
-           disabled: true
-         }, {
-           type: CONST.GUITYPE_RADIOBTN,
-           id: "minuteIncrements",
-           label: "Time entry increments:",
-           parent: "configCol2",
-           options: {
-             minuteIncrement1: "1 minute",
-             minuteIncrement15: "15 minutes",
-             minuteIncrement30: "30 minutes"
-           },
-           disabled: true
-         }
-      ]
+      type: CONST.GUITYPE_RADIOBTN,
+      id: "dateFormat",
+      label: "Date display format:",
+      parent: "configCol1",
+      options: {
+        DATETYPE_DDMMYY: "dd/mm/yy",
+        DATETYPE_MMDDYY: "mm/dd/yy",
+        DATETYPE_YYMMDD: "yy/mm/dd"
+      },
+      disabled: true
+    }, {
+      type: CONST.GUITYPE_RADIOBTN,
+      id: "timespan",
+      label: "Timespan shown on the timesheet page:",
+      parent: "configCol1",
+      options: {
+        timespanWeek: "A week",
+        timespanMonth: "A month",
+        timespanYear: "A year"
+      },
+      disabled: true
+    }, {
+      type: CONST.GUITYPE_RADIOBTN,
+      id: "totalsToShow",
+      label: "Which totals should be calculated and displayed:",
+      parent: "configCol2",
+      options: {
+        showTotalsWeek: "Show weekly totals",
+        showTotalsMonth: "Show monthly totals",
+        showTotalsWeekAndMonth: "Show both weekly and monthly totals"
+      },
+      disabled: true
+    }, {
+      type: CONST.GUITYPE_RADIOBTN,
+      id: "minuteIncrements",
+      label: "Time entry increments:",
+      parent: "configCol2",
+      options: {
+        minuteIncrement1: "1 minute",
+        minuteIncrement15: "15 minutes",
+        minuteIncrement30: "30 minutes"
+      },
+      disabled: true
     }
   ];
 
