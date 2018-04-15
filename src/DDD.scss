@@ -443,6 +443,11 @@ body#config aside nav button#config.btnNav {
 			.removeItemBtn { right: 1rem; color: $ddd-orangedark; }
 			&:only-child .removeItemBtn { visibility: hidden; }
 			&:not(:first-child) .addItemBtn { visibility: hidden; }
+
+      &:focus-within,
+      .spinner:hover {
+        .spin-button-up, .spin-button-down { display: inline-block; }
+      }
 		}
 	}
 
@@ -496,7 +501,7 @@ select {
   display: inline-block; position: relative;
   .spin-button-up, .spin-button-down {
 		cursor: pointer;
-    position: absolute; display: inline-block;
+    position: absolute; display: none;
     left: 10%; width: 40%; height: 0.5rem;
     padding: 0.1rem 0.2rem 0.55rem 0.2rem;
     background-color: $button-bgcolor; color: $button-color;

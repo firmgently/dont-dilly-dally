@@ -222,14 +222,18 @@ uk.co.firmgently.FGUtils = (function() {
 
 
   removeClassname = function(element, name) {
-    element.className = element.className.replace(" " + name,"");
+    if (element) {
+      element.className = element.className.replace(" " + name,"");
+    }
   };
 
 
   addClassname = function(element, name) {
-    name = " " + name;
-    element.className = element.className.replace(name,"");
-    element.className = element.className + name;
+    if (element) {
+      name = " " + name;
+      element.className = element.className.replace(name,"");
+      element.className = element.className + name;
+    }
   };
 
 

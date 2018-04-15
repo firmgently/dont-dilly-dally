@@ -406,6 +406,26 @@ body#config aside nav button#config.btnNav {
         visibility: hidden; }
       #timesheetContainer ul.day-data.col > li:not(:first-child) .addItemBtn, #timesheetContainer ul.clients > li:not(:first-child) .addItemBtn, #timesheetContainer ul.jobs > li:not(:first-child) .addItemBtn, #clientsExisting ul.day-data.col > li:not(:first-child) .addItemBtn, #clientsExisting ul.clients > li:not(:first-child) .addItemBtn, #clientsExisting ul.jobs > li:not(:first-child) .addItemBtn, #jobsExisting ul.day-data.col > li:not(:first-child) .addItemBtn, #jobsExisting ul.clients > li:not(:first-child) .addItemBtn, #jobsExisting ul.jobs > li:not(:first-child) .addItemBtn {
         visibility: hidden; }
+      #timesheetContainer ul.day-data.col > li:focus-within .spin-button-up, #timesheetContainer ul.day-data.col > li:focus-within .spin-button-down,
+      #timesheetContainer ul.day-data.col > li .spinner:hover .spin-button-up,
+      #timesheetContainer ul.day-data.col > li .spinner:hover .spin-button-down, #timesheetContainer ul.clients > li:focus-within .spin-button-up, #timesheetContainer ul.clients > li:focus-within .spin-button-down,
+      #timesheetContainer ul.clients > li .spinner:hover .spin-button-up,
+      #timesheetContainer ul.clients > li .spinner:hover .spin-button-down, #timesheetContainer ul.jobs > li:focus-within .spin-button-up, #timesheetContainer ul.jobs > li:focus-within .spin-button-down,
+      #timesheetContainer ul.jobs > li .spinner:hover .spin-button-up,
+      #timesheetContainer ul.jobs > li .spinner:hover .spin-button-down, #clientsExisting ul.day-data.col > li:focus-within .spin-button-up, #clientsExisting ul.day-data.col > li:focus-within .spin-button-down,
+      #clientsExisting ul.day-data.col > li .spinner:hover .spin-button-up,
+      #clientsExisting ul.day-data.col > li .spinner:hover .spin-button-down, #clientsExisting ul.clients > li:focus-within .spin-button-up, #clientsExisting ul.clients > li:focus-within .spin-button-down,
+      #clientsExisting ul.clients > li .spinner:hover .spin-button-up,
+      #clientsExisting ul.clients > li .spinner:hover .spin-button-down, #clientsExisting ul.jobs > li:focus-within .spin-button-up, #clientsExisting ul.jobs > li:focus-within .spin-button-down,
+      #clientsExisting ul.jobs > li .spinner:hover .spin-button-up,
+      #clientsExisting ul.jobs > li .spinner:hover .spin-button-down, #jobsExisting ul.day-data.col > li:focus-within .spin-button-up, #jobsExisting ul.day-data.col > li:focus-within .spin-button-down,
+      #jobsExisting ul.day-data.col > li .spinner:hover .spin-button-up,
+      #jobsExisting ul.day-data.col > li .spinner:hover .spin-button-down, #jobsExisting ul.clients > li:focus-within .spin-button-up, #jobsExisting ul.clients > li:focus-within .spin-button-down,
+      #jobsExisting ul.clients > li .spinner:hover .spin-button-up,
+      #jobsExisting ul.clients > li .spinner:hover .spin-button-down, #jobsExisting ul.jobs > li:focus-within .spin-button-up, #jobsExisting ul.jobs > li:focus-within .spin-button-down,
+      #jobsExisting ul.jobs > li .spinner:hover .spin-button-up,
+      #jobsExisting ul.jobs > li .spinner:hover .spin-button-down {
+        display: inline-block; }
   #timesheetContainer > li.totals-week, #timesheetContainer > li.totals-month, #timesheetContainer > li.totals-year,
   #timesheetContainer > li.totals-week:hover, #timesheetContainer > li.totals-month:hover, #timesheetContainer > li.totals-year:hover, #clientsExisting > li.totals-week, #clientsExisting > li.totals-month, #clientsExisting > li.totals-year,
   #clientsExisting > li.totals-week:hover, #clientsExisting > li.totals-month:hover, #clientsExisting > li.totals-year:hover, #jobsExisting > li.totals-week, #jobsExisting > li.totals-month, #jobsExisting > li.totals-year,
@@ -467,7 +487,7 @@ select {
   .spinner .spin-button-up, .spinner .spin-button-down {
     cursor: pointer;
     position: absolute;
-    display: inline-block;
+    display: none;
     left: 10%;
     width: 40%;
     height: 0.5rem;

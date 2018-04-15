@@ -30,6 +30,7 @@ uk.co.firmgently.DDDConsts = (function() {
 
 		AUTOREPEAT_RATE: 500,
     RECALCULATETOTALS_DELAY: 1000,
+    DAYSDRAWN_UPDATE_FREQ: 10, // lower number means more frequent updates on loading indicator
 
     PAGETYPE_TIMESHEETS: "timesheets",
     PAGETYPE_CONFIG: "preferences",
@@ -107,6 +108,10 @@ uk.co.firmgently.DDDConsts = (function() {
     EL_ID_JOBSAVEBTN: "saveNewJobBtn",
     EL_ID_SELECTCLIENT: "selectClient",
     EL_ID_SELECTJOB: "selectJob",
+    EL_ID_WEEKNEXTBTN: "weekNextBtn",
+    EL_ID_WEEKPREVBTN: "weekPrevBtn",
+    EL_ID_MONTHNEXTBTN: "monthNextBtn",
+    EL_ID_MONTHPREVBTN: "monthPrevBtn",
 
     CLIENT_FG_COLPICK: "clientFGPicker",
     CLIENT_BG_COLPICK: "clientBGPicker",
@@ -344,15 +349,17 @@ uk.co.firmgently.DDDConsts = (function() {
           parent: "miniNavForm"
         }, {
           type: CONST.GUITYPE_BTN,
+          id: CONST.EL_ID_MONTHPREVBTN,
           class: CONST.CLASS_BTNMININAV,
           label: "&#x25B2;",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.monthPrevClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
           parent: "miniNavForm"
         }, {
           type: CONST.GUITYPE_BTN,
+          id: CONST.EL_ID_MONTHNEXTBTN,
           class: CONST.CLASS_BTNMININAV,
           label: "&#x25BC;",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.monthNextClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
           parent: "miniNavForm"
         }, {
           type: CONST.GUITYPE_PARA,
@@ -360,15 +367,17 @@ uk.co.firmgently.DDDConsts = (function() {
           parent: "miniNavForm"
         }, {
           type: CONST.GUITYPE_BTN,
+          id: CONST.EL_ID_WEEKPREVBTN,
           class: CONST.CLASS_BTNMININAV,
           label: "&#x25B2;",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.weekPrevClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
           parent: "miniNavForm"
         }, {
           type: CONST.GUITYPE_BTN,
+          id: CONST.EL_ID_WEEKNEXTBTN,
           class: CONST.CLASS_BTNMININAV,
           label: "&#x25BC;",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.weekNextClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
           parent: "miniNavForm"
         }, {
           type: CONST.GUITYPE_BTN,
@@ -686,14 +695,18 @@ uk.co.firmgently.FGUtils = (function() {
 
 
   removeClassname = function(element, name) {
-    element.className = element.className.replace(" " + name,"");
+    if (element) {
+      element.className = element.className.replace(" " + name,"");
+    }
   };
 
 
   addClassname = function(element, name) {
-    name = " " + name;
-    element.className = element.className.replace(name,"");
-    element.className = element.className + name;
+    if (element) {
+      name = " " + name;
+      element.className = element.className.replace(name,"");
+      element.className = element.className + name;
+    }
   };
 
 
@@ -1057,8 +1070,10 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     addClassname(up_el, SPINNER_UPBTN_CLASSNAME);
     wrapper_el.appendChild(up_el);
     registerEventHandler(up_el, "mousedown", onIncreaseSpinnerMouseDown);
+    registerEventHandler(up_el, "touchstart", onIncreaseSpinnerMouseDown);
     registerEventHandler(up_el, "mouseup", onSpinnerMouseUp);
     registerEventHandler(up_el, "mouseout", onSpinnerMouseUp);
+    registerEventHandler(up_el, "touchend", onSpinnerMouseUp);
     
     down_el = document.createElement("button");
     down_el.innerHTML = "&#x25BC;";
@@ -1066,8 +1081,10 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     addClassname(down_el, SPINNER_DOWNBTN_CLASSNAME);
     wrapper_el.appendChild(down_el);
     registerEventHandler(down_el, "mousedown", onDecreaseSpinnerMouseDown);
+    registerEventHandler(down_el, "touchstart", onDecreaseSpinnerMouseDown);
     registerEventHandler(down_el, "mouseup", onSpinnerMouseUp);
     registerEventHandler(down_el, "mouseout", onSpinnerMouseUp);
+    registerEventHandler(down_el, "touchend", onSpinnerMouseUp);
 
 		return input_el;
   };
@@ -1427,6 +1444,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   Mark Mayes 2018
 
   TODO  file load isn't loading data yet
+  DONE  spinners ony show for hovered/focused day
+  FIXME colour palette can push off side of screen resulting in resize on Android
   TODO  add 'year start date' preference
   TODO  ensure big/small units update min/max/step when changing from money to hours or viceversa
   FIXME timesheet container not getting scroll focus
@@ -1434,7 +1453,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   TODO  delete job/client check if any records are referencing them, prompt if so
 	TODO	add 'wipe data' buttons with confirmation prompt
 	FIXME	spinners: numbers should pad eg. 00:45h, £10.00
-  FIXME next/prev week/month buttons not working
   TODO  all strings should be constants
   TODO  display month/week start correctly
   TODO  validate all input data
@@ -1447,6 +1465,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 	FIXME	£-0.77 must register as negative
   TODO  test everything on touchscreen
   TODO  test everything on narrow (phone) layout
+  DONE  use updatefrequency to refresh "days drawn" only on % === 0
+  DONE  refactor month/week click etc to all use 1 function
+  DONE next/prev week/month buttons not working
 	DONE	add privacy page/statement
 					by default all data is saved in your browser (localStorage)
 					you can wipe your data at any time
@@ -1487,10 +1508,10 @@ uk.co.firmgently.DontDillyDally = (function() {
 	var
   // variables
   prop, dateDisplayStart, dateDisplaySelected, dateToday, 
-  clientNameInput_el, jobNameInput_el, clientSaveBtn_el, jobSaveBtn_el,
-  colPickClientFG_el, colPickClientBG_el, colPickJobFG_el, colPickJobBG_el,
 	eventAutoRepeatTimer, timesheetDrawDayTimer, recalculateTotalsTimer,
   tsDaysToDraw, tsDaysToDrawTotal, curDrawnDay, tsWorkingFragment,
+
+  loadingIndicator_el,
 
 	// methods
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
@@ -1501,7 +1522,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   callMethodFromObOnElement, callMethodFromOb,
   drawTimesheets, drawNextDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
   getNextID, getNewClient, getNewJob,
-  navClick, todayClick, weekNextClick, weekPrevClick, monthNextClick, monthPrevClick,
+  navClick, todayClick, dayJumpClick, 
 
   onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
 	onSaveBtnClick, onColorChangeConfirm,
@@ -1760,7 +1781,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   clearPage = function() {
-    removeClassname(document.getElementById(LOADINGINDICATOR_ID), CLASS_HIDDEN);
+    removeClassname(loadingIndicator_el, CLASS_HIDDEN);
     document.getElementById("main").innerHTML = "";
   };
 
@@ -1778,19 +1799,19 @@ uk.co.firmgently.DontDillyDally = (function() {
         document.body.id = BODYID_CONFIG;
         fillHTMLFromOb(PAGEDATA_CONFIG);
         drawGUIFromAr(GUIDATA_CONFIG);
-        addClassname(document.getElementById(LOADINGINDICATOR_ID), CLASS_HIDDEN);
+        addClassname(loadingIndicator_el, CLASS_HIDDEN);
         break;
       case PAGETYPE_JOBSANDCLIENTS:
         document.body.id = BODYID_JOBSANDCLIENTS;
         fillHTMLFromOb(PAGEDATA_JOBSANDCLIENTS);
         drawGUIFromAr(GUIDATA_JOBSANDCLIENTS);
-        addClassname(document.getElementById(LOADINGINDICATOR_ID), CLASS_HIDDEN);
+        addClassname(loadingIndicator_el, CLASS_HIDDEN);
         break;
       case PAGETYPE_PRIVACY:
         document.body.id = BODYID_PRIVACY;
         fillHTMLFromOb(PAGEDATA_PRIVACY);
         drawGUIFromAr(GUIDATA_PRIVACY);
-        addClassname(document.getElementById(LOADINGINDICATOR_ID), CLASS_HIDDEN);
+        addClassname(loadingIndicator_el, CLASS_HIDDEN);
         break;
       default:
         break;
@@ -1807,6 +1828,7 @@ uk.co.firmgently.DontDillyDally = (function() {
           el_temp = createButtonFromOb(ob);
           if (ob.methodPathStr) {
             registerEventHandler(el_temp, "mousedown", callMethodFromObOnElement);
+            registerEventHandler(el_temp, "touchstart", callMethodFromObOnElement);
           }
           break;
         case GUITYPE_FORM:
@@ -2077,7 +2099,9 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
 
     if (tsDaysToDraw > 0) {
-      document.getElementById(LOADINGINDICATOR_ID).innerHTML = "creating day " + (tsDaysToDrawTotal - tsDaysToDraw) + "/" + tsDaysToDrawTotal;
+      if (tsDaysToDraw % DAYSDRAWN_UPDATE_FREQ === 0) {
+        loadingIndicator_el.innerHTML = "creating day " + (tsDaysToDrawTotal - tsDaysToDraw) + "/" + tsDaysToDrawTotal;
+      }
       timesheetDrawDayTimer = setTimeout(drawNextDay, 0);
       curDrawnDay.setDate(curDrawnDay.getDate() + 1);
       tsDaysToDraw --;
@@ -2095,7 +2119,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
       // add fragment to DOM
       document.getElementById(TIMESHEETCONTAINER_ID).appendChild(tsWorkingFragment);
-      addClassname(document.getElementById(LOADINGINDICATOR_ID), CLASS_HIDDEN);
+      addClassname(loadingIndicator_el, CLASS_HIDDEN);
 
       recalculateAllTotals();
     }
@@ -2533,7 +2557,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
       default:
         break;
-    };
+    }
     daysToCalculate = daysBetween(dateStart, dateEnd);
     dayCur = dateStart;
     for (i = 0; i < daysToCalculate; i++) {
@@ -2759,72 +2783,49 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-	weekPrevClick = function(e) {
-    var i, day,
-				scrollTop = document.getElementById("main").scrollTop,
-				days = document.getElementsByClassName("week-start");
-    for (i = days.length - 1; i >= 0; i--) {
-      day = days[i];
-      if (day.offsetTop < scrollTop) {
-        day.scrollIntoView();
+  dayJumpClick = function(event) {
+    var i, day, dayNodes,
+        searchDirection = "forward",
+        scrollTop = document.getElementById("main").scrollTop;
+
+    switch (event.target.id) {
+      case EL_ID_WEEKNEXTBTN:
+        dayNodes = document.getElementsByClassName("week-start");
         break;
+      case EL_ID_WEEKPREVBTN:
+        dayNodes = document.getElementsByClassName("week-start");
+        searchDirection = "backward";
+        break;
+      case EL_ID_MONTHNEXTBTN:
+        dayNodes = document.getElementsByClassName("month-start");
+        break;
+      case EL_ID_MONTHPREVBTN:
+        dayNodes = document.getElementsByClassName("month-start");
+        searchDirection = "backward";
+        break;
+      default:
+        break;
+    }
+    if (searchDirection === "forward") {
+      // look for matching nodes which are past the top of the scroll window
+      // breaking when we find a match (leaving 'day' set to our match)
+      // the +1 is to make sure we don't repeatedly match the same node after scrolling it to the top of the window
+      for (i = 0; i < dayNodes.length; i++) {
+        day = dayNodes[i];
+        if (day.offsetTop > scrollTop + 1) { break; } 
+      }
+    } else {
+      for (i = dayNodes.length - 1; i >= 0; i--) {
+        day = dayNodes[i];
+        if (day.offsetTop < scrollTop - 1) { break; }
       }
     }
-		eventAutoRepeat(e.target, e.type);
-		registerEventHandler(e.target, "mouseup", eventAutoRepeatStop);
-		registerEventHandler(e.target, "mouseout", eventAutoRepeatStop);
-	};
-
-
-	weekNextClick = function(e) {
-    var i, day,
-				scrollTop = document.getElementById("main").scrollTop,
-				days = document.getElementsByClassName("week-start");
-    for (i = 0; i < days.length; i++) {
-      day = days[i];
-      if (day.offsetTop > scrollTop) {
-        day.scrollIntoView();
-        break;
-      }
-    }
-		eventAutoRepeat(e.target, e.type);
-		registerEventHandler(e.target, "mouseup", eventAutoRepeatStop);
-		registerEventHandler(e.target, "mouseout", eventAutoRepeatStop);
-	};
-
-
-	monthPrevClick = function(e) {
-    var i, day,
-				scrollTop = document.getElementById("main").scrollTop,
-				days = document.getElementsByClassName("month-start");
-    for (i = days.length - 1; i >= 0; i--) {
-      day = days[i];
-      if (day.offsetTop < scrollTop) {
-        day.scrollIntoView();
-        break;
-      }
-    }
-		eventAutoRepeat(e.target, e.type);
-		registerEventHandler(e.target, "mouseup", eventAutoRepeatStop);
-		registerEventHandler(e.target, "mouseout", eventAutoRepeatStop);
-	};
-
-
-	monthNextClick = function(e) {
-    var i, day,
-				scrollTop = document.getElementById("main").scrollTop,
-				days = document.getElementsByClassName("month-start");
-    for (i = 0; i < days.length; i++) {
-      day = days[i];
-      if (day.offsetTop > scrollTop) {
-        day.scrollIntoView();
-        break;
-      }
-    }
-		eventAutoRepeat(e.target, e.type);
-		registerEventHandler(e.target, "mouseup", eventAutoRepeatStop);
-		registerEventHandler(e.target, "mouseout", eventAutoRepeatStop);
-	};
+    day.scrollIntoView();
+    eventAutoRepeat(event.target, event.type);
+    registerEventHandler(event.target, "mouseup", eventAutoRepeatStop);
+    registerEventHandler(event.target, "mouseout", eventAutoRepeatStop);
+    registerEventHandler(event.target, "touchend", eventAutoRepeatStop);
+  };
 
 
 	todayClick = function(e) {
@@ -2891,6 +2892,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
 		registerEventHandler(document.getElementById("file-chooser"), "change", handleFileSelect, false);
 		registerEventHandler(document.getElementById("file-save"), "click", onSaveBtnClick, false);
+    loadingIndicator_el = document.getElementById(LOADINGINDICATOR_ID);
   };
 
 
@@ -2907,10 +2909,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     addClient: addClient,
     navClick: navClick,
     todayClick: todayClick,
-    weekNextClick: weekNextClick,
-    weekPrevClick: weekPrevClick,
-    monthNextClick: monthNextClick,
-    monthPrevClick: monthPrevClick,
+    dayJumpClick: dayJumpClick,
     getNewClient: getNewClient,
     getNewJob: getNewJob,
     updateSelected: updateSelected,

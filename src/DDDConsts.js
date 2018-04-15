@@ -30,6 +30,7 @@ uk.co.firmgently.DDDConsts = (function() {
 
 		AUTOREPEAT_RATE: 500,
     RECALCULATETOTALS_DELAY: 1000,
+    DAYSDRAWN_UPDATE_FREQ: 10, // lower number means more frequent updates on loading indicator
 
     PAGETYPE_TIMESHEETS: "timesheets",
     PAGETYPE_CONFIG: "preferences",
@@ -107,6 +108,10 @@ uk.co.firmgently.DDDConsts = (function() {
     EL_ID_JOBSAVEBTN: "saveNewJobBtn",
     EL_ID_SELECTCLIENT: "selectClient",
     EL_ID_SELECTJOB: "selectJob",
+    EL_ID_WEEKNEXTBTN: "weekNextBtn",
+    EL_ID_WEEKPREVBTN: "weekPrevBtn",
+    EL_ID_MONTHNEXTBTN: "monthNextBtn",
+    EL_ID_MONTHPREVBTN: "monthPrevBtn",
 
     CLIENT_FG_COLPICK: "clientFGPicker",
     CLIENT_BG_COLPICK: "clientBGPicker",
@@ -344,15 +349,17 @@ uk.co.firmgently.DDDConsts = (function() {
           parent: "miniNavForm"
         }, {
           type: CONST.GUITYPE_BTN,
+          id: CONST.EL_ID_MONTHPREVBTN,
           class: CONST.CLASS_BTNMININAV,
           label: "&#x25B2;",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.monthPrevClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
           parent: "miniNavForm"
         }, {
           type: CONST.GUITYPE_BTN,
+          id: CONST.EL_ID_MONTHNEXTBTN,
           class: CONST.CLASS_BTNMININAV,
           label: "&#x25BC;",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.monthNextClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
           parent: "miniNavForm"
         }, {
           type: CONST.GUITYPE_PARA,
@@ -360,15 +367,17 @@ uk.co.firmgently.DDDConsts = (function() {
           parent: "miniNavForm"
         }, {
           type: CONST.GUITYPE_BTN,
+          id: CONST.EL_ID_WEEKPREVBTN,
           class: CONST.CLASS_BTNMININAV,
           label: "&#x25B2;",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.weekPrevClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
           parent: "miniNavForm"
         }, {
           type: CONST.GUITYPE_BTN,
+          id: CONST.EL_ID_WEEKNEXTBTN,
           class: CONST.CLASS_BTNMININAV,
           label: "&#x25BC;",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.weekNextClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
           parent: "miniNavForm"
         }, {
           type: CONST.GUITYPE_BTN,

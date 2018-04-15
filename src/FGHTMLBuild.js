@@ -131,8 +131,10 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     addClassname(up_el, SPINNER_UPBTN_CLASSNAME);
     wrapper_el.appendChild(up_el);
     registerEventHandler(up_el, "mousedown", onIncreaseSpinnerMouseDown);
+    registerEventHandler(up_el, "touchstart", onIncreaseSpinnerMouseDown);
     registerEventHandler(up_el, "mouseup", onSpinnerMouseUp);
     registerEventHandler(up_el, "mouseout", onSpinnerMouseUp);
+    registerEventHandler(up_el, "touchend", onSpinnerMouseUp);
     
     down_el = document.createElement("button");
     down_el.innerHTML = "&#x25BC;";
@@ -140,8 +142,10 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     addClassname(down_el, SPINNER_DOWNBTN_CLASSNAME);
     wrapper_el.appendChild(down_el);
     registerEventHandler(down_el, "mousedown", onDecreaseSpinnerMouseDown);
+    registerEventHandler(down_el, "touchstart", onDecreaseSpinnerMouseDown);
     registerEventHandler(down_el, "mouseup", onSpinnerMouseUp);
     registerEventHandler(down_el, "mouseout", onSpinnerMouseUp);
+    registerEventHandler(down_el, "touchend", onSpinnerMouseUp);
 
 		return input_el;
   };
