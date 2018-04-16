@@ -73,6 +73,7 @@ uk.co.firmgently.DDDConsts = (function() {
     CLASS_NOTESINPUT: "notes",
     CLASS_NEGATIVE: "negative",
     CLASS_HIDDEN: "hidden",
+		CLASS_ATTRACT: "attract",
     CLASS_TOTALSWEEK: "totals-week",
     CLASS_TOTALSMONTH: "totals-month",
     CLASS_TOTALSYEAR: "totals-year",

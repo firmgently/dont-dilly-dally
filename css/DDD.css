@@ -212,7 +212,12 @@ body#config aside nav button#config.btnNav {
   padding: 2rem;
   background-color: #F2F0F0; }
   #main h1, #main h2 {
+    color: #797777;
     padding: 0.8rem 0.6rem 0.8rem 2rem; }
+  #main h1 {
+    font-size: 1.5rem; }
+  #main h2 {
+    font-size: 1.25rem; }
 
 #jobsExisting, #clientsExisting, #configCol1, #configCol2 {
   width: 50%;
@@ -240,7 +245,7 @@ body#config aside nav button#config.btnNav {
   color: #ffeedd;
   font-weight: bold;
   text-transform: lowercase;
-  background-color: #cc6644;
+  background-color: #cec7c7;
   text-align: center; }
 
 #timesheetContainer, #clientsExisting, #jobsExisting {
@@ -251,8 +256,9 @@ body#config aside nav button#config.btnNav {
   box-shadow: 10px 10px 80px -8px rgba(0, 0, 0, 0.2); }
   #timesheetContainer > li .date.col, #clientsExisting > li .date.col, #jobsExisting > li .date.col {
     font-family: monospace;
-    font-size: 0.9rem;
-    font-weight: bold;
+    color: #797777;
+    font-size: 1.2rem;
+    font-weight: normal;
     width: 7.5rem;
     margin-right: -8.1rem;
     margin-left: 0.6rem; }
@@ -261,8 +267,8 @@ body#config aside nav button#config.btnNav {
       font-size: 0.7rem;
       text-align: right;
       text-transform: uppercase;
-      margin-top: -0.5rem;
-      margin-right: 0.5rem;
+      margin-top: -0.3rem;
+      margin-right: 0.15rem;
       color: #993322; }
   #timesheetContainer > li em, #clientsExisting > li em, #jobsExisting > li em {
     background-color: #cec7c7;
@@ -288,12 +294,13 @@ body#config aside nav button#config.btnNav {
     #timesheetContainer > li:nth-of-type(even):hover, #timesheetContainer > li:nth-of-type(even):focus-within, #clientsExisting > li:nth-of-type(even):hover, #clientsExisting > li:nth-of-type(even):focus-within, #jobsExisting > li:nth-of-type(even):hover, #jobsExisting > li:nth-of-type(even):focus-within {
       color: #393838;
       background-color: white; }
-  #timesheetContainer > li.today .date.col, #clientsExisting > li.today .date.col, #jobsExisting > li.today .date.col {
+  #timesheetContainer > li.today .date.col, #timesheetContainer > li.week-start .date.col, #clientsExisting > li.today .date.col, #clientsExisting > li.week-start .date.col, #jobsExisting > li.today .date.col, #jobsExisting > li.week-start .date.col {
     margin-top: -0.5rem; }
-    #timesheetContainer > li.today .date.col em, #clientsExisting > li.today .date.col em, #jobsExisting > li.today .date.col em {
-      top: 0.5rem;
-      background-color: #cc6644;
-      color: #ffeedd; }
+    #timesheetContainer > li.today .date.col em, #timesheetContainer > li.week-start .date.col em, #clientsExisting > li.today .date.col em, #clientsExisting > li.week-start .date.col em, #jobsExisting > li.today .date.col em, #jobsExisting > li.week-start .date.col em {
+      top: 0.5rem; }
+  #timesheetContainer > li.today .date.col em, #clientsExisting > li.today .date.col em, #jobsExisting > li.today .date.col em {
+    background-color: #cc6644;
+    color: #ffeedd; }
   #timesheetContainer > li.week-start, #clientsExisting > li.week-start, #jobsExisting > li.week-start {
     margin-top: 0.3rem; }
   #timesheetContainer > li.month-start h4, #clientsExisting > li.month-start h4, #jobsExisting > li.month-start h4 {
@@ -532,7 +539,7 @@ select {
   color: #776644;
   cursor: pointer;
   width: 10em;
-  border-radius: 0.15rem; }
+  border-radius: 0.3rem; }
   select:hover, select:focus {
     color: #978257;
     background-color: #ffd5aa; }

@@ -201,6 +201,9 @@ $extraLargePadding: 2rem;
 $bottomPadding: 0.9rem;
 $topPadding: 4.5rem;
 
+$fontSizeH1: 1.5rem;
+$fontSizeH2: 1.25rem;
+$fontSizeLarge: 1.2rem;
 $fontSizeNormal: 0.9rem;
 $fontSizeSmall: 0.8rem;
 $fontSizeTiny: 0.7rem;
@@ -373,7 +376,9 @@ body#config aside nav button#config.btnNav {
   overflow: scroll;
   padding: $extraLargePadding;
   background-color: $panelBgColor;
-  h1, h2 { padding: $largePadding $mediumPadding $largePadding $extraLargePadding; }
+  h1, h2 { color: $panelFgColor; padding: $largePadding $mediumPadding $largePadding $extraLargePadding; }
+  h1 { font-size: $fontSizeH1; }
+  h2 { font-size: $fontSizeH2; }
 }
 
 #jobsExisting, #clientsExisting, #configCol1, #configCol2 {
@@ -391,7 +396,7 @@ body#config aside nav button#config.btnNav {
   color: $ddd-cream;
   font-weight: bold; 
   text-transform: lowercase;
-  background-color: $ddd-orange; text-align: center;
+  background-color: $panelBgColor2; text-align: center;
 }
 
 // Timesheets
@@ -404,12 +409,13 @@ body#config aside nav button#config.btnNav {
 	> li {
     .date.col {
       font-family: monospace;
-      font-size: $fontSizeNormal; font-weight: bold;
+			color: $panelFgColor;
+      font-size: $fontSizeLarge; font-weight: normal;
       width: $date-width; margin-right: 0 - ($date-width + $mediumPadding); margin-left: $mediumPadding;
       span { // used for 'TODAY' text etc
         display: block;
         font-size: $fontSizeTiny; text-align: right; text-transform: uppercase;
-        margin-top: -0.5rem; margin-right: 0.5rem;
+        margin-top: -$smallPadding; margin-right: $tinyPadding;
         color: $ddd-orangedark;
       }
     }
@@ -435,10 +441,15 @@ body#config aside nav button#config.btnNav {
       //select { background-color: $evenDayBtnBgColor; color: $evenDayBtnFgColor; }
       &:hover, &:focus-within { color: $evenDayFgColorHover; background-color: $evenDayBgColorHover; }
 		}
-    &.today {
+    &.today, &.week-start {
       .date.col {
         margin-top: -0.5rem;
-        em { top: 0.5rem; background-color: $ddd-orange; color: $ddd-cream; }
+        em { top: 0.5rem; }
+      }
+    }
+    &.today, {
+      .date.col {
+        em { background-color: $ddd-orange; color: $ddd-cream; }
       }
     }
     &.week-start { margin-top: $smallPadding; }
@@ -629,7 +640,7 @@ select {
   appearance: none; -webkit-appearance: none; -moz-appearance: none;
   background-color: $button-bgcolor; color: $button-color;
   cursor: pointer;
-	width: 10em; @include border-radius($tinyPadding);
+	width: 10em; @include border-radius($smallPadding);
   &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; }
 	&:first-of-type { margin-right: $largePadding; } 
 }

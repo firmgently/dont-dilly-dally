@@ -73,6 +73,7 @@ uk.co.firmgently.DDDConsts = (function() {
     CLASS_NOTESINPUT: "notes",
     CLASS_NEGATIVE: "negative",
     CLASS_HIDDEN: "hidden",
+		CLASS_ATTRACT: "attract",
     CLASS_TOTALSWEEK: "totals-week",
     CLASS_TOTALSMONTH: "totals-month",
     CLASS_TOTALSYEAR: "totals-year",
@@ -1656,7 +1657,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   attachEventArrayToElement, callMethodsFromObOnElement, callMethodFromOb,
   drawTimesheets, drawNextDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
   getNextID, getNewClient, getNewJob,
-  navClick, todayClick, dayJump, 
+  navClick, todayClick, dayJump, attractAnimateElement, eventAutoRepeatStart,
 
   onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
 	onSaveBtnClick, onColorChangeConfirm,
@@ -2952,29 +2953,17 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   dayJump = function(event) {
-    var i, day, dayNodes, attract_el,
-        searchDirection = "forward",
+    var i, day, dayNodes,
+				btnID = event.target.id,
         scrollTop = mainContainer_el.scrollTop;
 
-    switch (event.target.id) {
-      case EL_ID_WEEKNEXTBTN:
+    if (btnID === EL_ID_WEEKNEXTBTN || btnID === EL_ID_WEEKPREVBTN) {
         dayNodes = document.getElementsByClassName("week-start");
-        break;
-      case EL_ID_WEEKPREVBTN:
-        dayNodes = document.getElementsByClassName("week-start");
-        searchDirection = "backward";
-        break;
-      case EL_ID_MONTHNEXTBTN:
+		} else if (btnID === EL_ID_MONTHNEXTBTN || btnID === EL_ID_MONTHPREVBTN) {
         dayNodes = document.getElementsByClassName("month-start");
-        break;
-      case EL_ID_MONTHPREVBTN:
-        dayNodes = document.getElementsByClassName("month-start");
-        searchDirection = "backward";
-        break;
-      default:
-        break;
     }
-    if (searchDirection === "forward") {
+    
+		if (btnID === EL_ID_WEEKNEXTBTN || btnID === EL_ID_MONTHNEXTBTN) { // search forward
       // look for matching nodes which are past the top of the scroll window
       // breaking when we find a match (leaving 'day' set to our match)
       // the +1 is to make sure we don't repeatedly match the same node after scrolling it to the top of the window
@@ -2982,7 +2971,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         day = dayNodes[i];
         if (day.offsetTop > scrollTop + 1) { break; } 
       }
-    } else {
+    } else if (btnID === EL_ID_WEEKPREVBTN || btnID === EL_ID_MONTHPREVBTN) { // search backward
       for (i = dayNodes.length - 1; i >= 0; i--) {
         day = dayNodes[i];
         if (day.offsetTop < scrollTop - 1) { break; }
@@ -2990,26 +2979,13 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
     day.scrollIntoView();
 
-    switch (event.target.id) {
-      case EL_ID_WEEKNEXTBTN:
-      case EL_ID_WEEKPREVBTN:
-				attract_el = day.getElementsByTagName("P")[0].getElementsByTagName("SPAN")[0];
-        break;
-      case EL_ID_MONTHNEXTBTN:
-      case EL_ID_MONTHPREVBTN:
-				attract_el = day.getElementsByTagName("H4")[0];
-        break;
-      default:
-        break;
-    }
-		removeClassname(attract_el, "attract");
-		attract_el.offsetTop; // HACK - trigger reflow
-		addClassname(attract_el, "attract");
+		if (btnID === EL_ID_WEEKNEXTBTN || btnID === EL_ID_WEEKPREVBTN) {
+			attractAnimateElement(day.getElementsByTagName("P")[0].getElementsByTagName("SPAN")[0]);
+		} else if (btnID === EL_ID_MONTHNEXTBTN || btnID === EL_ID_MONTHPREVBTN) {
+			attractAnimateElement(day.getElementsByTagName("H4")[0]);
+		}
 
-    eventAutoRepeat(event.target, event.type);
-    registerEventHandler(event.target, "mouseup", eventAutoRepeatStop);
-    registerEventHandler(event.target, "mouseout", eventAutoRepeatStop);
-    registerEventHandler(event.target, "touchend", eventAutoRepeatStop);
+    eventAutoRepeatStart(event.target, event.type);
   };
 
 
@@ -3018,6 +2994,23 @@ uk.co.firmgently.DontDillyDally = (function() {
 	};
 
 
+	attractAnimateElement = function(el) {
+		removeClassname(el, CLASS_ATTRACT);
+		// HACK - trigger a reflow, needed to properly remove class and allow 
+		// us to restart the animation
+		el.offsetTop;
+		addClassname(el, CLASS_ATTRACT);
+	};
+
+
+	eventAutoRepeatStart = function(el, eventType) {
+    eventAutoRepeat(el, eventType);
+    registerEventHandler(el, "mouseup", eventAutoRepeatStop);
+    registerEventHandler(el, "mouseout", eventAutoRepeatStop);
+    registerEventHandler(el, "touchend", eventAutoRepeatStop);
+	};
+	
+	
 	eventAutoRepeat = function(el, eventType) {
 		clearTimeout(eventAutoRepeatTimer);
 		eventAutoRepeatTimer = setTimeout(function() { manualEvent(el, eventType); }, AUTOREPEAT_RATE);
