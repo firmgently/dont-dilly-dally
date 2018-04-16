@@ -75,6 +75,35 @@ table {	border-collapse: collapse; border-spacing: 0; }
 ================================================== */
 
 
+
+
+/* ===============================================
+		SASS functions (need to be defined before
+		they are reference in the rest of the file	
+================================================== */
+
+@function color-SVG-icon($svg, $color) {
+	@return str-replace($svg, "FILLCOLOR", $color);
+}
+
+// STRING REPLACE FUNCTION
+// ==========================================================================
+// Replace `$search` with `$replace` in `$string`
+// @author Hugo Giraudel
+// @param {String} $string - Initial string
+// @param {String} $search - Substring to replace
+// @param {String} $replace ('') - New value
+// @return {String} - Updated string
+@function str-replace($string, $search, $replace: '') {
+	$index: str-index($string, $search);
+
+	@if $index {
+		@return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+	}
+
+	@return $string;
+}
+
 $zHidden: -1;
 $zBackground: 0;
 $zNormal: 1;
@@ -90,7 +119,7 @@ $normal-font-family: Tahoma, Arial, Helvetica;
 
 
 /* ===============================================
-		colour definitions
+		color definitions
 ================================================== */
 
 $ddd-green: #778866;
@@ -118,36 +147,42 @@ $button-color-over: lighten($button-color, 10%);
 $button-bgcolor-over: darken($button-bgcolor, 10%);
 $icon-color: $ddd-grey-dark;
 
-$panelFgColour: $ddd-grey-darker;
-$panelBgColour: $ddd-grey-light;
+$panelFgColor: $ddd-grey-darker;
+$panelBgColor: $ddd-grey-light;
 
-$panelFgColourDimmed: mix($panelFgColour, $ddd-grey-light, 75%);
-$panelBgColourDimmed: mix($panelBgColour, $ddd-grey-darker, 75%);
-$panelBgColourTint: mix($panelFgColour, white, 75%);
-$panelBgColour1: darken($panelBgColour, 25%);
-$panelBgColour2: darken($panelBgColour, 15%);
-$panelBgColour3: darken($panelBgColour, 10%);
+$panelFgColorDimmed: mix($panelFgColor, $ddd-grey-light, 75%);
+$panelBgColorDimmed: mix($panelBgColor, $ddd-grey-darker, 75%);
+$panelBgColorTint: mix($panelFgColor, white, 75%);
+$panelBgColor1: darken($panelBgColor, 25%);
+$panelBgColor2: darken($panelBgColor, 15%);
+$panelBgColor3: darken($panelBgColor, 10%);
+$panelBgColor4: lighten($panelBgColor, 10%);
 
-$jobInputColour: $ddd-sanddark;
-$jobInputBackgroundColour: $ddd-sand;
-$jobInputBackgroundColourTint: lighten($jobInputBackgroundColour, 25%);
-$moneyInputColour: $ddd-sanddark;
-$moneyInputBackgroundColour: $ddd-green;
-$moneyInputBackgroundColourTint: lighten($moneyInputBackgroundColour, 25%);
+$jobInputColor: $ddd-sanddark;
+$jobInputBackgroundColor: $ddd-sand;
+$jobNotesBackgroundColor: lighten($jobInputBackgroundColor, 25%);
+$moneyInputColor: $ddd-sanddark;
+$moneyInputBackgroundColor: $ddd-green;
+$moneyNotesBackgroundColor: mix($moneyInputBackgroundColor, white, 35%);
+$moneyNegativeBackgroundColor: $ddd-orange;
+$moneyNegativeNotesBackgroundColor: mix($moneyNegativeBackgroundColor, white, 35%);
+$hashlessMoneyIconColor: str-replace("#{$moneyNotesBackgroundColor}", "#", "");
+$hashlessJobIconColor: str-replace("#{$jobNotesBackgroundColor}", "#", "");
+$hashlessMoneyNegativeIconColor: str-replace("#{$moneyNegativeNotesBackgroundColor}", "#", "");
 
-$oddDayBgColour: lighten($panelBgColour, 2%);
-$oddDayFgColour: darken($panelFgColour, 5%);
-$oddDayBtnBgColour: darken($button-bgcolor, 11%);
-$oddDayBtnFgColour: lighten($button-color, 5%);
-$oddDayBgColourHover: darken($panelBgColour, 2%);
-$oddDayFgColourHover: lighten($panelFgColour, 15%);
+$oddDayBgColor: lighten($panelBgColor, 2%);
+$oddDayFgColor: darken($panelFgColor, 5%);
+$oddDayBtnBgColor: darken($button-bgcolor, 11%);
+$oddDayBtnFgColor: lighten($button-color, 5%);
+$oddDayBgColorHover: darken($panelBgColor, 2%);
+$oddDayFgColorHover: lighten($panelFgColor, 15%);
 
-$evenDayBgColour: lighten($panelBgColour, 4%);
-$evenDayFgColour: darken($panelFgColour, 5%);
-$evenDayBtnBgColour: lighten($button-bgcolor, 11%);
-$evenDayBtnFgColour: darken($button-color, 15%);
-$evenDayBgColourHover: lighten($panelBgColour, 15%);
-$evenDayFgColourHover: darken($panelFgColour, 25%);
+$evenDayBgColor: lighten($panelBgColor, 4%);
+$evenDayFgColor: darken($panelFgColor, 5%);
+$evenDayBtnBgColor: lighten($button-bgcolor, 11%);
+$evenDayBtnFgColor: darken($button-color, 15%);
+$evenDayBgColorHover: lighten($panelBgColor, 15%);
+$evenDayFgColorHover: darken($panelFgColor, 25%);
 
 
 
@@ -186,10 +221,13 @@ $tab-margin: $mediumPadding;
 		encoded SVG icon definitions
 ================================================== */
 
+// some include the hardcoded string FILLCOLOR which will be
+// replaced with a hex color (without the hash symbol)
+
 $svgIconAdd: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Eplus%3C/title%3E%3Cpath d='M31 12h-11v-11c0-0.552-0.448-1-1-1h-6c-0.552 0-1 0.448-1 1v11h-11c-0.552 0-1 0.448-1 1v6c0 0.552 0.448 1 1 1h11v11c0 0.552 0.448 1 1 1h6c0.552 0 1-0.448 1-1v-11h11c0.552 0 1-0.448 1-1v-6c0-0.552-0.448-1-1-1z'%3E%3C/path%3E%3C/svg%3E%0A");
 $svgIconRemove: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23cc6644' viewBox='0 0 32 32'%3E%3Ctitle%3Ecross%3C/title%3E%3Cpath d='M31.708 25.708c-0-0-0-0-0-0l-9.708-9.708 9.708-9.708c0-0 0-0 0-0 0.105-0.105 0.18-0.227 0.229-0.357 0.133-0.356 0.057-0.771-0.229-1.057l-4.586-4.586c-0.286-0.286-0.702-0.361-1.057-0.229-0.13 0.048-0.252 0.124-0.357 0.228 0 0-0 0-0 0l-9.708 9.708-9.708-9.708c-0-0-0-0-0-0-0.105-0.104-0.227-0.18-0.357-0.228-0.356-0.133-0.771-0.057-1.057 0.229l-4.586 4.586c-0.286 0.286-0.361 0.702-0.229 1.057 0.049 0.13 0.124 0.252 0.229 0.357 0 0 0 0 0 0l9.708 9.708-9.708 9.708c-0 0-0 0-0 0-0.104 0.105-0.18 0.227-0.229 0.357-0.133 0.355-0.057 0.771 0.229 1.057l4.586 4.586c0.286 0.286 0.702 0.361 1.057 0.229 0.13-0.049 0.252-0.124 0.357-0.229 0-0 0-0 0-0l9.708-9.708 9.708 9.708c0 0 0 0 0 0 0.105 0.105 0.227 0.18 0.357 0.229 0.356 0.133 0.771 0.057 1.057-0.229l4.586-4.586c0.286-0.286 0.362-0.702 0.229-1.057-0.049-0.13-0.124-0.252-0.229-0.357z'%3E%3C/path%3E%3C/svg%3E"); 
-$svgIconMoney: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23edebeb' viewBox='0 0 32 32'%3E%3Ctitle%3Ecredit-card%3C/title%3E%3Cpath d='M29 4h-26c-1.65 0-3 1.35-3 3v18c0 1.65 1.35 3 3 3h26c1.65 0 3-1.35 3-3v-18c0-1.65-1.35-3-3-3zM3 6h26c0.542 0 1 0.458 1 1v3h-28v-3c0-0.542 0.458-1 1-1zM29 26h-26c-0.542 0-1-0.458-1-1v-9h28v9c0 0.542-0.458 1-1 1zM4 20h2v4h-2zM8 20h2v4h-2zM12 20h2v4h-2z'%3E%3C/path%3E%3C/svg%3E");
-$svgIconTime: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23edebeb' viewBox='0 0 32 32'%3E%3Ctitle%3Eclock%3C/title%3E%3Cpath d='M20.586 23.414l-6.586-6.586v-8.828h4v7.172l5.414 5.414zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 28c-6.627 0-12-5.373-12-12s5.373-12 12-12c6.627 0 12 5.373 12 12s-5.373 12-12 12z'%3E%3C/path%3E%3C/svg%3E");
+$svgIconMoney: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23FILLCOLOR' viewBox='0 0 32 32'%3E%3Ctitle%3Ecredit-card%3C/title%3E%3Cpath d='M29 4h-26c-1.65 0-3 1.35-3 3v18c0 1.65 1.35 3 3 3h26c1.65 0 3-1.35 3-3v-18c0-1.65-1.35-3-3-3zM3 6h26c0.542 0 1 0.458 1 1v3h-28v-3c0-0.542 0.458-1 1-1zM29 26h-26c-0.542 0-1-0.458-1-1v-9h28v9c0 0.542-0.458 1-1 1zM4 20h2v4h-2zM8 20h2v4h-2zM12 20h2v4h-2z'%3E%3C/path%3E%3C/svg%3E");
+$svgIconTime: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23FILLCOLOR' viewBox='0 0 32 32'%3E%3Ctitle%3Eclock%3C/title%3E%3Cpath d='M20.586 23.414l-6.586-6.586v-8.828h4v7.172l5.414 5.414zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 28c-6.627 0-12-5.373-12-12s5.373-12 12-12c6.627 0 12 5.373 12 12s-5.373 12-12 12z'%3E%3C/path%3E%3C/svg%3E");
 $svgIconArrowUp: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Earrow-up%3C/title%3E%3Cpath d='M16 1l-15 15h9v16h12v-16h9z'%3E%3C/path%3E%3C/svg%3E");
 $svgIconArrowDown: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Earrow-down%3C/title%3E%3Cpath d='M16 31l15-15h-9v-16h-12v16h-9z'%3E%3C/path%3E%3C/svg%3E");
 $svgIconSettings: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Ecog%3C/title%3E%3Cpath d='M29.181 19.070c-1.679-2.908-0.669-6.634 2.255-8.328l-3.145-5.447c-0.898 0.527-1.943 0.829-3.058 0.829-3.361 0-6.085-2.742-6.085-6.125h-6.289c0.008 1.044-0.252 2.103-0.811 3.070-1.679 2.908-5.411 3.897-8.339 2.211l-3.144 5.447c0.905 0.515 1.689 1.268 2.246 2.234 1.676 2.903 0.672 6.623-2.241 8.319l3.145 5.447c0.895-0.522 1.935-0.82 3.044-0.82 3.35 0 6.067 2.725 6.084 6.092h6.289c-0.003-1.034 0.259-2.080 0.811-3.038 1.676-2.903 5.399-3.894 8.325-2.219l3.145-5.447c-0.899-0.515-1.678-1.266-2.232-2.226zM16 22.479c-3.578 0-6.479-2.901-6.479-6.479s2.901-6.479 6.479-6.479c3.578 0 6.479 2.901 6.479 6.479s-2.901 6.479-6.479 6.479z'%3E%3C/path%3E%3C/svg%3E");
@@ -207,7 +245,7 @@ $svgIconTimesheets: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://w
 ================================================== */
 
 @mixin icon-bg-defaults() {
-	background-size: 50%; background-repeat: no-repeat; background-position: center;
+	background-size: 1rem; background-repeat: no-repeat; background-position: center;
 }
 
 @mixin transition($args...) {
@@ -216,6 +254,12 @@ $svgIconTimesheets: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://w
   -ms-transition: $args;
   -o-transition: $args;
   transition: $args;
+}
+
+@mixin box-shadow($shadow...) {
+	-webkit-box-shadow: $shadow;
+	-moz-box-shadow: $shadow;
+	box-shadow: $shadow;
 }
 
 @mixin animation($animate...) {
@@ -276,17 +320,17 @@ $svgIconTimesheets: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://w
 
 body {
   font-family: $normal-font-family;
-	background-color: $panelFgColourDimmed;
+	background-color: $panelFgColorDimmed;
 }
 
 aside {
   display: inline-block; 
-  background-color: $panelBgColour3;
+  background-color: $panelBgColor3;
   img { height: 8vh; margin: 1vh 1vh 0 1vh; display: inline-block; }
   h1 {
     width: $sidebar-width;
     text-align: center;
-    font-size: 3vh; color: $panelBgColour2;
+    font-size: 3vh; color: $panelBgColor2;
     text-transform: lowercase;
 		letter-spacing: 0.07rem;
 		margin-bottom: 0.1rem;
@@ -300,10 +344,16 @@ aside {
       padding: $tab-padding; margin: $tab-margin $tab-margin 0 0;
       width: $sidebar-width; overflow: hidden; display: block;
       color: $button-color; background-color: $button-bgcolor;
-      border-color: $panelBgColourTint; border-bottom: none;
+      border-color: $panelBgColorTint; border-bottom: none;
       text-overflow: ellipsis; white-space: nowrap;
+			@include icon-bg-defaults;
+			background-position: left;
 			cursor: pointer;
       &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; outline: 0; }
+			&#jobsClients { background-image: $svgIconJobsClients; }
+			&#timesheets { background-image: $svgIconTimesheets; }
+			&#privacy { background-image: $svgIconPrivacy; }
+			&#config { background-image: $svgIconSettings; }
     }
   }
 }
@@ -322,7 +372,7 @@ body#config aside nav button#config.btnNav {
   top: 0; bottom: 0; left: $sidebar-width; right: 0;
   overflow: scroll;
   padding: $extraLargePadding;
-  background-color: $panelBgColour;
+  background-color: $panelBgColor;
   h1, h2 { padding: $largePadding $mediumPadding $largePadding $extraLargePadding; }
 }
 
@@ -349,6 +399,7 @@ body#config aside nav button#config.btnNav {
 #timesheetContainer, #clientsExisting, #jobsExisting {
   z-index: $zNormal;
   display: block;
+	@include box-shadow(10px 10px 80px -8px rgba(0,0,0,0.2));
 
 	> li {
     .date.col {
@@ -363,7 +414,7 @@ body#config aside nav button#config.btnNav {
       }
     }
     em { // used for weekday letter label
-      background-color: $panelBgColour2; 
+      background-color: $panelBgColor2; 
       padding: $largePadding; top: 0; margin-right: $mediumPadding;
       position: relative; display: inline-block;
 			font-weight: normal;
@@ -371,18 +422,18 @@ body#config aside nav button#config.btnNav {
     &.day {
       display: block;
       padding: $largePadding $tinyPadding;
-      color: $oddDayFgColour; background-color: $oddDayBgColour;
+      color: $oddDayFgColor; background-color: $oddDayBgColor;
       &:hover, &:focus-within {
-        color: $oddDayFgColourHover;
-        background-color: $oddDayBgColourHover;
+        color: $oddDayFgColorHover;
+        background-color: $oddDayBgColorHover;
       }
     }
     &:nth-of-type(even) {
-			background-color: $evenDayBgColour;
-      color: $evenDayFgColour;
-			em { background-color: $panelBgColour3; }
-      //select { background-color: $evenDayBtnBgColour; color: $evenDayBtnFgColour; }
-      &:hover, &:focus-within { color: $evenDayFgColourHover; background-color: $evenDayBgColourHover; }
+			background-color: $evenDayBgColor;
+      color: $evenDayFgColor;
+			em { background-color: $panelBgColor3; }
+      //select { background-color: $evenDayBtnBgColor; color: $evenDayBtnFgColor; }
+      &:hover, &:focus-within { color: $evenDayFgColorHover; background-color: $evenDayBgColorHover; }
 		}
     &.today {
       .date.col {
@@ -393,7 +444,7 @@ body#config aside nav button#config.btnNav {
     &.week-start { margin-top: $smallPadding; }
     &.month-start {
 			h4 {
-				display: block; font-size: $fontSizeNormal; color: $panelBgColour3; background-color: $panelBgColour1;
+				display: block; font-size: $fontSizeNormal; color: $panelBgColor3; background-color: $panelBgColor4;
 				padding: $largePadding; margin-top: -$largePadding; margin-bottom: $largePadding;
 			}
     }
@@ -425,8 +476,8 @@ body#config aside nav button#config.btnNav {
 					border-radius: 999px;
 					margin: 0 $mediumPadding;
 					padding: $smallPadding 0.5rem;
-					background: $jobInputBackgroundColour;
-					background-image: linear-gradient(90deg, $moneyInputBackgroundColour 50%, transparent 50%);
+					background: $jobInputBackgroundColor;
+					background-image: linear-gradient(90deg, $moneyInputBackgroundColor 50%, transparent 50%);
 					background-size: 200% 100%; background-position: 100% 0; background-origin: border-box; background-clip: border-box;
 					overflow: hidden;
 					cursor: pointer;
@@ -434,13 +485,13 @@ body#config aside nav button#config.btnNav {
 					&:before, &:after { font-size: $fontSizeIcon; }
 
 					&:before {
-						content: $svgIconMoney;
+						content: color-SVG-icon($svgIconMoney, $hashlessMoneyIconColor);
 						float: left; width: 1.3rem; height: 1.3rem;
 						margin: 0rem 0rem 0rem 0rem; border-radius: inherit; background: $button-bgcolor;
 						color: $icon-color; text-indent: -1.9rem;
 					}
 
-					&:after { content: $svgIconTime; margin-left: 0.8rem; color: $icon-color; }
+					&:after { content: color-SVG-icon($svgIconTime, $hashlessJobIconColor); margin-left: 0.8rem; color: $icon-color; }
 					
 					&:hover {
 						&:before	{ background-color: $button-bgcolor-over; }
@@ -464,11 +515,11 @@ body#config aside nav button#config.btnNav {
 
 			&.money {
 				input.unitBig, input.unitSmall {
-					background-color: $moneyInputBackgroundColour; color: $icon-color;
+					background-color: $moneyInputBackgroundColor; color: $icon-color;
 					background-size: 100%;
 				}
-				input.notes { color: $moneyInputColour; background-color: mix($moneyInputBackgroundColour, white, 35%); }
-			//	.spin-button-up, .spin-button-down { background-color: $moneyInputBackgroundColour; }
+				input.notes { color: $moneyInputColor; background-color: $moneyNotesBackgroundColor; }
+				.spin-button-up, .spin-button-down { background-color: $moneyInputBackgroundColor; }
 				.spinner:first-of-type {
 					&:before, &:after {
 						font-weight: bold;
@@ -487,16 +538,19 @@ body#config aside nav button#config.btnNav {
 					}
 				}
 				&.negative {
-					input.unitBig, input.unitSmall { background-color: $ddd-orange; }
-					input.notes { background-color: mix($ddd-orange, white, 35%);}
-					input[type="checkbox"].ios-switch + div { background-image: linear-gradient(90deg, $ddd-orange 50%, transparent 50%); }
-				//	.spin-button-up, .spin-button-down { background-color: $ddd-orange; }
+					input.unitBig, input.unitSmall { background-color: $moneyNegativeBackgroundColor; }
+					input.notes { background-color: $moneyNegativeNotesBackgroundColor;}
+					input[type="checkbox"].ios-switch + div { background-image: linear-gradient(90deg, $moneyNegativeBackgroundColor 50%, transparent 50%); }
+					.spin-button-up, .spin-button-down { background-color: $moneyNegativeBackgroundColor; }
+					input[type="checkbox"].ios-switch + div:before {
+						content: color-SVG-icon($svgIconMoney, $hashlessMoneyNegativeIconColor);
+					}
 				}
 			}
 
 			&.hrs {
-				input.unitBig, input.unitSmall { background-color: $jobInputBackgroundColour; color: $icon-color; }
-				input.notes { color: $jobInputColour; background-color: mix($jobInputBackgroundColour, white, 35%); }
+				input.unitBig, input.unitSmall { background-color: $jobInputBackgroundColor; color: $icon-color; }
+				input.notes { color: $jobInputColor; background-color: $jobNotesBackgroundColor; }
 				.spinner:first-of-type {
 					&:before, &:after {
 						font-weight: bold;
@@ -542,7 +596,7 @@ body#config aside nav button#config.btnNav {
   > li.totals-week, > li.totals-month, > li.totals-year,
   > li.totals-week:hover, > li.totals-month:hover, > li.totals-year:hover {
     padding: $mediumPadding;
-    background-color: $panelBgColour2;
+    background-color: $panelBgColor4;
     vertical-align: top;
     h4, table {
       display: inline-block;
@@ -550,7 +604,7 @@ body#config aside nav button#config.btnNav {
     h4 { width: $date-width + $extraLargePadding + 2rem; }
   }
   > li.totals-month, > li.totals-month:hover, {
-    background-color: $panelBgColour3;
+ //   background-color: $panelBgColor3;
   }
 
 }
@@ -563,7 +617,7 @@ body#config aside nav button#config.btnNav {
         font-weight: bold;
       }
       .removeItemBtn { right: auto; }
-			input, label { border: solid $tinyPadding $panelFgColourDimmed; }
+			input, label { border: solid $tinyPadding $panelFgColorDimmed; }
     }
   }
 }
@@ -575,6 +629,7 @@ select {
   appearance: none; -webkit-appearance: none; -moz-appearance: none;
   background-color: $button-bgcolor; color: $button-color;
   cursor: pointer;
+	width: 10em; @include border-radius($tinyPadding);
   &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; }
 	&:first-of-type { margin-right: $largePadding; } 
 }
@@ -594,9 +649,9 @@ select {
 		display: inline-block; opacity: 0; @include transition(opacity 0.2s ease);
     left: 15%; width: 70%; height: 0.5rem;
     padding: 0.2rem 0.3rem 0.7rem 0.3rem;
-    background-color: $button-bgcolor; color: $button-color;
+    background-color: $jobInputBackgroundColor; color: $button-bgcolor;
     text-align: center; font-size: 0.5rem;
-    &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; }
+    &:hover, &:focus { color: $button-bgcolor-over; }
 		&:after {
 			content:'';
 			position:absolute;
@@ -658,7 +713,7 @@ select {
 	position: absolute;
 	z-index: $zFloat;
 }
-#file-save { margin-top: $smallPadding; }
+#file-save { margin-top: $smallPadding; background-image: $svgIconDownload; }
 #miniNavForm button,
 #file-save,
 #file-chooser + label {
@@ -671,7 +726,9 @@ select {
 #file-save,
 #file-chooser + label {
 	width: 100%;
+	@include icon-bg-defaults; background-position: left;
 }
+#file-chooser + label { background-image: $svgIconUpload; }
 #miniNavForm button:focus,
 #miniNavForm button:hover,
 #file-save:focus,

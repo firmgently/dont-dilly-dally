@@ -5,7 +5,10 @@
   Mark Mayes 2018
 
   TODO  file load isn't loading data yet
+	TODO	look out for autorepeat getting stuck on dayJump (make sure timer gets cancelled on mouseup etc)
+	TODO	add year to timesheet special days eg: "January 2018", "2018 week 4", "totals for January 2018"
 	FIXME	preference changes not taking effect
+	FIXME 1st day of following year is showing
   DONE  spinners ony show for hovered/focused day
   FIXME colour palette can push off side of screen resulting in resize on Android
   TODO  add 'year start date' preference
@@ -658,7 +661,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
     }
 
-    if (tsDaysToDraw > 0) {
+    if (tsDaysToDraw > 1) {
       if (tsDaysToDraw % DAYSDRAWN_UPDATE_FREQ === 0) {
         loadingIndicator_el.innerHTML = "creating day " + (tsDaysToDrawTotal - tsDaysToDraw) + "/" + tsDaysToDrawTotal;
 				timesheetDrawDayTimer = setTimeout(drawNextDay, 0);
