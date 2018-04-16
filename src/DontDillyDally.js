@@ -5,10 +5,12 @@
   Mark Mayes 2018
 
   TODO  file load isn't loading data yet
+	FIXME	preference changes not taking effect
   DONE  spinners ony show for hovered/focused day
   FIXME colour palette can push off side of screen resulting in resize on Android
   TODO  add 'year start date' preference
   TODO  ensure big/small units update min/max/step when changing from money to hours or viceversa
+	FIXME	clients/jobs page - color pickers do not need to  be checkboxes
   FIXME timesheet container not getting scroll focus
   TODO  add ARIA attributes (eg. hide up/down spinner buttons)
   TODO  delete job/client check if any records are referencing them, prompt if so
@@ -23,7 +25,7 @@
   FIXME number spinners inconsistent colours
   TODO  loading bar
   TODO  fix widths of client/job selects on timesheets page, use text-overflow: ellipsis
-  TODO  use spritesheet png instead of fonts??
+  DONE  use spritesheet png instead of fonts??
   TODO  only show month/week jump buttons if they make sense
   TODO  validate all input data
           time/money
@@ -92,7 +94,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   attachEventArrayToElement, callMethodsFromObOnElement, callMethodFromOb,
   drawTimesheets, drawNextDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
   getNextID, getNewClient, getNewJob,
-  navClick, todayClick, dayJumpClick, 
+  navClick, todayClick, dayJump, 
 
   onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
 	onSaveBtnClick, onColorChangeConfirm,
@@ -980,7 +982,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 		var days_ar = dataRetrieveObject(DAYS_STR),
 				day_ob = days_ar[item_el.parentNode.parentNode.id];
 		
-		delete day_ob[item_el.id];
+		if (day_ob) { delete day_ob[item_el.id]; }
 		item_el.parentNode.removeChild(item_el);
 		dataStoreObject(DAYS_STR, days_ar);
 	};
@@ -1354,7 +1356,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   // calls a method based on a data object which defines
   // the method name, scope and optional arguments
-  callMethodFromOb = function(ob) {
+  callMethodFromOb = function(ob, event) {
     var scope;
 
     if (ob && ob.scope) { // ob.scope is an element
@@ -1387,8 +1389,8 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  dayJumpClick = function(event) {
-    var i, day, dayNodes,
+  dayJump = function(event) {
+    var i, day, dayNodes, attract_el,
         searchDirection = "forward",
         scrollTop = mainContainer_el.scrollTop;
 
@@ -1425,6 +1427,23 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
     }
     day.scrollIntoView();
+
+    switch (event.target.id) {
+      case EL_ID_WEEKNEXTBTN:
+      case EL_ID_WEEKPREVBTN:
+				attract_el = day.getElementsByTagName("P")[0].getElementsByTagName("SPAN")[0];
+        break;
+      case EL_ID_MONTHNEXTBTN:
+      case EL_ID_MONTHPREVBTN:
+				attract_el = day.getElementsByTagName("H4")[0];
+        break;
+      default:
+        break;
+    }
+		removeClassname(attract_el, "attract");
+		attract_el.offsetTop; // HACK - trigger reflow
+		addClassname(attract_el, "attract");
+
     eventAutoRepeat(event.target, event.type);
     registerEventHandler(event.target, "mouseup", eventAutoRepeatStop);
     registerEventHandler(event.target, "mouseout", eventAutoRepeatStop);
@@ -1503,6 +1522,8 @@ uk.co.firmgently.DontDillyDally = (function() {
   doSetup();
 
 
+	// return references to methods (make them public) that will be called
+	// from other scopes eg. FGHTMLBuild.js
   return {
     drawTimesheets: drawTimesheets,
     drawJobsAndClients: drawJobsAndClients,
@@ -1513,7 +1534,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     addClient: addClient,
     navClick: navClick,
     todayClick: todayClick,
-    dayJumpClick: dayJumpClick,
+    dayJump: dayJump,
     getNewClient: getNewClient,
     onFormClick: onFormClick,
     onFormSubmit: onFormSubmit,

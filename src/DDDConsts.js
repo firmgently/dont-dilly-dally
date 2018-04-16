@@ -95,8 +95,8 @@ uk.co.firmgently.DDDConsts = (function() {
     JOBSTOTAL_STR: "jobsTotal",
     CLIENT_SELECT_PLACEHOLDER: "select client",
     JOB_SELECT_PLACEHOLDER: "select job",
-    JOBNOTES_PLACEHOLDER: "job notes",
-    MONEYNOTES_PLACEHOLDER: "money notes",
+    JOBNOTES_PLACEHOLDER: "enter job notes",
+    MONEYNOTES_PLACEHOLDER: "enter money notes",
     SEPARATOR_CASH: ".",
     SEPARATOR_TIME: ":",
     TODAY_STR: "today",
@@ -407,10 +407,10 @@ uk.co.firmgently.DDDConsts = (function() {
       event_ar: [
         {
           eventType: "mousedown",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }, {
           eventType: "touchstart",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }
       ],
       parent: "miniNavForm"
@@ -422,10 +422,10 @@ uk.co.firmgently.DDDConsts = (function() {
       event_ar: [
         {
           eventType: "mousedown",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }, {
           eventType: "touchstart",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }
       ],
       parent: "miniNavForm"
@@ -441,10 +441,10 @@ uk.co.firmgently.DDDConsts = (function() {
       event_ar: [
         {
           eventType: "mousedown",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }, {
           eventType: "touchstart",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }
       ],
       parent: "miniNavForm"
@@ -456,10 +456,10 @@ uk.co.firmgently.DDDConsts = (function() {
       event_ar: [
         {
           eventType: "mousedown",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }, {
           eventType: "touchstart",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJumpClick",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }
       ],
       parent: "miniNavForm"

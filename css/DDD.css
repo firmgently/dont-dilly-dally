@@ -78,11 +78,57 @@ table {
   box-sizing: border-box; }
 
 /* ===============================================
-Don't Dilly Dally
+		Don't Dilly Dally
 ================================================== */
+/* ===============================================
+		colour definitions
+================================================== */
+/* ===============================================
+		size definitions
+================================================== */
+/* ===============================================
+		encoded SVG icon definitions
+================================================== */
+/* ===============================================
+		SASS mixins
+================================================== */
+@-webkit-keyframes attract {
+  0% {
+    background-color: black; }
+  50% {
+    background-color: white; }
+  100% {
+    background-color: white; } }
+@-moz-keyframes attract {
+  0% {
+    background-color: black; }
+  50% {
+    background-color: white; }
+  100% {
+    background-color: white; } }
+@-o-keyframes attract {
+  0% {
+    background-color: black; }
+  50% {
+    background-color: white; }
+  100% {
+    background-color: white; } }
+@keyframes attract {
+  0% {
+    background-color: black; }
+  50% {
+    background-color: white; }
+  100% {
+    background-color: white; } }
 :focus {
   background-color: white;
   color: black; }
+
+.attract {
+  -webkit-animation: attract .5s 1;
+  -moz-animation: attract .5s 1;
+  -o-animation: attract .5s 1;
+  animation: attract .5s 1; }
 
 body {
   font-family: Tahoma, Arial, Helvetica;
@@ -110,43 +156,31 @@ aside {
   aside nav {
     position: absolute;
     white-space: nowrap;
-    display: inline-block;
-    transform-origin: 0 0;
-    transform: rotate(-90deg);
-    top: 78vh;
-    left: calc(10vw - 2.2rem); }
+    display: inline-block; }
     aside nav button.btnNav {
       padding: 0.15rem;
       margin: 0.6rem 0.6rem 0 0;
-      font-size: 1rem;
-      vertical-align: bottom;
-      width: 17vh;
+      width: 10vw;
       overflow: hidden;
-      -webkit-border-radius: 0.3rem 0.3rem 0 0;
-      -moz-border-radius: 0.3rem 0.3rem 0 0;
-      border-radius: 0.3rem 0.3rem 0 0;
-      color: #979595;
-      background-color: #d4d2d2;
+      display: block;
+      color: #776644;
+      background-color: #ffeedd;
       border-color: #9b9999;
       border-bottom: none;
       text-overflow: ellipsis;
       white-space: nowrap;
       cursor: pointer; }
       aside nav button.btnNav:hover, aside nav button.btnNav:focus {
-        color: #797777;
+        color: #978257;
+        background-color: #ffd5aa;
         outline: 0; }
 
 body#jobsClients aside nav button#jobsClients.btnNav,
 body#timesheets aside nav button#timesheets.btnNav,
 body#privacy aside nav button#privacy.btnNav,
 body#config aside nav button#config.btnNav {
-  width: 19vh;
-  font-size: 1.15rem;
-  -webkit-border-radius: 0.6rem 0.6rem 0 0;
-  -moz-border-radius: 0.6rem 0.6rem 0 0;
-  border-radius: 0.6rem 0.6rem 0 0;
-  color: #797777;
-  background-color: #F2F0F0; }
+  color: #978257;
+  background-color: #ffd5aa; }
 
 .hidden {
   visibility: hidden; }
@@ -290,7 +324,7 @@ body#config aside nav button#config.btnNav {
           #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:after {
             font-size: 1rem; }
           #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:before {
-            content: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 32 32'%3E%3Ctitle%3Ecredit-card%3C/title%3E%3Cpath d='M29 4h-26c-1.65 0-3 1.35-3 3v18c0 1.65 1.35 3 3 3h26c1.65 0 3-1.35 3-3v-18c0-1.65-1.35-3-3-3zM3 6h26c0.542 0 1 0.458 1 1v3h-28v-3c0-0.542 0.458-1 1-1zM29 26h-26c-0.542 0-1-0.458-1-1v-9h28v9c0 0.542-0.458 1-1 1zM4 20h2v4h-2zM8 20h2v4h-2zM12 20h2v4h-2z'%3E%3C/path%3E%3C/svg%3E");
+            content: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23edebeb' viewBox='0 0 32 32'%3E%3Ctitle%3Ecredit-card%3C/title%3E%3Cpath d='M29 4h-26c-1.65 0-3 1.35-3 3v18c0 1.65 1.35 3 3 3h26c1.65 0 3-1.35 3-3v-18c0-1.65-1.35-3-3-3zM3 6h26c0.542 0 1 0.458 1 1v3h-28v-3c0-0.542 0.458-1 1-1zM29 26h-26c-0.542 0-1-0.458-1-1v-9h28v9c0 0.542-0.458 1-1 1zM4 20h2v4h-2zM8 20h2v4h-2zM12 20h2v4h-2z'%3E%3C/path%3E%3C/svg%3E");
             float: left;
             width: 1.3rem;
             height: 1.3rem;
@@ -298,9 +332,9 @@ body#config aside nav button#config.btnNav {
             border-radius: inherit;
             background: #ffeedd;
             color: #DFDDDD;
-            text-indent: -2.2rem; }
+            text-indent: -1.9rem; }
           #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:after {
-            content: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 32 32'%3E%3Ctitle%3Eclock%3C/title%3E%3Cpath d='M20.586 23.414l-6.586-6.586v-8.828h4v7.172l5.414 5.414zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 28c-6.627 0-12-5.373-12-12s5.373-12 12-12c6.627 0 12 5.373 12 12s-5.373 12-12 12z'%3E%3C/path%3E%3C/svg%3E");
+            content: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23edebeb' viewBox='0 0 32 32'%3E%3Ctitle%3Eclock%3C/title%3E%3Cpath d='M20.586 23.414l-6.586-6.586v-8.828h4v7.172l5.414 5.414zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 28c-6.627 0-12-5.373-12-12s5.373-12 12-12c6.627 0 12 5.373 12 12s-5.373 12-12 12z'%3E%3C/path%3E%3C/svg%3E");
             margin-left: 0.8rem;
             color: #DFDDDD; }
           #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:hover:before, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:hover:before, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:hover:before, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:hover:before, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch + div:hover:before, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:hover:before, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:hover:before, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch + div:hover:before, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:hover:before {
@@ -396,10 +430,10 @@ body#config aside nav button#config.btnNav {
           color: #978257;
           background-color: #ffd5aa; }
       #timesheetContainer ul.day-data.col > li .addItemBtn, #timesheetContainer ul.clients > li .addItemBtn, #timesheetContainer ul.jobs > li .addItemBtn, #clientsExisting ul.day-data.col > li .addItemBtn, #clientsExisting ul.clients > li .addItemBtn, #clientsExisting ul.jobs > li .addItemBtn, #jobsExisting ul.day-data.col > li .addItemBtn, #jobsExisting ul.clients > li .addItemBtn, #jobsExisting ul.jobs > li .addItemBtn {
-        background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Eplus%3C/title%3E%3Cpath d='M31 12h-11v-11c0-0.552-0.448-1-1-1h-6c-0.552 0-1 0.448-1 1v11h-11c-0.552 0-1 0.448-1 1v6c0 0.552 0.448 1 1 1h11v11c0 0.552 0.448 1 1 1h6c0.552 0 1-0.448 1-1v-11h11c0.552 0 1-0.448 1-1v-6c0-0.552-0.448-1-1-1z'%3E%3C/path%3E%3C/svg%3E%0A");
+        background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Eplus%3C/title%3E%3Cpath d='M31 12h-11v-11c0-0.552-0.448-1-1-1h-6c-0.552 0-1 0.448-1 1v11h-11c-0.552 0-1 0.448-1 1v6c0 0.552 0.448 1 1 1h11v11c0 0.552 0.448 1 1 1h6c0.552 0 1-0.448 1-1v-11h11c0.552 0 1-0.448 1-1v-6c0-0.552-0.448-1-1-1z'%3E%3C/path%3E%3C/svg%3E%0A");
         margin-left: -3rem; }
       #timesheetContainer ul.day-data.col > li .removeItemBtn, #timesheetContainer ul.clients > li .removeItemBtn, #timesheetContainer ul.jobs > li .removeItemBtn, #clientsExisting ul.day-data.col > li .removeItemBtn, #clientsExisting ul.clients > li .removeItemBtn, #clientsExisting ul.jobs > li .removeItemBtn, #jobsExisting ul.day-data.col > li .removeItemBtn, #jobsExisting ul.clients > li .removeItemBtn, #jobsExisting ul.jobs > li .removeItemBtn {
-        background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Ecross%3C/title%3E%3Cpath d='M31.708 25.708c-0-0-0-0-0-0l-9.708-9.708 9.708-9.708c0-0 0-0 0-0 0.105-0.105 0.18-0.227 0.229-0.357 0.133-0.356 0.057-0.771-0.229-1.057l-4.586-4.586c-0.286-0.286-0.702-0.361-1.057-0.229-0.13 0.048-0.252 0.124-0.357 0.228 0 0-0 0-0 0l-9.708 9.708-9.708-9.708c-0-0-0-0-0-0-0.105-0.104-0.227-0.18-0.357-0.228-0.356-0.133-0.771-0.057-1.057 0.229l-4.586 4.586c-0.286 0.286-0.361 0.702-0.229 1.057 0.049 0.13 0.124 0.252 0.229 0.357 0 0 0 0 0 0l9.708 9.708-9.708 9.708c-0 0-0 0-0 0-0.104 0.105-0.18 0.227-0.229 0.357-0.133 0.355-0.057 0.771 0.229 1.057l4.586 4.586c0.286 0.286 0.702 0.361 1.057 0.229 0.13-0.049 0.252-0.124 0.357-0.229 0-0 0-0 0-0l9.708-9.708 9.708 9.708c0 0 0 0 0 0 0.105 0.105 0.227 0.18 0.357 0.229 0.356 0.133 0.771 0.057 1.057-0.229l4.586-4.586c0.286-0.286 0.362-0.702 0.229-1.057-0.049-0.13-0.124-0.252-0.229-0.357z'%3E%3C/path%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23cc6644' viewBox='0 0 32 32'%3E%3Ctitle%3Ecross%3C/title%3E%3Cpath d='M31.708 25.708c-0-0-0-0-0-0l-9.708-9.708 9.708-9.708c0-0 0-0 0-0 0.105-0.105 0.18-0.227 0.229-0.357 0.133-0.356 0.057-0.771-0.229-1.057l-4.586-4.586c-0.286-0.286-0.702-0.361-1.057-0.229-0.13 0.048-0.252 0.124-0.357 0.228 0 0-0 0-0 0l-9.708 9.708-9.708-9.708c-0-0-0-0-0-0-0.105-0.104-0.227-0.18-0.357-0.228-0.356-0.133-0.771-0.057-1.057 0.229l-4.586 4.586c-0.286 0.286-0.361 0.702-0.229 1.057 0.049 0.13 0.124 0.252 0.229 0.357 0 0 0 0 0 0l9.708 9.708-9.708 9.708c-0 0-0 0-0 0-0.104 0.105-0.18 0.227-0.229 0.357-0.133 0.355-0.057 0.771 0.229 1.057l4.586 4.586c0.286 0.286 0.702 0.361 1.057 0.229 0.13-0.049 0.252-0.124 0.357-0.229 0-0 0-0 0-0l9.708-9.708 9.708 9.708c0 0 0 0 0 0 0.105 0.105 0.227 0.18 0.357 0.229 0.356 0.133 0.771 0.057 1.057-0.229l4.586-4.586c0.286-0.286 0.362-0.702 0.229-1.057-0.049-0.13-0.124-0.252-0.229-0.357z'%3E%3C/path%3E%3C/svg%3E");
         right: 1rem;
         color: #993322; }
       #timesheetContainer ul.day-data.col > li:only-child .removeItemBtn, #timesheetContainer ul.clients > li:only-child .removeItemBtn, #timesheetContainer ul.jobs > li:only-child .removeItemBtn, #clientsExisting ul.day-data.col > li:only-child .removeItemBtn, #clientsExisting ul.clients > li:only-child .removeItemBtn, #clientsExisting ul.jobs > li:only-child .removeItemBtn, #jobsExisting ul.day-data.col > li:only-child .removeItemBtn, #jobsExisting ul.clients > li:only-child .removeItemBtn, #jobsExisting ul.jobs > li:only-child .removeItemBtn {
@@ -457,6 +491,8 @@ body#config aside nav button#config.btnNav {
     font-weight: bold; }
   #clientsExisting ul.clients > li .removeItemBtn, #clientsExisting ul.jobs > li .removeItemBtn, #jobsExisting ul.clients > li .removeItemBtn, #jobsExisting ul.jobs > li .removeItemBtn {
     right: auto; }
+  #clientsExisting ul.clients > li input, #clientsExisting ul.clients > li label, #clientsExisting ul.jobs > li input, #clientsExisting ul.jobs > li label, #jobsExisting ul.clients > li input, #jobsExisting ul.clients > li label, #jobsExisting ul.jobs > li input, #jobsExisting ul.jobs > li label {
+    border: solid 0.15rem #979595; }
 
 /* FORMS */
 select, input, button {
@@ -543,7 +579,7 @@ select {
   #miniNavForm button:nth-of-type(4) {
     margin-right: 2rem;
     margin-left: 0.3rem;
-    background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Earrow-down%3C/title%3E%3Cpath d='M16 31l15-15h-9v-16h-12v16h-9z'%3E%3C/path%3E%3C/svg%3E"); }
+    background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Earrow-down%3C/title%3E%3Cpath d='M16 31l15-15h-9v-16h-12v16h-9z'%3E%3C/path%3E%3C/svg%3E"); }
   #miniNavForm #monthNextBtn, #miniNavForm #weekNextBtn, #miniNavForm #monthPrevBtn, #miniNavForm #weekPrevBtn {
     background-size: 50%;
     background-repeat: no-repeat;
@@ -552,9 +588,9 @@ select {
     width: 2rem;
     height: 2rem; }
   #miniNavForm #monthNextBtn, #miniNavForm #weekNextBtn {
-    background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Earrow-down%3C/title%3E%3Cpath d='M16 31l15-15h-9v-16h-12v16h-9z'%3E%3C/path%3E%3C/svg%3E"); }
+    background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Earrow-down%3C/title%3E%3Cpath d='M16 31l15-15h-9v-16h-12v16h-9z'%3E%3C/path%3E%3C/svg%3E"); }
   #miniNavForm #monthPrevBtn, #miniNavForm #weekPrevBtn {
-    background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Earrow-up%3C/title%3E%3Cpath d='M16 1l-15 15h9v16h12v-16h9z'%3E%3C/path%3E%3C/svg%3E"); }
+    background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Earrow-up%3C/title%3E%3Cpath d='M16 1l-15 15h9v16h12v-16h9z'%3E%3C/path%3E%3C/svg%3E"); }
 
 .file-buttons {
   position: absolute;
