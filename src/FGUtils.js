@@ -22,7 +22,7 @@ uk.co.firmgently.FGUtils = (function() {
   treatAsUTC, daysBetween, getFormattedDate,
   getFunctionFromString, getGUID, changeSelectByOption, manualEvent,
   updateSelectOptionList,
-  isEmpty, logMsg;
+  makeLocal, isEmpty, logMsg;
 
 
   /* -------------------------------------------------------------------------------
@@ -109,6 +109,14 @@ uk.co.firmgently.FGUtils = (function() {
   /* -------------------------------------------------------------------------------
     general helpers
   ---------------------------------------------------------------------------------- */
+
+  makeLocal = function(toClass, fromClass) {
+    var key;
+    for (key in fromClass) {
+      toClass[key] = fromClass[key];
+    }
+  };
+
 
   // prevent bubbling/propagation/default events (image drag and drop etc)
   // also when showing another image on click we don't want the event to bubble
@@ -434,6 +442,7 @@ uk.co.firmgently.FGUtils = (function() {
                 PUBLIC
     ---------------------------------------------------------
     */
+    makeLocal: makeLocal,
     registerEventHandler: registerEventHandler,
     unregisterEventHandler: unregisterEventHandler,
     stopPropagation: stopPropagation,

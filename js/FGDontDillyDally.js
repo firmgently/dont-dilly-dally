@@ -591,7 +591,7 @@ uk.co.firmgently.FGUtils = (function() {
   treatAsUTC, daysBetween, getFormattedDate,
   getFunctionFromString, getGUID, changeSelectByOption, manualEvent,
   updateSelectOptionList,
-  isEmpty, logMsg;
+  makeLocal, isEmpty, logMsg;
 
 
   /* -------------------------------------------------------------------------------
@@ -678,6 +678,14 @@ uk.co.firmgently.FGUtils = (function() {
   /* -------------------------------------------------------------------------------
     general helpers
   ---------------------------------------------------------------------------------- */
+
+  makeLocal = function(toClass, fromClass) {
+    var key;
+    for (key in fromClass) {
+      toClass[key] = fromClass[key];
+    }
+  };
+
 
   // prevent bubbling/propagation/default events (image drag and drop etc)
   // also when showing another image on click we don't want the event to bubble
@@ -1003,6 +1011,7 @@ uk.co.firmgently.FGUtils = (function() {
                 PUBLIC
     ---------------------------------------------------------
     */
+    makeLocal: makeLocal,
     registerEventHandler: registerEventHandler,
     unregisterEventHandler: unregisterEventHandler,
     stopPropagation: stopPropagation,
@@ -1568,8 +1577,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 	TODO	look out for autorepeat getting stuck on dayJump (make sure timer gets cancelled on mouseup etc)
 	TODO	add year to timesheet special days eg: "January 2018", "2018 week 4", "totals for January 2018"
 	FIXME	preference changes not taking effect
-	FIXME 1st day of following year is showing
-  DONE  spinners ony show for hovered/focused day
   FIXME colour palette can push off side of screen resulting in resize on Android
   TODO  add 'year start date' preference
   TODO  ensure big/small units update min/max/step when changing from money to hours or viceversa
@@ -1582,13 +1589,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   TODO  all strings should be constants
   TODO  display month/week start correctly
   FIXME press/hold to jump back through months, page reloads with ? in querystring
-  TODO  borders around inputs and colorpickers on clients/jobs page
-  TODO  month/week should flash briefly after day jump
   TODO  number spinners should fade up quickly with short delay (to avoid flickering on 'remove item' etc)
-  FIXME number spinners inconsistent colours
   TODO  loading bar
-  TODO  fix widths of client/job selects on timesheets page, use text-overflow: ellipsis
-  DONE  use spritesheet png instead of fonts??
   TODO  only show month/week jump buttons if they make sense
   TODO  validate all input data
           time/money
@@ -1600,7 +1602,12 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 	FIXME	£-0.77 must register as negative
   TODO  test everything on touchscreen
   TODO  test everything on narrow (phone) layout
-  FIXME if page is changed while timesheets are being drawn, bugs out (clear timeout)
+	DONE 1st day of following year is showing
+  DONE  spinners ony show for hovered/focused day
+  DONE if page is changed while timesheets are being drawn, bugs out (clear timeout)
+  DONE  fix widths of client/job selects on timesheets page, use text-overflow: ellipsis
+  DONE number spinners inconsistent colours
+  DONE  use spritesheet png instead of fonts??
   DONE  use updatefrequency to refresh "days drawn" only on % === 0
   DONE  refactor month/week click etc to all use 1 function
   DONE next/prev week/month buttons not working
@@ -1617,6 +1624,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   DONE  match all button styles
   DONE 	blank space appears at bottom of page (seems related to LOADING element)
   DONE	negative money values should attach negative classname on initial page load
+  DONE  borders around inputs and colorpickers on clients/jobs page
+  DONE  month/week should flash briefly after day jump
   DONE   jobs and clients list existing jobs/clients
   DONE   jobs and clients proper colour picker
   DONE	 minify JS on save
@@ -1638,31 +1647,38 @@ uk.co.firmgently = (uk.co.firmgently !== undefined) ? uk.co.firmgently : {};
 uk.co.firmgently.DontDillyDally = (function() {
   "use strict";
 
+
+
   /* ---------------------------------------------------------------------------
 		declare / init vars
+
+		ALL_CAPS denotes fake constants (declared with var) imported from DDDConsts.js
+
 	--------------------------------------------------------------------------- */
 	var
-  // variables
   key, dateDisplayStart, dateDisplaySelected, dateToday, 
-	eventAutoRepeatTimer, timesheetDrawDayTimer, recalculateTotalsTimer,
-  tsDaysToDraw, tsDaysToDrawTotal, curDrawnDay, tsWorkingFragment,
-
+  tsDaysToDraw, tsDaysToDrawTotal, curDrawnDay, tsWorkingFragment, // ts - timesheet
+	
+	// refs to important HTML elements
   loadingIndicator_el, mainContainer_el, timesheet_el,
+	
+	// handles for setTimeout
+	eventAutoRepeatTimer, timesheetDrawDayTimer, recalculateTotalsTimer,
+	
+	// callbacks
+  onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
+	onSaveBtnClick, onColorChangeConfirm,
+	onFormClick, onScroll,
 
-	// methods
+	// other methods
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
-	eventAutoRepeat, eventAutoRepeatStop,
+	eventAutoRepeat, eventAutoRepeatStop, eventAutoRepeatStart,
   recalculateAllTotals, calculateTotalsFromDateSpan,
   addTask, removeTask, addClient, removeClientOrJob, addJob,
   attachEventArrayToElement, callMethodsFromObOnElement, callMethodFromOb,
   drawTimesheets, drawNextDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
   getNextID, getNewClient, getNewJob,
-  navClick, todayClick, dayJump, attractAnimateElement, eventAutoRepeatStart,
-
-  onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
-	onSaveBtnClick, onColorChangeConfirm,
-	onFormClick, onScroll,
-  
+  navClick, todayClick, dayJump, attractAnimateElement,
   dataStoragePossible, initData,
 	dataStoreObject, dataRetrieveObject, dataUpdateObject,
 	clientAndJobStyleSheet, createClientOrJobFromOb, createCSSForClientOrJobFromOb,
@@ -1672,27 +1688,17 @@ uk.co.firmgently.DontDillyDally = (function() {
 	;
 
 
+
+
   /* ---------------------------------------------------------------------------
-    create local references to public members from external sources
-    (import)
+    create local references to public members from external (pre-concated)
+		sources (like import/require etc)
+		TODO make sure there isn't something existing to do this in this situ!
 	--------------------------------------------------------------------------- */
 
-  // constants
-  // these aren't real constants, are declared with var
-  // denoted by ALL_CAPS
-  for (key in uk.co.firmgently.DDDConsts) {
-    this[key] = uk.co.firmgently.DDDConsts[key];
-  }
-
-  // general utility methods
-	for (key in uk.co.firmgently.FGUtils) {
-		this[key] = uk.co.firmgently.FGUtils[key];
-	}
-
-  // HTML/DOM creation methods
-	for (key in uk.co.firmgently.FGHTMLBuild) {
-		this[key] = uk.co.firmgently.FGHTMLBuild[key];
-	}
+	uk.co.firmgently.FGUtils.makeLocal(this, uk.co.firmgently.DDDConsts);
+	uk.co.firmgently.FGUtils.makeLocal(this, uk.co.firmgently.FGUtils);
+	uk.co.firmgently.FGUtils.makeLocal(this, uk.co.firmgently.FGHTMLBuild);
 
 
 
@@ -1892,6 +1898,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   clearPage = function() {
+		clearTimeout(eventAutoRepeatTimer);
+		clearTimeout(timesheetDrawDayTimer);
+		clearTimeout(recalculateTotalsTimer);
     removeClassname(loadingIndicator_el, CLASS_HIDDEN);
     mainContainer_el.innerHTML = "";
   };
@@ -2292,15 +2301,22 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+	// monster function but really to abstract it out into sub-functions seems
+	// like it would add complexity...
+	// it just draws a work item (main row in the timesheet) and all the things inside it
+	// the pattern is simple:
+	// - create element
+	// - attach event handlers to it
+	// - pre-fill it with stored data if some exists
   drawUIWorkItem = function(dayDataContainer_el, itemID, itemData_ob) {
     var money_el, tmp_ob, tmp_el, item_el, wrappedCheckbox_el, numberValue_ar,
 				day_el = dayDataContainer_el.parentNode;
 
 		if (itemID === undefined) { itemID = getGUID(); }
-
     item_el = createElementWithId("li", itemID);
     dayDataContainer_el.insertBefore(item_el, dayDataContainer_el.firstChild);
 
+		//////////
     // 'add item' button
     tmp_el = createButtonFromOb({
       class: "addItemBtn",
@@ -2314,7 +2330,7 @@ uk.co.firmgently.DontDillyDally = (function() {
           scopeID: itemID
         }
     ]);
-
+		//////////
     // client select/dropdown
     tmp_el = createSelectFromOb({
       contentType: CONTENTTYPE_CLIENTS,
@@ -2334,7 +2350,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 			changeSelectByOption(tmp_el, itemData_ob[DATAINDICES.clientID]);
 			manualEvent(tmp_el, "change");
 		}
-
+		//////////
     // job select/dropdown
     tmp_el = createSelectFromOb({
       contentType: CONTENTTYPE_JOBS,
@@ -2353,7 +2369,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 			changeSelectByOption(tmp_el, itemData_ob[DATAINDICES.jobID]);
 			manualEvent(tmp_el, "change");
 		}
-    
+		//////////
 		// 'money/task' checkbox
     tmp_el = createCheckboxFromOb({
       class: "ios-switch isMoneyTaskChk",
@@ -2385,8 +2401,8 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
 			addClassname(item_el, "hrs");
     }
-
-    // hours/money big units
+		//////////
+    // hours/money big unit spinner input
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
       tmp_ob = { min: 0, max: 23, step: 1, wrapNum: true, pad: "00" };
     } else {
@@ -2425,8 +2441,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 		} else {
       tmp_el.value = "00";
     } 
-
-    // hours/money small units
+		//////////
+    // hours/money small unit spinner input
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
       tmp_ob = { min: 0, max: 59, wrapNum: true, pad: "00" };
       switch(dataRetrieveObject(PREFS_STR).minuteIncrements) {
@@ -2474,7 +2490,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 		} else {
       tmp_el.value = "00";
     }
-
+		//////////
     // job/money notes
     tmp_el = createInputFromOb({
       class: CLASS_NOTESINPUT,
@@ -2501,7 +2517,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
     ]);
 		if (itemData_ob && itemData_ob[DATAINDICES.notes]) { tmp_el.value = itemData_ob[DATAINDICES.notes]; }
-
+		//////////
     // 'remove item' button
     tmp_el = createButtonFromOb({
       class: "removeItemBtn",
@@ -2593,13 +2609,14 @@ uk.co.firmgently.DontDillyDally = (function() {
 		obj[CLIENTSTOTAL_STR] = dataRetrieveObject(CLIENTSTOTAL_STR);
 		obj[DAYS_STR] = dataRetrieveObject(DAYS_STR);
 
-		data  = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
+		data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
 
-		el       = document.createElement("a");
-		el.href      = "data:" + data;
-		el.download  = SAVE_FILENAME + ".txt";
+		// create a phantom element, attach encoded JSON to it
+		// add it to DOM, click then remove
+		el = document.createElement("a");
+		el.href = "data:" + data;
+		el.download = SAVE_FILENAME + ".txt";
 		el.innerHTML = "download .txt file of json";
-
 		document.body.appendChild(el);
 		el.click();
     document.body.removeChild(el);
@@ -2608,7 +2625,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   onFormClick = function(event) {
     //logMsg("onFormClick(" + this + ")");
-    var form = this;
+    var form = event.target;
     //logMsg("HELLO");
     if (form && form.id) {
       //logMsg(form.id);
@@ -2733,22 +2750,17 @@ uk.co.firmgently.DontDillyDally = (function() {
     
     dateStart = new Date(dateEnd.getTime());
 
-    switch (timeSpan) {
-      case TIMESPAN_WEEK:
-        dateStart.setDate(dateStart.getDate() - DAYSINWEEK);
-        break;
-      case TIMESPAN_MONTH:
-        daysInPrevMonth = new Date(dateStart.getDate() - 1).monthDays();
-        dateStart.setDate(dateStart.getDate() - daysInPrevMonth);
-        break;
-      case TIMESPAN_YEAR:
-        dateStart.setDate(dateStart.getDate() - DAYSINYEAR);
-        break;
-      default:
-        break;
-    }
+    if (timeSpan === TIMESPAN_WEEK) {
+			dateStart.setDate(dateStart.getDate() - DAYSINWEEK);
+		} else if (timeSpan === TIMESPAN_MONTH) {
+			daysInPrevMonth = new Date(dateStart.getDate() - 1).monthDays();
+			dateStart.setDate(dateStart.getDate() - daysInPrevMonth);
+		} else if (timeSpan === TIMESPAN_YEAR) {
+			dateStart.setDate(dateStart.getDate() - DAYSINYEAR);
+		}
     daysToCalculate = daysBetween(dateStart, dateEnd);
     dayCur = dateStart;
+		
     for (i = 0; i < daysToCalculate; i++) {
       day_str = dayCur.getShortISO();
       dayWorkItems = allWorkItems[day_str];
@@ -2771,7 +2783,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
     return return_ob;
   };
-
 
   // addTask is called from the scope of the 'add task' button
   addTask = function() {
@@ -2918,7 +2929,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   // calls a method based on a data object which defines
-  // the method name, scope and optional arguments
+  // the method name, scope and other arguments
+	// (with optional event passthrough to the called method)
   callMethodFromOb = function(ob, event) {
     var scope;
 
@@ -3078,7 +3090,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 	// return references to methods (make them public) that will be called
-	// from other scopes eg. FGHTMLBuild.js
+	// from eg. callbacks which don't have a reference to this scope
   return {
     drawTimesheets: drawTimesheets,
     drawJobsAndClients: drawJobsAndClients,
