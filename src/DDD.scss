@@ -473,9 +473,11 @@ body#config aside nav button#config.btnNav {
 			input.unitBig, input.unitSmall {
 				display: inline-block; width: 3rem; height: 2rem;
 				font-family: monospace;
-				font-size: $fontSizeNormal; font-weight: bold;
-				text-align: center;
+				font-size: $fontSizeLarge; font-weight: bold;
+				color: $button-bgcolor;
+				text-align: left;
 			}
+			input.unitBig { width: 5rem; text-align: right; }
 
 			input[type="checkbox"].ios-switch {
 				position: absolute; opacity: 0;
@@ -526,26 +528,30 @@ body#config aside nav button#config.btnNav {
 
 			&.money {
 				input.unitBig, input.unitSmall {
-					background-color: $moneyInputBackgroundColor; color: $icon-color;
+					background-color: $moneyInputBackgroundColor; 
 					background-size: 100%;
 				}
 				input.notes { color: $moneyInputColor; background-color: $moneyNotesBackgroundColor; }
 				.spin-button-up, .spin-button-down { background-color: $moneyInputBackgroundColor; }
-				.spinner:first-of-type {
+				.spinner {
 					&:before, &:after {
 						font-weight: bold;
 						top: 0.4rem;
 						position: absolute;
-						color: $ddd-cream;
+						color: $moneyNotesBackgroundColor;
 					}
+				}
+				.spinner:first-of-type {
 					&:before {
-						font-size: $fontSizeTiny;
+						font-size: $fontSizeNormal;
 						content: "£";
-						left: 0.3rem; top: 0.7rem;
+						left: 0.4rem; top: 0.6rem;
 					}
-					&:after {
+				}
+				.spinner:last-of-type {
+					&:before {
 						content: ".";
-						right: 0rem;
+						left: 0;
 					}
 				}
 				&.negative {
@@ -556,27 +562,32 @@ body#config aside nav button#config.btnNav {
 					input[type="checkbox"].ios-switch + div:before {
 						content: color-SVG-icon($svgIconMoney, $hashlessMoneyNegativeIconColor);
 					}
+					.spinner:before, .spinner:after { color: $moneyNegativeNotesBackgroundColor; }
 				}
 			}
 
 			&.hrs {
-				input.unitBig, input.unitSmall { background-color: $jobInputBackgroundColor; color: $icon-color; }
+				input.unitBig, input.unitSmall { background-color: $jobInputBackgroundColor; }
 				input.notes { color: $jobInputColor; background-color: $jobNotesBackgroundColor; }
-				.spinner:first-of-type {
+				.spinner {
 					&:before, &:after {
 						font-weight: bold;
 						top: 0.4rem;
 						position: absolute;
-						color: $ddd-cream;
+						color: $jobNotesBackgroundColor;
 					}
+				}
+				.spinner:first-of-type {
 					&:before {
-						font-size: $fontSizeTiny;
-						content: "H";
-						left: 0.3rem; top: 0.7rem;
+						font-size: $fontSizeNormal;
+						content: "Hrs";
+						left: 0.4rem; top: 0.55rem;
 					}
-					&:after {
+				}
+				.spinner:last-of-type {
+					&:before {
 						content: ":";
-						right: 0rem;
+						left: 0rem;
 					}
 				}
 			}
@@ -658,7 +669,7 @@ select {
 		cursor: pointer;
     position: absolute;
 		display: inline-block; opacity: 0; @include transition(opacity 0.2s ease);
-    left: 15%; width: 70%; height: 0.5rem;
+    width: 70%; height: 0.5rem;
     padding: 0.2rem 0.3rem 0.7rem 0.3rem;
     background-color: $jobInputBackgroundColor; color: $button-bgcolor;
     text-align: center; font-size: 0.5rem;
@@ -682,9 +693,21 @@ select {
 
 	input.unitBig {
     @include border-radius($mediumPadding 0 0 $mediumPadding);
+		+ .spin-button-up {
+			right: 0%;
+			+ .spin-button-down {
+				right: 0%;
+			}
+		}
 	}
 	input.unitSmall {
     @include border-radius(0 $mediumPadding $mediumPadding 0);
+		+ .spin-button-up {
+			left: 10%;
+			+ .spin-button-down {
+				left: 10%;
+			}
+		}
 	}
 }
 

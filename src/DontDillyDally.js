@@ -565,13 +565,13 @@ uk.co.firmgently.DontDillyDally = (function() {
      	label: LABEL_REMOVEITEM,
       parent: item_el,
     });
-    attachEventArrayToElement(tmp_el, [
-        {
-          eventType: "click",
-          methodPathStr: removeMethodPath,
-          scopeID: item.id
-        }
-    ]);
+		attachEventArrayToElement(tmp_el, [
+			{
+				eventType: "click",
+				methodPathStr: removeMethodPath,
+				scopeID: item.id
+			}
+		]);
 
     manualEvent(item_el, COLORPICKER_CHANGEEVENT_ID); // ensure input's colours are updated
   };
@@ -582,9 +582,12 @@ uk.co.firmgently.DontDillyDally = (function() {
 				isToday, significance_str, rowClassname,
 				monthHeader_el, day_el, date_el, dayDataContainer_el, totals_el,
 				dayWorkItems, itemID,
+				prevDay = new Date(),
 				weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
 				allWorkItems = dataRetrieveObject(DAYS_STR);
 
+		prevDay.setTime(curDrawnDay.getTime());
+		prevDay.setDate(curDrawnDay.getDate() - 1);
     day_str = curDrawnDay.getShortISO();
     day_el = createElementWithId("li", day_str);
 
@@ -608,7 +611,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         addClassname(totals_el, CLASS_TOTALSWEEK);
         tsWorkingFragment.appendChild(totals_el);
         drawTotalsContainer({
-          heading: "week " + (curDrawnDay.getWeekNumber() - 1) + " totals",
+          heading: "week ending " + getFormattedDate(prevDay, DATETYPE_DEFAULT.label) + ", totals",
           parent_el: totals_el,
           endDate: new Date(curDrawnDay.getTime()),
           timeSpan: TIMESPAN_WEEK
@@ -618,14 +621,14 @@ uk.co.firmgently.DontDillyDally = (function() {
     if (curDrawnDay.getDate() === 1) {
       rowClassname += "month-start ";
       monthHeader_el = document.createElement("h4");
-      monthHeader_el.innerHTML = MONTH_NAMES[curDrawnDay.getMonth()];
+      monthHeader_el.innerHTML = MONTH_NAMES[curDrawnDay.getMonth()] + " " + curDrawnDay.getFullYear();
       day_el.appendChild(monthHeader_el);
       totals_el = document.createElement("li");
       addClassname(totals_el, CLASS_TOTALSMONTH);
       if (curDrawnDay.getMonth() > 0) {
         tsWorkingFragment.appendChild(totals_el);
         drawTotalsContainer({
-          heading: MONTH_NAMES[curDrawnDay.getMonth() - 1] + " totals",
+          heading: MONTH_NAMES[curDrawnDay.getMonth() - 1] + " " + curDrawnDay.getFullYear() + " totals",
           parent_el: totals_el,
           endDate: new Date(curDrawnDay.getTime()),
           timeSpan: TIMESPAN_MONTH
