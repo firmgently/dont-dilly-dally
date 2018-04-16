@@ -30,7 +30,7 @@ uk.co.firmgently.DDDConsts = (function() {
 
 		AUTOREPEAT_RATE: 500,
     RECALCULATETOTALS_DELAY: 1000,
-    DAYSDRAWN_UPDATE_FREQ: 10, // lower number means more frequent updates on loading indicator
+    DAYSDRAWN_UPDATE_FREQ: 7, // lower number means more frequent updates on loading indicator
 
     PAGETYPE_TIMESHEETS: "timesheets",
     PAGETYPE_CONFIG: "preferences",
@@ -113,6 +113,11 @@ uk.co.firmgently.DDDConsts = (function() {
     EL_ID_MONTHNEXTBTN: "monthNextBtn",
     EL_ID_MONTHPREVBTN: "monthPrevBtn",
 
+    EL_ID_MAINCONTAINER: "main",
+    EL_ID_TIMESHEETCONTAINER: "timesheetContainer",
+    EL_ID_LOADINGINDICATOR: "loading-indicator",
+
+
     CLIENT_FG_COLPICK: "clientFGPicker",
     CLIENT_BG_COLPICK: "clientBGPicker",
     JOB_FG_COLPICK: "jobFGPicker",
@@ -134,9 +139,6 @@ uk.co.firmgently.DDDConsts = (function() {
 
     CONTENTTYPE_CLIENTS: "contentTypeClients",
     CONTENTTYPE_JOBS: "contentTypeJobs",
-
-    TIMESHEETCONTAINER_ID: "timesheetContainer",
-    LOADINGINDICATOR_ID: "loading-indicator",
 
     PAGEDATA_JOBSANDCLIENTS: {
       pageTitle: "Jobs and Clients",
@@ -467,7 +469,7 @@ uk.co.firmgently.DDDConsts = (function() {
       parent: "miniNavForm"
     }, {
       type: CONST.GUITYPE_UL,
-      id: CONST.TIMESHEETCONTAINER_ID,
+      id: CONST.EL_ID_TIMESHEETCONTAINER,
       parent: "main"
     }, {
       type: CONST.GUITYPE_METHODCALL,
@@ -1628,11 +1630,11 @@ uk.co.firmgently.DontDillyDally = (function() {
 	--------------------------------------------------------------------------- */
 	var
   // variables
-  prop, dateDisplayStart, dateDisplaySelected, dateToday, 
+  key, dateDisplayStart, dateDisplaySelected, dateToday, 
 	eventAutoRepeatTimer, timesheetDrawDayTimer, recalculateTotalsTimer,
   tsDaysToDraw, tsDaysToDrawTotal, curDrawnDay, tsWorkingFragment,
 
-  loadingIndicator_el,
+  loadingIndicator_el, mainContainer_el, timesheet_el,
 
 	// methods
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
@@ -1665,18 +1667,18 @@ uk.co.firmgently.DontDillyDally = (function() {
   // constants
   // these aren't real constants, are declared with var
   // denoted by ALL_CAPS
-  for (prop in uk.co.firmgently.DDDConsts) {
-    this[prop] = uk.co.firmgently.DDDConsts[prop];
+  for (key in uk.co.firmgently.DDDConsts) {
+    this[key] = uk.co.firmgently.DDDConsts[key];
   }
 
   // general utility methods
-	for (prop in uk.co.firmgently.FGUtils) {
-		this[prop] = uk.co.firmgently.FGUtils[prop];
+	for (key in uk.co.firmgently.FGUtils) {
+		this[key] = uk.co.firmgently.FGUtils[key];
 	}
 
   // HTML/DOM creation methods
-	for (prop in uk.co.firmgently.FGHTMLBuild) {
-		this[prop] = uk.co.firmgently.FGHTMLBuild[prop];
+	for (key in uk.co.firmgently.FGHTMLBuild) {
+		this[key] = uk.co.firmgently.FGHTMLBuild[key];
 	}
 
 
@@ -1696,7 +1698,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   initData = function() {
-		var item, container, temp_ob, temp_id;
+		var item, container, tmp_ob, tmp_id;
     // if no preferences are stored create some defaults
     if (!dataRetrieveObject(PREFS_STR)) {
 			// create default preferences object
@@ -1717,21 +1719,21 @@ uk.co.firmgently.DontDillyDally = (function() {
 			// create new object to store clients and fill it with some defaults
       dataStoreObject(CLIENTS_STR, {});
       for (item in CLIENT_DEFAULTS) {
-        temp_id = getNextID(DATATYPE_CLIENT);
-        temp_ob = CLIENT_DEFAULTS[item];
-        temp_ob.id = temp_id;
-        temp_ob.class = temp_id;
-        createClientOrJobFromOb(temp_ob, DATATYPE_CLIENT);
+        tmp_id = getNextID(DATATYPE_CLIENT);
+        tmp_ob = CLIENT_DEFAULTS[item];
+        tmp_ob.id = tmp_id;
+        tmp_ob.class = tmp_id;
+        createClientOrJobFromOb(tmp_ob, DATATYPE_CLIENT);
       }
 
 			// create new object to store jobs and fill it with some defaults
       dataStoreObject(JOBS_STR, {});
       for (item in JOB_DEFAULTS) {
-        temp_id = getNextID(DATATYPE_JOB);
-        temp_ob = JOB_DEFAULTS[item];
-        temp_ob.id = temp_id;
-        temp_ob.class = temp_id;
-        createClientOrJobFromOb(temp_ob, DATATYPE_JOB);
+        tmp_id = getNextID(DATATYPE_JOB);
+        tmp_ob = JOB_DEFAULTS[item];
+        tmp_ob.id = tmp_id;
+        tmp_ob.class = tmp_id;
+        createClientOrJobFromOb(tmp_ob, DATATYPE_JOB);
       }
 
 			// new empty object to store days
@@ -1762,11 +1764,11 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   dataUpdateObject = function(category, key, value) {
-    var prop,
+    var key,
 				ob = dataRetrieveObject(category);
-    for (prop in ob) {
-      if (prop === key) {
-        ob[prop] = value;
+    for (key in ob) {
+      if (key === key) {
+        ob[key] = value;
         break;
       }
     }
@@ -1878,18 +1880,19 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   clearPage = function() {
     removeClassname(loadingIndicator_el, CLASS_HIDDEN);
-    document.getElementById("main").innerHTML = "";
+    mainContainer_el.innerHTML = "";
   };
 
 
   drawPage = function() {
-    document.getElementById("main").appendChild(createElementWithId("h1", "pageTitle"));
-    document.getElementById("main").appendChild(createElementWithId("h2", "intro"));
+    mainContainer_el.appendChild(createElementWithId("h1", "pageTitle"));
+    mainContainer_el.appendChild(createElementWithId("h2", "intro"));
     switch (dataRetrieveObject(PREFS_STR).pagetype) {
       case PAGETYPE_TIMESHEETS:
         document.body.id = BODYID_TIMESHEETS;
         fillHTMLFromOb(PAGEDATA_TIMESHEETS);
         drawGUIFromAr(GUIDATA_TIMESHEETS);
+				timesheet_el = document.getElementById(EL_ID_TIMESHEETCONTAINER);
         break;
       case PAGETYPE_CONFIG:
         document.body.id = BODYID_CONFIG;
@@ -2013,32 +2016,32 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   drawJobsAndClients = function() {
-    var ul_el, li_el, tmp_el, prop, item, item_ar;
+    var container_el, key, item_ar;
 
     item_ar = dataRetrieveObject(CLIENTS_STR);
-    ul_el = document.createElement("ul");
-    addClassname(ul_el, CLIENTS_STR);
-    document.getElementById("clientsExisting").appendChild(ul_el);
-    for (prop in item_ar) {
-      drawClientOrJobFromOb(item_ar[prop]);
+    container_el = document.createElement("ul");
+    addClassname(container_el, CLIENTS_STR);
+    document.getElementById("clientsExisting").appendChild(container_el);
+    for (key in item_ar) {
+      drawClientOrJobFromOb(item_ar[key]);
     }
 
     item_ar = dataRetrieveObject(JOBS_STR);
-    ul_el = document.createElement("ul");
-    addClassname(ul_el, JOBS_STR);
-    document.getElementById("jobsExisting").appendChild(ul_el);
-    for (prop in item_ar) {
-      drawClientOrJobFromOb(item_ar[prop]);
+    container_el = document.createElement("ul");
+    addClassname(container_el, JOBS_STR);
+    document.getElementById("jobsExisting").appendChild(container_el);
+    for (key in item_ar) {
+      drawClientOrJobFromOb(item_ar[key]);
     }
   };
 
 
   drawClientOrJobFromOb = function(item) {
-    var li_el, tmp_el, parent_el, removeMethodPath, addMethodPath;
+    var item_el, tmp_el, parent_el, removeMethodPath, addMethodPath;
 
-    li_el = createElementWithId("li", item.id);
-    registerEventHandler(li_el, COLORPICKER_CHANGEEVENT_ID, updateColoursFromPickers);
-    registerEventHandler(li_el, COLORPICKER_CONFIRMEVENT_ID, onColorChangeConfirm);
+    item_el = createElementWithId("li", item.id);
+    registerEventHandler(item_el, COLORPICKER_CHANGEEVENT_ID, updateColoursFromPickers);
+    registerEventHandler(item_el, COLORPICKER_CONFIRMEVENT_ID, onColorChangeConfirm);
 
     if (item.id.indexOf(CLIENT_STR) !== -1) {
       addMethodPath = "uk.co.firmgently.DontDillyDally.addClient";
@@ -2047,14 +2050,14 @@ uk.co.firmgently.DontDillyDally = (function() {
       addMethodPath = "uk.co.firmgently.DontDillyDally.addJob";
       parent_el = document.getElementById("jobsExisting").getElementsByTagName("UL")[0];
     }
-    parent_el.appendChild(li_el);
+    parent_el.appendChild(item_el);
     removeMethodPath = "uk.co.firmgently.DontDillyDally.removeClientOrJob";
 
     // 'add task' button
     tmp_el = createButtonFromOb({
       class: "addItemBtn",
       label: "&#xe821;",
-      parent: li_el,
+      parent: item_el,
     });
     attachEventArrayToElement(tmp_el, [
         {
@@ -2066,7 +2069,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     tmp_el = createInputFromOb({
       class: item.id,
-      parent: li_el,
+      parent: item_el,
       attributes: { "type": "text", "value": item.name },
     });
     attachEventArrayToElement(tmp_el, [
@@ -2090,14 +2093,14 @@ uk.co.firmgently.DontDillyDally = (function() {
     ]);
 
     tmp_el = createColorPickerFromOb({
-      parent: li_el,
+      parent: item_el,
       class: "color-picker bg",
       id: "cpbg-" + item.id,
       color: item.bgcolor
     });
 
     tmp_el = createColorPickerFromOb({
-      parent: li_el,
+      parent: item_el,
       class: "color-picker fg",
       id: "cpfg-" + item.id,
       color: item.color
@@ -2107,7 +2110,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     tmp_el = createButtonFromOb({
       class: "removeItemBtn",
       label: "&#xe83d;",
-      parent: li_el,
+      parent: item_el,
     });
     attachEventArrayToElement(tmp_el, [
         {
@@ -2117,7 +2120,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         }
     ]);
 
-    manualEvent(li_el, COLORPICKER_CHANGEEVENT_ID); // ensure input's colours are updated
+    manualEvent(item_el, COLORPICKER_CHANGEEVENT_ID); // ensure input's colours are updated
   };
 
 
@@ -2208,10 +2211,18 @@ uk.co.firmgently.DontDillyDally = (function() {
     if (tsDaysToDraw > 0) {
       if (tsDaysToDraw % DAYSDRAWN_UPDATE_FREQ === 0) {
         loadingIndicator_el.innerHTML = "creating day " + (tsDaysToDrawTotal - tsDaysToDraw) + "/" + tsDaysToDrawTotal;
-      }
-      timesheetDrawDayTimer = setTimeout(drawNextDay, 0);
-      curDrawnDay.setDate(curDrawnDay.getDate() + 1);
-      tsDaysToDraw --;
+				timesheetDrawDayTimer = setTimeout(drawNextDay, 0);
+				// re-calling the function via setTimeout means it will happen *after* the 
+				// flow of execution leaves this context - so the following increment/decrement happen
+				// before the next drawNextDay() call
+				// TODO check terminology of above comment!
+				curDrawnDay.setDate(curDrawnDay.getDate() + 1);
+				tsDaysToDraw --;
+      } else {
+				curDrawnDay.setDate(curDrawnDay.getDate() + 1);
+				tsDaysToDraw --;
+				drawNextDay();
+			}
     } else {
       // add year totals
       totals_el = document.createElement("li");
@@ -2225,7 +2236,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       tsWorkingFragment.appendChild(totals_el);
 
       // add fragment to DOM
-      document.getElementById(TIMESHEETCONTAINER_ID).appendChild(tsWorkingFragment);
+      timesheet_el.appendChild(tsWorkingFragment);
       addClassname(loadingIndicator_el, CLASS_HIDDEN);
 
       recalculateAllTotals();
@@ -2269,7 +2280,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   drawUIWorkItem = function(dayDataContainer_el, itemID, itemData_ob) {
-    var money_el, ob_temp, tmp_el, item_el, wrappedCheckbox_el, numberValue_ar,
+    var money_el, tmp_ob, tmp_el, item_el, wrappedCheckbox_el, numberValue_ar,
 				day_el = dayDataContainer_el.parentNode;
 
 		if (itemID === undefined) { itemID = getGUID(); }
@@ -2364,14 +2375,14 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     // hours/money big units
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
-      ob_temp = { min: 0, max: 23, step: 1, wrapNum: true, pad: "00" };
+      tmp_ob = { min: 0, max: 23, step: 1, wrapNum: true, pad: "00" };
     } else {
-      ob_temp = { min: -999999999, max: 999999999, step: 1, pad: "    " };
+      tmp_ob = { min: -999999999, max: 999999999, step: 1, pad: "    " };
     }
     tmp_el = createSpinnerFromOb({
       class: CLASS_SPINNER_UNITBIG,
       parent: item_el,
-      attributes: ob_temp,
+      attributes: tmp_ob,
     });
     attachEventArrayToElement(tmp_el, [
       {
@@ -2404,26 +2415,26 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     // hours/money small units
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
-      ob_temp = { min: 0, max: 59, wrapNum: true, pad: "00" };
+      tmp_ob = { min: 0, max: 59, wrapNum: true, pad: "00" };
       switch(dataRetrieveObject(PREFS_STR).minuteIncrements) {
         case MINUTEINCREMENTS_15:
-          ob_temp.step = 15;
+          tmp_ob.step = 15;
           break;
         case MINUTEINCREMENTS_30:
-          ob_temp.step = 30;
+          tmp_ob.step = 30;
           break;
         case MINUTEINCREMENTS_1: // intentional rollthrough
         default:
-          ob_temp.step = 1;
+          tmp_ob.step = 1;
           break;
       }
     } else {
-      ob_temp = { min: 0, max: 99, step: 1, wrapNum: true, pad: "00" };
+      tmp_ob = { min: 0, max: 99, step: 1, wrapNum: true, pad: "00" };
     }
     tmp_el = createSpinnerFromOb({
       class: CLASS_SPINNER_UNITSMALL,
       parent: item_el,
-      attributes: ob_temp,
+      attributes: tmp_ob,
     });
     attachEventArrayToElement(tmp_el, [
       {
@@ -2683,7 +2694,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   recalculateAllTotals = function() {
     var i, curContainer, curTotalsData,
-        totalsContainers = document.getElementById(TIMESHEETCONTAINER_ID).getElementsByClassName("totals-container");
+        totalsContainers = timesheet_el.getElementsByClassName("totals-container");
 
     for (i = 0; i < totalsContainers.length; i++) {
       curContainer = totalsContainers[i];
@@ -2697,7 +2708,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   calculateTotalsFromDateSpan = function(dateEnd, timeSpan) {
-    var i, j, daysToCalculate, dayCur, day_str, tempVal,
+    var i, j, daysToCalculate, dayCur, day_str, tmpVal,
 				dayWorkItems, itemID, itemCur, daysInPrevMonth,
         dateStart,
         return_ob = {
@@ -2732,8 +2743,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 				for (itemID in dayWorkItems) {
           itemCur = dayWorkItems[itemID];
           if (itemCur[DATAINDICES.itemType] === ITEMTYPE_MONEY) {
-            tempVal = parseInt(itemCur[DATAINDICES.numberValue], 10);
-            if (tempVal < 0) {
+            tmpVal = parseInt(itemCur[DATAINDICES.numberValue], 10);
+            if (tmpVal < 0) {
               return_ob.spendTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
             } else {
               return_ob.incomeTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
@@ -2820,40 +2831,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       addCSSRule(selector, "color", ob.color);
       addCSSRule(selector, "background-color", ob.bgcolor);
     }
-	};
-
-
-  createClientOrJobFromOb = function(ob, dataType) {
-    var id, ar, n, containerObjectName, input_el;
-
-		// create unique identifier for this job or client
-    if (dataType === DATATYPE_CLIENT) {
-      containerObjectName = CLIENTS_STR;
-    } else if (dataType === DATATYPE_JOB) {
-      containerObjectName = JOBS_STR;
-    }
-    ar = dataRetrieveObject(containerObjectName);
-    ar[ob.id] = ob;
-    dataStoreObject(containerObjectName, ar);
-
-		createCSSForClientOrJobFromOb(ob, dataType);
-  };
-
-
-	createCSSForClientOrJobFromOb = function(ob, dataType) {
-    var selector =	"." + ob.class + ", " +
-										"." + ob.class + ":hover, " +
-										"." + ob.class + ":active",
-				colorPickerFGSelector, colorPickerBGSelector;
-
-		// add main CSS for eg. timesheets page
-    if (dataType === DATATYPE_CLIENT || dataType === DATATYPE_JOB) {
-      addCSSRule(selector, "color", ob.color + " !important");
-      addCSSRule(selector, "background-color", ob.bgcolor + " !important");
-    } else {
-      addCSSRule(selector, "color", ob.color);
-      addCSSRule(selector, "background-color", ob.bgcolor);
-    }
+		addCSSRule(selector, "font-style", "normal");
 	};
 
 
@@ -2964,7 +2942,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   dayJumpClick = function(event) {
     var i, day, dayNodes,
         searchDirection = "forward",
-        scrollTop = document.getElementById("main").scrollTop;
+        scrollTop = mainContainer_el.scrollTop;
 
     switch (event.target.id) {
       case EL_ID_WEEKNEXTBTN:
@@ -3055,6 +3033,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 	--------------------------------------------------------------------------- */
   
   doSetup = function() {
+    loadingIndicator_el = document.getElementById(EL_ID_LOADINGINDICATOR);
+		mainContainer_el = document.getElementById(EL_ID_MAINCONTAINER);
     dateDisplayStart = new Date();
     dateDisplaySelected = new Date();
     dateToday = new Date();
@@ -3069,7 +3049,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
 		registerEventHandler(document.getElementById("file-chooser"), "change", handleFileSelect, false);
 		registerEventHandler(document.getElementById("file-save"), "click", onSaveBtnClick, false);
-    loadingIndicator_el = document.getElementById(LOADINGINDICATOR_ID);
   };
 
 

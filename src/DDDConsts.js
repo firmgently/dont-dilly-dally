@@ -30,7 +30,7 @@ uk.co.firmgently.DDDConsts = (function() {
 
 		AUTOREPEAT_RATE: 500,
     RECALCULATETOTALS_DELAY: 1000,
-    DAYSDRAWN_UPDATE_FREQ: 10, // lower number means more frequent updates on loading indicator
+    DAYSDRAWN_UPDATE_FREQ: 7, // lower number means more frequent updates on loading indicator
 
     PAGETYPE_TIMESHEETS: "timesheets",
     PAGETYPE_CONFIG: "preferences",
@@ -113,6 +113,11 @@ uk.co.firmgently.DDDConsts = (function() {
     EL_ID_MONTHNEXTBTN: "monthNextBtn",
     EL_ID_MONTHPREVBTN: "monthPrevBtn",
 
+    EL_ID_MAINCONTAINER: "main",
+    EL_ID_TIMESHEETCONTAINER: "timesheetContainer",
+    EL_ID_LOADINGINDICATOR: "loading-indicator",
+
+
     CLIENT_FG_COLPICK: "clientFGPicker",
     CLIENT_BG_COLPICK: "clientBGPicker",
     JOB_FG_COLPICK: "jobFGPicker",
@@ -134,9 +139,6 @@ uk.co.firmgently.DDDConsts = (function() {
 
     CONTENTTYPE_CLIENTS: "contentTypeClients",
     CONTENTTYPE_JOBS: "contentTypeJobs",
-
-    TIMESHEETCONTAINER_ID: "timesheetContainer",
-    LOADINGINDICATOR_ID: "loading-indicator",
 
     PAGEDATA_JOBSANDCLIENTS: {
       pageTitle: "Jobs and Clients",
@@ -467,7 +469,7 @@ uk.co.firmgently.DDDConsts = (function() {
       parent: "miniNavForm"
     }, {
       type: CONST.GUITYPE_UL,
-      id: CONST.TIMESHEETCONTAINER_ID,
+      id: CONST.EL_ID_TIMESHEETCONTAINER,
       parent: "main"
     }, {
       type: CONST.GUITYPE_METHODCALL,

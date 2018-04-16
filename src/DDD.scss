@@ -410,9 +410,7 @@ body#config aside nav button#config.btnNav {
 				&.negative {
 					input.unitBig, input.unitSmall { background-color: $ddd-orange; }
 					input.notes { background-color: mix($ddd-orange, white, 35%);}
-					input[type="checkbox"].ios-switch + div {
-						background-image: linear-gradient(90deg, $ddd-orange 50%, transparent 50%);
-					}
+					input[type="checkbox"].ios-switch + div { background-image: linear-gradient(90deg, $ddd-orange 50%, transparent 50%); }
 				//	.spin-button-up, .spin-button-down { background-color: $ddd-orange; }
 				}
 			}
@@ -492,7 +490,7 @@ body#config aside nav button#config.btnNav {
 /* FORMS */
 select, input, button { border: none; padding: $smallPadding $smallPadding $smallPadding $mediumPadding; }
 select {
-  font-family: $bold-font-family;
+  font-family: $bold-font-family; font-style: italic;
   appearance: none; -webkit-appearance: none; -moz-appearance: none;
   background-color: $button-bgcolor; color: $button-color;
   cursor: pointer;
