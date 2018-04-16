@@ -101,6 +101,13 @@ uk.co.firmgently.DDDConsts = (function() {
     SEPARATOR_TIME: ":",
     TODAY_STR: "today",
 
+		LABEL_MONTHPREV: "previous month",
+		LABEL_MONTHNEXT: "next month",
+		LABEL_WEEKPREV: "previous week",
+		LABEL_WEEKNEXT: "next week",
+		LABEL_ADDITEM: "add item",
+		LABEL_REMOVEITEM: "remove item",
+
     EL_ID_COLHEADING: "column-headings",
     EL_ID_JOBNAMEIN: "jobNameIn",
     EL_ID_CLIENTNAMEIN: "clientNameIn",
@@ -396,7 +403,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_BTN,
       id: CONST.EL_ID_MONTHPREVBTN,
       class: CONST.CLASS_BTNMININAV,
-      label: "&#x25B2;",
+      label: CONST.LABEL_MONTHPREV,
       event_ar: [
         {
           eventType: "mousedown",
@@ -411,7 +418,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_BTN,
       id: CONST.EL_ID_MONTHNEXTBTN,
       class: CONST.CLASS_BTNMININAV,
-      label: "&#x25BC;",
+      label: CONST.LABEL_MONTHNEXT,
       event_ar: [
         {
           eventType: "mousedown",
@@ -430,7 +437,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_BTN,
       id: CONST.EL_ID_WEEKPREVBTN,
       class: CONST.CLASS_BTNMININAV,
-      label: "&#x25B2;",
+      label: CONST.LABEL_WEEKPREV,
       event_ar: [
         {
           eventType: "mousedown",
@@ -445,7 +452,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_BTN,
       id: CONST.EL_ID_WEEKNEXTBTN,
       class: CONST.CLASS_BTNMININAV,
-      label: "&#x25BC;",
+      label: CONST.LABEL_WEEKNEXT,
       event_ar: [
         {
           eventType: "mousedown",
@@ -2056,7 +2063,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     // 'add task' button
     tmp_el = createButtonFromOb({
       class: "addItemBtn",
-      label: "&#xe821;",
+      label: LABEL_ADDITEM,
       parent: item_el,
     });
     attachEventArrayToElement(tmp_el, [
@@ -2109,7 +2116,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     // 'remove task' button
     tmp_el = createButtonFromOb({
       class: "removeItemBtn",
-      label: "&#xe83d;",
+     	label: LABEL_REMOVEITEM,
       parent: item_el,
     });
     attachEventArrayToElement(tmp_el, [
@@ -2291,7 +2298,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     // 'add item' button
     tmp_el = createButtonFromOb({
       class: "addItemBtn",
-      label: "&#xe821;",
+      label: LABEL_ADDITEM,
       parent: item_el,
     });
     attachEventArrayToElement(tmp_el, [
@@ -2492,7 +2499,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     // 'remove item' button
     tmp_el = createButtonFromOb({
       class: "removeItemBtn",
-      label: "&#xe83d;",
+      label: LABEL_REMOVEITEM,
       parent: item_el,
     });
     attachEventArrayToElement(tmp_el, [

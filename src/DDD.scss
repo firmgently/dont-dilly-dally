@@ -73,14 +73,30 @@ table {	border-collapse: collapse; border-spacing: 0; }
 Don't Dilly Dally
 ================================================== */
 
+
+
+$svgIconAdd: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Eplus%3C/title%3E%3Cpath d='M31 12h-11v-11c0-0.552-0.448-1-1-1h-6c-0.552 0-1 0.448-1 1v11h-11c-0.552 0-1 0.448-1 1v6c0 0.552 0.448 1 1 1h11v11c0 0.552 0.448 1 1 1h6c0.552 0 1-0.448 1-1v-11h11c0.552 0 1-0.448 1-1v-6c0-0.552-0.448-1-1-1z'%3E%3C/path%3E%3C/svg%3E%0A");
+$svgIconRemove: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Ecross%3C/title%3E%3Cpath d='M31.708 25.708c-0-0-0-0-0-0l-9.708-9.708 9.708-9.708c0-0 0-0 0-0 0.105-0.105 0.18-0.227 0.229-0.357 0.133-0.356 0.057-0.771-0.229-1.057l-4.586-4.586c-0.286-0.286-0.702-0.361-1.057-0.229-0.13 0.048-0.252 0.124-0.357 0.228 0 0-0 0-0 0l-9.708 9.708-9.708-9.708c-0-0-0-0-0-0-0.105-0.104-0.227-0.18-0.357-0.228-0.356-0.133-0.771-0.057-1.057 0.229l-4.586 4.586c-0.286 0.286-0.361 0.702-0.229 1.057 0.049 0.13 0.124 0.252 0.229 0.357 0 0 0 0 0 0l9.708 9.708-9.708 9.708c-0 0-0 0-0 0-0.104 0.105-0.18 0.227-0.229 0.357-0.133 0.355-0.057 0.771 0.229 1.057l4.586 4.586c0.286 0.286 0.702 0.361 1.057 0.229 0.13-0.049 0.252-0.124 0.357-0.229 0-0 0-0 0-0l9.708-9.708 9.708 9.708c0 0 0 0 0 0 0.105 0.105 0.227 0.18 0.357 0.229 0.356 0.133 0.771 0.057 1.057-0.229l4.586-4.586c0.286-0.286 0.362-0.702 0.229-1.057-0.049-0.13-0.124-0.252-0.229-0.357z'%3E%3C/path%3E%3C/svg%3E"); 
+$svgIconMoney: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 32 32'%3E%3Ctitle%3Ecredit-card%3C/title%3E%3Cpath d='M29 4h-26c-1.65 0-3 1.35-3 3v18c0 1.65 1.35 3 3 3h26c1.65 0 3-1.35 3-3v-18c0-1.65-1.35-3-3-3zM3 6h26c0.542 0 1 0.458 1 1v3h-28v-3c0-0.542 0.458-1 1-1zM29 26h-26c-0.542 0-1-0.458-1-1v-9h28v9c0 0.542-0.458 1-1 1zM4 20h2v4h-2zM8 20h2v4h-2zM12 20h2v4h-2z'%3E%3C/path%3E%3C/svg%3E");
+$svgIconTime: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 32 32'%3E%3Ctitle%3Eclock%3C/title%3E%3Cpath d='M20.586 23.414l-6.586-6.586v-8.828h4v7.172l5.414 5.414zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 28c-6.627 0-12-5.373-12-12s5.373-12 12-12c6.627 0 12 5.373 12 12s-5.373 12-12 12z'%3E%3C/path%3E%3C/svg%3E");
+$svgIconArrowUp: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Earrow-up%3C/title%3E%3Cpath d='M16 1l-15 15h9v16h12v-16h9z'%3E%3C/path%3E%3C/svg%3E");
+$svgIconArrowDown: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Earrow-down%3C/title%3E%3Cpath d='M16 31l15-15h-9v-16h-12v16h-9z'%3E%3C/path%3E%3C/svg%3E");
+$svgIconSettings: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Ecog%3C/title%3E%3Cpath d='M29.181 19.070c-1.679-2.908-0.669-6.634 2.255-8.328l-3.145-5.447c-0.898 0.527-1.943 0.829-3.058 0.829-3.361 0-6.085-2.742-6.085-6.125h-6.289c0.008 1.044-0.252 2.103-0.811 3.070-1.679 2.908-5.411 3.897-8.339 2.211l-3.144 5.447c0.905 0.515 1.689 1.268 2.246 2.234 1.676 2.903 0.672 6.623-2.241 8.319l3.145 5.447c0.895-0.522 1.935-0.82 3.044-0.82 3.35 0 6.067 2.725 6.084 6.092h6.289c-0.003-1.034 0.259-2.080 0.811-3.038 1.676-2.903 5.399-3.894 8.325-2.219l3.145-5.447c-0.899-0.515-1.678-1.266-2.232-2.226zM16 22.479c-3.578 0-6.479-2.901-6.479-6.479s2.901-6.479 6.479-6.479c3.578 0 6.479 2.901 6.479 6.479s-2.901 6.479-6.479 6.479z'%3E%3C/path%3E%3C/svg%3E");
+$svgIconDownload: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Edownload3%3C/title%3E%3Cpath d='M23 14l-8 8-8-8h5v-12h6v12zM15 22h-15v8h30v-8h-15zM28 26h-4v-2h4v2z'%3E%3C/path%3E%3C/svg%3E");
+$svgIconUpload: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Eupload3%3C/title%3E%3Cpath d='M15 22h-15v8h30v-8h-15zM28 26h-4v-2h4v2zM7 10l8-8 8 8h-5v10h-6v-10z'%3E%3C/path%3E%3C/svg%3E");
+$svgIconPrivacy: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Eeye-blocked%3C/title%3E%3Cpath d='M29.561 0.439c-0.586-0.586-1.535-0.586-2.121 0l-6.318 6.318c-1.623-0.492-3.342-0.757-5.122-0.757-6.979 0-13.028 4.064-16 10 1.285 2.566 3.145 4.782 5.407 6.472l-4.968 4.968c-0.586 0.586-0.586 1.535 0 2.121 0.293 0.293 0.677 0.439 1.061 0.439s0.768-0.146 1.061-0.439l27-27c0.586-0.586 0.586-1.536 0-2.121zM13 10c1.32 0 2.44 0.853 2.841 2.037l-3.804 3.804c-1.184-0.401-2.037-1.521-2.037-2.841 0-1.657 1.343-3 3-3zM3.441 16c1.197-1.891 2.79-3.498 4.67-4.697 0.122-0.078 0.246-0.154 0.371-0.228-0.311 0.854-0.482 1.776-0.482 2.737 0 1.715 0.54 3.304 1.459 4.607l-1.904 1.904c-1.639-1.151-3.038-2.621-4.114-4.323z'%3E%3C/path%3E%3Cpath d='M24 13.813c0-0.849-0.133-1.667-0.378-2.434l-10.056 10.056c0.768 0.245 1.586 0.378 2.435 0.378 4.418 0 8-3.582 8-8z'%3E%3C/path%3E%3Cpath d='M25.938 9.062l-2.168 2.168c0.040 0.025 0.079 0.049 0.118 0.074 1.88 1.199 3.473 2.805 4.67 4.697-1.197 1.891-2.79 3.498-4.67 4.697-2.362 1.507-5.090 2.303-7.889 2.303-1.208 0-2.403-0.149-3.561-0.439l-2.403 2.403c1.866 0.671 3.873 1.036 5.964 1.036 6.978 0 13.027-4.064 16-10-1.407-2.81-3.504-5.2-6.062-6.938z'%3E%3C/path%3E%3C/svg%3E");
+$svgIconJobsClients: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Eprofile%3C/title%3E%3Cpath d='M27 0h-24c-1.65 0-3 1.35-3 3v26c0 1.65 1.35 3 3 3h24c1.65 0 3-1.35 3-3v-26c0-1.65-1.35-3-3-3zM26 28h-22v-24h22v24zM8 18h14v2h-14zM8 22h14v2h-14zM10 9c0-1.657 1.343-3 3-3s3 1.343 3 3c0 1.657-1.343 3-3 3s-3-1.343-3-3zM15 12h-4c-1.65 0-3 0.9-3 2v2h10v-2c0-1.1-1.35-2-3-2z'%3E%3C/path%3E%3C/svg%3E");
+$svgIconTimesheets: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Etable%3C/title%3E%3Cpath d='M0 6v22h32v-22h-32zM12 20v-4h8v4h-8zM20 22v4h-8v-4h8zM20 10v4h-8v-4h8zM10 10v4h-8v-4h8zM2 16h8v4h-8v-4zM22 16h8v4h-8v-4zM22 14v-4h8v4h-8zM2 22h8v4h-8v-4zM22 26v-4h8v4h-8z'%3E%3C/path%3E%3C/svg%3E");
+
+
 $zHidden: -1;
 $zBackground: 0;
 $zNormal: 1;
 $zFloat: 2;
 $zCover: 3;
 
-//$bold-font-family: "FG_Bold", Tahoma, Arial, Helvetica;
-//$normal-font-family: "FG_Medium", Tahoma, Arial, Helvetica;
+$hideIndent: -999999em;
+
 $bold-font-family: Tahoma, Arial, Helvetica;
 $normal-font-family: Tahoma, Arial, Helvetica;
 
@@ -141,7 +157,7 @@ $evenDayBgColourHover: lighten($panelBgColour, 15%);
 $evenDayFgColourHover: darken($panelFgColour, 25%);
 
 
-
+$iconSize: 2rem;
 
 $tinyPadding: 0.15rem;
 $smallPadding: 0.3rem;
@@ -154,8 +170,7 @@ $topPadding: 4.5rem;
 $fontSizeNormal: 0.9rem;
 $fontSizeSmall: 0.8rem;
 $fontSizeTiny: 0.7rem;
-$fontSizeIcon: 1.2rem;
-$fontSizeIconLarge: 1.5rem;
+$fontSizeIcon: 1rem;
 
 $sidebar-width: 10vw;
 $date-width: 7.5rem;
@@ -164,6 +179,10 @@ $tab-fontsize-unselected: 1rem;
 $tab-fontsize-selected:   1.15rem;
 $tab-padding: $tinyPadding;
 $tab-margin: $mediumPadding;
+
+@mixin icon-bg-defaults() {
+	background-size: 50%; background-repeat: no-repeat; background-position: center;
+}
 
 @mixin transition($args...) {
   -webkit-transition: $args;
@@ -272,7 +291,7 @@ body#config aside nav button#config.btnNav {
 
 	> li {
     .date.col {
-      font-family: 'Lucida Console', 'Monaco', 'monospace', 'Courier';
+      font-family: monospace;
       font-size: $fontSizeNormal; font-weight: bold;
       width: $date-width; margin-right: 0 - ($date-width + $mediumPadding); margin-left: $mediumPadding;
       span { // used for 'TODAY' text etc
@@ -349,19 +368,18 @@ body#config aside nav button#config.btnNav {
 					background-image: linear-gradient(90deg, $moneyInputBackgroundColour 50%, transparent 50%);
 					background-size: 200% 100%; background-position: 100% 0; background-origin: border-box; background-clip: border-box;
 					overflow: hidden;
-					font-size: $fontSizeIconLarge; font-family: "ddd-icons";
 					cursor: pointer;
 
-					&:before, &:after { font-size: $fontSizeIconLarge; }
+					&:before, &:after { font-size: $fontSizeIcon; }
 
 					&:before {
-						content: '\e801';
+						content: $svgIconMoney;
 						float: left; width: 1.3rem; height: 1.3rem;
 						margin: 0rem 0rem 0rem 0rem; border-radius: inherit; background: $button-bgcolor;
 						color: $icon-color; text-indent: -2.2rem;
 					}
 
-					&:after { content: '\e800'; margin-left: 0.8rem; color: $icon-color; }
+					&:after { content: $svgIconTime; margin-left: 0.8rem; color: $icon-color; }
 					
 					&:hover {
 						&:before	{ background-color: $button-bgcolor-over; }
@@ -438,17 +456,18 @@ body#config aside nav button#config.btnNav {
 			}
 			
 			.removeItemBtn, .addItemBtn {
-				font-family: "ddd-icons"; font-size: $fontSizeIcon;
 				@include border-radius(1rem); border: none;
-				height: 2rem; width: 2rem;
+				@include icon-bg-defaults();
+				text-indent: $hideIndent;
+				height: $iconSize; width: $iconSize;
 				margin-left: $largePadding; padding: 0.4rem 0.5rem 0.5rem 0.5rem;
 				cursor: pointer;
 				color: $button-color; background-color: $button-bgcolor;
 				position: absolute; bottom: 0;
         &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; }
 			}
-			.addItemBtn { margin-left: -3rem }
-			.removeItemBtn { right: 1rem; color: $ddd-orangedark; }
+			.addItemBtn { background-image: $svgIconAdd; margin-left: -3rem }
+			.removeItemBtn { background-image: $svgIconRemove; right: 1rem; color: $ddd-orangedark; }
 			&:only-child .removeItemBtn { visibility: hidden; }
 			&:not(:first-child) .addItemBtn { visibility: hidden; }
 
@@ -550,12 +569,19 @@ select {
 #miniNavForm {
 	position: fixed;
 	top: 0; right: 0; z-index: $zFloat;
-  p { font-size: $fontSizeSmall; font-weight: 700; display: inline; margin: 0 $largePadding}
+  p { font-size: $fontSizeSmall; font-weight: 700; display: inline; margin: 0 $largePadding; }
   button:nth-of-type(2),
   button:nth-of-type(4) {
     margin-right: $extraLargePadding;
     margin-left: $smallPadding;
+		background-image: $svgIconArrowDown;
   }
+	#monthNextBtn, #weekNextBtn, #monthPrevBtn, #weekPrevBtn {
+		@include icon-bg-defaults();
+		text-indent: $hideIndent; width: $iconSize; height: $iconSize;
+	}
+	#monthNextBtn, #weekNextBtn { background-image: $svgIconArrowDown; }
+	#monthPrevBtn, #weekPrevBtn { background-image: $svgIconArrowUp; }
 }
 
 
@@ -619,37 +645,3 @@ select {
   }
 }
 
-
-/* TEXT */
-
-@font-face {
-  font-family: 'ddd-icons';
-  src: url('/fonts/ddd-icons.eot?48170321');
-  src: url('/fonts/ddd-icons.eot?48170321#iefix') format('embedded-opentype'),
-  url('/fonts/ddd-icons.woff2?48170321') format('woff2'),
-  url('/fonts/ddd-icons.woff?48170321') format('woff'),
-  url('/fonts/ddd-icons.ttf?48170321') format('truetype'),
-  url('/fonts/ddd-icons.svg?48170321#ddd-icons') format('svg');
-  font-weight: normal;
-  font-style: normal;
-  font-display: block;
-}
-
-/*
-@font-face {
-  font-family: 'FG_Bold';
-  src: 	url('/fonts/NotoSans-Bold-webfont.eot?') format('eot'),
-  url('/fonts/NotoSans-Bold-webfont.woff2') format('woff2'),
-  url('/fonts/NotoSans-Bold-webfont.woff') format('woff'),
-  // url('/fonts/NotoSans-Bold-webfont.svg#NotoSansRegular') format('svg'),
-  url('/fonts/NotoSans-Bold-webfont.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'FG_Medium';
-  src: 	url('/fonts/NotoSans-Regular-webfont.eot?') format('eot'),
-  url('/fonts/NotoSans-Regular-webfont.woff2') format('woff2'),
-  url('/fonts/NotoSans-Regular-webfont.woff') format('woff'),
-  // url('/fonts/NotoSans-Regular-webfont.svg#NotoSansRegular') format('svg'),
-  url('/fonts/NotoSans-Regular-webfont.ttf') format('truetype');
-}
-*/

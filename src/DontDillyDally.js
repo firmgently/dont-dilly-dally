@@ -504,7 +504,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     // 'add task' button
     tmp_el = createButtonFromOb({
       class: "addItemBtn",
-      label: "&#xe821;",
+      label: LABEL_ADDITEM,
       parent: item_el,
     });
     attachEventArrayToElement(tmp_el, [
@@ -557,7 +557,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     // 'remove task' button
     tmp_el = createButtonFromOb({
       class: "removeItemBtn",
-      label: "&#xe83d;",
+     	label: LABEL_REMOVEITEM,
       parent: item_el,
     });
     attachEventArrayToElement(tmp_el, [
@@ -739,7 +739,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     // 'add item' button
     tmp_el = createButtonFromOb({
       class: "addItemBtn",
-      label: "&#xe821;",
+      label: LABEL_ADDITEM,
       parent: item_el,
     });
     attachEventArrayToElement(tmp_el, [
@@ -940,7 +940,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     // 'remove item' button
     tmp_el = createButtonFromOb({
       class: "removeItemBtn",
-      label: "&#xe83d;",
+      label: LABEL_REMOVEITEM,
       parent: item_el,
     });
     attachEventArrayToElement(tmp_el, [
