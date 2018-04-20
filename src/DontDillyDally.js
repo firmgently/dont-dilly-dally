@@ -5,6 +5,7 @@
   Mark Mayes 2018
 
   TODO  implement 'used' var in client/job data objects, keep count of how many times it's used on current timesheet
+  FIXME client select dropdown styles broken
   TODO  workitem remove button shoudnt disappear when firstchild, should remove item then create a new one
         - removeItem should decrement
         - change event should decrement current selection (if it exists) then increment new selection{
@@ -118,7 +119,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 	dataStoreObject, dataRetrieveObject, dataUpdateObject,
 	clientAndJobStyleSheet, createClientOrJobFromOb, createCSSForClientOrJobFromOb,
 	getJobOrClientIDFromElement, updateDataFromWorkItemEl, updateDataFromClientOrJobEl,
-	handleFileSelect, updateColoursFromPickers, 
+	onFileSelect, updateColoursFromPickers, 
   updateSelected, drawUIWorkItem, removeWorkItem 
 	;
 
@@ -227,17 +228,6 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
     }
     dataStoreObject(category, ob);
-  };
-
-
-  handleFileSelect = function(event) {
-    var file = event.target.files[0], // FileList object first item (as only single file)
-				reader = new FileReader();
-		reader.onload = function(event) {
-			console.log(event.target.result);
-		};
-		reader.readAsText(file);
-		console.log(file);
   };
 
 
@@ -1081,6 +1071,26 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
+  onFileSelect = function(event) {
+    var data_ob,
+        file = event.target.files[0], // FileList object first item (as only single file)
+				reader = new FileReader();
+	
+    reader.onload = function(event) {
+      var data_ob = JSON.parse(event.target.result);
+			console.log(data_ob);
+      dataStoreObject(PREFS_STR, data_ob[PREFS_STR]);
+      dataStoreObject(JOBS_STR, data_ob[JOBS_STR]);
+      dataStoreObject(JOBSTOTAL_STR, data_ob[JOBSTOTAL_STR]);
+      dataStoreObject(CLIENTS_STR, data_ob[CLIENTS_STR]);
+      dataStoreObject(CLIENTSTOTAL_STR, data_ob[CLIENTSTOTAL_STR]);
+      dataStoreObject(DAYS_STR, data_ob[DAYS_STR]);
+		};
+		reader.readAsText(file);
+		console.log(file);
+  };
+
+
 	onSaveBtnClick = function(event) {
 		var obj = {}, data, el;
 		obj[PREFS_STR] = dataRetrieveObject(PREFS_STR);
@@ -1594,7 +1604,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         selectPage(dataRetrieveObject(PREFS_STR).pagetype);
       }
     }
-		registerEventHandler(document.getElementById("file-chooser"), "change", handleFileSelect, false);
+		registerEventHandler(document.getElementById("file-chooser"), "change", onFileSelect, false);
 		registerEventHandler(document.getElementById("file-save"), "click", onSaveBtnClick, false);
   };
 
