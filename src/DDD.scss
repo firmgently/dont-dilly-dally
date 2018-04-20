@@ -605,7 +605,7 @@ body#config aside nav button#config.btnNav {
 			}
 			.addItemBtn { background-image: $svgIconAdd; margin-left: -3rem }
 			.removeItemBtn { background-image: $svgIconRemove; right: 1rem; color: $ddd-orangedark; }
-			&:only-child .removeItemBtn { visibility: hidden; }
+			//&:only-child .removeItemBtn { visibility: hidden; }
 			&:not(:first-child) .addItemBtn { visibility: hidden; }
 
       &:focus-within,

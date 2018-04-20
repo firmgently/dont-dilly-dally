@@ -1571,10 +1571,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   Mark Mayes 2018
 
   FIXME client select dropdown styles broken
-  TODO  workitem remove button shoudnt disappear when firstchild, should remove item then create a new one
-        - removeItem should decrement
-        - change event should decrement current selection (if it exists) then increment new selection{
-  TODO  file load isn't loading data yet
+  DONE  file load isn't loading data yet
 	TODO	look out for autorepeat getting stuck on dayJump (make sure timer gets cancelled on mouseup etc)
 	FIXME	preference changes not taking effect
   FIXME colour palette can push off side of screen resulting in resize on Android
@@ -1601,6 +1598,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 	FIXME	£-0.77 must register as negative
   TODO  test everything on touchscreen
   TODO  test everything on narrow (phone) layout
+  DONE  workitem remove button shoudnt disappear when firstchild, should remove item then create a new one
+        - removeItem should decrement
+        - change event should decrement current selection (if it exists) then increment new selection{
 	DONE 1st day of following year is showing
   DONE  spinners ony show for hovered/focused day
   DONE if page is changed while timesheets are being drawn, bugs out (clear timeout)
@@ -1676,7 +1676,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
 	eventAutoRepeat, eventAutoRepeatStop, eventAutoRepeatStart,
   recalculateAllTotals, calculateTotalsFromDateSpan,
-  addTask, removeTask, addClient, removeClientOrJob, addJob,
+  addItem, removeItem, addClient, removeClientOrJob, addJob,
   attachEventArrayToElement, callMethodsFromObOnElement, callMethodFromOb,
   drawTimesheets, drawNextDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
   getNextID, getNewClient, getNewJob, resetJobAndClientCounts, updateJobOrClientCount,
@@ -2341,7 +2341,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     attachEventArrayToElement(tmp_el, [
         {
           eventType: "click",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.addTask",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.addItem",
           scopeID: itemID
         }
     ]);
@@ -2544,7 +2544,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     attachEventArrayToElement(tmp_el, [
         {
           eventType: "click",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.removeTask",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.removeItem",
           scopeID: itemID
         }
     ]);
@@ -2580,24 +2580,25 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   removeWorkItem = function(el) {
-    var previouslySelectedClientID, previouslySelectedJobID,
-      days_ar = dataRetrieveObject(DAYS_STR),
-      day_ob = days_ar[el.parentNode.parentNode.id],
-      workItem_ob = day_ob[el.id];
+    var workItem_ob, previouslySelectedClientID, previouslySelectedJobID,
+        days_ar = dataRetrieveObject(DAYS_STR),
+        day_ob = days_ar[el.parentNode.parentNode.id];
 
-    if (workItem_ob) {
-      previouslySelectedClientID = workItem_ob[DATAINDICES.clientID];
-      previouslySelectedJobID = workItem_ob[DATAINDICES.jobID];
-      if (previouslySelectedClientID) {
-        updateJobOrClientCount(CLIENTS_STR, previouslySelectedClientID, -1);
+    if (day_ob) {
+      workItem_ob = day_ob[el.id];
+      if (workItem_ob) {
+        previouslySelectedClientID = workItem_ob[DATAINDICES.clientID];
+        previouslySelectedJobID = workItem_ob[DATAINDICES.jobID];
+        if (previouslySelectedClientID) {
+          updateJobOrClientCount(CLIENTS_STR, previouslySelectedClientID, -1);
+        }
+        if (previouslySelectedJobID) {
+          updateJobOrClientCount(JOBS_STR, previouslySelectedJobID, -1);
+        }
       }
-      if (previouslySelectedJobID) {
-        updateJobOrClientCount(JOBS_STR, previouslySelectedJobID, -1);
-      }
+      delete day_ob[el.id];
     }
 
-
-    if (day_ob) { delete day_ob[el.id]; }
     el.parentNode.removeChild(el);
     dataStoreObject(DAYS_STR, days_ar);
   };
@@ -2874,14 +2875,18 @@ uk.co.firmgently.DontDillyDally = (function() {
     return return_ob;
   };
 
-  // addTask is called from the scope of the 'add task' button
-  addTask = function() {
+  // addItem is called from the scope of the 'add task' button
+  addItem = function() {
     drawUIWorkItem(this.parentNode);
   };
 
 
-	removeTask = function() {
-		removeWorkItem(this);
+	removeItem = function() {
+    if (this.parentNode.children.length === 1) {
+      // make sure there's always at least one item for each day (for UI purposes)
+      drawUIWorkItem(this.parentNode);
+    }
+    removeWorkItem(this);
 	};
 
 
@@ -3184,8 +3189,8 @@ uk.co.firmgently.DontDillyDally = (function() {
   return {
     drawTimesheets: drawTimesheets,
     drawJobsAndClients: drawJobsAndClients,
-    addTask: addTask,
-    removeTask: removeTask,
+    addItem: addItem,
+    removeItem: removeItem,
     addJob: addJob,
     removeClientOrJob: removeClientOrJob,
     addClient: addClient,
