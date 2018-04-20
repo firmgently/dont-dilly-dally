@@ -1571,7 +1571,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   DontDillyDally
   Mark Mayes 2018
 
-  FIXME client select dropdown styles broken
+  FIXME client select dropdown styles broken (after loading data file?)
 	TODO	look out for autorepeat getting stuck on dayJump (make sure timer gets cancelled on mouseup etc)
 	FIXME	preference changes not taking effect
   FIXME colour palette can push off side of screen resulting in resize on Android
@@ -1583,6 +1583,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 	TODO	add 'wipe data' buttons with confirmation prompt
 	FIXME	spinners: numbers should pad eg. 00:45h, £10.00
   TODO  all strings should be constants
+  FIXME icons on buttons too small, positioned badly
+  TODO  redesign logo
   TODO  display month/week start correctly
   FIXME press/hold to jump back through months, page reloads with ? in querystring
   TODO  number spinners should fade up quickly with short delay (to avoid flickering on 'remove item' etc)
@@ -1592,9 +1594,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
           time/money
           notes - max length
           client/job names in clients/jobs page
-  FIXME tab nav - position wrong while page is loading (gap)
 	FIXME	if empty or bad time/money data is **stored in JSON**, correct it to zero
-	FIXME	select client/job - day remains highlighted (eg. darker date text)
 	FIXME	£-0.77 must register as negative
   TODO  test everything on touchscreen
   TODO  test everything on narrow (phone) layout
@@ -1612,6 +1612,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   DONE  delete job/client check if any records are referencing them, prompt if so
   DONE  refactor month/week click etc to all use 1 function
   DONE next/prev week/month buttons not working
+	DONE	select client/job - day remains highlighted (eg. darker date text)
+  DONE tab nav - position wrong while page is loading (gap)
 	DONE	add year to timesheet special days eg: "January 2018", "2018 week 4", "totals for January 2018"
 	DONE	add privacy page/statement
 					by default all data is saved in your browser (localStorage)

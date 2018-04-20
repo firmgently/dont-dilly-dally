@@ -140,7 +140,7 @@ body {
 
 aside {
   display: inline-block;
-  background-color: #dad5d5; }
+  background-color: #F2F0F0; }
   aside img {
     height: 8vh;
     margin: 1vh 1vh 0 1vh;
@@ -162,22 +162,10 @@ aside {
     white-space: nowrap;
     display: inline-block; }
     aside nav button.btnNav {
-      padding: 0.15rem;
-      margin: 0.6rem 0.6rem 0 0;
-      width: 10vw;
       overflow: hidden;
       display: block;
-      color: #776644;
-      background-color: #ffeedd;
-      border-color: #9b9999;
-      border-bottom: none;
       text-overflow: ellipsis;
-      white-space: nowrap;
-      background-size: 1rem;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-position: left;
-      cursor: pointer; }
+      white-space: nowrap; }
       aside nav button.btnNav:hover, aside nav button.btnNav:focus {
         color: #978257;
         background-color: #ffd5aa;
@@ -664,25 +652,27 @@ select {
   margin-top: 0.3rem;
   background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Edownload3%3C/title%3E%3Cpath d='M23 14l-8 8-8-8h5v-12h6v12zM15 22h-15v8h30v-8h-15zM28 26h-4v-2h4v2z'%3E%3C/path%3E%3C/svg%3E"); }
 
+nav button.btnNav,
 #miniNavForm button,
 #file-save,
 #file-chooser + label {
   font-size: 0.8rem;
   font-weight: 700;
-  text-align: center;
+  text-align: left;
   color: #776644;
   background-color: #ffeedd;
   display: inline-block;
-  padding: 0.6rem;
+  padding: 0.6rem 0.6rem 0.6rem 1.8rem;
   cursor: pointer; }
 
+nav button.btnNav,
 #file-save,
 #file-chooser + label {
   width: 100%;
   background-size: 1rem;
   background-repeat: no-repeat;
   background-position: center;
-  background-position: left; }
+  background-position: 0.6rem; }
 
 #file-chooser + label {
   background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Eupload3%3C/title%3E%3Cpath d='M15 22h-15v8h30v-8h-15zM28 26h-4v-2h4v2zM7 10l8-8 8 8h-5v10h-6v-10z'%3E%3C/path%3E%3C/svg%3E"); }

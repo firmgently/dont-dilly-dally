@@ -328,7 +328,7 @@ body {
 
 aside {
   display: inline-block; 
-  background-color: $panelBgColor3;
+  background-color: $panelBgColor;
   img { height: 8vh; margin: 1vh 1vh 0 1vh; display: inline-block; }
   h1 {
     width: $sidebar-width;
@@ -344,14 +344,8 @@ aside {
     position: absolute; white-space: nowrap;
     display: inline-block;
     button.btnNav {
-      padding: $tab-padding; margin: $tab-margin $tab-margin 0 0;
-      width: $sidebar-width; overflow: hidden; display: block;
-      color: $button-color; background-color: $button-bgcolor;
-      border-color: $panelBgColorTint; border-bottom: none;
+      overflow: hidden; display: block;
       text-overflow: ellipsis; white-space: nowrap;
-			@include icon-bg-defaults;
-			background-position: left;
-			cursor: pointer;
       &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; outline: 0; }
 			&#jobsClients { background-image: $svgIconJobsClients; }
 			&#timesheets { background-image: $svgIconTimesheets; }
@@ -725,8 +719,6 @@ select {
 
 
 
-
-
 /* Extraneous UI buttons */
 #miniNavForm {
 	position: fixed;
@@ -759,19 +751,22 @@ select {
 	z-index: $zFloat;
 }
 #file-save { margin-top: $smallPadding; background-image: $svgIconDownload; }
+
+nav button.btnNav,
 #miniNavForm button,
 #file-save,
 #file-chooser + label {
-  font-size: $fontSizeSmall; font-weight: 700; text-align: center;
+  font-size: $fontSizeSmall; font-weight: 700; text-align: left;
   color: $button-color; background-color: $button-bgcolor;
   display: inline-block;
-  padding: $mediumPadding;
+  padding: $mediumPadding $mediumPadding $mediumPadding (3 * $mediumPadding);
   cursor: pointer;
 }
+nav button.btnNav,
 #file-save,
 #file-chooser + label {
 	width: 100%;
-	@include icon-bg-defaults; background-position: left;
+	@include icon-bg-defaults(); background-position: $mediumPadding;
 }
 #file-chooser + label { background-image: $svgIconUpload; }
 #miniNavForm button:focus,
@@ -782,6 +777,9 @@ select {
 #file-chooser + label:hover {
   &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; }
 }
+
+
+
 
 /* COLOR PICKER */
 
