@@ -478,7 +478,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
   createHelpItemFromOb = function(ob) {
     var i, el, temp_el, for_el;
-    logMsg(ob);
     el = createElementWithId("div", ob.id);
     document.body.appendChild(el);
     addClassname(el, HELPITEM_CLASSNAME);

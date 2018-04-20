@@ -4,14 +4,12 @@
   DontDillyDally
   Mark Mayes 2018
 
-  TODO  implement 'used' var in client/job data objects, keep count of how many times it's used on current timesheet
   FIXME client select dropdown styles broken
   TODO  workitem remove button shoudnt disappear when firstchild, should remove item then create a new one
         - removeItem should decrement
         - change event should decrement current selection (if it exists) then increment new selection{
   TODO  file load isn't loading data yet
 	TODO	look out for autorepeat getting stuck on dayJump (make sure timer gets cancelled on mouseup etc)
-	TODO	add year to timesheet special days eg: "January 2018", "2018 week 4", "totals for January 2018"
 	FIXME	preference changes not taking effect
   FIXME colour palette can push off side of screen resulting in resize on Android
   TODO  add 'year start date' preference
@@ -19,7 +17,6 @@
 	FIXME	clients/jobs page - color pickers do not need to  be checkboxes
   FIXME timesheet container not getting scroll focus
   TODO  add ARIA attributes (eg. hide up/down spinner buttons)
-  TODO  delete job/client check if any records are referencing them, prompt if so
 	TODO	add 'wipe data' buttons with confirmation prompt
 	FIXME	spinners: numbers should pad eg. 00:45h, £10.00
   TODO  all strings should be constants
@@ -45,14 +42,17 @@
   DONE number spinners inconsistent colours
   DONE  use spritesheet png instead of fonts??
   DONE  use updatefrequency to refresh "days drawn" only on % === 0
+  DONE  delete job/client check if any records are referencing them, prompt if so
   DONE  refactor month/week click etc to all use 1 function
   DONE next/prev week/month buttons not working
+	DONE	add year to timesheet special days eg: "January 2018", "2018 week 4", "totals for January 2018"
 	DONE	add privacy page/statement
 					by default all data is saved in your browser (localStorage)
 					you can wipe your data at any time
 					you can export your data to a file (in JSON format) and import it into another browser or device
 					we don't see any of your personal data
   DONE  remove unnecessary form from clients/job page
+  DONE  implement 'used' var in client/job data objects, keep count of how many times it's used on current timesheet
   DONE	blank object being stored in data object results in missing day in UI
   DONE  add week/month/year calculations
   DONE  after updating client/job, styles are not universally updating
@@ -993,18 +993,23 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 	removeClientOrJob = function() {
-		var data_ob, type_str;
+		var data_ob, type_str, msgItemType, usedCount;
 
     if (this.id.indexOf(CLIENT_STR) !== -1) {
       type_str = CLIENTS_STR;
+      msgItemType = CLIENT_STR;
     } else if (this.id.indexOf(JOB_STR) !== -1) {
       type_str = JOBS_STR;
+      msgItemType = JOB_STR;
     }
       
     data_ob = dataRetrieveObject(type_str);
-		delete data_ob[this.id];
-		this.parentNode.removeChild(this);
-		dataStoreObject(type_str, data_ob);
+    usedCount = data_ob[this.id][CLIENTSORJOBS_USED];
+    if (!usedCount || confirm("This " + msgItemType  + " is used " + usedCount  + " time(s) in the current timesheet, really delete it?")) {
+		  delete data_ob[this.id];
+		  dataStoreObject(type_str, data_ob);
+		  this.parentNode.removeChild(this);
+    }
 	};
 
 
@@ -1115,11 +1120,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   onFormClick = function(event) {
-    //logMsg("onFormClick(" + this + ")");
     var form = event.target;
-    //logMsg("HELLO");
     if (form && form.id) {
-      //logMsg(form.id);
       switch (form.id) {
         case "configForm":
           dataUpdateObject(PREFS_STR, "timespan", form.timespan.value);
@@ -1222,8 +1224,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   // value: 1 or -1 (for increment or decrement)
   updateJobOrClientCount = function(dataType, id, value) {
     var data_ob = dataRetrieveObject(dataType);
-    logMsg("updateJobOrClientCount(): " + id);
-    if (id) {
+    if (id && data_ob[id]) {
       if (!data_ob[id][CLIENTSORJOBS_USED]) { data_ob[id][CLIENTSORJOBS_USED] = 0; }
       data_ob[id][CLIENTSORJOBS_USED] += value;
       dataStoreObject(dataType, data_ob);

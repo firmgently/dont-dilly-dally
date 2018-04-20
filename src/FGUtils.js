@@ -174,8 +174,6 @@ uk.co.firmgently.FGUtils = (function() {
       
     bigint = parseInt(hex, 16);
 
-    logMsg(hex);
-    logMsg(bigint);
     return [
       (bigint >> 16) & 255,
       (bigint >> 8) & 255,
@@ -208,8 +206,6 @@ uk.co.firmgently.FGUtils = (function() {
     var brightness1, brightness2, c1RGB_ar, hexContrasting,
         c2RGB_ar = hexToRGB_ar(hexColor),
         brightness2 = getBrightnessFromRGBAr(c2RGB_ar);
-    logMsg("brightness2: " + brightness2);
-    logMsg("c2RGB_ar: " + c2RGB_ar);
     do {
       hexContrasting = getRandomHexColor();
       c1RGB_ar = hexToRGB_ar(hexContrasting);
