@@ -4,6 +4,10 @@
   DontDillyDally
   Mark Mayes 2018
 
+  TODO  implement 'used' var in client/job data objects, keep count of how many times it's used on current timesheet
+  TODO  workitem remove button shoudnt disappear when firstchild, should remove item then create a new one
+        - removeItem should decrement
+        - change event should decrement current selection (if it exists) then increment new selection{
   TODO  file load isn't loading data yet
 	TODO	look out for autorepeat getting stuck on dayJump (make sure timer gets cancelled on mouseup etc)
 	TODO	add year to timesheet special days eg: "January 2018", "2018 week 4", "totals for January 2018"
@@ -108,7 +112,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   addTask, removeTask, addClient, removeClientOrJob, addJob,
   attachEventArrayToElement, callMethodsFromObOnElement, callMethodFromOb,
   drawTimesheets, drawNextDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
-  getNextID, getNewClient, getNewJob,
+  getNextID, getNewClient, getNewJob, resetJobAndClientCounts, updateJobOrClientCount,
   navClick, todayClick, dayJump, attractAnimateElement,
   dataStoragePossible, initData,
 	dataStoreObject, dataRetrieveObject, dataUpdateObject,
@@ -148,7 +152,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   initData = function() {
-		var item, container, tmp_ob, tmp_id;
+		var item, data_ob, tmp_ob, tmp_id;
     // if no preferences are stored create some defaults
     if (!dataRetrieveObject(PREFS_STR)) {
 			// create default preferences object
@@ -191,13 +195,13 @@ uk.co.firmgently.DontDillyDally = (function() {
       dataStoreObject(DAYS_STR, {});
     } else {
 			// customise client/job styles based on existing data
-			container = dataRetrieveObject(CLIENTS_STR);
-			for (item in container) {
-				createCSSForClientOrJobFromOb(container[item], DATATYPE_CLIENT);
+			data_ob = dataRetrieveObject(CLIENTS_STR);
+			for (item in data_ob) {
+				createCSSForClientOrJobFromOb(data_ob[item], DATATYPE_CLIENT);
 			}
-			container = dataRetrieveObject(JOBS_STR);
-			for (item in container) {
-				createCSSForClientOrJobFromOb(container[item], DATATYPE_JOB);
+			data_ob = dataRetrieveObject(JOBS_STR);
+			for (item in data_ob) {
+				createCSSForClientOrJobFromOb(data_ob[item], DATATYPE_JOB);
 			}
 		}
   };
@@ -239,6 +243,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 	updateDataFromWorkItemEl = function (el) {
 		var days_ar, day_ob, workItem_ar,
+        selectedClientID, selectedJobID, previouslySelectedClientID, previouslySelectedJobID,
 				isMoneyTaskChk_el, unitBigInput_el, unitSmallInput_el, clientSelect_el, jobSelect_el, notesInput_el,
 				pageType = dataRetrieveObject(PREFS_STR).pagetype,
 				day_el = el.parentNode.parentNode,
@@ -250,6 +255,10 @@ uk.co.firmgently.DontDillyDally = (function() {
 		clientSelect_el = el.getElementsByClassName(CLASS_CLIENTSELECT)[0];
 		jobSelect_el = el.getElementsByClassName(CLASS_JOBSELECT)[0];
 		notesInput_el = el.getElementsByClassName(CLASS_NOTESINPUT)[0]; 
+
+    selectedClientID = getJobOrClientIDFromElement(clientSelect_el);
+    selectedJobID = getJobOrClientIDFromElement(jobSelect_el);
+
 		days_ar = dataRetrieveObject(DAYS_STR);
 		day_ob = days_ar[day_str];
 		if (day_ob === undefined) { day_ob = {}; }
@@ -262,8 +271,23 @@ uk.co.firmgently.DontDillyDally = (function() {
 			workItem_ar[DATAINDICES.itemType] = ITEMTYPE_TIME;
       workItem_ar[DATAINDICES.numberValue] = unitBigInput_el.value + SEPARATOR_TIME + unitSmallInput_el.value;
 		}
-		workItem_ar[DATAINDICES.clientID] = getJobOrClientIDFromElement(clientSelect_el);
-		workItem_ar[DATAINDICES.jobID] = getJobOrClientIDFromElement(jobSelect_el);
+  
+    if (day_ob[el.id]) {
+      previouslySelectedClientID = day_ob[el.id][DATAINDICES.clientID];
+      previouslySelectedJobID = day_ob[el.id][DATAINDICES.jobID];
+    }
+    if (previouslySelectedClientID !== selectedClientID) {
+      // FIXME decrement ID isn't being found (as workItem_ar is new and not filled with pre-existing content)
+      updateJobOrClientCount(CLIENTS_STR, previouslySelectedClientID, -1);
+      updateJobOrClientCount(CLIENTS_STR, selectedClientID, 1)
+    }
+    if (previouslySelectedJobID !== selectedJobID) {
+      updateJobOrClientCount(JOBS_STR, previouslySelectedJobID, -1);
+      updateJobOrClientCount(JOBS_STR, selectedJobID, 1);
+    }
+
+		workItem_ar[DATAINDICES.clientID] = selectedClientID;
+		workItem_ar[DATAINDICES.jobID] = selectedJobID;
 		workItem_ar[DATAINDICES.notes] = notesInput_el.value;
 
 		day_ob[el.id] = workItem_ar; // write work item to day
@@ -438,6 +462,13 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     row_el = table_el.appendChild(document.createElement("tr"));
     cell_el = row_el.appendChild(document.createElement("td"));
+    cell_el.innerHTML = HOURSWORKED_STR; 
+    cell_el = row_el.appendChild(document.createElement("td"));
+    cell_el.innerHTML = "00:00"; 
+    addClassname(cell_el, "total-hoursworked");
+
+    row_el = table_el.appendChild(document.createElement("tr"));
+    cell_el = row_el.appendChild(document.createElement("td"));
     cell_el.innerHTML = INCOME_STR; 
     cell_el = row_el.appendChild(document.createElement("td"));
     cell_el.innerHTML = "00:00";
@@ -449,13 +480,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     cell_el = row_el.appendChild(document.createElement("td"));
     cell_el.innerHTML = "00:00"; 
     addClassname(cell_el, "total-spend");
-
-    row_el = table_el.appendChild(document.createElement("tr"));
-    cell_el = row_el.appendChild(document.createElement("td"));
-    cell_el.innerHTML = HOURSWORKED_STR; 
-    cell_el = row_el.appendChild(document.createElement("td"));
-    cell_el.innerHTML = "00:00"; 
-    addClassname(cell_el, "total-hoursworked");
 
     row_el = table_el.appendChild(document.createElement("tr"));
     cell_el = row_el.appendChild(document.createElement("td"));
@@ -611,7 +635,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         addClassname(totals_el, CLASS_TOTALSWEEK);
         tsWorkingFragment.appendChild(totals_el);
         drawTotalsContainer({
-          heading: "week ending " + getFormattedDate(prevDay, DATETYPE_DEFAULT.label) + ", totals",
+          heading: WEEK_ENDING_STR + getFormattedDate(prevDay, DATETYPE_DEFAULT.label),
           parent_el: totals_el,
           endDate: new Date(curDrawnDay.getTime()),
           timeSpan: TIMESPAN_WEEK
@@ -628,7 +652,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       if (curDrawnDay.getMonth() > 0) {
         tsWorkingFragment.appendChild(totals_el);
         drawTotalsContainer({
-          heading: MONTH_NAMES[curDrawnDay.getMonth() - 1] + " " + curDrawnDay.getFullYear() + " totals",
+          heading: MONTH_NAMES[curDrawnDay.getMonth() - 1] + " " + curDrawnDay.getFullYear(),
           parent_el: totals_el,
           endDate: new Date(curDrawnDay.getTime()),
           timeSpan: TIMESPAN_MONTH
@@ -704,6 +728,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     var i, j, weekdayCur,
 				totals_el, weekStartDay = 1; // 0 = Sunday, 1 = Monday etc
     
+    resetJobAndClientCounts();
     tsWorkingFragment = document.createDocumentFragment(); // work in a fragment to improve performance
     curDrawnDay = new Date();
 
@@ -782,6 +807,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 		if (itemData_ob && itemData_ob[DATAINDICES.clientID]
 		&& itemData_ob[DATAINDICES.clientID].length > 0) {
 			changeSelectByOption(tmp_el, itemData_ob[DATAINDICES.clientID]);
+      updateJobOrClientCount(CLIENTS_STR, itemData_ob[DATAINDICES.clientID], 1);
 			manualEvent(tmp_el, "change");
 		}
 		//////////
@@ -801,6 +827,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     ]);
 		if (itemData_ob && itemData_ob[DATAINDICES.jobID] && itemData_ob[DATAINDICES.jobID].length > 0) {
 			changeSelectByOption(tmp_el, itemData_ob[DATAINDICES.jobID]);
+      updateJobOrClientCount(JOBS_STR, itemData_ob[DATAINDICES.jobID], 1);
 			manualEvent(tmp_el, "change");
 		}
 		//////////
@@ -991,14 +1018,28 @@ uk.co.firmgently.DontDillyDally = (function() {
 	};
 
 
-	removeWorkItem = function(item_el) {
-		var days_ar = dataRetrieveObject(DAYS_STR),
-				day_ob = days_ar[item_el.parentNode.parentNode.id];
-		
-		if (day_ob) { delete day_ob[item_el.id]; }
-		item_el.parentNode.removeChild(item_el);
-		dataStoreObject(DAYS_STR, days_ar);
-	};
+  removeWorkItem = function(el) {
+    var previouslySelectedClientID, previouslySelectedJobID,
+      days_ar = dataRetrieveObject(DAYS_STR),
+      day_ob = days_ar[el.parentNode.parentNode.id],
+      workItem_ob = day_ob[el.id];
+
+    if (workItem_ob) {
+      previouslySelectedClientID = workItem_ob[DATAINDICES.clientID];
+      previouslySelectedJobID = workItem_ob[DATAINDICES.jobID];
+      if (previouslySelectedClientID) {
+        updateJobOrClientCount(CLIENTS_STR, previouslySelectedClientID, -1);
+      }
+      if (previouslySelectedJobID) {
+        updateJobOrClientCount(JOBS_STR, previouslySelectedJobID, -1);
+      }
+    }
+
+
+    if (day_ob) { delete day_ob[el.id]; }
+    el.parentNode.removeChild(el);
+    dataStoreObject(DAYS_STR, days_ar);
+  };
 
 
   updateColoursFromPickers = function(event) {
@@ -1028,6 +1069,12 @@ uk.co.firmgently.DontDillyDally = (function() {
   /* ---------------------------------------------------------------------------
 		callbacks/event handlers
 	--------------------------------------------------------------------------- */
+
+
+  /*onSelectFocus = function(event) {
+    this.previousSelection = this.value;
+  };*/
+
 
   onColorChangeConfirm = function(event) {
     updateDataFromClientOrJobEl(this);
@@ -1141,6 +1188,38 @@ uk.co.firmgently.DontDillyDally = (function() {
   /* ---------------------------------------------------------------------------
     housekeeping/calculations
 	--------------------------------------------------------------------------- */
+
+
+  resetJobAndClientCounts = function() {
+    var item, data_ob;
+    
+    data_ob = dataRetrieveObject(CLIENTS_STR);
+    for (item in data_ob) {
+      data_ob[item][CLIENTSORJOBS_USED] = 0;
+    }
+    dataStoreObject(CLIENTS_STR, data_ob);
+
+    data_ob = dataRetrieveObject(JOBS_STR);
+    for (item in data_ob) {
+      data_ob[item][CLIENTSORJOBS_USED] = 0;
+    }
+    dataStoreObject(JOBS_STR, data_ob);
+  };
+
+
+  // dataType: CLIENTS_STR or JOBS_STR
+  // id: client or job id
+  // value: 1 or -1 (for increment or decrement)
+  updateJobOrClientCount = function(dataType, id, value) {
+    var data_ob = dataRetrieveObject(dataType);
+    logMsg("updateJobOrClientCount(): " + id);
+    if (id) {
+      if (!data_ob[id][CLIENTSORJOBS_USED]) { data_ob[id][CLIENTSORJOBS_USED] = 0; }
+      data_ob[id][CLIENTSORJOBS_USED] += value;
+      dataStoreObject(dataType, data_ob);
+    }
+  };
+
 
 	getJobOrClientIDFromElement = function(el) {
 		var i, id, curClass, class_ar;

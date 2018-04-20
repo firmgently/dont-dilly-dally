@@ -502,7 +502,8 @@ body#config aside nav button#config.btnNav {
   #jobsExisting > li.totals-week:hover, #jobsExisting > li.totals-month:hover, #jobsExisting > li.totals-year:hover {
     padding: 0.6rem;
     background-color: white;
-    vertical-align: top; }
+    vertical-align: top;
+    position: relative; }
     #timesheetContainer > li.totals-week h4, #timesheetContainer > li.totals-week table, #timesheetContainer > li.totals-month h4, #timesheetContainer > li.totals-month table, #timesheetContainer > li.totals-year h4, #timesheetContainer > li.totals-year table,
     #timesheetContainer > li.totals-week:hover h4,
     #timesheetContainer > li.totals-week:hover table, #timesheetContainer > li.totals-month:hover h4, #timesheetContainer > li.totals-month:hover table, #timesheetContainer > li.totals-year:hover h4, #timesheetContainer > li.totals-year:hover table, #clientsExisting > li.totals-week h4, #clientsExisting > li.totals-week table, #clientsExisting > li.totals-month h4, #clientsExisting > li.totals-month table, #clientsExisting > li.totals-year h4, #clientsExisting > li.totals-year table,
@@ -510,11 +511,13 @@ body#config aside nav button#config.btnNav {
     #clientsExisting > li.totals-week:hover table, #clientsExisting > li.totals-month:hover h4, #clientsExisting > li.totals-month:hover table, #clientsExisting > li.totals-year:hover h4, #clientsExisting > li.totals-year:hover table, #jobsExisting > li.totals-week h4, #jobsExisting > li.totals-week table, #jobsExisting > li.totals-month h4, #jobsExisting > li.totals-month table, #jobsExisting > li.totals-year h4, #jobsExisting > li.totals-year table,
     #jobsExisting > li.totals-week:hover h4,
     #jobsExisting > li.totals-week:hover table, #jobsExisting > li.totals-month:hover h4, #jobsExisting > li.totals-month:hover table, #jobsExisting > li.totals-year:hover h4, #jobsExisting > li.totals-year:hover table {
-      display: inline-block; }
+      display: inline-block;
+      width: 50%; }
     #timesheetContainer > li.totals-week h4, #timesheetContainer > li.totals-month h4, #timesheetContainer > li.totals-year h4,
     #timesheetContainer > li.totals-week:hover h4, #timesheetContainer > li.totals-month:hover h4, #timesheetContainer > li.totals-year:hover h4, #clientsExisting > li.totals-week h4, #clientsExisting > li.totals-month h4, #clientsExisting > li.totals-year h4,
     #clientsExisting > li.totals-week:hover h4, #clientsExisting > li.totals-month:hover h4, #clientsExisting > li.totals-year:hover h4, #jobsExisting > li.totals-week h4, #jobsExisting > li.totals-month h4, #jobsExisting > li.totals-year h4,
     #jobsExisting > li.totals-week:hover h4, #jobsExisting > li.totals-month:hover h4, #jobsExisting > li.totals-year:hover h4 {
+      color: #979595;
       width: 11.5rem; }
 
 #clientsExisting ul.clients, #clientsExisting ul.jobs, #jobsExisting ul.clients, #jobsExisting ul.jobs {

@@ -620,10 +620,14 @@ body#config aside nav button#config.btnNav {
     padding: $mediumPadding;
     background-color: $panelBgColor4;
     vertical-align: top;
+    position: relative;
     h4, table {
       display: inline-block;
+      width: 50%;
     }
-    h4 { width: $date-width + $extraLargePadding + 2rem; }
+    h4 {
+      color: $panelFgColorDimmed; width: $date-width + $extraLargePadding + 2rem;
+    }
   }
   > li.totals-month, > li.totals-month:hover, {
  //   background-color: $panelBgColor3;

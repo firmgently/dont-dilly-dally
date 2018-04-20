@@ -78,11 +78,11 @@ uk.co.firmgently.DDDConsts = (function() {
     CLASS_TOTALSMONTH: "totals-month",
     CLASS_TOTALSYEAR: "totals-year",
 
-    TURNOVER_STR: "Turnover",
-    PROFIT_STR: "Profit",
-    EXPENDITURE_STR: "Expenditure",
-    INCOME_STR: "Income",
-    HOURSWORKED_STR: "Hours worked",
+    TURNOVER_STR: "earned",
+    PROFIT_STR: "profit",
+    EXPENDITURE_STR: "spent",
+    INCOME_STR: "earned",
+    HOURSWORKED_STR: "hours",
 
     TOTAL_STR: "Total",
     DAY_STR: "day",
@@ -94,6 +94,7 @@ uk.co.firmgently.DDDConsts = (function() {
     PREFS_STR: "prefs",
     CLIENTSTOTAL_STR: "clientsTotal",
     JOBSTOTAL_STR: "jobsTotal",
+    CLIENTSORJOBS_USED: "used",
     CLIENT_SELECT_PLACEHOLDER: "select client",
     JOB_SELECT_PLACEHOLDER: "select job",
     JOBNOTES_PLACEHOLDER: "enter job notes",
@@ -101,6 +102,7 @@ uk.co.firmgently.DDDConsts = (function() {
     SEPARATOR_CASH: ".",
     SEPARATOR_TIME: ":",
     TODAY_STR: "today",
+    WEEK_ENDING_STR: "w/e ",
 
 		LABEL_MONTHPREV: "previous month",
 		LABEL_MONTHNEXT: "next month",
