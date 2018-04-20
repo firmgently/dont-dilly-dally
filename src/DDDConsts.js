@@ -30,7 +30,8 @@ uk.co.firmgently.DDDConsts = (function() {
 
 		AUTOREPEAT_RATE: 500,
     RECALCULATETOTALS_DELAY: 1000,
-    DAYSDRAWN_UPDATE_FREQ: 7, // lower number means more frequent updates on loading indicator
+    DAYSDRAWN_UPDATE_FREQ: 12, // lower number means more frequent updates on loading indicator
+    LOADER_CSSWIDTH_SCALE: 2, // eg. 2 if 'full' width should be 50% (100/2)
 
     PAGETYPE_TIMESHEETS: "timesheets",
     PAGETYPE_CONFIG: "preferences",

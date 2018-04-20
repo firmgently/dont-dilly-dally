@@ -397,6 +397,13 @@ body#config aside nav button#config.btnNav {
   font-weight: bold; 
   text-transform: lowercase;
   background-color: $panelBgColor2; text-align: center;
+  span, em {
+    position: absolute; display: inline-block;
+    width: 50%; height: 3rem;
+    left: 25%; top: 10%;
+  }
+  span { background-color: $ddd-sanddark; }
+  em { z-index: $zFloat; background-color: $ddd-orange; background-clip: content-box; }
 }
 
 // Timesheets

@@ -5,7 +5,6 @@
   Mark Mayes 2018
 
   FIXME client select dropdown styles broken
-  DONE  file load isn't loading data yet
 	TODO	look out for autorepeat getting stuck on dayJump (make sure timer gets cancelled on mouseup etc)
 	FIXME	preference changes not taking effect
   FIXME colour palette can push off side of screen resulting in resize on Android
@@ -32,6 +31,7 @@
 	FIXME	£-0.77 must register as negative
   TODO  test everything on touchscreen
   TODO  test everything on narrow (phone) layout
+  DONE  file load isn't loading data yet
   DONE  workitem remove button shoudnt disappear when firstchild, should remove item then create a new one
         - removeItem should decrement
         - change event should decrement current selection (if it exists) then increment new selection{
@@ -598,7 +598,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 				dayWorkItems, itemID,
 				prevDay = new Date(),
 				weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
-				allWorkItems = dataRetrieveObject(DAYS_STR);
+				allWorkItems = dataRetrieveObject(DAYS_STR),
+        percentDrawn = 100 * (tsDaysToDraw / tsDaysToDrawTotal),
+        scaledPercent = percentDrawn / LOADER_CSSWIDTH_SCALE;
 
 		prevDay.setTime(curDrawnDay.getTime());
 		prevDay.setDate(curDrawnDay.getDate() - 1);
@@ -677,10 +679,11 @@ uk.co.firmgently.DontDillyDally = (function() {
         drawUIWorkItem(dayDataContainer_el, itemID, dayWorkItems[itemID]);
       }
     }
+        
+    loadingIndicator_el.getElementsByTagName("EM")[0].style.paddingRight = scaledPercent + "%";
 
     if (tsDaysToDraw > 1) {
       if (tsDaysToDraw % DAYSDRAWN_UPDATE_FREQ === 0) {
-        loadingIndicator_el.innerHTML = "creating day " + (tsDaysToDrawTotal - tsDaysToDraw) + "/" + tsDaysToDrawTotal;
 				timesheetDrawDayTimer = setTimeout(drawNextDay, 0);
 				// re-calling the function via setTimeout means it will happen *after* the 
 				// flow of execution leaves this context - so the following increment/decrement happen

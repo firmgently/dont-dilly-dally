@@ -247,6 +247,19 @@ body#config aside nav button#config.btnNav {
   text-transform: lowercase;
   background-color: #cec7c7;
   text-align: center; }
+  #loading-indicator span, #loading-indicator em {
+    position: absolute;
+    display: inline-block;
+    width: 50%;
+    height: 3rem;
+    left: 25%;
+    top: 10%; }
+  #loading-indicator span {
+    background-color: #776644; }
+  #loading-indicator em {
+    z-index: 2;
+    background-color: #cc6644;
+    background-clip: content-box; }
 
 #timesheetContainer, #clientsExisting, #jobsExisting {
   z-index: 1;
