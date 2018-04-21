@@ -451,10 +451,28 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
 
   onColorPickerClick = function(event) {
+    var xPos = event.clientX,
+        yPos = event.clientY;
+    
     colorPickerSelectedCurrent = event.currentTarget;
     colorPickerCanvas.style.display = "inline-block";
-    colorPickerCanvas.style.left = event.clientX + "px";
-    colorPickerCanvas.style.top = event.clientY + "px";
+    
+    if (xPos + colorPickerCanvas.offsetWidth > window.innerWidth) {
+      xPos -= colorPickerCanvas.offsetWidth;
+    }
+    if (xPos < 0) {
+      xPos += colorPickerCanvas.offsetWidth;
+    }
+    
+    if (yPos + colorPickerCanvas.offsetHeight > window.innerHeight) {
+      yPos -= colorPickerCanvas.offsetHeight;
+    }
+    if (yPos < 0) {
+      yPos += colorPickerCanvas.offsetHeight;
+    }
+
+    colorPickerCanvas.style.left = xPos + "px";
+    colorPickerCanvas.style.top = yPos + "px";
   };
 
 
@@ -479,6 +497,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   createHelpItemFromOb = function(ob) {
     var i, el, temp_el, for_el;
     el = createElementWithId("div", ob.id);
+    
     document.body.appendChild(el);
     addClassname(el, HELPITEM_CLASSNAME);
 

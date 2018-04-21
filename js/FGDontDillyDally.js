@@ -33,11 +33,11 @@ uk.co.firmgently.DDDConsts = (function() {
     DAYSDRAWN_UPDATE_FREQ: 12, // lower number means more frequent updates on loading indicator
     LOADER_CSSWIDTH_SCALE: 2, // eg. 2 if 'full' width should be 50% (100/2)
 
-    PAGETYPE_TIMESHEETS: "timesheets",
+    PAGETYPE_TIMESHEETS: "timesheet",
     PAGETYPE_CONFIG: "preferences",
     PAGETYPE_JOBSANDCLIENTS: "jobs-and-clients",
     PAGETYPE_PRIVACY: "privacy",
-    BODYID_TIMESHEETS: "timesheets",
+    BODYID_TIMESHEETS: "timesheet",
     BODYID_CONFIG: "config",
     BODYID_JOBSANDCLIENTS: "jobsClients",
     BODYID_PRIVACY: "privacy",
@@ -153,11 +153,11 @@ uk.co.firmgently.DDDConsts = (function() {
 
     PAGEDATA_JOBSANDCLIENTS: {
       pageTitle: "Jobs and Clients",
-      intro: "Add, delete or edit jobs and clients. Click the squares to edit colours."
+      intro: "Add jobs or clients with [+], remove with [x]. | Tap names to edit them. | Tap squares to edit colours."
     },
     PAGEDATA_TIMESHEETS: {
-      pageTitle: "Timesheets",
-      intro: "Keep track of where you spend your time. Also record payments in and expenses paid out."
+      pageTitle: "Timesheet",
+      intro: "Add items with [+], remove with [x]. | An item is about either time or money, tap [-o] to swap."
     },
     PAGEDATA_CONFIG: {
       pageTitle: "Preferences",
@@ -314,33 +314,13 @@ uk.co.firmgently.DDDConsts = (function() {
     {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
-      id: CONST.BODYID_PRIVACY,
-      label: "Privacy",
-      //methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      //args: [CONST.PAGETYPE_PRIVACY],
-      //scopeID: "main",
+      id: CONST.BODYID_TIMESHEETS,
+      label: "Timesheet",
       event_ar: [
         {
           eventType: "click",
           methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-          args: [CONST.PAGETYPE_PRIVACY],
-          scopeID: "main"
-        }
-      ],
-      parent: "nav-main"
-    }, {
-      type: CONST.GUITYPE_BTN,
-      class: CONST.CLASS_BTNNAV,
-      id: CONST.BODYID_CONFIG,
-      label: "Preferences",
-      //methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      //args: [CONST.PAGETYPE_CONFIG],
-      //scopeID: "main",
-      event_ar: [
-        {
-          eventType: "click",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-          args: [CONST.PAGETYPE_CONFIG],
+          args: [CONST.PAGETYPE_TIMESHEETS],
           scopeID: "main"
         }
       ],
@@ -350,9 +330,6 @@ uk.co.firmgently.DDDConsts = (function() {
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_JOBSANDCLIENTS,
       label: "Jobs & Clients",
-      //methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      //args: [CONST.PAGETYPE_JOBSANDCLIENTS],
-      //scopeID: "main",
       event_ar: [
         {
           eventType: "click",
@@ -365,16 +342,27 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
-      id: CONST.BODYID_TIMESHEETS,
-      label: "Timesheets",
-      //methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      //args: [CONST.PAGETYPE_TIMESHEETS],
-      //scopeID: "main",
+      id: CONST.BODYID_CONFIG,
+      label: "Preferences",
       event_ar: [
         {
           eventType: "click",
           methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-          args: [CONST.PAGETYPE_TIMESHEETS],
+          args: [CONST.PAGETYPE_CONFIG],
+          scopeID: "main"
+        }
+      ],
+      parent: "nav-main"
+    }, {
+      type: CONST.GUITYPE_BTN,
+      class: CONST.CLASS_BTNNAV,
+      id: CONST.BODYID_PRIVACY,
+      label: "Privacy",
+      event_ar: [
+        {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+          args: [CONST.PAGETYPE_PRIVACY],
           scopeID: "main"
         }
       ],
@@ -1494,10 +1482,28 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
 
   onColorPickerClick = function(event) {
+    var xPos = event.clientX,
+        yPos = event.clientY;
+    
     colorPickerSelectedCurrent = event.currentTarget;
     colorPickerCanvas.style.display = "inline-block";
-    colorPickerCanvas.style.left = event.clientX + "px";
-    colorPickerCanvas.style.top = event.clientY + "px";
+    
+    if (xPos + colorPickerCanvas.offsetWidth > window.innerWidth) {
+      xPos -= colorPickerCanvas.offsetWidth;
+    }
+    if (xPos < 0) {
+      xPos += colorPickerCanvas.offsetWidth;
+    }
+    
+    if (yPos + colorPickerCanvas.offsetHeight > window.innerHeight) {
+      yPos -= colorPickerCanvas.offsetHeight;
+    }
+    if (yPos < 0) {
+      yPos += colorPickerCanvas.offsetHeight;
+    }
+
+    colorPickerCanvas.style.left = xPos + "px";
+    colorPickerCanvas.style.top = yPos + "px";
   };
 
 
@@ -1522,6 +1528,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   createHelpItemFromOb = function(ob) {
     var i, el, temp_el, for_el;
     el = createElementWithId("div", ob.id);
+    
     document.body.appendChild(el);
     addClassname(el, HELPITEM_CLASSNAME);
 
@@ -1571,7 +1578,14 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   DontDillyDally
   Mark Mayes 2018
 
-  FIXME client select dropdown styles broken (after loading data file?)
+  TODO  horizontal layout of workitem, + X buttons, wrap for portrait
+  TODO  clicking anywhere off colorpicker should close it without changing colours (currently working on transparent pixels of png, needs to be the same for all the rest of the screen
+  TODO  visual feedback when saving (even though it's happening all the time)...appears on change, fades out after 2 secs
+  TODO  jobs/clients
+        - boxes fill bg
+        - add titles to boxes
+  TODO  pageIntro from Consts needs to be able to define more complex data (eg. ul, li, icons)
+  FIXME client select dropdown styles broken (CSS not being written after loading data file?)
 	TODO	look out for autorepeat getting stuck on dayJump (make sure timer gets cancelled on mouseup etc)
 	FIXME	preference changes not taking effect
   FIXME colour palette can push off side of screen resulting in resize on Android
@@ -1585,6 +1599,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   TODO  all strings should be constants
   FIXME icons on buttons too small, positioned badly
   TODO  redesign logo
+  FIXME when first day of timesheet is first of month, don't show previous month totals
   TODO  display month/week start correctly
   FIXME press/hold to jump back through months, page reloads with ? in querystring
   TODO  number spinners should fade up quickly with short delay (to avoid flickering on 'remove item' etc)
@@ -1598,6 +1613,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 	FIXME	£-0.77 must register as negative
   TODO  test everything on touchscreen
   TODO  test everything on narrow (phone) layout
+  TODO  after loading file current page must update be it timesheets, J&Cs or preferences
+  DONE dots in loaderbar
+  DONE  leave gap between months on timesheet
   DONE  file load isn't loading data yet
   DONE  workitem remove button shoudnt disappear when firstchild, should remove item then create a new one
         - removeItem should decrement
@@ -2185,18 +2203,19 @@ uk.co.firmgently.DontDillyDally = (function() {
       significance_str += "TODAY";
     }
     if (curDrawnDay.getDay() === weekStartDay) {
+    //if (curDrawnDay.getDay() === weekStartDay && curDrawnDay.getWeekNumber() > 1) {
       rowClassname += "week-start ";
       significance_str += "week " + curDrawnDay.getWeekNumber();
       // if this is week 1 and month is December, must be week 1 of next year
       if (curDrawnDay.getWeekNumber() === 1 && curDrawnDay.getMonth() === 11) {
         significance_str += " (" + (curDrawnDay.getFullYear() + 1) + ")";
       }
-      if (curDrawnDay.getWeekNumber() > 1) {
+      if (tsDaysToDraw !== tsDaysToDrawTotal) {
         totals_el = document.createElement("li");
         addClassname(totals_el, CLASS_TOTALSWEEK);
         tsWorkingFragment.appendChild(totals_el);
         drawTotalsContainer({
-          heading: WEEK_ENDING_STR + getFormattedDate(prevDay, DATETYPE_DEFAULT.label),
+          heading: "week " + curDrawnDay.getWeekNumber() + " totals",
           parent_el: totals_el,
           endDate: new Date(curDrawnDay.getTime()),
           timeSpan: TIMESPAN_WEEK
@@ -2204,13 +2223,14 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
     }
     if (curDrawnDay.getDate() === 1) {
+    //if (curDrawnDay.getDate() === 1 && curDrawnDay.getMonth() > 0) {
       rowClassname += "month-start ";
       monthHeader_el = document.createElement("h4");
       monthHeader_el.innerHTML = MONTH_NAMES[curDrawnDay.getMonth()] + " " + curDrawnDay.getFullYear();
       day_el.appendChild(monthHeader_el);
-      totals_el = document.createElement("li");
-      addClassname(totals_el, CLASS_TOTALSMONTH);
-      if (curDrawnDay.getMonth() > 0) {
+      if (tsDaysToDraw !== tsDaysToDrawTotal) {
+        totals_el = document.createElement("li");
+        addClassname(totals_el, CLASS_TOTALSMONTH);
         tsWorkingFragment.appendChild(totals_el);
         drawTotalsContainer({
           heading: MONTH_NAMES[curDrawnDay.getMonth() - 1] + " " + curDrawnDay.getFullYear(),
@@ -2270,7 +2290,8 @@ uk.co.firmgently.DontDillyDally = (function() {
       totals_el = document.createElement("li");
       addClassname(totals_el, CLASS_TOTALSYEAR);
       drawTotalsContainer({
-        heading: (curDrawnDay.getFullYear() - 1) + " totals",
+        heading: "timesheet totals",
+        //heading: (curDrawnDay.getFullYear() - 1) + " totals",
         parent_el: totals_el,
         endDate: new Date(curDrawnDay.getTime()),
         timeSpan: TIMESPAN_YEAR

@@ -4,7 +4,14 @@
   DontDillyDally
   Mark Mayes 2018
 
-  FIXME client select dropdown styles broken (after loading data file?)
+  TODO  horizontal layout of workitem, + X buttons, wrap for portrait
+  TODO  clicking anywhere off colorpicker should close it without changing colours (currently working on transparent pixels of png, needs to be the same for all the rest of the screen
+  TODO  visual feedback when saving (even though it's happening all the time)...appears on change, fades out after 2 secs
+  TODO  jobs/clients
+        - boxes fill bg
+        - add titles to boxes
+  TODO  pageIntro from Consts needs to be able to define more complex data (eg. ul, li, icons)
+  FIXME client select dropdown styles broken (CSS not being written after loading data file?)
 	TODO	look out for autorepeat getting stuck on dayJump (make sure timer gets cancelled on mouseup etc)
 	FIXME	preference changes not taking effect
   FIXME colour palette can push off side of screen resulting in resize on Android
@@ -18,6 +25,7 @@
   TODO  all strings should be constants
   FIXME icons on buttons too small, positioned badly
   TODO  redesign logo
+  FIXME when first day of timesheet is first of month, don't show previous month totals
   TODO  display month/week start correctly
   FIXME press/hold to jump back through months, page reloads with ? in querystring
   TODO  number spinners should fade up quickly with short delay (to avoid flickering on 'remove item' etc)
@@ -31,6 +39,9 @@
 	FIXME	£-0.77 must register as negative
   TODO  test everything on touchscreen
   TODO  test everything on narrow (phone) layout
+  TODO  after loading file current page must update be it timesheets, J&Cs or preferences
+  DONE dots in loaderbar
+  DONE  leave gap between months on timesheet
   DONE  file load isn't loading data yet
   DONE  workitem remove button shoudnt disappear when firstchild, should remove item then create a new one
         - removeItem should decrement
@@ -618,18 +629,19 @@ uk.co.firmgently.DontDillyDally = (function() {
       significance_str += "TODAY";
     }
     if (curDrawnDay.getDay() === weekStartDay) {
+    //if (curDrawnDay.getDay() === weekStartDay && curDrawnDay.getWeekNumber() > 1) {
       rowClassname += "week-start ";
       significance_str += "week " + curDrawnDay.getWeekNumber();
       // if this is week 1 and month is December, must be week 1 of next year
       if (curDrawnDay.getWeekNumber() === 1 && curDrawnDay.getMonth() === 11) {
         significance_str += " (" + (curDrawnDay.getFullYear() + 1) + ")";
       }
-      if (curDrawnDay.getWeekNumber() > 1) {
+      if (tsDaysToDraw !== tsDaysToDrawTotal) {
         totals_el = document.createElement("li");
         addClassname(totals_el, CLASS_TOTALSWEEK);
         tsWorkingFragment.appendChild(totals_el);
         drawTotalsContainer({
-          heading: WEEK_ENDING_STR + getFormattedDate(prevDay, DATETYPE_DEFAULT.label),
+          heading: "week " + curDrawnDay.getWeekNumber() + " totals",
           parent_el: totals_el,
           endDate: new Date(curDrawnDay.getTime()),
           timeSpan: TIMESPAN_WEEK
@@ -637,13 +649,14 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
     }
     if (curDrawnDay.getDate() === 1) {
+    //if (curDrawnDay.getDate() === 1 && curDrawnDay.getMonth() > 0) {
       rowClassname += "month-start ";
       monthHeader_el = document.createElement("h4");
       monthHeader_el.innerHTML = MONTH_NAMES[curDrawnDay.getMonth()] + " " + curDrawnDay.getFullYear();
       day_el.appendChild(monthHeader_el);
-      totals_el = document.createElement("li");
-      addClassname(totals_el, CLASS_TOTALSMONTH);
-      if (curDrawnDay.getMonth() > 0) {
+      if (tsDaysToDraw !== tsDaysToDrawTotal) {
+        totals_el = document.createElement("li");
+        addClassname(totals_el, CLASS_TOTALSMONTH);
         tsWorkingFragment.appendChild(totals_el);
         drawTotalsContainer({
           heading: MONTH_NAMES[curDrawnDay.getMonth() - 1] + " " + curDrawnDay.getFullYear(),
@@ -703,7 +716,8 @@ uk.co.firmgently.DontDillyDally = (function() {
       totals_el = document.createElement("li");
       addClassname(totals_el, CLASS_TOTALSYEAR);
       drawTotalsContainer({
-        heading: (curDrawnDay.getFullYear() - 1) + " totals",
+        heading: "timesheet totals",
+        //heading: (curDrawnDay.getFullYear() - 1) + " totals",
         parent_el: totals_el,
         endDate: new Date(curDrawnDay.getTime()),
         timeSpan: TIMESPAN_YEAR

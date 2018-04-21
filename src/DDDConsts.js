@@ -33,11 +33,11 @@ uk.co.firmgently.DDDConsts = (function() {
     DAYSDRAWN_UPDATE_FREQ: 12, // lower number means more frequent updates on loading indicator
     LOADER_CSSWIDTH_SCALE: 2, // eg. 2 if 'full' width should be 50% (100/2)
 
-    PAGETYPE_TIMESHEETS: "timesheets",
+    PAGETYPE_TIMESHEETS: "timesheet",
     PAGETYPE_CONFIG: "preferences",
     PAGETYPE_JOBSANDCLIENTS: "jobs-and-clients",
     PAGETYPE_PRIVACY: "privacy",
-    BODYID_TIMESHEETS: "timesheets",
+    BODYID_TIMESHEETS: "timesheet",
     BODYID_CONFIG: "config",
     BODYID_JOBSANDCLIENTS: "jobsClients",
     BODYID_PRIVACY: "privacy",
@@ -153,11 +153,11 @@ uk.co.firmgently.DDDConsts = (function() {
 
     PAGEDATA_JOBSANDCLIENTS: {
       pageTitle: "Jobs and Clients",
-      intro: "Add, delete or edit jobs and clients. Click the squares to edit colours."
+      intro: "Add jobs or clients with [+], remove with [x]. | Tap names to edit them. | Tap squares to edit colours."
     },
     PAGEDATA_TIMESHEETS: {
-      pageTitle: "Timesheets",
-      intro: "Keep track of where you spend your time. Also record payments in and expenses paid out."
+      pageTitle: "Timesheet",
+      intro: "Add items with [+], remove with [x]. | An item is about either time or money, tap [-o] to swap."
     },
     PAGEDATA_CONFIG: {
       pageTitle: "Preferences",
@@ -314,33 +314,13 @@ uk.co.firmgently.DDDConsts = (function() {
     {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
-      id: CONST.BODYID_PRIVACY,
-      label: "Privacy",
-      //methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      //args: [CONST.PAGETYPE_PRIVACY],
-      //scopeID: "main",
+      id: CONST.BODYID_TIMESHEETS,
+      label: "Timesheet",
       event_ar: [
         {
           eventType: "click",
           methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-          args: [CONST.PAGETYPE_PRIVACY],
-          scopeID: "main"
-        }
-      ],
-      parent: "nav-main"
-    }, {
-      type: CONST.GUITYPE_BTN,
-      class: CONST.CLASS_BTNNAV,
-      id: CONST.BODYID_CONFIG,
-      label: "Preferences",
-      //methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      //args: [CONST.PAGETYPE_CONFIG],
-      //scopeID: "main",
-      event_ar: [
-        {
-          eventType: "click",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-          args: [CONST.PAGETYPE_CONFIG],
+          args: [CONST.PAGETYPE_TIMESHEETS],
           scopeID: "main"
         }
       ],
@@ -350,9 +330,6 @@ uk.co.firmgently.DDDConsts = (function() {
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_JOBSANDCLIENTS,
       label: "Jobs & Clients",
-      //methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      //args: [CONST.PAGETYPE_JOBSANDCLIENTS],
-      //scopeID: "main",
       event_ar: [
         {
           eventType: "click",
@@ -365,16 +342,27 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
-      id: CONST.BODYID_TIMESHEETS,
-      label: "Timesheets",
-      //methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      //args: [CONST.PAGETYPE_TIMESHEETS],
-      //scopeID: "main",
+      id: CONST.BODYID_CONFIG,
+      label: "Preferences",
       event_ar: [
         {
           eventType: "click",
           methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-          args: [CONST.PAGETYPE_TIMESHEETS],
+          args: [CONST.PAGETYPE_CONFIG],
+          scopeID: "main"
+        }
+      ],
+      parent: "nav-main"
+    }, {
+      type: CONST.GUITYPE_BTN,
+      class: CONST.CLASS_BTNNAV,
+      id: CONST.BODYID_PRIVACY,
+      label: "Privacy",
+      event_ar: [
+        {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+          args: [CONST.PAGETYPE_PRIVACY],
           scopeID: "main"
         }
       ],
