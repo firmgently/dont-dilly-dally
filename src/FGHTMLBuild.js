@@ -341,6 +341,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 		}
 
     addClassname(UL_el, CLASS_ROW);
+    if (ob.class) { addClassname(UL_el, ob.class); }
 
 		if (ob.ar) {
 	    for (i = 0; i < ob.ar.length; i++) {
@@ -370,6 +371,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
         break;
       case GUITYPE_SECTION:
         elType = "section";
+        break;
+      case GUITYPE_HEADING:
+        elType = "h" + ob.heirarchy;
         break;
       default:
         elType = "div";

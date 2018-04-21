@@ -51,6 +51,7 @@ uk.co.firmgently.DDDConsts = (function() {
     GUITYPE_COL: "GUITypeCol",
     GUITYPE_ROW: "GUITypeRow",
     GUITYPE_BTN: "GUITypeBtn",
+    GUITYPE_HEADING: "GUITypeHeading",
     GUITYPE_COLORPICKER: "GUITypeColorPicker",
     GUITYPE_RADIOBTN: "GUITypeRadioBtn",
     GUITYPE_TEXTINPUT: "GUITypeTextInput",
@@ -61,6 +62,7 @@ uk.co.firmgently.DDDConsts = (function() {
     GUITYPE_UL: "GUITypeUL",
     GUITYPE_HELP: "GUITypeHelp",
 
+    CLASS_SHEET: "sheet",
     CLASS_BTNNAV: "btnNav",
     CLASS_BTNMININAV: "btnMiniNav",
     CLASS_FORMMAIN: "formMain",
@@ -295,13 +297,23 @@ uk.co.firmgently.DDDConsts = (function() {
     {
       type: CONST.GUITYPE_COL,
       id: "clientsExisting",
-      class: CONST.CLASS_COL,
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
       parent: "main",
     }, {
       type: CONST.GUITYPE_COL,
       id: "jobsExisting",
-      class: CONST.CLASS_COL,
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
       parent: "main",
+    }, {
+      type: CONST.GUITYPE_HEADING,
+      heirarchy: 4,
+      text: CONST.CLIENTS_STR,
+      parent: "clientsExisting"
+    }, {
+      type: CONST.GUITYPE_HEADING,
+      heirarchy: 4,
+      text: CONST.JOBS_STR,
+      parent: "jobsExisting"
     }, {
       type: CONST.GUITYPE_METHODCALL,
       methodPathStr: "uk.co.firmgently.DontDillyDally.drawJobsAndClients",
@@ -469,6 +481,7 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: CONST.GUITYPE_UL,
       id: CONST.EL_ID_TIMESHEETCONTAINER,
+      class: CONST.CLASS_SHEET,
       parent: "main"
     }, {
       type: CONST.GUITYPE_METHODCALL,
@@ -500,12 +513,12 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: CONST.GUITYPE_COL,
       id: "configCol1",
-      class: CONST.CLASS_COL,
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
       parent: "configForm"
     }, {
       type: CONST.GUITYPE_COL,
       id: "configCol2",
-      class: CONST.CLASS_COL,
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
       parent: "configForm"
     }, {
       type: CONST.GUITYPE_RADIOBTN,

@@ -51,6 +51,7 @@ uk.co.firmgently.DDDConsts = (function() {
     GUITYPE_COL: "GUITypeCol",
     GUITYPE_ROW: "GUITypeRow",
     GUITYPE_BTN: "GUITypeBtn",
+    GUITYPE_HEADING: "GUITypeHeading",
     GUITYPE_COLORPICKER: "GUITypeColorPicker",
     GUITYPE_RADIOBTN: "GUITypeRadioBtn",
     GUITYPE_TEXTINPUT: "GUITypeTextInput",
@@ -61,6 +62,7 @@ uk.co.firmgently.DDDConsts = (function() {
     GUITYPE_UL: "GUITypeUL",
     GUITYPE_HELP: "GUITypeHelp",
 
+    CLASS_SHEET: "sheet",
     CLASS_BTNNAV: "btnNav",
     CLASS_BTNMININAV: "btnMiniNav",
     CLASS_FORMMAIN: "formMain",
@@ -295,13 +297,23 @@ uk.co.firmgently.DDDConsts = (function() {
     {
       type: CONST.GUITYPE_COL,
       id: "clientsExisting",
-      class: CONST.CLASS_COL,
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
       parent: "main",
     }, {
       type: CONST.GUITYPE_COL,
       id: "jobsExisting",
-      class: CONST.CLASS_COL,
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
       parent: "main",
+    }, {
+      type: CONST.GUITYPE_HEADING,
+      heirarchy: 4,
+      text: CONST.CLIENTS_STR,
+      parent: "clientsExisting"
+    }, {
+      type: CONST.GUITYPE_HEADING,
+      heirarchy: 4,
+      text: CONST.JOBS_STR,
+      parent: "jobsExisting"
     }, {
       type: CONST.GUITYPE_METHODCALL,
       methodPathStr: "uk.co.firmgently.DontDillyDally.drawJobsAndClients",
@@ -469,6 +481,7 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: CONST.GUITYPE_UL,
       id: CONST.EL_ID_TIMESHEETCONTAINER,
+      class: CONST.CLASS_SHEET,
       parent: "main"
     }, {
       type: CONST.GUITYPE_METHODCALL,
@@ -500,12 +513,12 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: CONST.GUITYPE_COL,
       id: "configCol1",
-      class: CONST.CLASS_COL,
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
       parent: "configForm"
     }, {
       type: CONST.GUITYPE_COL,
       id: "configCol2",
-      class: CONST.CLASS_COL,
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
       parent: "configForm"
     }, {
       type: CONST.GUITYPE_RADIOBTN,
@@ -1372,6 +1385,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 		}
 
     addClassname(UL_el, CLASS_ROW);
+    if (ob.class) { addClassname(UL_el, ob.class); }
 
 		if (ob.ar) {
 	    for (i = 0; i < ob.ar.length; i++) {
@@ -1401,6 +1415,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
         break;
       case GUITYPE_SECTION:
         elType = "section";
+        break;
+      case GUITYPE_HEADING:
+        elType = "h" + ob.heirarchy;
         break;
       default:
         elType = "div";
@@ -1614,6 +1631,16 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   TODO  test everything on touchscreen
   TODO  test everything on narrow (phone) layout
   TODO  after loading file current page must update be it timesheets, J&Cs or preferences
+  TODO  portrait CSS
+        - workItem bottom margin increase
+        - notes input move left margin to be right margin on unitSmall
+  TODO  remove button should be closer to item it is removing
+  TODO  notes input field even more faded when its not focused and has no data
+  TODO  remove old dynamic classes (jobs/clients) 
+  TODO  feedback:
+        - [on startup] data and settings restored from previous session (localStorage)
+        - [first usage] default data and settings created
+        - [on load] data and settings loaded from $filename
   DONE dots in loaderbar
   DONE  leave gap between months on timesheet
   DONE  file load isn't loading data yet
@@ -1999,7 +2026,8 @@ uk.co.firmgently.DontDillyDally = (function() {
         case GUITYPE_PARA: // intentional rollthrough
         case GUITYPE_SECTION: // intentional rollthrough
         case GUITYPE_COL: // intentional rollthrough
-        case GUITYPE_ROW:
+        case GUITYPE_ROW: // intentional rollthrough
+        case GUITYPE_HEADING:
           tmp_el = createBasicElementFromOb(ob);
           break;
         case GUITYPE_COLORPICKER:
