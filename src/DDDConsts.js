@@ -77,7 +77,8 @@ uk.co.firmgently.DDDConsts = (function() {
     CLASS_NOTESINPUT: "notes",
     CLASS_NEGATIVE: "negative",
     CLASS_HIDDEN: "hidden",
-		CLASS_ATTRACT: "attract",
+		CLASS_ANIM_ATTRACT: "attract",
+    CLASS_ANIM_WORKING: "working",
     CLASS_TOTALSWEEK: "totals-week",
     CLASS_TOTALSMONTH: "totals-month",
     CLASS_TOTALSYEAR: "totals-year",
@@ -509,7 +510,7 @@ uk.co.firmgently.DDDConsts = (function() {
       parent: "main"
     }, {
       type: CONST.GUITYPE_METHODCALL,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.drawTimesheets",
+      methodPathStr: "uk.co.firmgently.DontDillyDally.drawTimesheet",
       scopeID: "main"
     }
   ];
@@ -540,11 +541,6 @@ uk.co.firmgently.DDDConsts = (function() {
       class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
       parent: "configForm"
     }, {
-      type: CONST.GUITYPE_COL,
-      id: "configCol2",
-      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
-      parent: "configForm"
-    }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "dateFormat",
       label: "How dates look:",
@@ -556,10 +552,15 @@ uk.co.firmgently.DDDConsts = (function() {
       },
       disabled: true
     }, {
+      type: CONST.GUITYPE_COL,
+      id: "configCol2",
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
+      parent: "configForm"
+    }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "timespan",
       label: "The timesheet shows:",
-      parent: "configCol1",
+      parent: "configCol2",
       options: {
         timespanWeek: "A week",
         timespanMonth: "A month",
@@ -567,10 +568,15 @@ uk.co.firmgently.DDDConsts = (function() {
       },
       disabled: true
     }, {
+      type: CONST.GUITYPE_COL,
+      id: "configCol3",
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
+      parent: "configForm"
+    }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "totalsToShow",
       label: "When calculating totals:",
-      parent: "configCol2",
+      parent: "configCol3",
       options: {
         showTotalsWeek: "Show weekly totals",
         showTotalsMonth: "Show monthly totals",
@@ -578,10 +584,15 @@ uk.co.firmgently.DDDConsts = (function() {
       },
       disabled: true
     }, {
+      type: CONST.GUITYPE_COL,
+      id: "configCol4",
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
+      parent: "configForm"
+    }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "minuteIncrements",
       label: "Smallest time that can be entered is:",
-      parent: "configCol2",
+      parent: "configCol4",
       options: {
         minuteIncrement1: "1 minute",
         minuteIncrement15: "15 minutes",

@@ -5,31 +5,17 @@
   Mark Mayes 2018
 
   TODO  horizontal layout of workitem, + X buttons, wrap for portrait
-  TODO  clicking anywhere off colorpicker should close it without changing colours (currently working on transparent pixels of png, needs to be the same for all the rest of the screen
-  TODO  visual feedback when saving (even though it's happening all the time)...appears on change, fades out after 2 secs
-  TODO  jobs/clients
-        - boxes fill bg
-        - add titles to boxes
   TODO  pageIntro from Consts needs to be able to define more complex data (eg. ul, li, icons)
-  FIXME client select dropdown styles broken (CSS not being written after loading data file?)
 	TODO	look out for autorepeat getting stuck on dayJump (make sure timer gets cancelled on mouseup etc)
-	FIXME	preference changes not taking effect
-  FIXME colour palette can push off side of screen resulting in resize on Android
   TODO  add 'year start date' preference
   TODO  ensure big/small units update min/max/step when changing from money to hours or viceversa
-	FIXME	clients/jobs page - color pickers do not need to  be checkboxes
   FIXME timesheet container not getting scroll focus
   TODO  add ARIA attributes (eg. hide up/down spinner buttons)
-	TODO	add 'wipe data' buttons with confirmation prompt
 	FIXME	spinners: numbers should pad eg. 00:45h, £10.00
   TODO  all strings should be constants
-  FIXME icons on buttons too small, positioned badly
-  TODO  redesign logo
-  FIXME when first day of timesheet is first of month, don't show previous month totals
   TODO  display month/week start correctly
   FIXME press/hold to jump back through months, page reloads with ? in querystring
   TODO  number spinners should fade up quickly with short delay (to avoid flickering on 'remove item' etc)
-  TODO  loading bar
   TODO  only show month/week jump buttons if they make sense
   TODO  validate all input data
           time/money
@@ -39,34 +25,48 @@
 	FIXME	£-0.77 must register as negative
   TODO  test everything on touchscreen
   TODO  test everything on narrow (phone) layout
-  TODO  after loading file current page must update be it timesheets, J&Cs or preferences
   TODO  portrait CSS
         - workItem bottom margin increase
         - notes input move left margin to be right margin on unitSmall
-  TODO  remove button should be closer to item it is removing
-  TODO  notes input field even more faded when its not focused and has no data
   TODO  remove old dynamic classes (jobs/clients) 
-  TODO  'import from file' button doesn't get focus outline
+  TODO  nav buttons shouldnt be chopped off
+  TODO  import button wrong colour (white) on rollover
   TODO  feedback:
         - [on startup] data and settings restored from previous session (localStorage)
         - [first usage] default data and settings created
         - [on load] data and settings loaded from $filename
+
+
   DONE dots in loaderbar
   DONE  leave gap between months on timesheet
+  DONE  after loading file current page must update (redraw) be it timesheets, J&Cs or preferences
   DONE  file load isn't loading data yet
   DONE  workitem remove button shoudnt disappear when firstchild, should remove item then create a new one
         - removeItem should decrement
         - change event should decrement current selection (if it exists) then increment new selection{
 	DONE 1st day of following year is showing
+  DONE  remove button should be closer to item it is removing
+  DONE  notes input field even more faded when its not focused and has no data
+  DONE client select dropdown styles broken (CSS not being written after loading data file?)
+  DONE  clicking anywhere off colorpicker should close it without changing colours (currently working on transparent pixels of png, needs to be the same for all the rest of the screen
   DONE  spinners ony show for hovered/focused day
   DONE if page is changed while timesheets are being drawn, bugs out (clear timeout)
   DONE  fix widths of client/job selects on timesheets page, use text-overflow: ellipsis
+	DONE	add 'wipe data' buttons with confirmation prompt
+  DONE  visual feedback when saving (even though it's happening all the time)...appears on change, fades out after 2 secs
+  DONE  jobs/clients
+        - boxes fill bg
+        - add titles to boxes
   DONE number spinners inconsistent colours
   DONE  use spritesheet png instead of fonts??
   DONE  use updatefrequency to refresh "days drawn" only on % === 0
+  DONE icons on buttons too small, positioned badly
   DONE  delete job/client check if any records are referencing them, prompt if so
   DONE  refactor month/week click etc to all use 1 function
   DONE next/prev week/month buttons not working
+  DONE  redesign logo
+  DONE when first day of timesheet is first of month, don't show previous month totals
+  DONE  loading bar
 	DONE	select client/job - day remains highlighted (eg. darker date text)
   DONE tab nav - position wrong while page is loading (gap)
 	DONE	add year to timesheet special days eg: "January 2018", "2018 week 4", "totals for January 2018"
@@ -80,11 +80,14 @@
   DONE	blank object being stored in data object results in missing day in UI
   DONE  add week/month/year calculations
   DONE  after updating client/job, styles are not universally updating
+  DONE colour palette can push off side of screen resulting in resize on Android
   DONE	 number spinners
   DONE  match all button styles
   DONE 	blank space appears at bottom of page (seems related to LOADING element)
+	DONE	clients/jobs page - color pickers do not need to  be checkboxes
   DONE	negative money values should attach negative classname on initial page load
   DONE  borders around inputs and colorpickers on clients/jobs page
+	DONE	preference changes not taking effect
   DONE  month/week should flash briefly after day jump
   DONE   jobs and clients list existing jobs/clients
   DONE   jobs and clients proper colour picker
@@ -93,6 +96,7 @@
 	DONE	'even' class wrongly being applied to child elements
   DONE  month/week skip buttons should auto-repeat
   DONE	 spinners: hour/minute units can wrap
+  DONE  'import from file' button doesn't get focus outline
   DONE	 spinners: NaN gets converted to 0
   DONE	spinners: other events should trigger mouseup to prevent stuck spin
 	DONE	spinners: unit should be denoted, with £/h and ./:
@@ -120,25 +124,25 @@ uk.co.firmgently.DontDillyDally = (function() {
   tsDaysToDraw, tsDaysToDrawTotal, curDrawnDay, tsWorkingFragment, // ts - timesheet
 	
 	// refs to important HTML elements
-  loadingIndicator_el, mainContainer_el, timesheet_el,
+  loadingIndicator_el, mainContainer_el, timesheet_el, workingIndicator_el,
 	
 	// handles for setTimeout
 	eventAutoRepeatTimer, timesheetDrawDayTimer, recalculateTotalsTimer,
 	
 	// callbacks
   onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
-	onSaveBtnClick, onColorChangeConfirm,
+	onClearDataBtnClick, onSaveBtnClick, onColorChangeConfirm,
 	onFormClick, onScroll,
 
 	// other methods
-  doSetup, selectPage, drawPage, clearPage, drawGUIFromAr,
+  doSetup, selectPage, refreshPage, drawPage, clearPage, drawGUIFromAr,
 	eventAutoRepeat, eventAutoRepeatStop, eventAutoRepeatStart,
   recalculateAllTotals, calculateTotalsFromDateSpan,
   addItem, removeItem, addClient, removeClientOrJob, addJob,
   attachEventArrayToElement, callMethodsFromObOnElement, callMethodFromOb,
-  drawTimesheets, drawNextDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
+  drawTimesheet, drawNextDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
   getNextID, getNewClient, getNewJob, resetJobAndClientCounts, updateJobOrClientCount,
-  navClick, todayClick, dayJump, attractAnimateElement,
+  navClick, todayClick, dayJump, startCSSAnimation,
   dataStoragePossible, initData,
 	dataStoreObject, dataRetrieveObject, dataUpdateObject,
 	clientAndJobStyleSheet, createClientOrJobFromOb, createCSSForClientOrJobFromOb,
@@ -233,11 +237,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   dataStoreObject = function(category, ob) {
-    logMsg("+dataStoreObject()");
-    logMsg("++category: " + category);
-    logMsg("++ob: " + JSON.stringify(ob));
     localStorage.setItem(APP_ID + DATASTORE_CATEGORY_PREFIX + category, JSON.stringify(ob));
-    attractAnimateElement(document.getElementById("sidebar-main"));
+    startCSSAnimation(workingIndicator_el, CLASS_ANIM_WORKING);
   };
 
 
@@ -249,10 +250,6 @@ uk.co.firmgently.DontDillyDally = (function() {
   dataUpdateObject = function(category, key, value) {
     var keyCurrent,
 				ob = dataRetrieveObject(category);
-    logMsg("--dataUpdateObject()");
-    logMsg("---category: " + category);
-    logMsg("---key: " + key);
-    logMsg("---value: " + value);
     for (keyCurrent in ob) {
       if (keyCurrent === key) {
         ob[key] = value;
@@ -365,16 +362,20 @@ uk.co.firmgently.DontDillyDally = (function() {
 	--------------------------------------------------------------------------- */
   
   selectPage = function(pagetype) {
-    logMsg("selectPage()");
     dataUpdateObject(PREFS_STR, "pagetype", pagetype);
     location.hash = pagetype;
-		document.body.id = "";
+    refreshPage();
+  };
+
+
+  refreshPage = function() {
     clearPage();
     setTimeout(drawPage, 1); // on timer to force reflow after clearPage()
   };
 
 
   clearPage = function() {
+		document.body.id = "";
 		clearTimeout(eventAutoRepeatTimer);
 		clearTimeout(timesheetDrawDayTimer);
 		clearTimeout(recalculateTotalsTimer);
@@ -462,9 +463,6 @@ uk.co.firmgently.DontDillyDally = (function() {
           break;
       }
 
-      logMsg("//drawGUIFromAr()");
-      logMsg("///ob.event_ar: " + JSON.stringify(ob.event_ar));
-      logMsg("///tmp_el: " + tmp_el);
 
      /* if (tmp_el && ob.event_ar && ob.event_ar.length > 0) {
         attachEventArrayToElement(tmp_el, ob.event_ar);
@@ -767,7 +765,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   };
 
 
-  drawTimesheets = function() {
+  drawTimesheet = function() {
     var i, j, weekdayCur,
 				totals_el, weekStartDay = 1; // 0 = Sunday, 1 = Monday etc
     
@@ -1136,17 +1134,34 @@ uk.co.firmgently.DontDillyDally = (function() {
 				reader = new FileReader();
 	
     reader.onload = function(event) {
-      var data_ob = JSON.parse(event.target.result);
-			console.log(data_ob);
-      dataStoreObject(PREFS_STR, data_ob[PREFS_STR]);
-      dataStoreObject(JOBS_STR, data_ob[JOBS_STR]);
-      dataStoreObject(JOBSTOTAL_STR, data_ob[JOBSTOTAL_STR]);
-      dataStoreObject(CLIENTS_STR, data_ob[CLIENTS_STR]);
-      dataStoreObject(CLIENTSTOTAL_STR, data_ob[CLIENTSTOTAL_STR]);
-      dataStoreObject(DAYS_STR, data_ob[DAYS_STR]);
+      var data_ob, currentPage;
+      
+      if (confirm("REPLACE\n all your data, clients, jobs and preferences\nwith file?")) {
+        currentPage = dataRetrieveObject(PREFS_STR).pagetype;
+        data_ob = JSON.parse(event.target.result);
+        dataStoreObject(PREFS_STR, data_ob[PREFS_STR]);
+        dataStoreObject(JOBS_STR, data_ob[JOBS_STR]);
+        dataStoreObject(JOBSTOTAL_STR, data_ob[JOBSTOTAL_STR]);
+        dataStoreObject(CLIENTS_STR, data_ob[CLIENTS_STR]);
+        dataStoreObject(CLIENTSTOTAL_STR, data_ob[CLIENTSTOTAL_STR]);
+        dataStoreObject(DAYS_STR, data_ob[DAYS_STR]);
+        // stay on same page rather than redirecting to page from stored prefs
+        dataUpdateObject(PREFS_STR, "pagetype", currentPage);
+        initData();
+        refreshPage();
+      }
 		};
 		reader.readAsText(file);
-		console.log(file);
+  };
+
+  
+  onClearDataBtnClick = function(event) {
+    if (confirm("Delete all your data, clients, jobs and preferences?")) {
+      localStorage.clear();
+      initData();
+      // TODO some form of page refresh/reload - do same after loading data
+      refreshPage();
+    }
   };
 
 
@@ -1176,34 +1191,14 @@ uk.co.firmgently.DontDillyDally = (function() {
   onFormClick = function(event) {
     var form = this,
         prefs_ob = dataRetrieveObject(PREFS_STR);
-   /* logMsg("!onFormClick()");
-    logMsg("!this: " + this);
-    logMsg("!event.target: " + event.target);
-    logMsg("!event.target.id: " + event.target.id);
-    logMsg("!event.target.htmlFor: " + event.target.htmlFor);
-    logMsg("!event.currentTarget: " + event.currentTarget);
-    logMsg("!event.currentTarget.id: " + event.currentTarget.id);
-    logMsg("!event.currentTarget.htmlFor: " + event.currentTarget.htmlFor);*/
     if (form && form.id) {
-      logMsg("!form.id: " + form.id);
       switch (form.id) {
         case "configForm":
-        /*  logMsg("!configForm FOUND");
-          logMsg("!form.timespan.value: " + form.timespan.value);
-          logMsg("!form.dateFormat.value: " + form.dateFormat.value);
-          logMsg("!form.totalsToShow.value: " + form.totalsToShow.value);
-          logMsg("!form.minuteIncrements.value: " + form.minuteIncrements.value);
-         // /* */
           prefs_ob.timespan = form.timespan.value;
           prefs_ob.dateFormat = form.dateFormat.value;
           prefs_ob.totalsToShow = form.totalsToShow.value;
           prefs_ob.minuteIncrements = form.minuteIncrements.value;
           dataStoreObject(PREFS_STR, prefs_ob);
-          // dateFormat is an object, the form just stores the name of it so grab it here
-         // dataUpdateObject(PREFS_STR, "dateFormat", form.dateFormat.value);
-          //dataUpdateObject(PREFS_STR, "totalsToShow", form.totalsToShow.value);
-          //dataUpdateObject(PREFS_STR, "minuteIncrements", form.minuteIncrements.value);
-          //*/
           break;
         default:
           break;
@@ -1213,43 +1208,12 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   onFormSubmit = function(event) {
-    logMsg("onFormSubmit()");
-    logMsg("event.target: " + event.target);
-    logMsg("event.currentTarget: " + event.currentTarget);
     stopPropagation(event);
   };
 
 
   onUpdateInput = function(event) {
-    logMsg("onUpdateInput()");
-    if (dataRetrieveObject(PREFS_STR).pagetype === PAGETYPE_TIMESHEETS) {
-      // is a notes input field
-        if (this.className.indexOf(CLASS_NOTESINPUT) !== -1) {
-          // TODO validate notes input
-          updateDataFromWorkItemEl(this.parentNode);
-        } else {
-          if (isNaN(parseInt(this.value))) { this.value = 0; }
-
-          // TODO needs to handle negative small unit eg. -£0.13
-          if (this.className.indexOf(CLASS_SPINNER_UNITBIG) !== -1) {
-            if (parseInt(this.value) < 0) {
-              addClassname(this.parentNode.parentNode, CLASS_NEGATIVE);
-            } else {
-              removeClassname(this.parentNode.parentNode, CLASS_NEGATIVE);
-            }
-          }
-          // TODO check following line still works
-          if (document.body.contains(this)) {
-            updateDataFromWorkItemEl(this.parentNode.parentNode);
-          }
-          this.value = padString(this.value, this.spin_ob.pad);
-          clearTimeout(recalculateTotalsTimer);
-          recalculateTotalsTimer = setTimeout(recalculateAllTotals, RECALCULATETOTALS_DELAY);
-        }
-    } else if (dataRetrieveObject(PREFS_STR).pagetype === PAGETYPE_JOBSANDCLIENTS) {
-        updateDataFromClientOrJobEl(this.parentNode);
-    }
-    /*switch (dataRetrieveObject(PREFS_STR).pagetype) {
+    switch (dataRetrieveObject(PREFS_STR).pagetype) {
       case PAGETYPE_TIMESHEETS:
         if (this.className.indexOf(CLASS_NOTESINPUT) !== -1) {
           // TODO validate notes input
@@ -1281,7 +1245,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
       default:
         break;
-    }*/
+    }
   };
 
 
@@ -1596,7 +1560,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 	--------------------------------------------------------------------------- */
 
   navClick = function(event) {
-    logMsg("navClick()");
     selectPage(arguments[0]);
   };
 
@@ -1629,9 +1592,9 @@ uk.co.firmgently.DontDillyDally = (function() {
     day.scrollIntoView();
 
 		if (btnID === EL_ID_WEEKNEXTBTN || btnID === EL_ID_WEEKPREVBTN) {
-			attractAnimateElement(day.getElementsByTagName("P")[0].getElementsByTagName("SPAN")[0]);
+			startCSSAnimation(day.getElementsByTagName("P")[0].getElementsByTagName("SPAN")[0], CLASS_ANIM_ATTRACT);
 		} else if (btnID === EL_ID_MONTHNEXTBTN || btnID === EL_ID_MONTHPREVBTN) {
-			attractAnimateElement(day.getElementsByTagName("H4")[0]);
+			startCSSAnimation(day.getElementsByTagName("H4")[0], CLASS_ANIM_ATTRACT);
 		}
 
     eventAutoRepeatStart(event.target, event.type);
@@ -1643,12 +1606,12 @@ uk.co.firmgently.DontDillyDally = (function() {
 	};
 
 
-	attractAnimateElement = function(el) {
-		removeClassname(el, CLASS_ATTRACT);
+	startCSSAnimation = function(el, animClass) {
+		removeClassname(el, animClass);
 		// HACK - trigger a reflow, needed to properly remove class and allow 
 		// us to restart the animation
 		el.offsetTop;
-		addClassname(el, CLASS_ATTRACT);
+		addClassname(el, animClass);
 	};
 
 
@@ -1673,7 +1636,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   updateSelected = function() {
     var pagetype = dataRetrieveObject(PREFS_STR).pagetype; // refers to current page
-    logMsg("updateSelected()");
 
     if (pagetype === PAGETYPE_TIMESHEETS || pagetype === PAGETYPE_JOBSANDCLIENTS) {
       if (this.className.indexOf(CLASS_CLIENTSELECT) !== -1) {
@@ -1700,6 +1662,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   doSetup = function() {
     loadingIndicator_el = document.getElementById(EL_ID_LOADINGINDICATOR);
 		mainContainer_el = document.getElementById(EL_ID_MAINCONTAINER);
+    workingIndicator_el = document.getElementById("sidebar-main").getElementsByTagName("H1")[0].getElementsByTagName("EM")[0];
     dateDisplayStart = new Date();
     dateDisplaySelected = new Date();
     dateToday = new Date();
@@ -1714,6 +1677,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
 		registerEventHandler(document.getElementById("file-chooser"), "change", onFileSelect, false);
 		registerEventHandler(document.getElementById("file-save"), "click", onSaveBtnClick, false);
+		registerEventHandler(document.getElementById("clear-data"), "click", onClearDataBtnClick, false);
   };
 
 
@@ -1723,7 +1687,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 	// return references to methods (make them public) that will be called
 	// from eg. callbacks which don't have a reference to this scope
   return {
-    drawTimesheets: drawTimesheets,
+    drawTimesheet: drawTimesheet,
     drawJobsAndClients: drawJobsAndClients,
     addItem: addItem,
     removeItem: removeItem,

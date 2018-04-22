@@ -97,6 +97,34 @@ table {
 /* ===============================================
 		SASS mixins
 ================================================== */
+@-webkit-keyframes working {
+  0% {
+    color: red; }
+  70% {
+    color: red; }
+  100% {
+    color: white; } }
+@-moz-keyframes working {
+  0% {
+    color: red; }
+  70% {
+    color: red; }
+  100% {
+    color: white; } }
+@-o-keyframes working {
+  0% {
+    color: red; }
+  70% {
+    color: red; }
+  100% {
+    color: white; } }
+@keyframes working {
+  0% {
+    color: red; }
+  70% {
+    color: red; }
+  100% {
+    color: white; } }
 @-webkit-keyframes attract {
   0% {
     background-color: black; }
@@ -126,6 +154,7 @@ table {
   100% {
     background-color: white; } }
 input.ios-switch:focus + div,
+input#file-chooser:focus + label,
 :focus {
   outline: 0;
   -webkit-box-shadow: 0px 0px 0px 11px red;
@@ -133,6 +162,12 @@ input.ios-switch:focus + div,
   box-shadow: 0px 0px 0px 11px red;
   background-color: white;
   color: black; }
+
+.working {
+  -webkit-animation: working 1s 1;
+  -moz-animation: working 1s 1;
+  -o-animation: working 1s 1;
+  animation: working 1s 1; }
 
 .attract {
   -webkit-animation: attract .5s 1;
@@ -217,16 +252,16 @@ body#config aside nav button#config.btnNav {
   #main h1, #main h2 {
     padding: 0.8rem 0.6rem 0.8rem 2rem; }
   #main h1 {
-    font-size: 1.5rem; }
+    font-size: 1.75rem; }
   #main h2 {
     font-size: 1.25rem; }
 
-#jobsExisting, #clientsExisting, #configCol1, #configCol2 {
+#jobsExisting, #clientsExisting, #configForm .sheet {
   width: calc(50% - 2rem);
   display: inline-block;
   padding: 0.8rem;
   margin-right: 2rem; }
-  #jobsExisting p, #clientsExisting p, #configCol1 p, #configCol2 p {
+  #jobsExisting p, #clientsExisting p, #configForm .sheet p {
     margin-top: 2rem;
     margin-bottom: 0.8rem; }
 
@@ -277,8 +312,8 @@ body#config aside nav button#config.btnNav {
     color: #797777;
     font-size: 1.2rem;
     font-weight: normal;
-    width: 10rem;
-    margin-right: -10.6rem;
+    width: 11rem;
+    margin-right: -11.6rem;
     margin-left: 0.6rem; }
     #timesheetContainer > li .date.col span, #clientsExisting > li .date.col span, #jobsExisting > li .date.col span {
       display: block;
@@ -299,18 +334,19 @@ body#config aside nav button#config.btnNav {
     font-weight: normal; }
   #timesheetContainer > li.day, #clientsExisting > li.day, #jobsExisting > li.day {
     display: block;
+    text-align: right;
     padding: 0.8rem 0.15rem;
     color: #6c6a6a;
-    background-color: #f7f5f5; }
+    background-color: #f9f8f8; }
     #timesheetContainer > li.day:hover, #timesheetContainer > li.day:focus-within, #clientsExisting > li.day:hover, #clientsExisting > li.day:focus-within, #jobsExisting > li.day:hover, #jobsExisting > li.day:focus-within {
       color: #9f9d9d;
-      background-color: #f2f0f0; }
+      background-color: #f7f5f5; }
   #timesheetContainer > li:nth-of-type(even), #clientsExisting > li:nth-of-type(even), #jobsExisting > li:nth-of-type(even) {
     background-color: #fbfbfb;
     color: #6c6a6a; }
     #timesheetContainer > li:nth-of-type(even):hover, #timesheetContainer > li:nth-of-type(even):focus-within, #clientsExisting > li:nth-of-type(even):hover, #clientsExisting > li:nth-of-type(even):focus-within, #jobsExisting > li:nth-of-type(even):hover, #jobsExisting > li:nth-of-type(even):focus-within {
       color: #393838;
-      background-color: white; }
+      background-color: #f7f5f5; }
   #timesheetContainer > li.today .date.col, #timesheetContainer > li.week-start .date.col, #clientsExisting > li.today .date.col, #clientsExisting > li.week-start .date.col, #jobsExisting > li.today .date.col, #jobsExisting > li.week-start .date.col {
     margin-top: -0.5rem; }
     #timesheetContainer > li.today .date.col em, #timesheetContainer > li.week-start .date.col em, #clientsExisting > li.today .date.col em, #clientsExisting > li.week-start .date.col em, #jobsExisting > li.today .date.col em, #jobsExisting > li.week-start .date.col em {
@@ -332,15 +368,17 @@ body#config aside nav button#config.btnNav {
       margin-bottom: 0.8rem; }
     #timesheetContainer > li.month-start:first-child, #clientsExisting > li.month-start:first-child, #jobsExisting > li.month-start:first-child {
       margin-top: 0; }
+  #timesheetContainer ul.day-data.col > li, #clientsExisting ul.day-data.col > li, #jobsExisting ul.day-data.col > li {
+    margin-bottom: 1.4rem; }
   #timesheetContainer ul.day-data.col, #timesheetContainer ul.clients, #timesheetContainer ul.jobs, #clientsExisting ul.day-data.col, #clientsExisting ul.clients, #clientsExisting ul.jobs, #jobsExisting ul.day-data.col, #jobsExisting ul.clients, #jobsExisting ul.jobs {
-    padding-left: 14rem;
+    padding-left: 15rem;
     display: inline-block;
     float: right; }
     #timesheetContainer ul.day-data.col > li, #timesheetContainer ul.clients > li, #timesheetContainer ul.jobs > li, #clientsExisting ul.day-data.col > li, #clientsExisting ul.clients > li, #clientsExisting ul.jobs > li, #jobsExisting ul.day-data.col > li, #jobsExisting ul.clients > li, #jobsExisting ul.jobs > li {
       /* WORK ITEM */
       display: block;
-      margin-bottom: 1.4rem;
       padding-left: 2rem;
+      padding-right: 2rem;
       position: relative; }
       #timesheetContainer ul.day-data.col > li input.unitBig, #timesheetContainer ul.day-data.col > li input.unitSmall, #timesheetContainer ul.clients > li input.unitBig, #timesheetContainer ul.clients > li input.unitSmall, #timesheetContainer ul.jobs > li input.unitBig, #timesheetContainer ul.jobs > li input.unitSmall, #clientsExisting ul.day-data.col > li input.unitBig, #clientsExisting ul.day-data.col > li input.unitSmall, #clientsExisting ul.clients > li input.unitBig, #clientsExisting ul.clients > li input.unitSmall, #clientsExisting ul.jobs > li input.unitBig, #clientsExisting ul.jobs > li input.unitSmall, #jobsExisting ul.day-data.col > li input.unitBig, #jobsExisting ul.day-data.col > li input.unitSmall, #jobsExisting ul.clients > li input.unitBig, #jobsExisting ul.clients > li input.unitSmall, #jobsExisting ul.jobs > li input.unitBig, #jobsExisting ul.jobs > li input.unitSmall {
         display: inline-block;
@@ -398,7 +436,7 @@ body#config aside nav button#config.btnNav {
           background-position: 0 0;
           white-space: nowrap; }
       #timesheetContainer ul.day-data.col > li input.notes, #timesheetContainer ul.clients > li input.notes, #timesheetContainer ul.jobs > li input.notes, #clientsExisting ul.day-data.col > li input.notes, #clientsExisting ul.clients > li input.notes, #clientsExisting ul.jobs > li input.notes, #jobsExisting ul.day-data.col > li input.notes, #jobsExisting ul.clients > li input.notes, #jobsExisting ul.jobs > li input.notes {
-        width: calc(100vw - 10vw - 50rem);
+        min-width: 16rem;
         max-width: 50em;
         border-radius: 0.6rem;
         padding: 0.6rem 0.6rem 0.6rem 0.8rem;
@@ -424,7 +462,7 @@ body#config aside nav button#config.btnNav {
         background-size: 100%; }
       #timesheetContainer ul.day-data.col > li.money input.notes, #timesheetContainer ul.clients > li.money input.notes, #timesheetContainer ul.jobs > li.money input.notes, #clientsExisting ul.day-data.col > li.money input.notes, #clientsExisting ul.clients > li.money input.notes, #clientsExisting ul.jobs > li.money input.notes, #jobsExisting ul.day-data.col > li.money input.notes, #jobsExisting ul.clients > li.money input.notes, #jobsExisting ul.jobs > li.money input.notes {
         color: #776644;
-        background-color: #bbc4b3; }
+        background-color: #e9ebe6; }
       #timesheetContainer ul.day-data.col > li.money .spin-button-up, #timesheetContainer ul.day-data.col > li.money .spin-button-down, #timesheetContainer ul.clients > li.money .spin-button-up, #timesheetContainer ul.clients > li.money .spin-button-down, #timesheetContainer ul.jobs > li.money .spin-button-up, #timesheetContainer ul.jobs > li.money .spin-button-down, #clientsExisting ul.day-data.col > li.money .spin-button-up, #clientsExisting ul.day-data.col > li.money .spin-button-down, #clientsExisting ul.clients > li.money .spin-button-up, #clientsExisting ul.clients > li.money .spin-button-down, #clientsExisting ul.jobs > li.money .spin-button-up, #clientsExisting ul.jobs > li.money .spin-button-down, #jobsExisting ul.day-data.col > li.money .spin-button-up, #jobsExisting ul.day-data.col > li.money .spin-button-down, #jobsExisting ul.clients > li.money .spin-button-up, #jobsExisting ul.clients > li.money .spin-button-down, #jobsExisting ul.jobs > li.money .spin-button-up, #jobsExisting ul.jobs > li.money .spin-button-down {
         background-color: #778866; }
       #timesheetContainer ul.day-data.col > li.money .spinner:before, #timesheetContainer ul.day-data.col > li.money .spinner:after, #timesheetContainer ul.clients > li.money .spinner:before, #timesheetContainer ul.clients > li.money .spinner:after, #timesheetContainer ul.jobs > li.money .spinner:before, #timesheetContainer ul.jobs > li.money .spinner:after, #clientsExisting ul.day-data.col > li.money .spinner:before, #clientsExisting ul.day-data.col > li.money .spinner:after, #clientsExisting ul.clients > li.money .spinner:before, #clientsExisting ul.clients > li.money .spinner:after, #clientsExisting ul.jobs > li.money .spinner:before, #clientsExisting ul.jobs > li.money .spinner:after, #jobsExisting ul.day-data.col > li.money .spinner:before, #jobsExisting ul.day-data.col > li.money .spinner:after, #jobsExisting ul.clients > li.money .spinner:before, #jobsExisting ul.clients > li.money .spinner:after, #jobsExisting ul.jobs > li.money .spinner:before, #jobsExisting ul.jobs > li.money .spinner:after {
@@ -443,7 +481,7 @@ body#config aside nav button#config.btnNav {
       #timesheetContainer ul.day-data.col > li.money.negative input.unitBig, #timesheetContainer ul.day-data.col > li.money.negative input.unitSmall, #timesheetContainer ul.clients > li.money.negative input.unitBig, #timesheetContainer ul.clients > li.money.negative input.unitSmall, #timesheetContainer ul.jobs > li.money.negative input.unitBig, #timesheetContainer ul.jobs > li.money.negative input.unitSmall, #clientsExisting ul.day-data.col > li.money.negative input.unitBig, #clientsExisting ul.day-data.col > li.money.negative input.unitSmall, #clientsExisting ul.clients > li.money.negative input.unitBig, #clientsExisting ul.clients > li.money.negative input.unitSmall, #clientsExisting ul.jobs > li.money.negative input.unitBig, #clientsExisting ul.jobs > li.money.negative input.unitSmall, #jobsExisting ul.day-data.col > li.money.negative input.unitBig, #jobsExisting ul.day-data.col > li.money.negative input.unitSmall, #jobsExisting ul.clients > li.money.negative input.unitBig, #jobsExisting ul.clients > li.money.negative input.unitSmall, #jobsExisting ul.jobs > li.money.negative input.unitBig, #jobsExisting ul.jobs > li.money.negative input.unitSmall {
         background-color: #cc6644; }
       #timesheetContainer ul.day-data.col > li.money.negative input.notes, #timesheetContainer ul.clients > li.money.negative input.notes, #timesheetContainer ul.jobs > li.money.negative input.notes, #clientsExisting ul.day-data.col > li.money.negative input.notes, #clientsExisting ul.clients > li.money.negative input.notes, #clientsExisting ul.jobs > li.money.negative input.notes, #jobsExisting ul.day-data.col > li.money.negative input.notes, #jobsExisting ul.clients > li.money.negative input.notes, #jobsExisting ul.jobs > li.money.negative input.notes {
-        background-color: #e6b3a2; }
+        background-color: #f6e4de; }
       #timesheetContainer ul.day-data.col > li.money.negative input[type="checkbox"].ios-switch + div, #timesheetContainer ul.clients > li.money.negative input[type="checkbox"].ios-switch + div, #timesheetContainer ul.jobs > li.money.negative input[type="checkbox"].ios-switch + div, #clientsExisting ul.day-data.col > li.money.negative input[type="checkbox"].ios-switch + div, #clientsExisting ul.clients > li.money.negative input[type="checkbox"].ios-switch + div, #clientsExisting ul.jobs > li.money.negative input[type="checkbox"].ios-switch + div, #jobsExisting ul.day-data.col > li.money.negative input[type="checkbox"].ios-switch + div, #jobsExisting ul.clients > li.money.negative input[type="checkbox"].ios-switch + div, #jobsExisting ul.jobs > li.money.negative input[type="checkbox"].ios-switch + div {
         background-image: linear-gradient(90deg, #cc6644 50%, transparent 50%); }
       #timesheetContainer ul.day-data.col > li.money.negative .spin-button-up, #timesheetContainer ul.day-data.col > li.money.negative .spin-button-down, #timesheetContainer ul.clients > li.money.negative .spin-button-up, #timesheetContainer ul.clients > li.money.negative .spin-button-down, #timesheetContainer ul.jobs > li.money.negative .spin-button-up, #timesheetContainer ul.jobs > li.money.negative .spin-button-down, #clientsExisting ul.day-data.col > li.money.negative .spin-button-up, #clientsExisting ul.day-data.col > li.money.negative .spin-button-down, #clientsExisting ul.clients > li.money.negative .spin-button-up, #clientsExisting ul.clients > li.money.negative .spin-button-down, #clientsExisting ul.jobs > li.money.negative .spin-button-up, #clientsExisting ul.jobs > li.money.negative .spin-button-down, #jobsExisting ul.day-data.col > li.money.negative .spin-button-up, #jobsExisting ul.day-data.col > li.money.negative .spin-button-down, #jobsExisting ul.clients > li.money.negative .spin-button-up, #jobsExisting ul.clients > li.money.negative .spin-button-down, #jobsExisting ul.jobs > li.money.negative .spin-button-up, #jobsExisting ul.jobs > li.money.negative .spin-button-down {
@@ -456,7 +494,7 @@ body#config aside nav button#config.btnNav {
         background-color: #aa9977; }
       #timesheetContainer ul.day-data.col > li.hrs input.notes, #timesheetContainer ul.clients > li.hrs input.notes, #timesheetContainer ul.jobs > li.hrs input.notes, #clientsExisting ul.day-data.col > li.hrs input.notes, #clientsExisting ul.clients > li.hrs input.notes, #clientsExisting ul.jobs > li.hrs input.notes, #jobsExisting ul.day-data.col > li.hrs input.notes, #jobsExisting ul.clients > li.hrs input.notes, #jobsExisting ul.jobs > li.hrs input.notes {
         color: #776644;
-        background-color: #efebe5; }
+        background-color: #f1eee8; }
       #timesheetContainer ul.day-data.col > li.hrs .spinner:before, #timesheetContainer ul.day-data.col > li.hrs .spinner:after, #timesheetContainer ul.clients > li.hrs .spinner:before, #timesheetContainer ul.clients > li.hrs .spinner:after, #timesheetContainer ul.jobs > li.hrs .spinner:before, #timesheetContainer ul.jobs > li.hrs .spinner:after, #clientsExisting ul.day-data.col > li.hrs .spinner:before, #clientsExisting ul.day-data.col > li.hrs .spinner:after, #clientsExisting ul.clients > li.hrs .spinner:before, #clientsExisting ul.clients > li.hrs .spinner:after, #clientsExisting ul.jobs > li.hrs .spinner:before, #clientsExisting ul.jobs > li.hrs .spinner:after, #jobsExisting ul.day-data.col > li.hrs .spinner:before, #jobsExisting ul.day-data.col > li.hrs .spinner:after, #jobsExisting ul.clients > li.hrs .spinner:before, #jobsExisting ul.clients > li.hrs .spinner:after, #jobsExisting ul.jobs > li.hrs .spinner:before, #jobsExisting ul.jobs > li.hrs .spinner:after {
         font-weight: bold;
         top: 0.3rem;
@@ -473,7 +511,7 @@ body#config aside nav button#config.btnNav {
       #timesheetContainer ul.day-data.col > li .removeItemBtn, #timesheetContainer ul.day-data.col > li .addItemBtn, #timesheetContainer ul.clients > li .removeItemBtn, #timesheetContainer ul.clients > li .addItemBtn, #timesheetContainer ul.jobs > li .removeItemBtn, #timesheetContainer ul.jobs > li .addItemBtn, #clientsExisting ul.day-data.col > li .removeItemBtn, #clientsExisting ul.day-data.col > li .addItemBtn, #clientsExisting ul.clients > li .removeItemBtn, #clientsExisting ul.clients > li .addItemBtn, #clientsExisting ul.jobs > li .removeItemBtn, #clientsExisting ul.jobs > li .addItemBtn, #jobsExisting ul.day-data.col > li .removeItemBtn, #jobsExisting ul.day-data.col > li .addItemBtn, #jobsExisting ul.clients > li .removeItemBtn, #jobsExisting ul.clients > li .addItemBtn, #jobsExisting ul.jobs > li .removeItemBtn, #jobsExisting ul.jobs > li .addItemBtn {
         border-radius: 1rem;
         border: none;
-        background-size: 1rem;
+        background-size: 1.2rem;
         background-repeat: no-repeat;
         background-position: center;
         text-indent: -999999em;
@@ -495,7 +533,7 @@ body#config aside nav button#config.btnNav {
         margin-right: 2rem; }
       #timesheetContainer ul.day-data.col > li .removeItemBtn, #timesheetContainer ul.clients > li .removeItemBtn, #timesheetContainer ul.jobs > li .removeItemBtn, #clientsExisting ul.day-data.col > li .removeItemBtn, #clientsExisting ul.clients > li .removeItemBtn, #clientsExisting ul.jobs > li .removeItemBtn, #jobsExisting ul.day-data.col > li .removeItemBtn, #jobsExisting ul.clients > li .removeItemBtn, #jobsExisting ul.jobs > li .removeItemBtn {
         background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23cc6644' viewBox='0 0 32 32'%3E%3Ctitle%3Ecross%3C/title%3E%3Cpath d='M31.708 25.708c-0-0-0-0-0-0l-9.708-9.708 9.708-9.708c0-0 0-0 0-0 0.105-0.105 0.18-0.227 0.229-0.357 0.133-0.356 0.057-0.771-0.229-1.057l-4.586-4.586c-0.286-0.286-0.702-0.361-1.057-0.229-0.13 0.048-0.252 0.124-0.357 0.228 0 0-0 0-0 0l-9.708 9.708-9.708-9.708c-0-0-0-0-0-0-0.105-0.104-0.227-0.18-0.357-0.228-0.356-0.133-0.771-0.057-1.057 0.229l-4.586 4.586c-0.286 0.286-0.361 0.702-0.229 1.057 0.049 0.13 0.124 0.252 0.229 0.357 0 0 0 0 0 0l9.708 9.708-9.708 9.708c-0 0-0 0-0 0-0.104 0.105-0.18 0.227-0.229 0.357-0.133 0.355-0.057 0.771 0.229 1.057l4.586 4.586c0.286 0.286 0.702 0.361 1.057 0.229 0.13-0.049 0.252-0.124 0.357-0.229 0-0 0-0 0-0l9.708-9.708 9.708 9.708c0 0 0 0 0 0 0.105 0.105 0.227 0.18 0.357 0.229 0.356 0.133 0.771 0.057 1.057-0.229l4.586-4.586c0.286-0.286 0.362-0.702 0.229-1.057-0.049-0.13-0.124-0.252-0.229-0.357z'%3E%3C/path%3E%3C/svg%3E");
-        right: 1rem;
+        margin-right: -2rem;
         color: #993322; }
       #timesheetContainer ul.day-data.col > li:not(:first-child) .addItemBtn, #timesheetContainer ul.clients > li:not(:first-child) .addItemBtn, #timesheetContainer ul.jobs > li:not(:first-child) .addItemBtn, #clientsExisting ul.day-data.col > li:not(:first-child) .addItemBtn, #clientsExisting ul.clients > li:not(:first-child) .addItemBtn, #clientsExisting ul.jobs > li:not(:first-child) .addItemBtn, #jobsExisting ul.day-data.col > li:not(:first-child) .addItemBtn, #jobsExisting ul.clients > li:not(:first-child) .addItemBtn, #jobsExisting ul.jobs > li:not(:first-child) .addItemBtn {
         visibility: hidden; }
@@ -846,13 +884,13 @@ select {
     margin-left: 0.3rem;
     background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Earrow-down%3C/title%3E%3Cpath d='M16 31l15-15h-9v-16h-12v16h-9z'%3E%3C/path%3E%3C/svg%3E"); }
   #miniNavForm button:last-of-type {
-    background-size: 1rem;
+    background-size: 1.2rem;
     background-repeat: no-repeat;
     background-position: center;
     background-position: 0.6rem;
-    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0%29 --%3E%3Csvg version='1.2' baseProfile='tiny' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='32px' height='32px' viewBox='0 0 32 32' xml:space='preserve'%3E%3Cg%3E%3Cpath fill-rule='evenodd' d='M16.3,0c0.1,0,0.3,0,0.4,0.1c1.2,0.3,2.1,1.3,2.2,2.5c0.1,0.8-0.2,1.6-0.6,2.3 c-0.5,0.8-1.1,1.7-1.7,2.5C16.4,7.6,16.2,7.8,16,8c-0.1-0.2-0.2-0.3-0.3-0.4c-0.5-0.8-1.1-1.5-1.6-2.3c-0.4-0.6-0.7-1.1-0.8-1.8 C13,2.2,13.6,1,14.6,0.4c0.3-0.2,0.7-0.3,1-0.3c0,0,0.1,0,0.1,0C15.9,0,16.1,0,16.3,0z'/%3E%3Cpath fill-rule='evenodd' d='M-0.5,15.9c0.1-0.7,0.6-1.1,1.1-1.5c0.8-0.5,1.6-0.8,2.5-1.1c1.3-0.4,2.6-0.7,3.9-0.9 c1-0.2,2-0.3,3-0.4c0.5-0.1,0.9-0.1,1.4-0.1c0.2,0,0.3,0.1,0.3,0.2c0,0.1-0.1,0.2-0.3,0.2c-1.3,0.2-2.7,0.4-4,0.7 c-1.2,0.3-2.3,0.6-3.3,1.2c-0.4,0.2-0.7,0.4-1.1,0.7c-0.3,0.3-0.5,0.5-0.6,0.9c-0.1,0.3,0,0.6,0.2,0.9c0.2,0.3,0.4,0.5,0.7,0.7 c0.6,0.5,1.4,0.8,2.1,1c1.2,0.4,2.4,0.7,3.7,0.9c0.8,0.1,1.5,0.2,2.3,0.3c0.1,0,0.2,0,0.2,0.1c0,0,0.1,0.1,0,0.2 c0,0.1-0.1,0.1-0.2,0.1c-0.2,0-0.4,0-0.7,0C9.9,20,9,19.9,8.2,19.8c-2-0.3-4-0.7-5.9-1.4c-0.7-0.3-1.4-0.6-1.9-1.1 c-0.4-0.3-0.7-0.7-0.7-1.2C-0.5,16.1-0.5,16-0.5,15.9z'/%3E%3Cpath fill-rule='evenodd' d='M32.5,16.2c-0.1,0.7-0.6,1.1-1.2,1.5c-0.8,0.5-1.6,0.8-2.4,1.1c-1.3,0.4-2.6,0.7-3.9,0.9 c-1,0.2-2,0.3-3,0.4c-0.5,0.1-0.9,0.1-1.4,0.1c-0.1,0-0.1,0-0.2,0c-0.1,0-0.1-0.1-0.1-0.2c0-0.1,0.1-0.2,0.1-0.2 c0.1,0,0.3-0.1,0.4-0.1c1-0.1,2.1-0.3,3.1-0.5c1.3-0.3,2.5-0.6,3.7-1.2c0.4-0.2,0.8-0.5,1.2-0.8c0.3-0.3,0.5-0.6,0.6-1 c0.1-0.3,0-0.6-0.2-0.9c-0.2-0.3-0.4-0.5-0.7-0.7c-0.6-0.5-1.4-0.8-2.1-1c-1.2-0.4-2.4-0.7-3.7-0.9c-0.8-0.1-1.5-0.2-2.3-0.3 c-0.1,0-0.2,0-0.2-0.1c0,0-0.1-0.1,0-0.2c0-0.1,0.1-0.1,0.2-0.1c0.2,0,0.4,0,0.7,0c0.9,0.1,1.8,0.2,2.7,0.3c2,0.3,3.9,0.6,5.8,1.4 c0.7,0.3,1.4,0.6,2,1.1c0.3,0.2,0.5,0.5,0.7,0.8c0.1,0.1,0.1,0.3,0.2,0.5C32.5,16,32.5,16.1,32.5,16.2z'/%3E%3Cpath fill-rule='evenodd' d='M16,24c0.2,0.3,0.5,0.6,0.7,0.9c0.5,0.7,1,1.5,1.5,2.2c0.4,0.6,0.6,1.2,0.6,1.9c0.1,1.6-1,2.8-2.5,3 c-1,0.1-1.8-0.2-2.5-1c-0.5-0.6-0.7-1.4-0.6-2.2c0.1-0.8,0.4-1.4,0.8-2.1C14.7,25.9,15.3,25,16,24C16,24.1,16,24.1,16,24z'/%3E%3Cpath fill-rule='evenodd' d='M12.4,13.7c0.2,0,0.3,0.1,0.3,0.2c0,0.1-0.1,0.2-0.2,0.2c-0.7,0.2-1.4,0.3-2,0.6 c-0.3,0.1-0.5,0.3-0.8,0.5c-0.1,0.1-0.2,0.2-0.3,0.4c-0.2,0.3-0.2,0.7,0,1c0.1,0.2,0.3,0.3,0.5,0.5c0.5,0.3,1.1,0.6,1.7,0.7 c0.3,0.1,0.6,0.2,0.9,0.2c0.2,0,0.2,0.1,0.2,0.2c0,0.1-0.1,0.2-0.3,0.2c-0.4,0-0.9-0.1-1.3-0.2c-0.9-0.1-1.8-0.3-2.6-0.6 c-0.5-0.2-1-0.3-1.4-0.6c-0.2-0.1-0.4-0.3-0.5-0.4c-0.3-0.4-0.3-0.8,0-1.1c0.2-0.2,0.4-0.3,0.6-0.5c0.6-0.4,1.2-0.6,1.8-0.7 c0.9-0.2,1.8-0.4,2.8-0.5C11.9,13.7,12.2,13.7,12.4,13.7z'/%3E%3Cpath fill-rule='evenodd' d='M25.7,16.1c0,0.2-0.1,0.4-0.2,0.5c-0.2,0.2-0.4,0.4-0.6,0.5c-0.6,0.4-1.2,0.6-1.9,0.7 c-0.9,0.2-1.8,0.4-2.7,0.5c-0.2,0-0.4,0-0.6,0.1c-0.1,0-0.1,0-0.2,0c-0.1,0-0.2-0.1-0.2-0.2c0-0.1,0.1-0.2,0.2-0.2 c0.2,0,0.4-0.1,0.5-0.1c0.6-0.2,1.2-0.3,1.7-0.6c0.3-0.1,0.6-0.3,0.8-0.5c0.4-0.4,0.4-0.9,0-1.3c-0.3-0.3-0.8-0.6-1.2-0.7 c-0.6-0.2-1.1-0.4-1.7-0.5c-0.2-0.1-0.3-0.1-0.2-0.3c0-0.1,0.1-0.2,0.3-0.2c1,0.1,2.1,0.2,3.1,0.5c0.7,0.2,1.3,0.4,1.9,0.7 c0.3,0.1,0.5,0.3,0.7,0.5C25.6,15.5,25.7,15.8,25.7,16.1z'/%3E%3Cpath fill-rule='evenodd' d='M14.7,16c0-0.7,0.6-1.3,1.3-1.3c0.7,0,1.3,0.6,1.3,1.3c0,0.7-0.6,1.3-1.3,1.3 C15.3,17.4,14.7,16.8,14.7,16z'/%3E%3Cpath fill-rule='evenodd' d='M16,9.2c0.3,0.5,0.7,1,1,1.5c0.2,0.3,0.2,0.7,0.1,1.1c-0.1,0.5-0.6,0.8-1.1,0.8c-0.5,0-0.9-0.4-1-0.9 c-0.1-0.3-0.1-0.7,0.1-1C15.4,10.3,15.7,9.8,16,9.2z'/%3E%3Cpath fill-rule='evenodd' d='M16,22.8c-0.1-0.2-0.3-0.4-0.4-0.6c-0.2-0.2-0.3-0.5-0.5-0.7c-0.2-0.4-0.3-0.8-0.2-1.2 c0.1-0.5,0.6-0.9,1.1-0.8c0.5,0,0.9,0.4,1,1c0.1,0.3,0,0.6-0.2,0.9C16.7,21.8,16.3,22.3,16,22.8z'/%3E%3C/g%3E%3C/svg%3E%0A"); }
+    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0%29 --%3E%3Csvg version='1.2' baseProfile='tiny' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='64px' height='64px' viewBox='0 0 32 32' xml:space='preserve'%3E%3Cg%3E%3Cpath fill-rule='evenodd' d='M16.3,0c0.1,0,0.3,0,0.4,0.1c1.2,0.3,2.1,1.3,2.2,2.5c0.1,0.8-0.2,1.6-0.6,2.3 c-0.5,0.8-1.1,1.7-1.7,2.5C16.4,7.6,16.2,7.8,16,8c-0.1-0.2-0.2-0.3-0.3-0.4c-0.5-0.8-1.1-1.5-1.6-2.3c-0.4-0.6-0.7-1.1-0.8-1.8 C13,2.2,13.6,1,14.6,0.4c0.3-0.2,0.7-0.3,1-0.3c0,0,0.1,0,0.1,0C15.9,0,16.1,0,16.3,0z'/%3E%3Cpath fill-rule='evenodd' d='M-0.5,15.9c0.1-0.7,0.6-1.1,1.1-1.5c0.8-0.5,1.6-0.8,2.5-1.1c1.3-0.4,2.6-0.7,3.9-0.9 c1-0.2,2-0.3,3-0.4c0.5-0.1,0.9-0.1,1.4-0.1c0.2,0,0.3,0.1,0.3,0.2c0,0.1-0.1,0.2-0.3,0.2c-1.3,0.2-2.7,0.4-4,0.7 c-1.2,0.3-2.3,0.6-3.3,1.2c-0.4,0.2-0.7,0.4-1.1,0.7c-0.3,0.3-0.5,0.5-0.6,0.9c-0.1,0.3,0,0.6,0.2,0.9c0.2,0.3,0.4,0.5,0.7,0.7 c0.6,0.5,1.4,0.8,2.1,1c1.2,0.4,2.4,0.7,3.7,0.9c0.8,0.1,1.5,0.2,2.3,0.3c0.1,0,0.2,0,0.2,0.1c0,0,0.1,0.1,0,0.2 c0,0.1-0.1,0.1-0.2,0.1c-0.2,0-0.4,0-0.7,0C9.9,20,9,19.9,8.2,19.8c-2-0.3-4-0.7-5.9-1.4c-0.7-0.3-1.4-0.6-1.9-1.1 c-0.4-0.3-0.7-0.7-0.7-1.2C-0.5,16.1-0.5,16-0.5,15.9z'/%3E%3Cpath fill-rule='evenodd' d='M32.5,16.2c-0.1,0.7-0.6,1.1-1.2,1.5c-0.8,0.5-1.6,0.8-2.4,1.1c-1.3,0.4-2.6,0.7-3.9,0.9 c-1,0.2-2,0.3-3,0.4c-0.5,0.1-0.9,0.1-1.4,0.1c-0.1,0-0.1,0-0.2,0c-0.1,0-0.1-0.1-0.1-0.2c0-0.1,0.1-0.2,0.1-0.2 c0.1,0,0.3-0.1,0.4-0.1c1-0.1,2.1-0.3,3.1-0.5c1.3-0.3,2.5-0.6,3.7-1.2c0.4-0.2,0.8-0.5,1.2-0.8c0.3-0.3,0.5-0.6,0.6-1 c0.1-0.3,0-0.6-0.2-0.9c-0.2-0.3-0.4-0.5-0.7-0.7c-0.6-0.5-1.4-0.8-2.1-1c-1.2-0.4-2.4-0.7-3.7-0.9c-0.8-0.1-1.5-0.2-2.3-0.3 c-0.1,0-0.2,0-0.2-0.1c0,0-0.1-0.1,0-0.2c0-0.1,0.1-0.1,0.2-0.1c0.2,0,0.4,0,0.7,0c0.9,0.1,1.8,0.2,2.7,0.3c2,0.3,3.9,0.6,5.8,1.4 c0.7,0.3,1.4,0.6,2,1.1c0.3,0.2,0.5,0.5,0.7,0.8c0.1,0.1,0.1,0.3,0.2,0.5C32.5,16,32.5,16.1,32.5,16.2z'/%3E%3Cpath fill-rule='evenodd' d='M16,24c0.2,0.3,0.5,0.6,0.7,0.9c0.5,0.7,1,1.5,1.5,2.2c0.4,0.6,0.6,1.2,0.6,1.9c0.1,1.6-1,2.8-2.5,3 c-1,0.1-1.8-0.2-2.5-1c-0.5-0.6-0.7-1.4-0.6-2.2c0.1-0.8,0.4-1.4,0.8-2.1C14.7,25.9,15.3,25,16,24C16,24.1,16,24.1,16,24z'/%3E%3Cpath fill-rule='evenodd' d='M12.4,13.7c0.2,0,0.3,0.1,0.3,0.2c0,0.1-0.1,0.2-0.2,0.2c-0.7,0.2-1.4,0.3-2,0.6 c-0.3,0.1-0.5,0.3-0.8,0.5c-0.1,0.1-0.2,0.2-0.3,0.4c-0.2,0.3-0.2,0.7,0,1c0.1,0.2,0.3,0.3,0.5,0.5c0.5,0.3,1.1,0.6,1.7,0.7 c0.3,0.1,0.6,0.2,0.9,0.2c0.2,0,0.2,0.1,0.2,0.2c0,0.1-0.1,0.2-0.3,0.2c-0.4,0-0.9-0.1-1.3-0.2c-0.9-0.1-1.8-0.3-2.6-0.6 c-0.5-0.2-1-0.3-1.4-0.6c-0.2-0.1-0.4-0.3-0.5-0.4c-0.3-0.4-0.3-0.8,0-1.1c0.2-0.2,0.4-0.3,0.6-0.5c0.6-0.4,1.2-0.6,1.8-0.7 c0.9-0.2,1.8-0.4,2.8-0.5C11.9,13.7,12.2,13.7,12.4,13.7z'/%3E%3Cpath fill-rule='evenodd' d='M25.7,16.1c0,0.2-0.1,0.4-0.2,0.5c-0.2,0.2-0.4,0.4-0.6,0.5c-0.6,0.4-1.2,0.6-1.9,0.7 c-0.9,0.2-1.8,0.4-2.7,0.5c-0.2,0-0.4,0-0.6,0.1c-0.1,0-0.1,0-0.2,0c-0.1,0-0.2-0.1-0.2-0.2c0-0.1,0.1-0.2,0.2-0.2 c0.2,0,0.4-0.1,0.5-0.1c0.6-0.2,1.2-0.3,1.7-0.6c0.3-0.1,0.6-0.3,0.8-0.5c0.4-0.4,0.4-0.9,0-1.3c-0.3-0.3-0.8-0.6-1.2-0.7 c-0.6-0.2-1.1-0.4-1.7-0.5c-0.2-0.1-0.3-0.1-0.2-0.3c0-0.1,0.1-0.2,0.3-0.2c1,0.1,2.1,0.2,3.1,0.5c0.7,0.2,1.3,0.4,1.9,0.7 c0.3,0.1,0.5,0.3,0.7,0.5C25.6,15.5,25.7,15.8,25.7,16.1z'/%3E%3Cpath fill-rule='evenodd' d='M14.7,16c0-0.7,0.6-1.3,1.3-1.3c0.7,0,1.3,0.6,1.3,1.3c0,0.7-0.6,1.3-1.3,1.3 C15.3,17.4,14.7,16.8,14.7,16z'/%3E%3Cpath fill-rule='evenodd' d='M16,9.2c0.3,0.5,0.7,1,1,1.5c0.2,0.3,0.2,0.7,0.1,1.1c-0.1,0.5-0.6,0.8-1.1,0.8c-0.5,0-0.9-0.4-1-0.9 c-0.1-0.3-0.1-0.7,0.1-1C15.4,10.3,15.7,9.8,16,9.2z'/%3E%3Cpath fill-rule='evenodd' d='M16,22.8c-0.1-0.2-0.3-0.4-0.4-0.6c-0.2-0.2-0.3-0.5-0.5-0.7c-0.2-0.4-0.3-0.8-0.2-1.2 c0.1-0.5,0.6-0.9,1.1-0.8c0.5,0,0.9,0.4,1,1c0.1,0.3,0,0.6-0.2,0.9C16.7,21.8,16.3,22.3,16,22.8z'/%3E%3C/g%3E%3C/svg%3E%0A"); }
   #miniNavForm #monthNextBtn, #miniNavForm #weekNextBtn, #miniNavForm #monthPrevBtn, #miniNavForm #weekPrevBtn {
-    background-size: 1rem;
+    background-size: 1.2rem;
     background-repeat: no-repeat;
     background-position: center;
     text-indent: -999999em;
@@ -875,13 +913,13 @@ select {
   position: absolute;
   z-index: 2; }
 
-#file-save {
+#file-save, #clear-data {
   margin-top: 0.3rem;
   background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Edownload3%3C/title%3E%3Cpath d='M23 14l-8 8-8-8h5v-12h6v12zM15 22h-15v8h30v-8h-15zM28 26h-4v-2h4v2z'%3E%3C/path%3E%3C/svg%3E"); }
 
 nav button.btnNav,
 #miniNavForm button,
-#file-save,
+#file-save, #clear-data,
 #file-chooser + label {
   font-size: 0.8rem;
   font-weight: 700;
@@ -893,10 +931,10 @@ nav button.btnNav,
   cursor: pointer; }
 
 nav button.btnNav,
-#file-save,
+#file-save, #clear-data,
 #file-chooser + label {
   width: 100%;
-  background-size: 1rem;
+  background-size: 1.2rem;
   background-repeat: no-repeat;
   background-position: center;
   background-position: 0.6rem; }
@@ -907,10 +945,10 @@ nav button.btnNav,
 #miniNavForm button:focus:hover, #miniNavForm button:focus:focus,
 #miniNavForm button:hover:hover,
 #miniNavForm button:hover:focus,
-#file-save:focus:hover,
-#file-save:focus:focus,
-#file-save:hover:hover,
-#file-save:hover:focus,
+#clear-data:focus:hover,
+#clear-data:focus:focus, #file-save:focus:hover, #file-save:focus:focus,
+#clear-data:hover:hover,
+#clear-data:hover:focus, #file-save:hover:hover, #file-save:hover:focus,
 #file-chooser:focus + label:hover,
 #file-chooser:focus + label:focus,
 #file-chooser + label:hover:hover,

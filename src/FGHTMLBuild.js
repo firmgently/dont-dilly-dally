@@ -30,7 +30,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 	onSpinnerStart, onSpinnerMouseUp, doSpinStep, spinnerTimer,
 	onIncreaseSpinnerMouseDown, onDecreaseSpinnerMouseDown,
 
-  onColorPickerClick, onColorPickerCanvasClick, onColorPickerCanvasMoveOver, onColorPickerImageLoad, colorPickerImage, colorPickerCanvas,
+  onColorPickerClick, onColorPickerCanvasClick, onColorPickerClickOutside, onColorPickerCanvasMoveOver, onColorPickerImageLoad, colorPickerImage, colorPickerCanvas,
+  colorPickerClose, colorPickerCanvasClickCount,
   colorPickerSelectedCurrent
 	;
 
@@ -323,8 +324,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       radio_el.id = optionID;
       radio_el.name = ob.id;
       radio_el.value = prop;
-//      logMsg("ob.checkIfMatched: " + ob.checkIfMatched);
-  //    logMsg("radio_el.value:" + radio_el.value);
       if (prop === ob.checkIfMatched) { radio_el.checked = true; }
       label_el.htmlFor = optionID;
     }
@@ -441,7 +440,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       registerEventHandler(colorPickerImage, "load", onColorPickerImageLoad);
     }
 
-    registerEventHandler(label_el, "click", onColorPickerClick);
+    registerEventHandler(label_el, "mousedown", onColorPickerClick);
 
 		return el;
   };
@@ -452,8 +451,6 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     colorPickerCanvas.width = colorPickerImage.width;
     colorPickerCanvas.height = colorPickerImage.height;
     colorPickerCanvas.getContext('2d').drawImage(colorPickerImage, 0, 0, colorPickerImage.width, colorPickerImage.height);
-    registerEventHandler(colorPickerCanvas, "click", onColorPickerCanvasClick);
-    registerEventHandler(colorPickerCanvas, "mousemove", onColorPickerCanvasMoveOver);
     document.body.appendChild(colorPickerCanvas);
   };
 
@@ -481,12 +478,31 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
     colorPickerCanvas.style.left = xPos + "px";
     colorPickerCanvas.style.top = yPos + "px";
+
+    colorPickerCanvasClickCount = 0;
+    registerEventHandler(document.body, "click", onColorPickerCanvasClick);
+    registerEventHandler(colorPickerCanvas, "mousemove", onColorPickerCanvasMoveOver);
   };
 
 
   onColorPickerCanvasClick = function(event) {
-    colorPickerCanvas.style.display = "none";
-    manualEvent(colorPickerSelectedCurrent.parentNode, COLORPICKER_CONFIRMEVENT_ID);
+    var activeAreaClicked = false,
+        pixelData = colorPickerCanvas.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data;
+
+    if (pixelData[3] > 0) { activeAreaClicked = true; }
+    
+    if (activeAreaClicked) {
+      manualEvent(colorPickerSelectedCurrent.parentNode, COLORPICKER_CONFIRMEVENT_ID);
+      colorPickerClose();
+    } else {
+      // HACK event is registered on document.body, so initial click was
+      // triggering this function and making the picker close as soon as it opened
+      // increment a counter so that we can ignore this first erroneous click
+      if (colorPickerCanvasClickCount > 1) {
+        colorPickerClose();
+      }
+      colorPickerCanvasClickCount ++;
+    }
   };
 
 
@@ -499,6 +515,13 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     } else {
       colorPickerCanvas.style.cursor = "default";
     }
+  };
+
+
+  colorPickerClose = function() {
+    colorPickerCanvas.style.display = "none";
+    unregisterEventHandler(document.body, "click", onColorPickerCanvasClick);
+    unregisterEventHandler(colorPickerCanvas, "mousemove", onColorPickerCanvasMoveOver);
   };
 
 
