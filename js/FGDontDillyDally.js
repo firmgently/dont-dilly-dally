@@ -61,6 +61,7 @@ uk.co.firmgently.DDDConsts = (function() {
     GUITYPE_METHODCALL: "GUITypeMethodCall",
     GUITYPE_UL: "GUITypeUL",
     GUITYPE_HELP: "GUITypeHelp",
+    GUITYPE_SPACER: "GUITypeSpacer",
 
     CLASS_SHEET: "sheet",
     CLASS_BTNNAV: "btnNav",
@@ -80,6 +81,7 @@ uk.co.firmgently.DDDConsts = (function() {
     CLASS_TOTALSWEEK: "totals-week",
     CLASS_TOTALSMONTH: "totals-month",
     CLASS_TOTALSYEAR: "totals-year",
+    CLASS_SPACER_EXPAND_VERT: "expand-vert",
 
     TURNOVER_STR: "earned",
     PROFIT_STR: "profit",
@@ -162,7 +164,7 @@ uk.co.firmgently.DDDConsts = (function() {
       intro: "Add items with [+], remove with [x]. | An item is about either time or money, tap [-o] to swap."
     },
     PAGEDATA_CONFIG: {
-      pageTitle: "Preferences",
+      pageTitle: "Settings",
       intro: "Show and hide things and customise settings."
     },
     PAGEDATA_PRIVACY: {
@@ -170,14 +172,32 @@ uk.co.firmgently.DDDConsts = (function() {
       intro: "Info about data you create with this application."
     },
 
-    DATETYPE_YYMMDD: {
+    /*DATETYPE_YYMMDD: {
+      id: "yymmdd",
       label: "yy/mm/dd"
     },
     DATETYPE_DDMMYY: {
+      id: "ddmmyy",
       label: "dd/mm/yy"
     },
     DATETYPE_MMDDYY: {
+      id: "mmddyy",
       label: "mm/dd/yy"
+    },*/
+
+    DATETYPES: {
+      yymmdd: {
+        id: "yymmdd",
+        label: "yy/mm/dd"
+      },
+      ddmmyy: {
+        id: "ddmmyy",
+        label: "dd/mm/yy"
+      },
+      mmddyy: {
+        id: "mmddyy",
+        label: "mm/dd/yy"
+      },
     },
 
     JOB_DEFAULTS: [
@@ -240,7 +260,7 @@ uk.co.firmgently.DDDConsts = (function() {
   CONST.MINUTEINCREMENTS_DEFAULT = CONST.MINUTEINCREMENTS_15;
   CONST.SHOWTOTALS_DEFAULT = CONST.SHOWTOTALS_BOTH;
   CONST.TIMESPAN_DEFAULT = CONST.TIMESPAN_MONTH;
-  CONST.DATETYPE_DEFAULT = CONST.DATETYPE_DDMMYY;
+  CONST.DATETYPE_DEFAULT = "ddmmyy";
   CONST.PAGETYPE_DEFAULT = CONST.PAGETYPE_TIMESHEETS;
 
 
@@ -352,10 +372,14 @@ uk.co.firmgently.DDDConsts = (function() {
       ],
       parent: "nav-main"
     }, {
+      type: CONST.GUITYPE_SPACER,
+      class: CONST.CLASS_SPACER_EXPAND_VERT,
+      parent: "nav-main"
+    }, {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_CONFIG,
-      label: "Preferences",
+      label: "Settings",
       event_ar: [
         {
           eventType: "click",
@@ -523,18 +547,18 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "dateFormat",
-      label: "Date display format:",
+      label: "How dates look:",
       parent: "configCol1",
       options: {
-        DATETYPE_DDMMYY: "dd/mm/yy",
-        DATETYPE_MMDDYY: "mm/dd/yy",
-        DATETYPE_YYMMDD: "yy/mm/dd"
+        ddmmyy: "dd/mm/yy",
+        mmddyy: "mm/dd/yy",
+        yymmdd: "yy/mm/dd"
       },
       disabled: true
     }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "timespan",
-      label: "Timespan shown on the timesheet page:",
+      label: "The timesheet shows:",
       parent: "configCol1",
       options: {
         timespanWeek: "A week",
@@ -545,7 +569,7 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "totalsToShow",
-      label: "Which totals should be calculated and displayed:",
+      label: "When calculating totals:",
       parent: "configCol2",
       options: {
         showTotalsWeek: "Show weekly totals",
@@ -556,7 +580,7 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "minuteIncrements",
-      label: "Time entry increments:",
+      label: "Smallest time that can be entered is:",
       parent: "configCol2",
       options: {
         minuteIncrement1: "1 minute",
@@ -1174,6 +1198,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     up_el.spinner = input_el;
     addClassname(up_el, SPINNER_UPBTN_CLASSNAME);
     wrapper_el.appendChild(up_el);
+    up_el.setAttribute('tabIndex', -1);
     registerEventHandler(up_el, "mousedown", onIncreaseSpinnerMouseDown);
     registerEventHandler(up_el, "touchstart", onIncreaseSpinnerMouseDown);
     registerEventHandler(up_el, "mouseup", onSpinnerMouseUp);
@@ -1185,6 +1210,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     down_el.spinner = input_el;
     addClassname(down_el, SPINNER_DOWNBTN_CLASSNAME);
     wrapper_el.appendChild(down_el);
+    down_el.setAttribute('tabIndex', -1);
     registerEventHandler(down_el, "mousedown", onDecreaseSpinnerMouseDown);
     registerEventHandler(down_el, "touchstart", onDecreaseSpinnerMouseDown);
     registerEventHandler(down_el, "mouseup", onSpinnerMouseUp);
@@ -1365,6 +1391,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       radio_el.id = optionID;
       radio_el.name = ob.id;
       radio_el.value = prop;
+//      logMsg("ob.checkIfMatched: " + ob.checkIfMatched);
+  //    logMsg("radio_el.value:" + radio_el.value);
       if (prop === ob.checkIfMatched) { radio_el.checked = true; }
       label_el.htmlFor = optionID;
     }
@@ -1419,6 +1447,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       case GUITYPE_HEADING:
         elType = "h" + ob.heirarchy;
         break;
+      case GUITYPE_SPACER:
+        elType = "hr";
+        break;
       default:
         elType = "div";
         break;
@@ -1450,12 +1481,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
     if (ob.class) { addClassname(form_el, ob.class); }
     if (ob.title) { form_el.innerHTML = "<h2>" + ob.title + "</h2>"; }
-//    if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
     if (ob.hidden) { form_el.style.display = "none"; }
 
     form_el.ob = ob;
-    //registerEventHandler(form_el, "submit", onFormSubmit);
-    //registerEventHandler(form_el, "click", onFormClick);
 
 		return form_el;
   };
@@ -1637,6 +1665,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   TODO  remove button should be closer to item it is removing
   TODO  notes input field even more faded when its not focused and has no data
   TODO  remove old dynamic classes (jobs/clients) 
+  TODO  'import from file' button doesn't get focus outline
   TODO  feedback:
         - [on startup] data and settings restored from previous session (localStorage)
         - [first usage] default data and settings created
@@ -1823,7 +1852,11 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   dataStoreObject = function(category, ob) {
+    logMsg("+dataStoreObject()");
+    logMsg("++category: " + category);
+    logMsg("++ob: " + JSON.stringify(ob));
     localStorage.setItem(APP_ID + DATASTORE_CATEGORY_PREFIX + category, JSON.stringify(ob));
+    attractAnimateElement(document.getElementById("sidebar-main"));
   };
 
 
@@ -1833,10 +1866,14 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   dataUpdateObject = function(category, key, value) {
-    var key,
+    var keyCurrent,
 				ob = dataRetrieveObject(category);
-    for (key in ob) {
-      if (key === key) {
+    logMsg("--dataUpdateObject()");
+    logMsg("---category: " + category);
+    logMsg("---key: " + key);
+    logMsg("---value: " + value);
+    for (keyCurrent in ob) {
+      if (keyCurrent === key) {
         ob[key] = value;
         break;
       }
@@ -1849,7 +1886,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 		var days_ar, day_ob, workItem_ar,
         selectedClientID, selectedJobID, previouslySelectedClientID, previouslySelectedJobID,
 				isMoneyTaskChk_el, unitBigInput_el, unitSmallInput_el, clientSelect_el, jobSelect_el, notesInput_el,
-				pageType = dataRetrieveObject(PREFS_STR).pagetype,
 				day_el = el.parentNode.parentNode,
 				day_str = day_el.id;
 		
@@ -1948,6 +1984,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 	--------------------------------------------------------------------------- */
   
   selectPage = function(pagetype) {
+    logMsg("selectPage()");
     dataUpdateObject(PREFS_STR, "pagetype", pagetype);
     location.hash = pagetype;
 		document.body.id = "";
@@ -2000,7 +2037,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   drawGUIFromAr = function(ar) {
-    var i, j, ob, eventToAdd_ob, eventToAddCur, tmp_el;
+    var i, j, ob, eventToAdd_ob, tmp_el;
     for (i = 0; i < ar.length; i++) {
       ob = ar[i];
       switch (ob.type) {
@@ -2027,7 +2064,8 @@ uk.co.firmgently.DontDillyDally = (function() {
         case GUITYPE_SECTION: // intentional rollthrough
         case GUITYPE_COL: // intentional rollthrough
         case GUITYPE_ROW: // intentional rollthrough
-        case GUITYPE_HEADING:
+        case GUITYPE_HEADING: // intentional rollthrough
+        case GUITYPE_SPACER:
           tmp_el = createBasicElementFromOb(ob);
           break;
         case GUITYPE_COLORPICKER:
@@ -2043,10 +2081,21 @@ uk.co.firmgently.DontDillyDally = (function() {
           break;
       }
 
+      logMsg("//drawGUIFromAr()");
+      logMsg("///ob.event_ar: " + JSON.stringify(ob.event_ar));
+      logMsg("///tmp_el: " + tmp_el);
+
+     /* if (tmp_el && ob.event_ar && ob.event_ar.length > 0) {
+        attachEventArrayToElement(tmp_el, ob.event_ar);
+      }*/
+
+
       if (ob.event_ar) { // contains an array of objects
         for (j = 0; j < ob.event_ar.length; j++) {
           eventToAdd_ob = ob.event_ar[j];
-          registerEventHandler(tmp_el, eventToAdd_ob.eventType, callMethodsFromObOnElement);
+          if (eventToAdd_ob.eventType) {
+            registerEventHandler(tmp_el, eventToAdd_ob.eventType, callMethodsFromObOnElement);
+          }
         }
       }
     }
@@ -2212,6 +2261,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 				monthHeader_el, day_el, date_el, dayDataContainer_el, totals_el,
 				dayWorkItems, itemID,
 				prevDay = new Date(),
+        totalsToShow = dataRetrieveObject(PREFS_STR).totalsToShow,
+        showWeekTotals = (totalsToShow === "showTotalsWeek" || totalsToShow === "showTotalsWeekAndMonth"), 
+        showMonthTotals = (totalsToShow === "showTotalsMonth" || totalsToShow === "showTotalsWeekAndMonth"), 
 				weekStartDay = 1, // 0 = Sunday, 1 = Monday etc
 				allWorkItems = dataRetrieveObject(DAYS_STR),
         percentDrawn = 100 * (tsDaysToDraw / tsDaysToDrawTotal),
@@ -2238,7 +2290,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       if (curDrawnDay.getWeekNumber() === 1 && curDrawnDay.getMonth() === 11) {
         significance_str += " (" + (curDrawnDay.getFullYear() + 1) + ")";
       }
-      if (tsDaysToDraw !== tsDaysToDrawTotal) {
+      if (showWeekTotals && tsDaysToDraw !== tsDaysToDrawTotal) {
         totals_el = document.createElement("li");
         addClassname(totals_el, CLASS_TOTALSWEEK);
         tsWorkingFragment.appendChild(totals_el);
@@ -2256,7 +2308,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       monthHeader_el = document.createElement("h4");
       monthHeader_el.innerHTML = MONTH_NAMES[curDrawnDay.getMonth()] + " " + curDrawnDay.getFullYear();
       day_el.appendChild(monthHeader_el);
-      if (tsDaysToDraw !== tsDaysToDrawTotal) {
+      if (showMonthTotals && tsDaysToDraw !== tsDaysToDrawTotal) {
         totals_el = document.createElement("li");
         addClassname(totals_el, CLASS_TOTALSMONTH);
         tsWorkingFragment.appendChild(totals_el);
@@ -2274,12 +2326,11 @@ uk.co.firmgently.DontDillyDally = (function() {
     // add date
     date_el = document.createElement("p");
     addClassname(date_el, "date col");
-    // TODO DATETYPE_DEFAULT being used here is that correct?
     if (significance_str !== "") {
     //if (isToday) {
-      date_el.innerHTML = "<em>" + curDrawnDay.getWeekDay(1) + "</em>" + getFormattedDate(curDrawnDay, DATETYPE_DEFAULT.label) + "<span>" + significance_str + "</span>";
+      date_el.innerHTML = "<em>" + curDrawnDay.getWeekDay(1) + "</em>" + getFormattedDate(curDrawnDay, DATETYPES[dataRetrieveObject(PREFS_STR).dateFormat].label) + "<span>" + significance_str + "</span>";
     } else {
-      date_el.innerHTML = "<em>" + curDrawnDay.getWeekDay(1) + "</em>" + getFormattedDate(curDrawnDay, DATETYPE_DEFAULT.label);
+      date_el.innerHTML = "<em>" + curDrawnDay.getWeekDay(1) + "</em>" + getFormattedDate(curDrawnDay, DATETYPES[dataRetrieveObject(PREFS_STR).dateFormat].label);
     }
     day_el.appendChild(date_el);
 
@@ -2742,15 +2793,36 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   onFormClick = function(event) {
-    var form = event.target;
+    var form = this,
+        prefs_ob = dataRetrieveObject(PREFS_STR);
+   /* logMsg("!onFormClick()");
+    logMsg("!this: " + this);
+    logMsg("!event.target: " + event.target);
+    logMsg("!event.target.id: " + event.target.id);
+    logMsg("!event.target.htmlFor: " + event.target.htmlFor);
+    logMsg("!event.currentTarget: " + event.currentTarget);
+    logMsg("!event.currentTarget.id: " + event.currentTarget.id);
+    logMsg("!event.currentTarget.htmlFor: " + event.currentTarget.htmlFor);*/
     if (form && form.id) {
+      logMsg("!form.id: " + form.id);
       switch (form.id) {
         case "configForm":
-          dataUpdateObject(PREFS_STR, "timespan", form.timespan.value);
+        /*  logMsg("!configForm FOUND");
+          logMsg("!form.timespan.value: " + form.timespan.value);
+          logMsg("!form.dateFormat.value: " + form.dateFormat.value);
+          logMsg("!form.totalsToShow.value: " + form.totalsToShow.value);
+          logMsg("!form.minuteIncrements.value: " + form.minuteIncrements.value);
+         // /* */
+          prefs_ob.timespan = form.timespan.value;
+          prefs_ob.dateFormat = form.dateFormat.value;
+          prefs_ob.totalsToShow = form.totalsToShow.value;
+          prefs_ob.minuteIncrements = form.minuteIncrements.value;
+          dataStoreObject(PREFS_STR, prefs_ob);
           // dateFormat is an object, the form just stores the name of it so grab it here
-          dataUpdateObject(PREFS_STR, "dateFormat", form.dateFormat.value);
-          dataUpdateObject(PREFS_STR, "totalsToShow", form.totalsToShow.value);
-          dataUpdateObject(PREFS_STR, "minuteIncrements", form.minuteIncrements.value);
+         // dataUpdateObject(PREFS_STR, "dateFormat", form.dateFormat.value);
+          //dataUpdateObject(PREFS_STR, "totalsToShow", form.totalsToShow.value);
+          //dataUpdateObject(PREFS_STR, "minuteIncrements", form.minuteIncrements.value);
+          //*/
           break;
         default:
           break;
@@ -2760,12 +2832,43 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   onFormSubmit = function(event) {
+    logMsg("onFormSubmit()");
+    logMsg("event.target: " + event.target);
+    logMsg("event.currentTarget: " + event.currentTarget);
     stopPropagation(event);
   };
 
 
   onUpdateInput = function(event) {
-    switch (dataRetrieveObject(PREFS_STR).pagetype) {
+    logMsg("onUpdateInput()");
+    if (dataRetrieveObject(PREFS_STR).pagetype === PAGETYPE_TIMESHEETS) {
+      // is a notes input field
+        if (this.className.indexOf(CLASS_NOTESINPUT) !== -1) {
+          // TODO validate notes input
+          updateDataFromWorkItemEl(this.parentNode);
+        } else {
+          if (isNaN(parseInt(this.value))) { this.value = 0; }
+
+          // TODO needs to handle negative small unit eg. -£0.13
+          if (this.className.indexOf(CLASS_SPINNER_UNITBIG) !== -1) {
+            if (parseInt(this.value) < 0) {
+              addClassname(this.parentNode.parentNode, CLASS_NEGATIVE);
+            } else {
+              removeClassname(this.parentNode.parentNode, CLASS_NEGATIVE);
+            }
+          }
+          // TODO check following line still works
+          if (document.body.contains(this)) {
+            updateDataFromWorkItemEl(this.parentNode.parentNode);
+          }
+          this.value = padString(this.value, this.spin_ob.pad);
+          clearTimeout(recalculateTotalsTimer);
+          recalculateTotalsTimer = setTimeout(recalculateAllTotals, RECALCULATETOTALS_DELAY);
+        }
+    } else if (dataRetrieveObject(PREFS_STR).pagetype === PAGETYPE_JOBSANDCLIENTS) {
+        updateDataFromClientOrJobEl(this.parentNode);
+    }
+    /*switch (dataRetrieveObject(PREFS_STR).pagetype) {
       case PAGETYPE_TIMESHEETS:
         if (this.className.indexOf(CLASS_NOTESINPUT) !== -1) {
           // TODO validate notes input
@@ -2797,7 +2900,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         break;
       default:
         break;
-    }
+    }*/
   };
 
 
@@ -3051,8 +3154,10 @@ uk.co.firmgently.DontDillyDally = (function() {
     if (!el.ob.event_ar) { el.ob.event_ar = [] ; }
 
     for (i = 0; i < ar.length; i++) {
-      el.ob.event_ar.push(ar[i]);
-      registerEventHandler(el, ar[i].eventType, callMethodsFromObOnElement);
+      if (ar[i].eventType) {
+        el.ob.event_ar.push(ar[i]);
+        registerEventHandler(el, ar[i].eventType, callMethodsFromObOnElement);
+      }
     }
   };
 
@@ -3065,7 +3170,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     node = event.target;
     // TODO make sure this loop cant get infinite
-    while (!node.ob) {
+    while (!node.ob && node !== document.body) {
       node = node.parentNode;
     }
 
@@ -3110,6 +3215,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 	--------------------------------------------------------------------------- */
 
   navClick = function(event) {
+    logMsg("navClick()");
     selectPage(arguments[0]);
   };
 
@@ -3185,24 +3291,18 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   updateSelected = function() {
-    var pageType = dataRetrieveObject(PREFS_STR).pagetype;
+    var pagetype = dataRetrieveObject(PREFS_STR).pagetype; // refers to current page
+    logMsg("updateSelected()");
 
-    switch (pageType) {
-      case PAGETYPE_TIMESHEETS: // run on to next case
-      case PAGETYPE_JOBSANDCLIENTS:
-				if (this.className.indexOf(CLASS_CLIENTSELECT) !== -1) {
-					this.className = CLASS_CLIENTSELECT + " " + this.value;
-				} else if (this.className.indexOf(CLASS_JOBSELECT) !== -1) {
-					this.className = CLASS_JOBSELECT + " " + this.value;
-				}
-        break;
-      case PAGETYPE_CONFIG:
-        break;
-      default:
-        break;
+    if (pagetype === PAGETYPE_TIMESHEETS || pagetype === PAGETYPE_JOBSANDCLIENTS) {
+      if (this.className.indexOf(CLASS_CLIENTSELECT) !== -1) {
+        this.className = CLASS_CLIENTSELECT + " " + this.value;
+      } else if (this.className.indexOf(CLASS_JOBSELECT) !== -1) {
+        this.className = CLASS_JOBSELECT + " " + this.value;
+      }
     }
 
-    if (pageType === PAGETYPE_TIMESHEETS) {
+    if (pagetype === PAGETYPE_TIMESHEETS) {
 			if (document.body.contains(this)) {
 				updateDataFromWorkItemEl(this.parentNode);
 			}

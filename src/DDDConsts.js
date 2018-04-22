@@ -61,6 +61,7 @@ uk.co.firmgently.DDDConsts = (function() {
     GUITYPE_METHODCALL: "GUITypeMethodCall",
     GUITYPE_UL: "GUITypeUL",
     GUITYPE_HELP: "GUITypeHelp",
+    GUITYPE_SPACER: "GUITypeSpacer",
 
     CLASS_SHEET: "sheet",
     CLASS_BTNNAV: "btnNav",
@@ -80,6 +81,7 @@ uk.co.firmgently.DDDConsts = (function() {
     CLASS_TOTALSWEEK: "totals-week",
     CLASS_TOTALSMONTH: "totals-month",
     CLASS_TOTALSYEAR: "totals-year",
+    CLASS_SPACER_EXPAND_VERT: "expand-vert",
 
     TURNOVER_STR: "earned",
     PROFIT_STR: "profit",
@@ -162,7 +164,7 @@ uk.co.firmgently.DDDConsts = (function() {
       intro: "Add items with [+], remove with [x]. | An item is about either time or money, tap [-o] to swap."
     },
     PAGEDATA_CONFIG: {
-      pageTitle: "Preferences",
+      pageTitle: "Settings",
       intro: "Show and hide things and customise settings."
     },
     PAGEDATA_PRIVACY: {
@@ -170,14 +172,32 @@ uk.co.firmgently.DDDConsts = (function() {
       intro: "Info about data you create with this application."
     },
 
-    DATETYPE_YYMMDD: {
+    /*DATETYPE_YYMMDD: {
+      id: "yymmdd",
       label: "yy/mm/dd"
     },
     DATETYPE_DDMMYY: {
+      id: "ddmmyy",
       label: "dd/mm/yy"
     },
     DATETYPE_MMDDYY: {
+      id: "mmddyy",
       label: "mm/dd/yy"
+    },*/
+
+    DATETYPES: {
+      yymmdd: {
+        id: "yymmdd",
+        label: "yy/mm/dd"
+      },
+      ddmmyy: {
+        id: "ddmmyy",
+        label: "dd/mm/yy"
+      },
+      mmddyy: {
+        id: "mmddyy",
+        label: "mm/dd/yy"
+      },
     },
 
     JOB_DEFAULTS: [
@@ -240,7 +260,7 @@ uk.co.firmgently.DDDConsts = (function() {
   CONST.MINUTEINCREMENTS_DEFAULT = CONST.MINUTEINCREMENTS_15;
   CONST.SHOWTOTALS_DEFAULT = CONST.SHOWTOTALS_BOTH;
   CONST.TIMESPAN_DEFAULT = CONST.TIMESPAN_MONTH;
-  CONST.DATETYPE_DEFAULT = CONST.DATETYPE_DDMMYY;
+  CONST.DATETYPE_DEFAULT = "ddmmyy";
   CONST.PAGETYPE_DEFAULT = CONST.PAGETYPE_TIMESHEETS;
 
 
@@ -352,10 +372,14 @@ uk.co.firmgently.DDDConsts = (function() {
       ],
       parent: "nav-main"
     }, {
+      type: CONST.GUITYPE_SPACER,
+      class: CONST.CLASS_SPACER_EXPAND_VERT,
+      parent: "nav-main"
+    }, {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_CONFIG,
-      label: "Preferences",
+      label: "Settings",
       event_ar: [
         {
           eventType: "click",
@@ -523,18 +547,18 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "dateFormat",
-      label: "Date display format:",
+      label: "How dates look:",
       parent: "configCol1",
       options: {
-        DATETYPE_DDMMYY: "dd/mm/yy",
-        DATETYPE_MMDDYY: "mm/dd/yy",
-        DATETYPE_YYMMDD: "yy/mm/dd"
+        ddmmyy: "dd/mm/yy",
+        mmddyy: "mm/dd/yy",
+        yymmdd: "yy/mm/dd"
       },
       disabled: true
     }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "timespan",
-      label: "Timespan shown on the timesheet page:",
+      label: "The timesheet shows:",
       parent: "configCol1",
       options: {
         timespanWeek: "A week",
@@ -545,7 +569,7 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "totalsToShow",
-      label: "Which totals should be calculated and displayed:",
+      label: "When calculating totals:",
       parent: "configCol2",
       options: {
         showTotalsWeek: "Show weekly totals",
@@ -556,7 +580,7 @@ uk.co.firmgently.DDDConsts = (function() {
     }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "minuteIncrements",
-      label: "Time entry increments:",
+      label: "Smallest time that can be entered is:",
       parent: "configCol2",
       options: {
         minuteIncrement1: "1 minute",

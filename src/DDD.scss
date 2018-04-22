@@ -169,13 +169,17 @@ $moneyNotesBackgroundColor: mix($moneyInputBackgroundColor, white, 35%);
 $moneyNegativeBackgroundColor: $ddd-orange;
 $moneyNegativeNotesBackgroundColor: mix($moneyNegativeBackgroundColor, white, 35%);
 
+$jobNotesBackgroundColorDim: lighten($jobInputBackgroundColor, 35%);
+$moneyNotesBackgroundColorDim: mix($moneyInputBackgroundColor, white, 50%);
+$moneyNegativeNotesBackgroundColorDim: mix($moneyNegativeBackgroundColor, white, 50%);
+
 $hashlessMoneyIconColor: str-replace("#{$moneyNotesBackgroundColor}", "#", "");
 $hashlessJobIconColor: str-replace("#{$jobNotesBackgroundColor}", "#", "");
 $hashlessMoneyNegativeIconColor: str-replace("#{$moneyNegativeNotesBackgroundColor}", "#", "");
 
-$iconBrightColorMoney: saturate($moneyNotesBackgroundColor, 60%);
-$iconBrightColorJob: saturate($jobNotesBackgroundColor, 60%);
-$iconBrightColorMoneyNegative: saturate($moneyNegativeNotesBackgroundColor, 60%);
+$iconBrightColorMoney: saturate($moneyNotesBackgroundColor, 90%);
+$iconBrightColorJob: saturate($jobNotesBackgroundColor, 90%);
+$iconBrightColorMoneyNegative: saturate($moneyNegativeNotesBackgroundColor, 90%);
 $hashlessMoneyIconBrightColor: str-replace("#{$iconBrightColorMoney}", "#", "");
 $hashlessJobIconBrightColor: str-replace("#{$iconBrightColorJob}", "#", "");
 $hashlessMoneyNegativeBrightIconColor: str-replace("#{$iconBrightColorMoneyNegative}", "#", "");
@@ -323,8 +327,12 @@ $svgIconNow: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F
 	100% { background-color: white; }
 }
 
-:focus {
+input.ios-switch:focus + div,
+:focus/*,
+label:focus-within*/ {
 	//outline: $largePadding solid $ddd-orange;
+  outline: 0;
+	@include box-shadow(0px 0px 0px 11px rgba(255,0,0,1));
 	background-color: white; color: black;
 }
 
@@ -334,10 +342,14 @@ $svgIconNow: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F
 
 
 .sheet {
-	@include box-shadow(10px 10px 80px -8px rgba(0,0,0,0.2));
+	@include box-shadow(0px 0px 30px -10px rgba(0,0,0,0.3));
   background-color: $sheetBgColor;
 }
 
+.expand-vert {
+  display: inline-block;
+  height: 0;
+}
 
 body {
   font-family: $normal-font-family;
@@ -364,7 +376,7 @@ aside {
       overflow: hidden; display: block;
       text-overflow: ellipsis; white-space: nowrap;
       margin-bottom: $smallPadding;
-      &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; outline: 0; }
+      &:hover, &:focus { color: $button-color-over; background-color: $button-bgcolor-over; }
 			&#jobsClients { background-image: $svgIconJobsClients; }
 			&#timesheet { background-image: $svgIconTimesheets; }
 			&#privacy { background-image: $svgIconPrivacy; }
@@ -558,7 +570,7 @@ body#config aside nav button#config.btnNav {
 					background-color: $moneyInputBackgroundColor; 
 					background-size: 100%;
 				}
-				input.notes { color: $moneyInputColor; background-color: $moneyNotesBackgroundColor; }
+				input.notes { color: $moneyInputColor; background-color: $moneyNotesBackgroundColorDim; }
 				.spin-button-up, .spin-button-down { background-color: $moneyInputBackgroundColor; }
 				.spinner {
 					&:before, &:after {
@@ -583,7 +595,7 @@ body#config aside nav button#config.btnNav {
 				}
 				&.negative {
 					input.unitBig, input.unitSmall { background-color: $moneyNegativeBackgroundColor; }
-					input.notes { background-color: $moneyNegativeNotesBackgroundColor;}
+					input.notes { background-color: $moneyNegativeNotesBackgroundColorDim;}
 					input[type="checkbox"].ios-switch + div { background-image: linear-gradient(90deg, $moneyNegativeBackgroundColor 50%, transparent 50%); }
 					.spin-button-up, .spin-button-down { background-color: $moneyNegativeBackgroundColor; }
 					input[type="checkbox"].ios-switch + div:before {
@@ -595,7 +607,7 @@ body#config aside nav button#config.btnNav {
 
 			&.hrs {
 				input.unitBig, input.unitSmall { background-color: $jobInputBackgroundColor; }
-				input.notes { color: $jobInputColor; background-color: $jobNotesBackgroundColor; }
+				input.notes { color: $jobInputColor; background-color: $jobNotesBackgroundColorDim; }
 				.spinner {
 					&:before, &:after {
 						font-weight: bold;
@@ -652,15 +664,18 @@ body#config aside nav button#config.btnNav {
           &:-moz-placeholder { opacity: 1; }
         }
         &.hrs {
+          .notes { background-color: $jobNotesBackgroundColor; }
           .spinner {
             &:before, &:after { color: $iconBrightColorJob; }
           }
         }
         &.money {
+          .notes { background-color: $moneyNotesBackgroundColor; }
           .spinner {
             &:before, &:after { color: $iconBrightColorMoney; }
           }
           &.negative {
+            .notes { background-color: $moneyNegativeNotesBackgroundColor; }
             .spinner {
               &:before, &:after { color: $iconBrightColorMoneyNegative; }
             }
@@ -709,9 +724,10 @@ body#config aside nav button#config.btnNav {
         @include border-radius($mediumPadding);
         font-weight: bold;
         height: $iconSize;
+        vertical-align: top;
       }
       .removeItemBtn { right: auto; }
-			input, label { border: solid $tinyPadding $panelFgColorDimmed; }
+			input, label { border: solid $tinyPadding $panelBgColor; }
     }
   }
 }
@@ -877,7 +893,8 @@ nav button.btnNav,
   }
   + label {
     padding: 0;
-    display: inline-block; width: 1rem; height: 1rem; background-color: #efefef;
+    display: inline-block; width: $iconSize; height: $iconSize;
+    @include border-radius($mediumPadding);
     cursor: pointer;
   }
 }

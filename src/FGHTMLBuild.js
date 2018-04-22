@@ -130,6 +130,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     up_el.spinner = input_el;
     addClassname(up_el, SPINNER_UPBTN_CLASSNAME);
     wrapper_el.appendChild(up_el);
+    up_el.setAttribute('tabIndex', -1);
     registerEventHandler(up_el, "mousedown", onIncreaseSpinnerMouseDown);
     registerEventHandler(up_el, "touchstart", onIncreaseSpinnerMouseDown);
     registerEventHandler(up_el, "mouseup", onSpinnerMouseUp);
@@ -141,6 +142,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     down_el.spinner = input_el;
     addClassname(down_el, SPINNER_DOWNBTN_CLASSNAME);
     wrapper_el.appendChild(down_el);
+    down_el.setAttribute('tabIndex', -1);
     registerEventHandler(down_el, "mousedown", onDecreaseSpinnerMouseDown);
     registerEventHandler(down_el, "touchstart", onDecreaseSpinnerMouseDown);
     registerEventHandler(down_el, "mouseup", onSpinnerMouseUp);
@@ -321,6 +323,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       radio_el.id = optionID;
       radio_el.name = ob.id;
       radio_el.value = prop;
+//      logMsg("ob.checkIfMatched: " + ob.checkIfMatched);
+  //    logMsg("radio_el.value:" + radio_el.value);
       if (prop === ob.checkIfMatched) { radio_el.checked = true; }
       label_el.htmlFor = optionID;
     }
@@ -375,6 +379,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       case GUITYPE_HEADING:
         elType = "h" + ob.heirarchy;
         break;
+      case GUITYPE_SPACER:
+        elType = "hr";
+        break;
       default:
         elType = "div";
         break;
@@ -406,12 +413,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
     if (ob.class) { addClassname(form_el, ob.class); }
     if (ob.title) { form_el.innerHTML = "<h2>" + ob.title + "</h2>"; }
-//    if (ob.el_ar) { drawGUIFromAr(ob.el_ar); }
     if (ob.hidden) { form_el.style.display = "none"; }
 
     form_el.ob = ob;
-    //registerEventHandler(form_el, "submit", onFormSubmit);
-    //registerEventHandler(form_el, "click", onFormClick);
 
 		return form_el;
   };
