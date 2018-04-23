@@ -16,7 +16,7 @@ uk.co.firmgently.FGUtils = (function() {
   addCSSRule, getIEVersion, isTouchDevice,
   registerEventHandler, unregisterEventHandler, stopPropagation,
   hexOpacityToRGBA, rgbToHex, getRandomHexColor, getRandomContrastingHexColor,
-  hexToRGB_ar, getBrightnessFromRGBAr,
+  hexToRGB_ar, getBrightnessFromRGBAr, floatToArray,
   createElementWithId,
   removeClassname, addClassname, getStyle, padString,
   treatAsUTC, daysBetween, getFormattedDate,
@@ -322,6 +322,16 @@ uk.co.firmgently.FGUtils = (function() {
   };
 
 
+  floatToArray = function(float) {
+    var numStr = "" + float;
+    if (numStr.indexOf(".") === -1) {
+      numStr += ".00";
+    }
+    return numStr.split(".");
+    logMsg("float: " + float);
+    logMsg("numStr: " + numStr);
+  };
+
 
   // ----------------------------------------------------------
   // A short snippet for detecting versions of IE in JavaScript
@@ -457,6 +467,7 @@ uk.co.firmgently.FGUtils = (function() {
     treatAsUTC: treatAsUTC,
     padString: padString,
     daysBetween: daysBetween,
+    floatToArray: floatToArray,
     logMsg: logMsg,
     isEmpty: isEmpty,
     getIEVersion: getIEVersion,

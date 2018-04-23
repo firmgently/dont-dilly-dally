@@ -30,7 +30,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 	onSpinnerStart, onSpinnerMouseUp, doSpinStep, spinnerTimer,
 	onIncreaseSpinnerMouseDown, onDecreaseSpinnerMouseDown,
 
-  onColorPickerClick, onColorPickerCanvasClick, onColorPickerClickOutside, onColorPickerCanvasMoveOver, onColorPickerImageLoad, colorPickerImage, colorPickerCanvas,
+  onColorPickerClick, onColorPickerCanvasClick, onColorPickerClickOutside,
+  onColorPickerCanvasMoveOver, onColorPickerImageLoad, colorPickerImage, colorPickerCanvas,
   colorPickerClose, colorPickerCanvasClickCount,
   colorPickerSelectedCurrent
 	;
@@ -314,11 +315,18 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 
       label_el = document.createElement("label");
       label_el.innerHTML = ob.options[prop];
-      parent_el.appendChild(label_el);
 
       radio_el = document.createElement("input");
       if (ob.class) { addClassname(radio_el, ob.class); }
-      parent_el.appendChild(radio_el);
+
+
+      if (ob.swapLabelPos) {
+        parent_el.appendChild(radio_el);
+        parent_el.appendChild(label_el);
+      } else {
+        parent_el.appendChild(label_el);
+        parent_el.appendChild(radio_el);
+      }
 
       radio_el.setAttribute("type", "radio");
       radio_el.id = optionID;

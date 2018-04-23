@@ -16,7 +16,7 @@
   TODO  display month/week start correctly
   FIXME press/hold to jump back through months, page reloads with ? in querystring
   TODO  number spinners should fade up quickly with short delay (to avoid flickering on 'remove item' etc)
-  TODO  only show month/week jump buttons if they make sense
+  TODO  only show month/week jump buttons if they make sense OR make them work everywhere (ie. flip month/week page)
   TODO  validate all input data
           time/money
           notes - max length
@@ -38,6 +38,7 @@
 
 
   DONE dots in loaderbar
+  DONE  loader should only appear on timesheets page
   DONE  leave gap between months on timesheet
   DONE  after loading file current page must update (redraw) be it timesheets, J&Cs or preferences
   DONE  file load isn't loading data yet
@@ -132,23 +133,21 @@ uk.co.firmgently.DontDillyDally = (function() {
 	// callbacks
   onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
 	onClearDataBtnClick, onSaveBtnClick, onColorChangeConfirm,
-	onFormClick, onScroll,
+	onFormClick, onScroll, onFileSelect,
 
 	// other methods
   doSetup, selectPage, refreshPage, drawPage, clearPage, drawGUIFromAr,
 	eventAutoRepeat, eventAutoRepeatStop, eventAutoRepeatStart,
-  recalculateAllTotals, calculateTotalsFromDateSpan,
+  recalculateAllTotals, calculateTotalsFromDateSpan, getNumberDataFromWorkItem,
   addItem, removeItem, addClient, removeClientOrJob, addJob,
   attachEventArrayToElement, callMethodsFromObOnElement, callMethodFromOb,
   drawTimesheet, drawNextDay, drawJobsAndClients, drawClientOrJobFromOb, drawTotalsContainer,
   getNextID, getNewClient, getNewJob, resetJobAndClientCounts, updateJobOrClientCount,
   navClick, todayClick, dayJump, startCSSAnimation,
-  dataStoragePossible, initData,
-	dataStoreObject, dataRetrieveObject, dataUpdateObject,
+  dataStoragePossible, initData, dataStoreObject, dataRetrieveObject, dataUpdateObject,
 	clientAndJobStyleSheet, createClientOrJobFromOb, createCSSForClientOrJobFromOb,
 	getJobOrClientIDFromElement, updateDataFromWorkItemEl, updateDataFromClientOrJobEl,
-	onFileSelect, updateColoursFromPickers, 
-  updateSelected, drawUIWorkItem, removeWorkItem 
+	updateColoursFromPickers, updateSelected, drawUIWorkItem, removeWorkItem 
 	;
 
 
@@ -262,20 +261,15 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 	updateDataFromWorkItemEl = function (el) {
 		var days_ar, day_ob, workItem_ar,
-        selectedClientID, selectedJobID, previouslySelectedClientID, previouslySelectedJobID,
-				isMoneyTaskChk_el, unitBigInput_el, unitSmallInput_el, clientSelect_el, jobSelect_el, notesInput_el,
-				day_el = el.parentNode.parentNode,
-				day_str = day_el.id;
-		
-		isMoneyTaskChk_el = el.getElementsByClassName("isMoneyTaskChk")[0];
-		unitBigInput_el = el.getElementsByClassName(CLASS_SPINNER_UNITBIG)[0];
-		unitSmallInput_el = el.getElementsByClassName(CLASS_SPINNER_UNITSMALL)[0];
-		clientSelect_el = el.getElementsByClassName(CLASS_CLIENTSELECT)[0];
-		jobSelect_el = el.getElementsByClassName(CLASS_JOBSELECT)[0];
-		notesInput_el = el.getElementsByClassName(CLASS_NOTESINPUT)[0]; 
-
-    selectedClientID = getJobOrClientIDFromElement(clientSelect_el);
-    selectedJobID = getJobOrClientIDFromElement(jobSelect_el);
+        previouslySelectedClientID, previouslySelectedJobID,
+        isMoneyTaskChk_el = el.getElementsByClassName("isMoneyTaskChk")[0],
+        clientSelect_el = el.getElementsByClassName(CLASS_CLIENTSELECT)[0],
+        jobSelect_el = el.getElementsByClassName(CLASS_JOBSELECT)[0],
+        notesInput_el = el.getElementsByClassName(CLASS_NOTESINPUT)[0], 
+        selectedClientID = getJobOrClientIDFromElement(clientSelect_el),
+        selectedJobID = getJobOrClientIDFromElement(jobSelect_el),
+        day_el = el.parentNode.parentNode,
+        day_str = day_el.id;
 
 		days_ar = dataRetrieveObject(DAYS_STR);
 		day_ob = days_ar[day_str];
@@ -284,18 +278,16 @@ uk.co.firmgently.DontDillyDally = (function() {
 		workItem_ar = [];
 		if (isMoneyTaskChk_el && isMoneyTaskChk_el.checked) {
 			workItem_ar[DATAINDICES.itemType] = ITEMTYPE_MONEY;
-      workItem_ar[DATAINDICES.numberValue] = unitBigInput_el.value + SEPARATOR_CASH + unitSmallInput_el.value;
 		} else {
 			workItem_ar[DATAINDICES.itemType] = ITEMTYPE_TIME;
-      workItem_ar[DATAINDICES.numberValue] = unitBigInput_el.value + SEPARATOR_TIME + unitSmallInput_el.value;
 		}
+    workItem_ar[DATAINDICES.numberValue] = getNumberDataFromWorkItem(el).value;
   
     if (day_ob[el.id]) {
       previouslySelectedClientID = day_ob[el.id][DATAINDICES.clientID];
       previouslySelectedJobID = day_ob[el.id][DATAINDICES.jobID];
     }
     if (previouslySelectedClientID !== selectedClientID) {
-      // FIXME decrement ID isn't being found (as workItem_ar is new and not filled with pre-existing content)
       updateJobOrClientCount(CLIENTS_STR, previouslySelectedClientID, -1);
       updateJobOrClientCount(CLIENTS_STR, selectedClientID, 1)
     }
@@ -365,12 +357,15 @@ uk.co.firmgently.DontDillyDally = (function() {
     dataUpdateObject(PREFS_STR, "pagetype", pagetype);
     location.hash = pagetype;
     refreshPage();
+    if (pagetype === PAGETYPE_TIMESHEETS) {
+      removeClassname(loadingIndicator_el, CLASS_HIDDEN);
+    }
   };
 
 
   refreshPage = function() {
     clearPage();
-    setTimeout(drawPage, 1); // on timer to force reflow after clearPage()
+    setTimeout(drawPage, 0); // on timer to force reflow after clearPage()
   };
 
 
@@ -379,7 +374,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 		clearTimeout(eventAutoRepeatTimer);
 		clearTimeout(timesheetDrawDayTimer);
 		clearTimeout(recalculateTotalsTimer);
-    removeClassname(loadingIndicator_el, CLASS_HIDDEN);
     mainContainer_el.innerHTML = "";
   };
 
@@ -493,14 +487,14 @@ uk.co.firmgently.DontDillyDally = (function() {
     heading_el.innerHTML = data_ob.heading;
     data_ob.parent_el.appendChild(heading_el);
 
+    // TODO numbers should be padded here
     row_el = table_el.appendChild(document.createElement("tr"));
+
     cell_el = row_el.appendChild(document.createElement("td"));
     cell_el.innerHTML = HOURSWORKED_STR; 
     cell_el = row_el.appendChild(document.createElement("td"));
     cell_el.innerHTML = "00:00"; 
     addClassname(cell_el, "total-hoursworked");
-
-    row_el = table_el.appendChild(document.createElement("tr"));
     cell_el = row_el.appendChild(document.createElement("td"));
     cell_el.innerHTML = INCOME_STR; 
     cell_el = row_el.appendChild(document.createElement("td"));
@@ -508,6 +502,10 @@ uk.co.firmgently.DontDillyDally = (function() {
     addClassname(cell_el, "total-income");
 
     row_el = table_el.appendChild(document.createElement("tr"));
+
+    cell_el = row_el.appendChild(document.createElement("td"));
+//    cell_el.colSpan = "2";
+    cell_el = row_el.appendChild(document.createElement("td"));
     cell_el = row_el.appendChild(document.createElement("td"));
     cell_el.innerHTML = EXPENDITURE_STR; 
     cell_el = row_el.appendChild(document.createElement("td"));
@@ -515,6 +513,10 @@ uk.co.firmgently.DontDillyDally = (function() {
     addClassname(cell_el, "total-spend");
 
     row_el = table_el.appendChild(document.createElement("tr"));
+
+    cell_el = row_el.appendChild(document.createElement("td"));
+    //cell_el.colSpan = "2";
+    cell_el = row_el.appendChild(document.createElement("td"));
     cell_el = row_el.appendChild(document.createElement("td"));
     cell_el.innerHTML = PROFIT_STR; 
     cell_el = row_el.appendChild(document.createElement("td"));
@@ -809,7 +811,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 	// - attach event handlers to it
 	// - pre-fill it with stored data if some exists
   drawUIWorkItem = function(dayDataContainer_el, itemID, itemData_ob) {
-    var money_el, tmp_ob, tmp_el, item_el, wrappedCheckbox_el, numberValue_ar,
+    var money_el, tmp_ob, tmp_el, item_el, wrappedCheckbox_el, tmpNum, numberValue_ar,
 				day_el = dayDataContainer_el.parentNode;
 
 		if (itemID === undefined) { itemID = getGUID(); }
@@ -894,15 +896,24 @@ uk.co.firmgently.DontDillyDally = (function() {
 			tmp_el.checked = true;
       //
       if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
-        numberValue_ar = itemData_ob[DATAINDICES.numberValue].split(SEPARATOR_CASH);
+        tmpNum = parseInt(itemData_ob[DATAINDICES.numberValue], 10);
+        //numberValue_ar = itemData_ob[DATAINDICES.numberValue].split(SEPARATOR_CASH);
+        // TODO optimise this (following)
+        numberValue_ar = floatToArray(tmpNum/100); // cash is stored in pennies
       }
 			addClassname(item_el, "money");
 		} else {
       if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
-        numberValue_ar = itemData_ob[DATAINDICES.numberValue].split(SEPARATOR_TIME);
+        tmpNum = parseInt(itemData_ob[DATAINDICES.numberValue], 10);
+        //numberValue_ar = itemData_ob[DATAINDICES.numberValue].split(SEPARATOR_TIME);
+        numberValue_ar = [
+          (tmpNum - (tmpNum % 60)) / 60,
+          tmpNum % 60
+        ]
       }
 			addClassname(item_el, "hrs");
     }
+    if (numberValue_ar) { logMsg(numberValue_ar.join("/")); }
 		//////////
     // hours/money big unit spinner input
 		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
@@ -936,9 +947,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     ]);
     if (itemData_ob && itemData_ob[DATAINDICES.numberValue]) {
 			tmp_el.value = numberValue_ar[0];
-			if (parseInt(numberValue_ar[0]) < 0) {
-				addClassname(tmp_el.parentNode.parentNode, CLASS_NEGATIVE);
-			}
 			manualEvent(tmp_el, "change");
 		} else {
       tmp_el.value = "00";
@@ -991,6 +999,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 			manualEvent(tmp_el, "change");
 		} else {
       tmp_el.value = "00";
+    }
+    if (getNumberDataFromWorkItem(item_el).value < 0) {
+      addClassname(tmp_el.parentNode.parentNode, CLASS_NEGATIVE);
     }
 		//////////
     // job/money notes
@@ -1229,11 +1240,11 @@ uk.co.firmgently.DontDillyDally = (function() {
               removeClassname(this.parentNode.parentNode, CLASS_NEGATIVE);
             }
           }
-          // TODO check following line still works
           if (document.body.contains(this)) {
             updateDataFromWorkItemEl(this.parentNode.parentNode);
           }
           this.value = padString(this.value, this.spin_ob.pad);
+
           clearTimeout(recalculateTotalsTimer);
           recalculateTotalsTimer = setTimeout(recalculateAllTotals, RECALCULATETOTALS_DELAY);
         }
@@ -1270,6 +1281,57 @@ uk.co.firmgently.DontDillyDally = (function() {
   /* ---------------------------------------------------------------------------
     housekeeping/calculations
 	--------------------------------------------------------------------------- */
+
+
+  // convert displayed numeric values into correct formats for storing
+  getNumberDataFromWorkItem = function(item_el) {
+    var return_ob,
+        spinners = item_el.getElementsByClassName("spinner"),
+        val1 = parseInt(spinners[0].getElementsByTagName("INPUT")[0].value, 10),
+        val2 = parseInt(spinners[1].getElementsByTagName("INPUT")[0].value, 10);
+
+    logMsg("val1: " + val1);
+    logMsg("val2: " + val2);
+    if (item_el.className.indexOf("money") !== -1) {
+      return_ob = { type: ITEMTYPE_MONEY };
+      // val1/val2 = before/after the decimal point
+      // value stored as pennies eg. £7.24 = 724
+      if (val1 < 0) { // negative value, need to subtract small units (not add)
+        return_ob.value = 0 + (val1*100) - val2
+      } else {
+        return_ob.value = 0 + (val1*100) + val2
+      }
+    } else if (item_el.className.indexOf("hrs") !== -1) {
+      return_ob = {
+        type: ITEMTYPE_TIME,
+        // value stored as minutes
+        // val1 = hours, val2 = mins
+        value: 0 + (val1 * 60) + val2
+      };
+    }
+    return return_ob;
+  };
+
+
+  /*getNumberDataFromWorkItemData = function(data_ob) {
+    var return_ob,
+        spinners = item_el.getElementsByClassName("spinner"),
+        val1 = parseInt(spinners[0].getElementsByTagName("INPUT")[0].value, 10),
+        val2 = parseInt(spinners[0].getElementsByTagName("INPUT")[0].value, 10);
+
+    if (item_el.className.indexOf("money") !== -1) {
+      return_ob = {
+        type: ITEMTYPE_MONEY,
+        value: 0 + val1 + (val2/10) // val2 = after the decimal point
+      };
+    } else if (item_el.className.indexOf("hrs") !== -1) {
+      return_ob = {
+        type: ITEMTYPE_TIME,
+        value: 0 + (val1 * 60) + val2 // val1 = hours, val2 = mins
+      };
+    }
+    return return_ob;
+  };*/
 
 
   resetJobAndClientCounts = function() {
@@ -1333,13 +1395,8 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   calculateTotalsFromDateSpan = function(dateEnd, timeSpan) {
     var i, j, daysToCalculate, dayCur, day_str, tmpVal,
-				dayWorkItems, itemID, itemCur, daysInPrevMonth,
-        dateStart,
-        return_ob = {
-          timeTotal: 0,
-          incomeTotal: 0,
-          spendTotal: 0
-        },
+				dayWorkItems, itemID, itemCur, daysInPrevMonth, dateStart,
+        return_ob = { timeTotal: 0, incomeTotal: 0, spendTotal: 0 },
 				allWorkItems = dataRetrieveObject(DAYS_STR);
     
     dateStart = new Date(dateEnd.getTime());
@@ -1362,6 +1419,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 				for (itemID in dayWorkItems) {
           itemCur = dayWorkItems[itemID];
           if (itemCur[DATAINDICES.itemType] === ITEMTYPE_MONEY) {
+            //tmpVal = getNumberDataFromWorkItem(n
             tmpVal = parseInt(itemCur[DATAINDICES.numberValue], 10);
             if (tmpVal < 0) {
               return_ob.spendTotal += parseInt(itemCur[DATAINDICES.numberValue], 10);
@@ -1375,8 +1433,14 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
       dayCur.setDate(dayCur.getDate() + 1);
     }
+    return_ob.spendTotal = return_ob.spendTotal / 100;
+    return_ob.incomeTotal = return_ob.incomeTotal / 100;
+    // convert minutes to hh/mm
+    tmpVal = return_ob.timeTotal;
+    return_ob.timeTotal = ((tmpVal - (tmpVal % 60)) / 60) + SEPARATOR_TIME + (tmpVal % 60) ;
     return return_ob;
   };
+
 
   // addItem is called from the scope of the 'add task' button
   addItem = function() {
@@ -1597,7 +1661,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 			startCSSAnimation(day.getElementsByTagName("H4")[0], CLASS_ANIM_ATTRACT);
 		}
 
-    eventAutoRepeatStart(event.target, event.type);
+    eventAutoRepeatStart(event);
   };
 
 
@@ -1615,17 +1679,17 @@ uk.co.firmgently.DontDillyDally = (function() {
 	};
 
 
-	eventAutoRepeatStart = function(el, eventType) {
-    eventAutoRepeat(el, eventType);
-    registerEventHandler(el, "mouseup", eventAutoRepeatStop);
-    registerEventHandler(el, "mouseout", eventAutoRepeatStop);
-    registerEventHandler(el, "touchend", eventAutoRepeatStop);
+	eventAutoRepeatStart = function(event) {
+    eventAutoRepeat(event);
+    registerEventHandler(event.target, "mouseup", eventAutoRepeatStop);
+    registerEventHandler(event.target, "mouseout", eventAutoRepeatStop);
+    registerEventHandler(event.target, "touchend", eventAutoRepeatStop);
 	};
 	
 	
-	eventAutoRepeat = function(el, eventType) {
+	eventAutoRepeat = function(event) {
 		clearTimeout(eventAutoRepeatTimer);
-		eventAutoRepeatTimer = setTimeout(function() { manualEvent(el, eventType); }, AUTOREPEAT_RATE);
+		eventAutoRepeatTimer = setTimeout(function() { manualEvent(event.target, event.type); }, AUTOREPEAT_RATE);
 	};
 
 

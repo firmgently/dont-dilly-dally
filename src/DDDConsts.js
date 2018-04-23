@@ -424,10 +424,6 @@ uk.co.firmgently.DDDConsts = (function() {
           scopeID: "miniNavForm"
         }
       ]
-    },  {
-      type: CONST.GUITYPE_PARA,
-      text: "month",
-      parent: "miniNavForm"
     }, {
       type: CONST.GUITYPE_BTN,
       id: CONST.EL_ID_MONTHPREVBTN,
@@ -442,6 +438,10 @@ uk.co.firmgently.DDDConsts = (function() {
           methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }
       ],
+      parent: "miniNavForm"
+    },  {
+      type: CONST.GUITYPE_PARA,
+      text: "month",
       parent: "miniNavForm"
     }, {
       type: CONST.GUITYPE_BTN,
@@ -459,10 +459,6 @@ uk.co.firmgently.DDDConsts = (function() {
       ],
       parent: "miniNavForm"
     }, {
-      type: CONST.GUITYPE_PARA,
-      text: "week",
-      parent: "miniNavForm"
-    }, {
       type: CONST.GUITYPE_BTN,
       id: CONST.EL_ID_WEEKPREVBTN,
       class: CONST.CLASS_BTNMININAV,
@@ -476,6 +472,10 @@ uk.co.firmgently.DDDConsts = (function() {
           methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }
       ],
+      parent: "miniNavForm"
+    }, {
+      type: CONST.GUITYPE_PARA,
+      text: "week",
       parent: "miniNavForm"
     }, {
       type: CONST.GUITYPE_BTN,
@@ -544,6 +544,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_RADIOBTN,
       id: "dateFormat",
       label: "How dates look:",
+      swapLabelPos: true,
       parent: "configCol1",
       options: {
         ddmmyy: "dd/mm/yy",
@@ -560,6 +561,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_RADIOBTN,
       id: "timespan",
       label: "The timesheet shows:",
+      swapLabelPos: true,
       parent: "configCol2",
       options: {
         timespanWeek: "A week",
@@ -576,6 +578,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_RADIOBTN,
       id: "totalsToShow",
       label: "When calculating totals:",
+      swapLabelPos: true,
       parent: "configCol3",
       options: {
         showTotalsWeek: "Show weekly totals",
@@ -592,6 +595,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_RADIOBTN,
       id: "minuteIncrements",
       label: "Smallest time that can be entered is:",
+      swapLabelPos: true,
       parent: "configCol4",
       options: {
         minuteIncrement1: "1 minute",

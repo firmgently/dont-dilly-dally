@@ -155,6 +155,7 @@ table {
     background-color: white; } }
 input.ios-switch:focus + div,
 input#file-chooser:focus + label,
+.spinner:focus-within,
 :focus {
   outline: 0;
   -webkit-box-shadow: 0px 0px 0px 11px red;
@@ -179,7 +180,13 @@ input#file-chooser:focus + label,
   -webkit-box-shadow: 0px 0px 30px -10px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0px 0px 30px -10px rgba(0, 0, 0, 0.3);
   box-shadow: 0px 0px 30px -10px rgba(0, 0, 0, 0.3);
-  background-color: white; }
+  background-color: white;
+  padding: 2rem;
+  margin: 0 2rem 2rem 0;
+  width: calc(50% - 2rem);
+  display: inline-block; }
+  .sheet p {
+    margin-bottom: 2rem; }
 
 .expand-vert {
   display: inline-block;
@@ -209,13 +216,9 @@ aside {
       color: #dad5d5; }
   aside nav {
     position: absolute;
-    white-space: nowrap;
+    z-index: 3;
     display: inline-block; }
     aside nav button.btnNav {
-      overflow: hidden;
-      display: block;
-      text-overflow: ellipsis;
-      white-space: nowrap;
       margin-bottom: 0.3rem; }
       aside nav button.btnNav:hover, aside nav button.btnNav:focus {
         color: #978257;
@@ -256,15 +259,6 @@ body#config aside nav button#config.btnNav {
   #main h2 {
     font-size: 1.25rem; }
 
-#jobsExisting, #clientsExisting, #configForm .sheet {
-  width: calc(50% - 2rem);
-  display: inline-block;
-  padding: 0.8rem;
-  margin-right: 2rem; }
-  #jobsExisting p, #clientsExisting p, #configForm .sheet p {
-    margin-top: 2rem;
-    margin-bottom: 0.8rem; }
-
 #sidebar-main {
   position: absolute;
   left: 0;
@@ -303,6 +297,9 @@ body#config aside nav button#config.btnNav {
     z-index: 2;
     background-color: #cc6644;
     background-clip: content-box; }
+
+#timesheetContainer.sheet {
+  width: 100%; }
 
 #timesheetContainer, #clientsExisting, #jobsExisting {
   z-index: 1;
@@ -398,6 +395,7 @@ body#config aside nav button#config.btnNav {
         position: absolute;
         opacity: 0; }
         #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch + div, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch + div, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch + div, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch + div {
+          text-align: left;
           display: inline-block;
           vertical-align: middle;
           width: 4.5rem;
@@ -749,18 +747,18 @@ body#config aside nav button#config.btnNav {
     #clientsExisting > li.totals-week:hover table > tr > td, #clientsExisting > li.totals-month:hover table > tr > td, #clientsExisting > li.totals-year:hover table > tr > td, #jobsExisting > li.totals-week table > tr > td, #jobsExisting > li.totals-month table > tr > td, #jobsExisting > li.totals-year table > tr > td,
     #jobsExisting > li.totals-week:hover table > tr > td, #jobsExisting > li.totals-month:hover table > tr > td, #jobsExisting > li.totals-year:hover table > tr > td {
       padding-bottom: 0.6rem; }
-    #timesheetContainer > li.totals-week table > tr > td:first-of-type, #timesheetContainer > li.totals-month table > tr > td:first-of-type, #timesheetContainer > li.totals-year table > tr > td:first-of-type,
-    #timesheetContainer > li.totals-week:hover table > tr > td:first-of-type, #timesheetContainer > li.totals-month:hover table > tr > td:first-of-type, #timesheetContainer > li.totals-year:hover table > tr > td:first-of-type, #clientsExisting > li.totals-week table > tr > td:first-of-type, #clientsExisting > li.totals-month table > tr > td:first-of-type, #clientsExisting > li.totals-year table > tr > td:first-of-type,
-    #clientsExisting > li.totals-week:hover table > tr > td:first-of-type, #clientsExisting > li.totals-month:hover table > tr > td:first-of-type, #clientsExisting > li.totals-year:hover table > tr > td:first-of-type, #jobsExisting > li.totals-week table > tr > td:first-of-type, #jobsExisting > li.totals-month table > tr > td:first-of-type, #jobsExisting > li.totals-year table > tr > td:first-of-type,
-    #jobsExisting > li.totals-week:hover table > tr > td:first-of-type, #jobsExisting > li.totals-month:hover table > tr > td:first-of-type, #jobsExisting > li.totals-year:hover table > tr > td:first-of-type {
+    #timesheetContainer > li.totals-week table > tr > td:nth-of-type(odd), #timesheetContainer > li.totals-month table > tr > td:nth-of-type(odd), #timesheetContainer > li.totals-year table > tr > td:nth-of-type(odd),
+    #timesheetContainer > li.totals-week:hover table > tr > td:nth-of-type(odd), #timesheetContainer > li.totals-month:hover table > tr > td:nth-of-type(odd), #timesheetContainer > li.totals-year:hover table > tr > td:nth-of-type(odd), #clientsExisting > li.totals-week table > tr > td:nth-of-type(odd), #clientsExisting > li.totals-month table > tr > td:nth-of-type(odd), #clientsExisting > li.totals-year table > tr > td:nth-of-type(odd),
+    #clientsExisting > li.totals-week:hover table > tr > td:nth-of-type(odd), #clientsExisting > li.totals-month:hover table > tr > td:nth-of-type(odd), #clientsExisting > li.totals-year:hover table > tr > td:nth-of-type(odd), #jobsExisting > li.totals-week table > tr > td:nth-of-type(odd), #jobsExisting > li.totals-month table > tr > td:nth-of-type(odd), #jobsExisting > li.totals-year table > tr > td:nth-of-type(odd),
+    #jobsExisting > li.totals-week:hover table > tr > td:nth-of-type(odd), #jobsExisting > li.totals-month:hover table > tr > td:nth-of-type(odd), #jobsExisting > li.totals-year:hover table > tr > td:nth-of-type(odd) {
       text-align: right;
       color: #d4d2d2;
       width: 10rem;
       padding-right: 0.6rem; }
-    #timesheetContainer > li.totals-week table > tr > td:last-of-type, #timesheetContainer > li.totals-month table > tr > td:last-of-type, #timesheetContainer > li.totals-year table > tr > td:last-of-type,
-    #timesheetContainer > li.totals-week:hover table > tr > td:last-of-type, #timesheetContainer > li.totals-month:hover table > tr > td:last-of-type, #timesheetContainer > li.totals-year:hover table > tr > td:last-of-type, #clientsExisting > li.totals-week table > tr > td:last-of-type, #clientsExisting > li.totals-month table > tr > td:last-of-type, #clientsExisting > li.totals-year table > tr > td:last-of-type,
-    #clientsExisting > li.totals-week:hover table > tr > td:last-of-type, #clientsExisting > li.totals-month:hover table > tr > td:last-of-type, #clientsExisting > li.totals-year:hover table > tr > td:last-of-type, #jobsExisting > li.totals-week table > tr > td:last-of-type, #jobsExisting > li.totals-month table > tr > td:last-of-type, #jobsExisting > li.totals-year table > tr > td:last-of-type,
-    #jobsExisting > li.totals-week:hover table > tr > td:last-of-type, #jobsExisting > li.totals-month:hover table > tr > td:last-of-type, #jobsExisting > li.totals-year:hover table > tr > td:last-of-type {
+    #timesheetContainer > li.totals-week table > tr > td:nth-of-type(even), #timesheetContainer > li.totals-month table > tr > td:nth-of-type(even), #timesheetContainer > li.totals-year table > tr > td:nth-of-type(even),
+    #timesheetContainer > li.totals-week:hover table > tr > td:nth-of-type(even), #timesheetContainer > li.totals-month:hover table > tr > td:nth-of-type(even), #timesheetContainer > li.totals-year:hover table > tr > td:nth-of-type(even), #clientsExisting > li.totals-week table > tr > td:nth-of-type(even), #clientsExisting > li.totals-month table > tr > td:nth-of-type(even), #clientsExisting > li.totals-year table > tr > td:nth-of-type(even),
+    #clientsExisting > li.totals-week:hover table > tr > td:nth-of-type(even), #clientsExisting > li.totals-month:hover table > tr > td:nth-of-type(even), #clientsExisting > li.totals-year:hover table > tr > td:nth-of-type(even), #jobsExisting > li.totals-week table > tr > td:nth-of-type(even), #jobsExisting > li.totals-month table > tr > td:nth-of-type(even), #jobsExisting > li.totals-year table > tr > td:nth-of-type(even),
+    #jobsExisting > li.totals-week:hover table > tr > td:nth-of-type(even), #jobsExisting > li.totals-month:hover table > tr > td:nth-of-type(even), #jobsExisting > li.totals-year:hover table > tr > td:nth-of-type(even) {
       font-family: monospace;
       font-size: 1.2rem; }
     #timesheetContainer > li.totals-week h4, #timesheetContainer > li.totals-month h4, #timesheetContainer > li.totals-year h4,
@@ -808,10 +806,11 @@ select {
   select:first-of-type {
     margin-right: 0.8rem; }
 
-#configForm > span {
-  margin: 0 2rem 2rem 0; }
 #configForm input[type=radio] {
-  display: block; }
+  float: right;
+  clear: both; }
+#configForm label {
+  float: right; }
 
 /* Spinners */
 .spinner {
@@ -903,7 +902,8 @@ select {
 
 .file-buttons {
   position: absolute;
-  bottom: 0; }
+  bottom: 0;
+  display: inline-block; }
 
 #file-chooser {
   width: 0.1px;
@@ -924,6 +924,7 @@ nav button.btnNav,
   font-size: 0.8rem;
   font-weight: 700;
   text-align: left;
+  line-height: 0.9rem;
   color: #776644;
   background-color: #ffeedd;
   display: inline-block;
@@ -938,6 +939,9 @@ nav button.btnNav,
   background-repeat: no-repeat;
   background-position: center;
   background-position: 0.6rem; }
+
+#clear-data {
+  background-image: url("data:image/svg+xml,%3C!-- Generated by IcoMoon.io --%3E%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Efire%3C/title%3E%3Cpath d='M10.031 32c-2.133-4.438-0.997-6.981 0.642-9.376 1.795-2.624 2.258-5.221 2.258-5.221s1.411 1.834 0.847 4.703c2.493-2.775 2.963-7.196 2.587-8.889 5.635 3.938 8.043 12.464 4.798 18.783 17.262-9.767 4.294-24.38 2.036-26.027 0.753 1.646 0.895 4.433-0.625 5.785-2.573-9.759-8.937-11.759-8.937-11.759 0.753 5.033-2.728 10.536-6.084 14.648-0.118-2.007-0.243-3.392-1.298-5.312-0.237 3.646-3.023 6.617-3.777 10.27-1.022 4.946 0.765 8.568 7.555 12.394z'%3E%3C/path%3E%3C/svg%3E%0A"); }
 
 #file-chooser + label {
   background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Eupload3%3C/title%3E%3Cpath d='M15 22h-15v8h30v-8h-15zM28 26h-4v-2h4v2zM7 10l8-8 8 8h-5v10h-6v-10z'%3E%3C/path%3E%3C/svg%3E"); }
