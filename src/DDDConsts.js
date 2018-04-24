@@ -144,6 +144,9 @@ uk.co.firmgently.DDDConsts = (function() {
 
     ITEMTYPE_TIME: "TIME",
     ITEMTYPE_MONEY: "CASH",
+
+    PADSTR_DOUBLEDIGIT: "00",
+    PADSTR_LONGSPACEDNUM: "    ",
     
     DATAINDICES: {
       itemType:			0,
@@ -263,6 +266,33 @@ uk.co.firmgently.DDDConsts = (function() {
   CONST.TIMESPAN_DEFAULT = CONST.TIMESPAN_MONTH;
   CONST.DATETYPE_DEFAULT = "ddmmyy";
   CONST.PAGETYPE_DEFAULT = CONST.PAGETYPE_TIMESHEETS;
+  CONST.NUMFIELD_DATA_TIME_BIG = {
+    min: 0,  
+    max: 23, 
+    step: 1,  
+    wrapNum: true,
+    pad: CONST.PADSTR_DOUBLEDIGIT
+  };
+  CONST.NUMFIELD_DATA_TIME_SMALL = {
+    min: 0,  
+    max: 59, 
+    step: 1, 
+    wrapNum: true,
+    pad: CONST.PADSTR_DOUBLEDIGIT
+  };
+  CONST.NUMFIELD_DATA_MONEY_BIG = {
+    min: -999999999,
+    max: 999999999,
+    step: 1, 
+    pad: CONST.PADSTR_LONGSPACEDNUM
+  };
+  CONST.NUMFIELD_DATA_MONEY_SMALL = {
+    min: 0,
+    max: 99,
+    step: 1,
+    wrapNum: true,
+    pad: CONST.PADSTR_DOUBLEDIGIT
+  };
 
 
 

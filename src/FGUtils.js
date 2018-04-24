@@ -21,7 +21,7 @@ uk.co.firmgently.FGUtils = (function() {
   removeClassname, addClassname, getStyle, padString,
   treatAsUTC, daysBetween, getFormattedDate,
   getFunctionFromString, getGUID, changeSelectByOption, manualEvent,
-  updateSelectOptionList,
+  updateSelectOptionList, getNewStylesheet,
   makeLocal, isEmpty, logMsg;
 
 
@@ -241,22 +241,39 @@ uk.co.firmgently.FGUtils = (function() {
   };
 
 
-  addCSSRule = function(selector, property, newValue) {
-    var
-    i, curStyleSheet,
-    totalStyleSheets = document.styleSheets.length,
-    newStyle = property + ": " + newValue;
+  addCSSRule = function(selector, property, newValue, customSheet) {
+    var i, curStyleSheet,
+        totalStyleSheets = document.styleSheets.length,
+        newStyle = property + ": " + newValue;
 
-    for (i = 0; i < totalStyleSheets; i++) {
-      curStyleSheet = document.styleSheets[i];
+    if (customSheet) {
       try {
-        curStyleSheet.insertRule(selector + " {" + newStyle + "}", curStyleSheet.cssRules.length);
+        customSheet.insertRule(selector + " {" + newStyle + "}", customSheet.cssRules.length);
       } catch(err1) {
         try {
-          curStyleSheet.addRule(selector, newStyle);
+          customSheet.addRule(selector, newStyle);
         } catch(err2) {}
       }
+    } else {
+      for (i = 0; i < totalStyleSheets; i++) {
+        curStyleSheet = document.styleSheets[i];
+        try {
+          curStyleSheet.insertRule(selector + " {" + newStyle + "}", curStyleSheet.cssRules.length);
+        } catch(err1) {
+          try {
+            curStyleSheet.addRule(selector, newStyle);
+          } catch(err2) {}
+        }
+      }
     }
+  };
+
+
+  getNewStylesheet = function() {
+    var style = document.createElement("style");
+    style.appendChild(document.createTextNode("")); // needed for webkit
+    document.head.appendChild(style);
+    return style.sheet;
   };
 
 
@@ -265,6 +282,7 @@ uk.co.firmgently.FGUtils = (function() {
     if (str.length < pad.length) {
       return_str = pad.substr(0, (pad.length - str.length)) + str;
     }
+   ///logMsg(pad + " || " + str + " --> " + return_str);
     return return_str;
   };
 
@@ -328,8 +346,6 @@ uk.co.firmgently.FGUtils = (function() {
       numStr += ".00";
     }
     return numStr.split(".");
-    logMsg("float: " + float);
-    logMsg("numStr: " + numStr);
   };
 
 
@@ -470,6 +486,7 @@ uk.co.firmgently.FGUtils = (function() {
     floatToArray: floatToArray,
     logMsg: logMsg,
     isEmpty: isEmpty,
+    getNewStylesheet: getNewStylesheet,
     getIEVersion: getIEVersion,
     getStyle: getStyle,
     isTouchDevice: isTouchDevice,
