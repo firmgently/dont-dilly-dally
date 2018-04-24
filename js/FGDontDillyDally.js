@@ -1737,13 +1737,11 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   TODO  display month/week start correctly
   FIXME press/hold to jump back through months, page reloads with ? in querystring
   FIXME final (sheet) totals not calculating correctly
-  TODO  number spinners should fade up quickly with short delay (to avoid flickering on 'remove item' etc)
   TODO  only show month/week jump buttons if they make sense OR make them work everywhere (ie. flip month/week page)
   TODO  validate all input data
           time/money
           notes - max length
           client/job names in clients/jobs page
-	FIXME	if empty or bad time/money data is **stored in JSON**, correct it to zero
 	FIXME	£-0.77 must register as negative
   TODO  test everything on touchscreen
   TODO  test everything on narrow (phone) layout
@@ -1771,6 +1769,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   DONE  remove old dynamic classes (jobs/clients) 
   DONE  notes input field even more faded when its not focused and has no data
   DONE client select dropdown styles broken (CSS not being written after loading data file?)
+	DONE	if empty or bad time/money data is **stored in JSON**, correct it to zero
+  DONE  number spinners should fade up quickly with short delay (to avoid flickering on 'remove item' etc)
   DONE  clicking anywhere off colorpicker should close it without changing colours (currently working on transparent pixels of png, needs to be the same for all the rest of the screen
   DONE  spinners ony show for hovered/focused day
   DONE if page is changed while timesheets are being drawn, bugs out (clear timeout)
@@ -2640,7 +2640,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     }
 		//////////
     // hours/money big unit spinner input
-		if (itemData_ob && itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
+		if (!itemData_ob || itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
       tmp_ob = NUMFIELD_DATA_TIME_BIG;
     } else {
       tmp_ob = NUMFIELD_DATA_MONEY_BIG;
