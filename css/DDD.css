@@ -363,14 +363,14 @@ body#config aside nav button#config.btnNav {
     color: #6c6a6a;
     background-color: #f9f8f8; }
     #timesheetContainer > li.day:hover, #timesheetContainer > li.day:focus-within, #clientsExisting > li.day:hover, #clientsExisting > li.day:focus-within, #jobsExisting > li.day:hover, #jobsExisting > li.day:focus-within {
-      color: #9f9d9d;
-      background-color: #f7f5f5; }
+      color: #1f1e1e;
+      background-color: #fefefe; }
   #timesheetContainer > li:nth-of-type(even), #clientsExisting > li:nth-of-type(even), #jobsExisting > li:nth-of-type(even) {
     background-color: #fbfbfb;
     color: #6c6a6a; }
     #timesheetContainer > li:nth-of-type(even):hover, #timesheetContainer > li:nth-of-type(even):focus-within, #clientsExisting > li:nth-of-type(even):hover, #clientsExisting > li:nth-of-type(even):focus-within, #jobsExisting > li:nth-of-type(even):hover, #jobsExisting > li:nth-of-type(even):focus-within {
-      color: #393838;
-      background-color: #f7f5f5; }
+      color: #1f1e1e;
+      background-color: #fefefe; }
   #timesheetContainer > li.today .date.col, #timesheetContainer > li.week-start .date.col, #clientsExisting > li.today .date.col, #clientsExisting > li.week-start .date.col, #jobsExisting > li.today .date.col, #jobsExisting > li.week-start .date.col {
     /* margin-top: -0.5rem;*/ }
     #timesheetContainer > li.today .date.col em, #timesheetContainer > li.week-start .date.col em, #clientsExisting > li.today .date.col em, #clientsExisting > li.week-start .date.col em, #jobsExisting > li.today .date.col em, #jobsExisting > li.week-start .date.col em {
@@ -392,7 +392,7 @@ body#config aside nav button#config.btnNav {
       padding: 2rem;
       margin-top: -0.8rem;
       margin-bottom: 0.8rem;
-      border-bottom: solid 0.15rem #d4d2d2; }
+      /*  border-bottom: solid $tinyPadding $panelBgColorDimmed;*/ }
     #timesheetContainer > li.month-start:first-child, #clientsExisting > li.month-start:first-child, #jobsExisting > li.month-start:first-child {
       margin-top: 0; }
   #timesheetContainer ul.day-data.col > li, #clientsExisting ul.day-data.col > li, #jobsExisting ul.day-data.col > li {
@@ -436,7 +436,7 @@ body#config aside nav button#config.btnNav {
           border-radius: 999px;
           margin: 0 0.6rem 0;
           padding: 0.3rem 0.5rem;
-          background: #DFDDDD;
+          background: #9f9090;
           background-image: linear-gradient(90deg, #778866 50%, transparent 50%);
           background-size: 200% 100%;
           background-position: 100% 0;
@@ -457,7 +457,7 @@ body#config aside nav button#config.btnNav {
             color: #DFDDDD;
             text-indent: -1.9rem; }
           #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:after {
-            content: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23whitesmoke' viewBox='0 0 32 32'%3E%3Ctitle%3Eclock%3C/title%3E%3Cpath d='M20.586 23.414l-6.586-6.586v-8.828h4v7.172l5.414 5.414zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 28c-6.627 0-12-5.373-12-12s5.373-12 12-12c6.627 0 12 5.373 12 12s-5.373 12-12 12z'%3E%3C/path%3E%3C/svg%3E");
+            content: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23beb4b4' viewBox='0 0 32 32'%3E%3Ctitle%3Eclock%3C/title%3E%3Cpath d='M20.586 23.414l-6.586-6.586v-8.828h4v7.172l5.414 5.414zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 28c-6.627 0-12-5.373-12-12s5.373-12 12-12c6.627 0 12 5.373 12 12s-5.373 12-12 12z'%3E%3C/path%3E%3C/svg%3E");
             margin-left: 0.8rem;
             color: #DFDDDD; }
           #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:hover:before, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:hover:before, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:hover:before, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:hover:before, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch + div:hover:before, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:hover:before, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:hover:before, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch + div:hover:before, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:hover:before {
@@ -522,15 +522,15 @@ body#config aside nav button#config.btnNav {
       #timesheetContainer ul.day-data.col > li.money.negative .spinner:before, #timesheetContainer ul.day-data.col > li.money.negative .spinner:after, #timesheetContainer ul.clients > li.money.negative .spinner:before, #timesheetContainer ul.clients > li.money.negative .spinner:after, #timesheetContainer ul.jobs > li.money.negative .spinner:before, #timesheetContainer ul.jobs > li.money.negative .spinner:after, #clientsExisting ul.day-data.col > li.money.negative .spinner:before, #clientsExisting ul.day-data.col > li.money.negative .spinner:after, #clientsExisting ul.clients > li.money.negative .spinner:before, #clientsExisting ul.clients > li.money.negative .spinner:after, #clientsExisting ul.jobs > li.money.negative .spinner:before, #clientsExisting ul.jobs > li.money.negative .spinner:after, #jobsExisting ul.day-data.col > li.money.negative .spinner:before, #jobsExisting ul.day-data.col > li.money.negative .spinner:after, #jobsExisting ul.clients > li.money.negative .spinner:before, #jobsExisting ul.clients > li.money.negative .spinner:after, #jobsExisting ul.jobs > li.money.negative .spinner:before, #jobsExisting ul.jobs > li.money.negative .spinner:after {
         color: #edc9be; }
       #timesheetContainer ul.day-data.col > li.hrs input.unitBig, #timesheetContainer ul.day-data.col > li.hrs input.unitSmall, #timesheetContainer ul.clients > li.hrs input.unitBig, #timesheetContainer ul.clients > li.hrs input.unitSmall, #timesheetContainer ul.jobs > li.hrs input.unitBig, #timesheetContainer ul.jobs > li.hrs input.unitSmall, #clientsExisting ul.day-data.col > li.hrs input.unitBig, #clientsExisting ul.day-data.col > li.hrs input.unitSmall, #clientsExisting ul.clients > li.hrs input.unitBig, #clientsExisting ul.clients > li.hrs input.unitSmall, #clientsExisting ul.jobs > li.hrs input.unitBig, #clientsExisting ul.jobs > li.hrs input.unitSmall, #jobsExisting ul.day-data.col > li.hrs input.unitBig, #jobsExisting ul.day-data.col > li.hrs input.unitSmall, #jobsExisting ul.clients > li.hrs input.unitBig, #jobsExisting ul.clients > li.hrs input.unitSmall, #jobsExisting ul.jobs > li.hrs input.unitBig, #jobsExisting ul.jobs > li.hrs input.unitSmall {
-        background-color: #DFDDDD; }
+        background-color: #9f9090; }
       #timesheetContainer ul.day-data.col > li.hrs input.notes, #timesheetContainer ul.clients > li.hrs input.notes, #timesheetContainer ul.jobs > li.hrs input.notes, #clientsExisting ul.day-data.col > li.hrs input.notes, #clientsExisting ul.clients > li.hrs input.notes, #clientsExisting ul.jobs > li.hrs input.notes, #jobsExisting ul.day-data.col > li.hrs input.notes, #jobsExisting ul.clients > li.hrs input.notes, #jobsExisting ul.jobs > li.hrs input.notes {
-        color: #F0EEEE;
-        background-color: white; }
+        color: #797777;
+        background-color: #d3cccc; }
       #timesheetContainer ul.day-data.col > li.hrs .spinner:before, #timesheetContainer ul.day-data.col > li.hrs .spinner:after, #timesheetContainer ul.clients > li.hrs .spinner:before, #timesheetContainer ul.clients > li.hrs .spinner:after, #timesheetContainer ul.jobs > li.hrs .spinner:before, #timesheetContainer ul.jobs > li.hrs .spinner:after, #clientsExisting ul.day-data.col > li.hrs .spinner:before, #clientsExisting ul.day-data.col > li.hrs .spinner:after, #clientsExisting ul.clients > li.hrs .spinner:before, #clientsExisting ul.clients > li.hrs .spinner:after, #clientsExisting ul.jobs > li.hrs .spinner:before, #clientsExisting ul.jobs > li.hrs .spinner:after, #jobsExisting ul.day-data.col > li.hrs .spinner:before, #jobsExisting ul.day-data.col > li.hrs .spinner:after, #jobsExisting ul.clients > li.hrs .spinner:before, #jobsExisting ul.clients > li.hrs .spinner:after, #jobsExisting ul.jobs > li.hrs .spinner:before, #jobsExisting ul.jobs > li.hrs .spinner:after {
         font-weight: bold;
         top: 0.3rem;
         position: absolute;
-        color: whitesmoke; }
+        color: #beb4b4; }
       #timesheetContainer ul.day-data.col > li.hrs .spinner:first-of-type:before, #timesheetContainer ul.clients > li.hrs .spinner:first-of-type:before, #timesheetContainer ul.jobs > li.hrs .spinner:first-of-type:before, #clientsExisting ul.day-data.col > li.hrs .spinner:first-of-type:before, #clientsExisting ul.clients > li.hrs .spinner:first-of-type:before, #clientsExisting ul.jobs > li.hrs .spinner:first-of-type:before, #jobsExisting ul.day-data.col > li.hrs .spinner:first-of-type:before, #jobsExisting ul.clients > li.hrs .spinner:first-of-type:before, #jobsExisting ul.jobs > li.hrs .spinner:first-of-type:before {
         font-size: 0.9rem;
         content: "hrs";
@@ -615,51 +615,62 @@ body#config aside nav button#config.btnNav {
       #jobsExisting ul.day-data.col > li .spinner:hover input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.clients > li:focus-within input[type="checkbox"].ios-switch + div:after,
       #jobsExisting ul.clients > li .spinner:hover input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.jobs > li:focus-within input[type="checkbox"].ios-switch + div:after,
       #jobsExisting ul.jobs > li .spinner:hover input[type="checkbox"].ios-switch + div:after {
-        content: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23928c8c' viewBox='0 0 32 32'%3E%3Ctitle%3Eclock%3C/title%3E%3Cpath d='M20.586 23.414l-6.586-6.586v-8.828h4v7.172l5.414 5.414zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 28c-6.627 0-12-5.373-12-12s5.373-12 12-12c6.627 0 12 5.373 12 12s-5.373 12-12 12z'%3E%3C/path%3E%3C/svg%3E"); }
-      #timesheetContainer ul.day-data.col > li:focus-within input.notes::-webkit-input-placeholder,
-      #timesheetContainer ul.day-data.col > li .spinner:hover input.notes::-webkit-input-placeholder, #timesheetContainer ul.clients > li:focus-within input.notes::-webkit-input-placeholder,
-      #timesheetContainer ul.clients > li .spinner:hover input.notes::-webkit-input-placeholder, #timesheetContainer ul.jobs > li:focus-within input.notes::-webkit-input-placeholder,
-      #timesheetContainer ul.jobs > li .spinner:hover input.notes::-webkit-input-placeholder, #clientsExisting ul.day-data.col > li:focus-within input.notes::-webkit-input-placeholder,
-      #clientsExisting ul.day-data.col > li .spinner:hover input.notes::-webkit-input-placeholder, #clientsExisting ul.clients > li:focus-within input.notes::-webkit-input-placeholder,
-      #clientsExisting ul.clients > li .spinner:hover input.notes::-webkit-input-placeholder, #clientsExisting ul.jobs > li:focus-within input.notes::-webkit-input-placeholder,
-      #clientsExisting ul.jobs > li .spinner:hover input.notes::-webkit-input-placeholder, #jobsExisting ul.day-data.col > li:focus-within input.notes::-webkit-input-placeholder,
-      #jobsExisting ul.day-data.col > li .spinner:hover input.notes::-webkit-input-placeholder, #jobsExisting ul.clients > li:focus-within input.notes::-webkit-input-placeholder,
-      #jobsExisting ul.clients > li .spinner:hover input.notes::-webkit-input-placeholder, #jobsExisting ul.jobs > li:focus-within input.notes::-webkit-input-placeholder,
-      #jobsExisting ul.jobs > li .spinner:hover input.notes::-webkit-input-placeholder {
-        opacity: 1; }
-      #timesheetContainer ul.day-data.col > li:focus-within input.notes::-moz-placeholder,
-      #timesheetContainer ul.day-data.col > li .spinner:hover input.notes::-moz-placeholder, #timesheetContainer ul.clients > li:focus-within input.notes::-moz-placeholder,
-      #timesheetContainer ul.clients > li .spinner:hover input.notes::-moz-placeholder, #timesheetContainer ul.jobs > li:focus-within input.notes::-moz-placeholder,
-      #timesheetContainer ul.jobs > li .spinner:hover input.notes::-moz-placeholder, #clientsExisting ul.day-data.col > li:focus-within input.notes::-moz-placeholder,
-      #clientsExisting ul.day-data.col > li .spinner:hover input.notes::-moz-placeholder, #clientsExisting ul.clients > li:focus-within input.notes::-moz-placeholder,
-      #clientsExisting ul.clients > li .spinner:hover input.notes::-moz-placeholder, #clientsExisting ul.jobs > li:focus-within input.notes::-moz-placeholder,
-      #clientsExisting ul.jobs > li .spinner:hover input.notes::-moz-placeholder, #jobsExisting ul.day-data.col > li:focus-within input.notes::-moz-placeholder,
-      #jobsExisting ul.day-data.col > li .spinner:hover input.notes::-moz-placeholder, #jobsExisting ul.clients > li:focus-within input.notes::-moz-placeholder,
-      #jobsExisting ul.clients > li .spinner:hover input.notes::-moz-placeholder, #jobsExisting ul.jobs > li:focus-within input.notes::-moz-placeholder,
-      #jobsExisting ul.jobs > li .spinner:hover input.notes::-moz-placeholder {
-        opacity: 1; }
-      #timesheetContainer ul.day-data.col > li:focus-within input.notes:-ms-input-placeholder,
-      #timesheetContainer ul.day-data.col > li .spinner:hover input.notes:-ms-input-placeholder, #timesheetContainer ul.clients > li:focus-within input.notes:-ms-input-placeholder,
-      #timesheetContainer ul.clients > li .spinner:hover input.notes:-ms-input-placeholder, #timesheetContainer ul.jobs > li:focus-within input.notes:-ms-input-placeholder,
-      #timesheetContainer ul.jobs > li .spinner:hover input.notes:-ms-input-placeholder, #clientsExisting ul.day-data.col > li:focus-within input.notes:-ms-input-placeholder,
-      #clientsExisting ul.day-data.col > li .spinner:hover input.notes:-ms-input-placeholder, #clientsExisting ul.clients > li:focus-within input.notes:-ms-input-placeholder,
-      #clientsExisting ul.clients > li .spinner:hover input.notes:-ms-input-placeholder, #clientsExisting ul.jobs > li:focus-within input.notes:-ms-input-placeholder,
-      #clientsExisting ul.jobs > li .spinner:hover input.notes:-ms-input-placeholder, #jobsExisting ul.day-data.col > li:focus-within input.notes:-ms-input-placeholder,
-      #jobsExisting ul.day-data.col > li .spinner:hover input.notes:-ms-input-placeholder, #jobsExisting ul.clients > li:focus-within input.notes:-ms-input-placeholder,
-      #jobsExisting ul.clients > li .spinner:hover input.notes:-ms-input-placeholder, #jobsExisting ul.jobs > li:focus-within input.notes:-ms-input-placeholder,
-      #jobsExisting ul.jobs > li .spinner:hover input.notes:-ms-input-placeholder {
-        opacity: 1; }
-      #timesheetContainer ul.day-data.col > li:focus-within input.notes:-moz-placeholder,
-      #timesheetContainer ul.day-data.col > li .spinner:hover input.notes:-moz-placeholder, #timesheetContainer ul.clients > li:focus-within input.notes:-moz-placeholder,
-      #timesheetContainer ul.clients > li .spinner:hover input.notes:-moz-placeholder, #timesheetContainer ul.jobs > li:focus-within input.notes:-moz-placeholder,
-      #timesheetContainer ul.jobs > li .spinner:hover input.notes:-moz-placeholder, #clientsExisting ul.day-data.col > li:focus-within input.notes:-moz-placeholder,
-      #clientsExisting ul.day-data.col > li .spinner:hover input.notes:-moz-placeholder, #clientsExisting ul.clients > li:focus-within input.notes:-moz-placeholder,
-      #clientsExisting ul.clients > li .spinner:hover input.notes:-moz-placeholder, #clientsExisting ul.jobs > li:focus-within input.notes:-moz-placeholder,
-      #clientsExisting ul.jobs > li .spinner:hover input.notes:-moz-placeholder, #jobsExisting ul.day-data.col > li:focus-within input.notes:-moz-placeholder,
-      #jobsExisting ul.day-data.col > li .spinner:hover input.notes:-moz-placeholder, #jobsExisting ul.clients > li:focus-within input.notes:-moz-placeholder,
-      #jobsExisting ul.clients > li .spinner:hover input.notes:-moz-placeholder, #jobsExisting ul.jobs > li:focus-within input.notes:-moz-placeholder,
-      #jobsExisting ul.jobs > li .spinner:hover input.notes:-moz-placeholder {
-        opacity: 1; }
+        content: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23white' viewBox='0 0 32 32'%3E%3Ctitle%3Eclock%3C/title%3E%3Cpath d='M20.586 23.414l-6.586-6.586v-8.828h4v7.172l5.414 5.414zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 28c-6.627 0-12-5.373-12-12s5.373-12 12-12c6.627 0 12 5.373 12 12s-5.373 12-12 12z'%3E%3C/path%3E%3C/svg%3E"); }
+      #timesheetContainer ul.day-data.col > li:focus-within input.notes,
+      #timesheetContainer ul.day-data.col > li .spinner:hover input.notes, #timesheetContainer ul.clients > li:focus-within input.notes,
+      #timesheetContainer ul.clients > li .spinner:hover input.notes, #timesheetContainer ul.jobs > li:focus-within input.notes,
+      #timesheetContainer ul.jobs > li .spinner:hover input.notes, #clientsExisting ul.day-data.col > li:focus-within input.notes,
+      #clientsExisting ul.day-data.col > li .spinner:hover input.notes, #clientsExisting ul.clients > li:focus-within input.notes,
+      #clientsExisting ul.clients > li .spinner:hover input.notes, #clientsExisting ul.jobs > li:focus-within input.notes,
+      #clientsExisting ul.jobs > li .spinner:hover input.notes, #jobsExisting ul.day-data.col > li:focus-within input.notes,
+      #jobsExisting ul.day-data.col > li .spinner:hover input.notes, #jobsExisting ul.clients > li:focus-within input.notes,
+      #jobsExisting ul.clients > li .spinner:hover input.notes, #jobsExisting ul.jobs > li:focus-within input.notes,
+      #jobsExisting ul.jobs > li .spinner:hover input.notes {
+        color: white; }
+        #timesheetContainer ul.day-data.col > li:focus-within input.notes::-webkit-input-placeholder,
+        #timesheetContainer ul.day-data.col > li .spinner:hover input.notes::-webkit-input-placeholder, #timesheetContainer ul.clients > li:focus-within input.notes::-webkit-input-placeholder,
+        #timesheetContainer ul.clients > li .spinner:hover input.notes::-webkit-input-placeholder, #timesheetContainer ul.jobs > li:focus-within input.notes::-webkit-input-placeholder,
+        #timesheetContainer ul.jobs > li .spinner:hover input.notes::-webkit-input-placeholder, #clientsExisting ul.day-data.col > li:focus-within input.notes::-webkit-input-placeholder,
+        #clientsExisting ul.day-data.col > li .spinner:hover input.notes::-webkit-input-placeholder, #clientsExisting ul.clients > li:focus-within input.notes::-webkit-input-placeholder,
+        #clientsExisting ul.clients > li .spinner:hover input.notes::-webkit-input-placeholder, #clientsExisting ul.jobs > li:focus-within input.notes::-webkit-input-placeholder,
+        #clientsExisting ul.jobs > li .spinner:hover input.notes::-webkit-input-placeholder, #jobsExisting ul.day-data.col > li:focus-within input.notes::-webkit-input-placeholder,
+        #jobsExisting ul.day-data.col > li .spinner:hover input.notes::-webkit-input-placeholder, #jobsExisting ul.clients > li:focus-within input.notes::-webkit-input-placeholder,
+        #jobsExisting ul.clients > li .spinner:hover input.notes::-webkit-input-placeholder, #jobsExisting ul.jobs > li:focus-within input.notes::-webkit-input-placeholder,
+        #jobsExisting ul.jobs > li .spinner:hover input.notes::-webkit-input-placeholder {
+          opacity: 1; }
+        #timesheetContainer ul.day-data.col > li:focus-within input.notes::-moz-placeholder,
+        #timesheetContainer ul.day-data.col > li .spinner:hover input.notes::-moz-placeholder, #timesheetContainer ul.clients > li:focus-within input.notes::-moz-placeholder,
+        #timesheetContainer ul.clients > li .spinner:hover input.notes::-moz-placeholder, #timesheetContainer ul.jobs > li:focus-within input.notes::-moz-placeholder,
+        #timesheetContainer ul.jobs > li .spinner:hover input.notes::-moz-placeholder, #clientsExisting ul.day-data.col > li:focus-within input.notes::-moz-placeholder,
+        #clientsExisting ul.day-data.col > li .spinner:hover input.notes::-moz-placeholder, #clientsExisting ul.clients > li:focus-within input.notes::-moz-placeholder,
+        #clientsExisting ul.clients > li .spinner:hover input.notes::-moz-placeholder, #clientsExisting ul.jobs > li:focus-within input.notes::-moz-placeholder,
+        #clientsExisting ul.jobs > li .spinner:hover input.notes::-moz-placeholder, #jobsExisting ul.day-data.col > li:focus-within input.notes::-moz-placeholder,
+        #jobsExisting ul.day-data.col > li .spinner:hover input.notes::-moz-placeholder, #jobsExisting ul.clients > li:focus-within input.notes::-moz-placeholder,
+        #jobsExisting ul.clients > li .spinner:hover input.notes::-moz-placeholder, #jobsExisting ul.jobs > li:focus-within input.notes::-moz-placeholder,
+        #jobsExisting ul.jobs > li .spinner:hover input.notes::-moz-placeholder {
+          opacity: 1; }
+        #timesheetContainer ul.day-data.col > li:focus-within input.notes:-ms-input-placeholder,
+        #timesheetContainer ul.day-data.col > li .spinner:hover input.notes:-ms-input-placeholder, #timesheetContainer ul.clients > li:focus-within input.notes:-ms-input-placeholder,
+        #timesheetContainer ul.clients > li .spinner:hover input.notes:-ms-input-placeholder, #timesheetContainer ul.jobs > li:focus-within input.notes:-ms-input-placeholder,
+        #timesheetContainer ul.jobs > li .spinner:hover input.notes:-ms-input-placeholder, #clientsExisting ul.day-data.col > li:focus-within input.notes:-ms-input-placeholder,
+        #clientsExisting ul.day-data.col > li .spinner:hover input.notes:-ms-input-placeholder, #clientsExisting ul.clients > li:focus-within input.notes:-ms-input-placeholder,
+        #clientsExisting ul.clients > li .spinner:hover input.notes:-ms-input-placeholder, #clientsExisting ul.jobs > li:focus-within input.notes:-ms-input-placeholder,
+        #clientsExisting ul.jobs > li .spinner:hover input.notes:-ms-input-placeholder, #jobsExisting ul.day-data.col > li:focus-within input.notes:-ms-input-placeholder,
+        #jobsExisting ul.day-data.col > li .spinner:hover input.notes:-ms-input-placeholder, #jobsExisting ul.clients > li:focus-within input.notes:-ms-input-placeholder,
+        #jobsExisting ul.clients > li .spinner:hover input.notes:-ms-input-placeholder, #jobsExisting ul.jobs > li:focus-within input.notes:-ms-input-placeholder,
+        #jobsExisting ul.jobs > li .spinner:hover input.notes:-ms-input-placeholder {
+          opacity: 1; }
+        #timesheetContainer ul.day-data.col > li:focus-within input.notes:-moz-placeholder,
+        #timesheetContainer ul.day-data.col > li .spinner:hover input.notes:-moz-placeholder, #timesheetContainer ul.clients > li:focus-within input.notes:-moz-placeholder,
+        #timesheetContainer ul.clients > li .spinner:hover input.notes:-moz-placeholder, #timesheetContainer ul.jobs > li:focus-within input.notes:-moz-placeholder,
+        #timesheetContainer ul.jobs > li .spinner:hover input.notes:-moz-placeholder, #clientsExisting ul.day-data.col > li:focus-within input.notes:-moz-placeholder,
+        #clientsExisting ul.day-data.col > li .spinner:hover input.notes:-moz-placeholder, #clientsExisting ul.clients > li:focus-within input.notes:-moz-placeholder,
+        #clientsExisting ul.clients > li .spinner:hover input.notes:-moz-placeholder, #clientsExisting ul.jobs > li:focus-within input.notes:-moz-placeholder,
+        #clientsExisting ul.jobs > li .spinner:hover input.notes:-moz-placeholder, #jobsExisting ul.day-data.col > li:focus-within input.notes:-moz-placeholder,
+        #jobsExisting ul.day-data.col > li .spinner:hover input.notes:-moz-placeholder, #jobsExisting ul.clients > li:focus-within input.notes:-moz-placeholder,
+        #jobsExisting ul.clients > li .spinner:hover input.notes:-moz-placeholder, #jobsExisting ul.jobs > li:focus-within input.notes:-moz-placeholder,
+        #jobsExisting ul.jobs > li .spinner:hover input.notes:-moz-placeholder {
+          opacity: 1; }
       #timesheetContainer ul.day-data.col > li:focus-within.hrs .notes,
       #timesheetContainer ul.day-data.col > li .spinner:hover.hrs .notes, #timesheetContainer ul.clients > li:focus-within.hrs .notes,
       #timesheetContainer ul.clients > li .spinner:hover.hrs .notes, #timesheetContainer ul.jobs > li:focus-within.hrs .notes,
@@ -670,7 +681,7 @@ body#config aside nav button#config.btnNav {
       #jobsExisting ul.day-data.col > li .spinner:hover.hrs .notes, #jobsExisting ul.clients > li:focus-within.hrs .notes,
       #jobsExisting ul.clients > li .spinner:hover.hrs .notes, #jobsExisting ul.jobs > li:focus-within.hrs .notes,
       #jobsExisting ul.jobs > li .spinner:hover.hrs .notes {
-        background-color: whitesmoke; }
+        background-color: #9f9090; }
       #timesheetContainer ul.day-data.col > li:focus-within.hrs .spinner:before, #timesheetContainer ul.day-data.col > li:focus-within.hrs .spinner:after,
       #timesheetContainer ul.day-data.col > li .spinner:hover.hrs .spinner:before,
       #timesheetContainer ul.day-data.col > li .spinner:hover.hrs .spinner:after, #timesheetContainer ul.clients > li:focus-within.hrs .spinner:before, #timesheetContainer ul.clients > li:focus-within.hrs .spinner:after,
@@ -690,7 +701,7 @@ body#config aside nav button#config.btnNav {
       #jobsExisting ul.clients > li .spinner:hover.hrs .spinner:after, #jobsExisting ul.jobs > li:focus-within.hrs .spinner:before, #jobsExisting ul.jobs > li:focus-within.hrs .spinner:after,
       #jobsExisting ul.jobs > li .spinner:hover.hrs .spinner:before,
       #jobsExisting ul.jobs > li .spinner:hover.hrs .spinner:after {
-        color: #928c8c; }
+        color: white; }
       #timesheetContainer ul.day-data.col > li:focus-within.money .notes,
       #timesheetContainer ul.day-data.col > li .spinner:hover.money .notes, #timesheetContainer ul.clients > li:focus-within.money .notes,
       #timesheetContainer ul.clients > li .spinner:hover.money .notes, #timesheetContainer ul.jobs > li:focus-within.money .notes,
@@ -701,7 +712,7 @@ body#config aside nav button#config.btnNav {
       #jobsExisting ul.day-data.col > li .spinner:hover.money .notes, #jobsExisting ul.clients > li:focus-within.money .notes,
       #jobsExisting ul.clients > li .spinner:hover.money .notes, #jobsExisting ul.jobs > li:focus-within.money .notes,
       #jobsExisting ul.jobs > li .spinner:hover.money .notes {
-        background-color: #c6cdbf; }
+        background-color: #778866; }
       #timesheetContainer ul.day-data.col > li:focus-within.money .spinner:before, #timesheetContainer ul.day-data.col > li:focus-within.money .spinner:after,
       #timesheetContainer ul.day-data.col > li .spinner:hover.money .spinner:before,
       #timesheetContainer ul.day-data.col > li .spinner:hover.money .spinner:after, #timesheetContainer ul.clients > li:focus-within.money .spinner:before, #timesheetContainer ul.clients > li:focus-within.money .spinner:after,
@@ -732,7 +743,7 @@ body#config aside nav button#config.btnNav {
       #jobsExisting ul.day-data.col > li .spinner:hover.money.negative .notes, #jobsExisting ul.clients > li:focus-within.money.negative .notes,
       #jobsExisting ul.clients > li .spinner:hover.money.negative .notes, #jobsExisting ul.jobs > li:focus-within.money.negative .notes,
       #jobsExisting ul.jobs > li .spinner:hover.money.negative .notes {
-        background-color: #edc9be; }
+        background-color: #cc6644; }
       #timesheetContainer ul.day-data.col > li:focus-within.money.negative .spinner:before, #timesheetContainer ul.day-data.col > li:focus-within.money.negative .spinner:after,
       #timesheetContainer ul.day-data.col > li .spinner:hover.money.negative .spinner:before,
       #timesheetContainer ul.day-data.col > li .spinner:hover.money.negative .spinner:after, #timesheetContainer ul.clients > li:focus-within.money.negative .spinner:before, #timesheetContainer ul.clients > li:focus-within.money.negative .spinner:after,
@@ -768,7 +779,7 @@ body#config aside nav button#config.btnNav {
   #timesheetContainer > li.totals-week:hover, #timesheetContainer > li.totals-month:hover, #timesheetContainer > li.totals-year:hover, #clientsExisting > li.totals-week, #clientsExisting > li.totals-month, #clientsExisting > li.totals-year,
   #clientsExisting > li.totals-week:hover, #clientsExisting > li.totals-month:hover, #clientsExisting > li.totals-year:hover, #jobsExisting > li.totals-week, #jobsExisting > li.totals-month, #jobsExisting > li.totals-year,
   #jobsExisting > li.totals-week:hover, #jobsExisting > li.totals-month:hover, #jobsExisting > li.totals-year:hover {
-    padding: 0.8rem 0.8rem 2rem 1.6rem;
+    padding: 2rem 0.8rem 2rem 1.6rem;
     background-color: white;
     position: relative;
     overflow: auto; }
@@ -808,6 +819,15 @@ body#config aside nav button#config.btnNav {
       font-style: italic;
       width: 27rem;
       text-align: right; }
+  #timesheetContainer > li.totals-week, #timesheetContainer > li.totals-week:hover, #clientsExisting > li.totals-week, #clientsExisting > li.totals-week:hover, #jobsExisting > li.totals-week, #jobsExisting > li.totals-week:hover {
+    border-bottom: dotted 0.3rem #f4f3f3;
+    border-right: dotted 0.3rem #f4f3f3; }
+  #timesheetContainer > li.totals-month, #timesheetContainer > li.totals-month:hover, #clientsExisting > li.totals-month, #clientsExisting > li.totals-month:hover, #jobsExisting > li.totals-month, #jobsExisting > li.totals-month:hover {
+    border-bottom: dashed 0.3rem #f4f3f3;
+    border-right: dashed 0.3rem #f4f3f3;
+    margin-bottom: 0.8rem; }
+  #timesheetContainer > li.totals-year, #timesheetContainer > li.totals-year:hover, #clientsExisting > li.totals-year, #clientsExisting > li.totals-year:hover, #jobsExisting > li.totals-year, #jobsExisting > li.totals-year:hover {
+    border: dotted 0.3rem #f4f3f3; }
 
 #clientsExisting ul.clients, #clientsExisting ul.jobs, #jobsExisting ul.clients, #jobsExisting ul.jobs {
   float: none;
@@ -864,7 +884,7 @@ select {
     width: 70%;
     height: 0.5rem;
     padding: 0.2rem 0.3rem 0.7rem 0.3rem;
-    background-color: #DFDDDD;
+    background-color: #9f9090;
     color: #ffeedd;
     text-align: center;
     font-size: 0.5rem; }

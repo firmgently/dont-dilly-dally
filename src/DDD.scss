@@ -141,6 +141,7 @@ $ddd-grey-mid: #F0EEEE;
 $ddd-grey-light: #F2F0F0;
 $ddd-grey-lighter: #F8F6F6;
 
+$ddd-bright-text: white;
 $button-color: $ddd-sanddark;
 $button-bgcolor: $ddd-cream;
 $button-color-over: lighten($button-color, 10%);
@@ -153,7 +154,7 @@ $panelBgColor: $ddd-grey-light;
 $panelFgColorDimmed: mix($panelFgColor, $ddd-grey-light, 75%);
 $panelBgColorDimmed: mix($panelBgColor, $ddd-grey-darker, 75%);
 $panelBgColorTint: mix($panelFgColor, white, 75%);
-$panelBgColor1: darken($panelBgColor, 25%);
+$panelBgColor1: darken($panelBgColor, 35%);
 $panelBgColor2: darken($panelBgColor, 15%);
 $panelBgColor3: darken($panelBgColor, 10%);
 $panelBgColor4: lighten($panelBgColor, 10%);
@@ -161,12 +162,13 @@ $panelBGColor0: lighten($panelBgColor, 1%);
 
 $sheetBgColor: $panelBgColor4;
 
-$jobInputColor: $ddd-grey-mid;
-$jobInputBackgroundColor: $ddd-grey-dark;
-$jobNotesBackgroundColor: lighten($jobInputBackgroundColor, 9%);
+$jobInputColor: $ddd-grey-darker;
+$jobInputBackgroundColor: $panelBgColor1;
+$jobNotesBackgroundColor: lighten($jobInputBackgroundColor, 13%);
 $hashlessJobIconColor: str-replace("#{$jobNotesBackgroundColor}", "#", "");
-$jobNotesBackgroundColorDim: lighten($jobNotesBackgroundColor, 90%);
-$iconBrightColorJob: darken($jobNotesBackgroundColor, 40%);
+$jobNotesBackgroundColorDim: lighten($jobInputBackgroundColor, 22%);
+$iconBrightColorJob: lighten($jobNotesBackgroundColor, 50%);
+$iconBrightColorJob: lighten($iconBrightColorJob, 20%);
 $hashlessJobIconBrightColor: str-replace("#{$iconBrightColorJob}", "#", "");
 
 $moneyInputColor: $ddd-sanddark;
@@ -188,15 +190,15 @@ $oddDayBgColor: lighten($panelBgColor, 3%);
 $oddDayFgColor: darken($panelFgColor, 5%);
 $oddDayBtnBgColor: darken($button-bgcolor, 11%);
 $oddDayBtnFgColor: lighten($button-color, 5%);
-$oddDayBgColorHover: lighten($panelBgColor, 2%);
-$oddDayFgColorHover: lighten($panelFgColor, 15%);
+$oddDayBgColorHover: lighten($panelBgColor, 5%);
+$oddDayFgColorHover: darken($panelFgColor, 35%);
 
 $evenDayBgColor: lighten($panelBgColor, 4%);
 $evenDayFgColor: darken($panelFgColor, 5%);
 $evenDayBtnBgColor: lighten($button-bgcolor, 11%);
 $evenDayBtnFgColor: darken($button-color, 15%);
-$evenDayBgColorHover: lighten($panelBgColor, 2%);
-$evenDayFgColorHover: darken($panelFgColor, 25%);
+$evenDayBgColorHover: lighten($panelBgColor, 5%);
+$evenDayFgColorHover: darken($panelFgColor, 35%);
 
 
 
@@ -518,7 +520,7 @@ body#config aside nav button#config.btnNav {
 				display: block; font-size: $fontSizeLarge; color: $panelFgColorDimmed; background-color: $panelBGColor0;
         text-align: center; font-weight: bold; 
 				padding: $extraLargePadding; margin-top: -$largePadding; margin-bottom: $largePadding;
-        border-bottom: solid $tinyPadding $panelBgColorDimmed;
+      /*  border-bottom: solid $tinyPadding $panelBgColorDimmed;*/
 			}
       &:first-child { margin-top: 0; }
     }
@@ -546,7 +548,7 @@ body#config aside nav button#config.btnNav {
 				display: inline-block; width: 3rem; height: 2rem;
 				font-family: monospace;
 				font-size: $fontSizeLarge; font-weight: bold;
-				color: white;
+				color: $ddd-bright-text;
 				text-align: left;
 			}
 			input.unitBig { width: 5rem; text-align: right; }
@@ -693,6 +695,7 @@ body#config aside nav button#config.btnNav {
       &:focus-within,
       .spinner:hover {
         .spin-button-up, .spin-button-down {  @include animation('delayed-fade-up 0.3s 1 forwards'); }
+        //> li { background-color: red; }
         input[type="checkbox"].ios-switch {
           + div {
             &:before { content: color-SVG-icon($svgIconMoney, $hashlessMoneyIconBrightColor); }
@@ -704,20 +707,21 @@ body#config aside nav button#config.btnNav {
           &::-moz-placeholder { opacity: 1; }
           &:-ms-input-placeholder { opacity: 1; }
           &:-moz-placeholder { opacity: 1; }
+          color: $ddd-bright-text;
         }
         &.hrs {
-          .notes { background-color: $jobNotesBackgroundColor; }
+          .notes { background-color: $jobInputBackgroundColor; }
           .spinner {
             &:before, &:after { color: $iconBrightColorJob; }
           }
         }
         &.money {
-          .notes { background-color: $moneyNotesBackgroundColor; }
+          .notes { background-color: $moneyInputBackgroundColor; }
           .spinner {
             &:before, &:after { color: $iconBrightColorMoney; }
           }
           &.negative {
-            .notes { background-color: $moneyNegativeNotesBackgroundColor; }
+            .notes { background-color: $moneyNegativeBackgroundColor; }
             .spinner {
               &:before, &:after { color: $iconBrightColorMoneyNegative; }
             }
@@ -734,7 +738,7 @@ body#config aside nav button#config.btnNav {
 
   > li.totals-week, > li.totals-month, > li.totals-year,
   > li.totals-week:hover, > li.totals-month:hover, > li.totals-year:hover {
-    padding: $largePadding $largePadding $extraLargePadding (2 * $largePadding);
+    padding: $extraLargePadding $largePadding $extraLargePadding (2 * $largePadding);
     background-color: $sheetBgColor;
     position: relative;
     overflow: auto; // hack to force parent (this) height to fit child elements
@@ -752,9 +756,17 @@ body#config aside nav button#config.btnNav {
       text-align: right;
     }
   }
+  > li.totals-week, > li.totals-week:hover {
+    border-bottom: dotted $smallPadding $panelBGColor0;
+    border-right: dotted $smallPadding $panelBGColor0;
+  }
   > li.totals-month, > li.totals-month:hover {
+    border-bottom: dashed $smallPadding $panelBGColor0;
+    border-right: dashed $smallPadding $panelBGColor0;
+    margin-bottom: $largePadding;
   }
   > li.totals-year, > li.totals-year:hover {
+    border: dotted $smallPadding $panelBGColor0;
   }
 
 }

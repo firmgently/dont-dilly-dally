@@ -17,7 +17,6 @@
 	FIXME	£-0.77 must register as negative (if IS smallUnit && bigUnit=0 && direction===-1 && current===0)
   TODO  test everything on touchscreen
   TODO  test everything on narrow (phone) layout
-  TODO  don't need to save 'class' in JSON for each client/job... id holds same info, redundant
   TODO  feedback:
         - [on startup] data and settings restored from previous session (localStorage)
         - [first usage] default data and settings created
@@ -44,6 +43,7 @@
   DONE  remove button should be closer to item it is removing
   DONE  remove old dynamic classes (jobs/clients) 
 	DONE	spinners: numbers should pad eg. 00:45h, £10.00
+  DONE  don't need to save 'class' in JSON for each client/job... id holds same info, redundant
   DONE  display month/week start correctly
   DONE  import button wrong colour (white) on rollover
   DONE  notes input field even more faded when its not focused and has no data
@@ -869,9 +869,6 @@ uk.co.firmgently.DontDillyDally = (function() {
       updateJobOrClientCount(JOBS_STR, itemData_ob[DATAINDICES.jobID], 1);
 			manualEvent(tmp_el, "change");
 		}
-    //////////
-    // break visibility is controlled with CSS
-    item_el.appendChild(document.createElement("br")); 
 		//////////
 		// 'money/task' checkbox
     tmp_el = createCheckboxFromOb({
@@ -912,6 +909,9 @@ uk.co.firmgently.DontDillyDally = (function() {
       }
 			addClassname(item_el, "hrs");
     }
+    //////////
+    // break visibility is controlled with CSS
+    item_el.appendChild(document.createElement("br")); 
 		//////////
     // hours/money big unit spinner input
 		if (!itemData_ob || itemData_ob[DATAINDICES.itemType] === ITEMTYPE_TIME) {
