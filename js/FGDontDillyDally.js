@@ -28,6 +28,11 @@ uk.co.firmgently.DDDConsts = (function() {
 
     DATASTORE_CATEGORY_PREFIX: "_",
 
+    MAXLENGTH_INPUT_NAMES: 50,
+    MAXLENGTH_INPUT_NOTES: 1000,
+
+    DAYJUMP_TOPPOS_BUFFERPX: 40,
+
 		AUTOREPEAT_RATE: 500,
     RECALCULATETOTALS_DELAY: 1000,
     DAYSDRAWN_UPDATE_FREQ: 12, // lower number means more frequent updates on loading indicator
@@ -443,7 +448,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_FORM,
       id: "miniNavForm",
       parent: "main",
-      event_ar: [
+     /* event_ar: [
         {
           eventType: "submit",
           methodPathStr: "uk.co.firmgently.DontDillyDally.onFormSubmit",
@@ -453,7 +458,7 @@ uk.co.firmgently.DDDConsts = (function() {
           methodPathStr: "uk.co.firmgently.DontDillyDally.onFormClick",
           scopeID: "miniNavForm"
         }
-      ]
+      ]*/
     }, {
       type: CONST.GUITYPE_BTN,
       id: CONST.EL_ID_MONTHPREVBTN,
@@ -463,9 +468,9 @@ uk.co.firmgently.DDDConsts = (function() {
         {
           eventType: "mousedown",
           methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
-        }, {
-          eventType: "touchstart",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+        //}, {
+         // eventType: "touchstart",
+         // methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }
       ],
       parent: "miniNavForm"
@@ -482,9 +487,9 @@ uk.co.firmgently.DDDConsts = (function() {
         {
           eventType: "mousedown",
           methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
-        }, {
-          eventType: "touchstart",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+       // }, {
+        //  eventType: "touchstart",
+         // methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }
       ],
       parent: "miniNavForm"
@@ -497,9 +502,9 @@ uk.co.firmgently.DDDConsts = (function() {
         {
           eventType: "mousedown",
           methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
-        }, {
-          eventType: "touchstart",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+       // }, {
+         // eventType: "touchstart",
+         // methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }
       ],
       parent: "miniNavForm"
@@ -516,9 +521,9 @@ uk.co.firmgently.DDDConsts = (function() {
         {
           eventType: "mousedown",
           methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
-        }, {
-          eventType: "touchstart",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+    //    }, {
+      //    eventType: "touchstart",
+        //  methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }
       ],
       parent: "miniNavForm"
@@ -1385,7 +1390,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       for (prop in ob.options) {
         clientOrJob_ob = ob.options[prop];
         option_el = select_el.options[select_el.options.length] = new Option(clientOrJob_ob.name, clientOrJob_ob.class);
-        addClassname(option_el, clientOrJob_ob.class);
+        if (clientOrJob_ob.class) { addClassname(option_el, clientOrJob_ob.class); }
+        if (clientOrJob_ob.id) { addClassname(option_el, clientOrJob_ob.id); }
       }
     } else { // normal options
       for (prop in ob.options) {
@@ -1721,6 +1727,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 	};
 
 }());
+
 /*
 ---------------------------------------------------------
   Firm Gently
@@ -1732,20 +1739,14 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   TODO  add 'year start date' preference
   TODO  add ARIA attributes (eg. hide up/down spinner buttons)
   FIXME click around nav while timesheets loading - bug seen where eg. settings page, all settings were duplicated in GUI
-	FIXME	spinners: numbers should pad eg. 00:45h, £10.00
   TODO  all strings should be constants
-  TODO  display month/week start correctly
   FIXME press/hold to jump back through months, page reloads with ? in querystring
   FIXME final (sheet) totals not calculating correctly
   TODO  only show month/week jump buttons if they make sense OR make them work everywhere (ie. flip month/week page)
-  TODO  validate all input data
-          time/money
-          notes - max length
-          client/job names in clients/jobs page
-	FIXME	£-0.77 must register as negative
+	FIXME	£-0.77 must register as negative (if IS smallUnit && bigUnit=0 && direction===-1 && current===0)
   TODO  test everything on touchscreen
   TODO  test everything on narrow (phone) layout
-  TODO  import button wrong colour (white) on rollover
+  TODO  don't need to save 'class' in JSON for each client/job... id holds same info, redundant
   TODO  feedback:
         - [on startup] data and settings restored from previous session (localStorage)
         - [first usage] default data and settings created
@@ -1756,6 +1757,10 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   DONE  loader should only appear on timesheets page
   DONE  leave gap between months on timesheet
   DONE  horizontal layout of workitem, + X buttons, wrap for portrait
+  DONE  validate all input data
+          time/money
+          notes - max length
+          client/job names in clients/jobs page
   DONE  after loading file current page must update (redraw) be it timesheets, J&Cs or preferences
   DONE  file load isn't loading data yet
   DONE  workitem remove button shoudnt disappear when firstchild, should remove item then create a new one
@@ -1767,6 +1772,9 @@ uk.co.firmgently.FGHTMLBuild = (function() {
         - notes input move left margin to be right margin on unitSmall
   DONE  remove button should be closer to item it is removing
   DONE  remove old dynamic classes (jobs/clients) 
+	DONE	spinners: numbers should pad eg. 00:45h, £10.00
+  DONE  display month/week start correctly
+  DONE  import button wrong colour (white) on rollover
   DONE  notes input field even more faded when its not focused and has no data
   DONE client select dropdown styles broken (CSS not being written after loading data file?)
 	DONE	if empty or bad time/money data is **stored in JSON**, correct it to zero
@@ -1853,7 +1861,7 @@ uk.co.firmgently.DontDillyDally = (function() {
   loadingIndicator_el, mainContainer_el, timesheet_el, workingIndicator_el,
 	
 	// handles for setTimeout
-	eventAutoRepeatTimer, timesheetDrawDayTimer, recalculateTotalsTimer,
+	btnEventAutoRepeatTimer, timesheetDrawDayTimer, recalculateTotalsTimer,
 	
 	// callbacks
   onFormSubmit, onUpdateInput, onIsMoneyTaskChkChange,
@@ -1862,7 +1870,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 	// other methods
   doSetup, selectPage, refreshPage, drawPage, clearPage, drawGUIFromAr,
-	eventAutoRepeat, eventAutoRepeatStop, eventAutoRepeatStart,
+	btnEventAutoRepeat, btnEventAutoRepeatStop, btnEventAutoRepeatStart,
   recalculateAllTotals, calculateTotalsFromDateSpan, getNumberDataFromWorkItem,
   addItem, removeItem, addClient, removeClientOrJob, addJob,
   attachEventArrayToElement, callMethodsFromObOnElement, callMethodFromOb,
@@ -1929,7 +1937,6 @@ uk.co.firmgently.DontDillyDally = (function() {
         tmp_id = getNextID(DATATYPE_CLIENT);
         tmp_ob = CLIENT_DEFAULTS[item];
         tmp_ob.id = tmp_id;
-        tmp_ob.class = tmp_id;
         createClientOrJobFromOb(tmp_ob, DATATYPE_CLIENT);
       }
 
@@ -1939,7 +1946,6 @@ uk.co.firmgently.DontDillyDally = (function() {
         tmp_id = getNextID(DATATYPE_JOB);
         tmp_ob = JOB_DEFAULTS[item];
         tmp_ob.id = tmp_id;
-        tmp_ob.class = tmp_id;
         createClientOrJobFromOb(tmp_ob, DATATYPE_JOB);
       }
 
@@ -2060,7 +2066,6 @@ uk.co.firmgently.DontDillyDally = (function() {
 
     update_ob = {
       id: el.id,
-      class: el.id,
       name: textInput_el.value, // TODO  validate input
       color: getStyle(fg_el, "background-color"),
       bgcolor: getStyle(bg_el, "background-color")
@@ -2096,7 +2101,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 
   clearPage = function() {
 		document.body.id = "";
-		clearTimeout(eventAutoRepeatTimer);
+		clearTimeout(btnEventAutoRepeatTimer);
 		clearTimeout(timesheetDrawDayTimer);
 		clearTimeout(recalculateTotalsTimer);
     mainContainer_el.innerHTML = "";
@@ -2304,7 +2309,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     tmp_el = createInputFromOb({
       class: item.id,
       parent: item_el,
-      attributes: { "type": "text", "value": item.name },
+      attributes: { "type": "text", "value": item.name, maxlength: MAXLENGTH_INPUT_NAMES },
     });
     attachEventArrayToElement(tmp_el, [
       {
@@ -2383,7 +2388,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     isToday = !Math.round(daysBetween(curDrawnDay, dateToday));
     if (isToday) {
       rowClassname += CLASS_TODAY + " ";
-      significance_str += "TODAY";
     }
     if (curDrawnDay.getDay() === weekStartDay) {
     //if (curDrawnDay.getDay() === weekStartDay && curDrawnDay.getWeekNumber() > 1) {
@@ -2430,7 +2434,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     date_el = document.createElement("p");
     addClassname(date_el, "date col");
     if (significance_str !== "") {
-    //if (isToday) {
       date_el.innerHTML = "<em>" + curDrawnDay.getWeekDay(1) + "</em>" + getFormattedDate(curDrawnDay, DATETYPES[dataRetrieveObject(PREFS_STR).dateFormat].label) + "<span>" + significance_str + "</span>";
     } else {
       date_el.innerHTML = "<em>" + curDrawnDay.getWeekDay(1) + "</em>" + getFormattedDate(curDrawnDay, DATETYPES[dataRetrieveObject(PREFS_STR).dateFormat].label);
@@ -2735,7 +2738,7 @@ uk.co.firmgently.DontDillyDally = (function() {
     tmp_el = createInputFromOb({
       class: CLASS_NOTESINPUT,
       parent: item_el,
-      attributes: { "type": "text", "placeholder": JOBNOTES_PLACEHOLDER },
+      attributes: { "type": "text", "placeholder": JOBNOTES_PLACEHOLDER, maxlength: MAXLENGTH_INPUT_NOTES },
     });
     attachEventArrayToElement(tmp_el, [
       {
@@ -2945,27 +2948,30 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
   onUpdateInput = function(event) {
+    var workItem = this.parentNode;
     switch (dataRetrieveObject(PREFS_STR).pagetype) {
       case PAGETYPE_TIMESHEETS:
         if (this.className.indexOf(CLASS_NOTESINPUT) !== -1) {
           // TODO validate notes input
-          updateDataFromWorkItemEl(this.parentNode);
-        } else {
+          updateDataFromWorkItemEl(workItem);
+        } else { // other (non-notes) inputs on timesheet
+          workItem = this.parentNode.parentNode; // these are nested deeper
+          // fix non-numeric input
           if (isNaN(parseInt(this.value))) { this.value = 0; }
-
           // TODO needs to handle negative small unit eg. -£0.13
-          if (this.className.indexOf(CLASS_SPINNER_UNITBIG) !== -1) {
-            if (parseInt(this.value) < 0) {
-              addClassname(this.parentNode.parentNode, CLASS_NEGATIVE);
+          
+          if (document.body.contains(this)) {
+            if (getNumberDataFromWorkItem(workItem).value < 0) {
+              addClassname(workItem, CLASS_NEGATIVE);
             } else {
-              removeClassname(this.parentNode.parentNode, CLASS_NEGATIVE);
+              removeClassname(workItem, CLASS_NEGATIVE);
             }
           }
-          if (document.body.contains(this)) {
-            updateDataFromWorkItemEl(this.parentNode.parentNode);
-          }
+          // save data
+          if (document.body.contains(this)) { updateDataFromWorkItemEl(workItem); }
+          // pad for display
           this.value = padString(this.value, this.spin_ob.pad);
-
+          // recalculate totals (delayed)
           clearTimeout(recalculateTotalsTimer);
           recalculateTotalsTimer = setTimeout(recalculateAllTotals, RECALCULATETOTALS_DELAY);
         }
@@ -2973,7 +2979,7 @@ uk.co.firmgently.DontDillyDally = (function() {
       case PAGETYPE_CONFIG:
         break;
       case PAGETYPE_JOBSANDCLIENTS:
-        updateDataFromClientOrJobEl(this.parentNode);
+        updateDataFromClientOrJobEl(workItem);
         break;
       default:
         break;
@@ -3074,7 +3080,7 @@ uk.co.firmgently.DontDillyDally = (function() {
 		var i, id, curClass, class_ar;
 		if (el) {
 			class_ar = el.className.split(" ");
-			for (i =0; i < class_ar.length; i++) {
+			for (i = 0; i < class_ar.length; i++) {
 				curClass = class_ar[i];
 				if (curClass !== CLASS_JOBSELECT && curClass !== CLASS_CLIENTSELECT) {
 					return curClass;
@@ -3215,9 +3221,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 	createCSSForClientOrJobFromOb = function(ob, dataType) {
 		var colorPickerFGSelector, colorPickerBGSelector,
-        selector =	"." + ob.class + ", " +
-										"." + ob.class + ":hover, " +
-										"." + ob.class + ":active";
+        selector =	"." + ob.id + ", " +
+										"." + ob.id + ":hover, " +
+										"." + ob.id + ":active";
 
 		// add main CSS for eg. timesheets page
     if (dataType === DATATYPE_CLIENT || dataType === DATATYPE_JOB) {
@@ -3236,7 +3242,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     return {
       id: id,
       name: id,
-      class: id,
       color: getRandomHexColor("dark"),
       bgcolor: getRandomHexColor("light")
     };
@@ -3248,7 +3253,6 @@ uk.co.firmgently.DontDillyDally = (function() {
     return {
       id: id,
       name: id,
-      class: id,
       color: getRandomHexColor("light"),
       bgcolor: getRandomHexColor("dark")
     };
@@ -3360,7 +3364,7 @@ uk.co.firmgently.DontDillyDally = (function() {
         // the +1 is to make sure we don't repeatedly match the same node after scrolling it to the top of the window
         for (i = 0; i < dayNodes.length; i++) {
           day = dayNodes[i];
-          if (day.offsetTop > scrollTop + 1) { break; } 
+          if (day.offsetTop > scrollTop + DAYJUMP_TOPPOS_BUFFERPX + 1) { break; } 
         }
       } else if (btnID === EL_ID_WEEKPREVBTN || btnID === EL_ID_MONTHPREVBTN) { // search backward
         for (i = dayNodes.length - 1; i >= 0; i--) {
@@ -3370,13 +3374,16 @@ uk.co.firmgently.DontDillyDally = (function() {
         }
       }
       if (day) {
-        day.scrollIntoView();
+        logMsg(day);
+        mainContainer_el.scrollTop = day.offsetTop - DAYJUMP_TOPPOS_BUFFERPX;
+        //day.scrollIntoView();
         if (btnID === EL_ID_WEEKNEXTBTN || btnID === EL_ID_WEEKPREVBTN) {
-          startCSSAnimation(day.getElementsByTagName("P")[0].getElementsByTagName("SPAN")[0], CLASS_ANIM_ATTRACT);
+          startCSSAnimation(day, CLASS_ANIM_ATTRACT);
+          //startCSSAnimation(day.getElementsByTagName("P")[0].getElementsByTagName("SPAN")[0], CLASS_ANIM_ATTRACT);
         } else if (btnID === EL_ID_MONTHNEXTBTN || btnID === EL_ID_MONTHPREVBTN) {
           startCSSAnimation(day.getElementsByTagName("H4")[0], CLASS_ANIM_ATTRACT);
         }
-        eventAutoRepeatStart(event);
+        btnEventAutoRepeatStart(event);
       }
     }
 
@@ -3384,7 +3391,9 @@ uk.co.firmgently.DontDillyDally = (function() {
 
 
 	todayClick = function(event) {
-		document.getElementsByClassName(CLASS_TODAY)[0].scrollIntoView();
+		//document.getElementsByClassName(CLASS_TODAY)[0].scrollIntoView();
+    mainContainer_el.scrollTop = document.getElementsByClassName(CLASS_TODAY)[0].offsetTop - DAYJUMP_TOPPOS_BUFFERPX;
+    startCSSAnimation(document.getElementsByClassName(CLASS_TODAY)[0], CLASS_ANIM_ATTRACT);
 	};
 
 
@@ -3397,22 +3406,25 @@ uk.co.firmgently.DontDillyDally = (function() {
 	};
 
 
-	eventAutoRepeatStart = function(event) {
-    eventAutoRepeat(event);
-    registerEventHandler(event.target, "mouseup", eventAutoRepeatStop);
-    registerEventHandler(event.target, "mouseout", eventAutoRepeatStop);
-    registerEventHandler(event.target, "touchend", eventAutoRepeatStop);
+	btnEventAutoRepeatStart = function(event) {
+    btnEventAutoRepeat(event);
+    registerEventHandler(document.body, "mouseup", btnEventAutoRepeatStop);
+    registerEventHandler(event.target, "mouseout", btnEventAutoRepeatStop);
+    registerEventHandler(event.target, "touchend", btnEventAutoRepeatStop);
 	};
 	
 	
-	eventAutoRepeat = function(event) {
-		clearTimeout(eventAutoRepeatTimer);
-		eventAutoRepeatTimer = setTimeout(function() { manualEvent(event.target, event.type); }, AUTOREPEAT_RATE);
+	btnEventAutoRepeat = function(event) {
+		clearTimeout(btnEventAutoRepeatTimer);
+		btnEventAutoRepeatTimer = setTimeout(function() { manualEvent(event.target, event.type); }, AUTOREPEAT_RATE);
 	};
 
 
-	eventAutoRepeatStop = function() {
-		clearTimeout(eventAutoRepeatTimer);
+	btnEventAutoRepeatStop = function(event) {
+		clearTimeout(btnEventAutoRepeatTimer);
+    unregisterEventHandler(document.body, "mouseup", btnEventAutoRepeatStop);
+    unregisterEventHandler(event.target, "mouseout", btnEventAutoRepeatStop);
+    unregisterEventHandler(event.target, "touchend", btnEventAutoRepeatStop);
 	};
 
 

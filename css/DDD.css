@@ -188,9 +188,7 @@ input#file-chooser:focus + label,
   outline: 0;
   -webkit-box-shadow: 0px 0px 16px 8px white;
   -moz-box-shadow: 0px 0px 16px 8px white;
-  box-shadow: 0px 0px 16px 8px white;
-  background-color: white;
-  color: black; }
+  box-shadow: 0px 0px 16px 8px white; }
 
 .working {
   -webkit-animation: working 1s 1;
@@ -212,9 +210,8 @@ input#file-chooser:focus + label,
   padding: 2rem;
   margin: 0 2rem 2rem 0;
   width: calc(50% - 2rem);
-  display: inline-block; }
-  .sheet p {
-    margin-bottom: 2rem; }
+  display: inline-block;
+  /* p { margin-bottom: $extraLargePadding; }*/ }
 
 .expand-vert {
   display: inline-block;
@@ -339,25 +336,25 @@ body#config aside nav button#config.btnNav {
     color: #797777;
     font-size: 1.2rem;
     font-weight: normal;
-    width: 11rem;
-    margin-right: -11.6rem;
-    margin-left: 0.6rem; }
+    margin-right: -9.6rem;
+    width: initial;
+    margin-left: 0.6rem;
+    margin-top: 0.8rem; }
     #timesheetContainer > li .date.col span, #clientsExisting > li .date.col span, #jobsExisting > li .date.col span {
+      /* used for 'TODAY' text etc */
       display: block;
       font-size: 0.7rem;
       text-align: right;
       text-transform: uppercase;
-      margin-top: -0.5rem;
-      margin-right: 2.6rem;
+      /* margin-right: 2.6rem;*/
       color: #993322; }
   #timesheetContainer > li em, #clientsExisting > li em, #jobsExisting > li em {
     color: white;
     background-color: #dad5d5;
     padding: 0.8rem;
-    top: 0;
-    margin-right: 0.6rem;
-    /* position: relative;*/
-    /*  display: inline-block;*/
+    vertical-align: sub;
+    /* top: 0; */
+    margin-right: 0.8rem;
     font-weight: normal; }
   #timesheetContainer > li.day, #clientsExisting > li.day, #jobsExisting > li.day {
     display: block;
@@ -375,7 +372,7 @@ body#config aside nav button#config.btnNav {
       color: #393838;
       background-color: #f7f5f5; }
   #timesheetContainer > li.today .date.col, #timesheetContainer > li.week-start .date.col, #clientsExisting > li.today .date.col, #clientsExisting > li.week-start .date.col, #jobsExisting > li.today .date.col, #jobsExisting > li.week-start .date.col {
-    margin-top: -0.5rem; }
+    /* margin-top: -0.5rem;*/ }
     #timesheetContainer > li.today .date.col em, #timesheetContainer > li.week-start .date.col em, #clientsExisting > li.today .date.col em, #clientsExisting > li.week-start .date.col em, #jobsExisting > li.today .date.col em, #jobsExisting > li.week-start .date.col em {
       top: 0.5rem; }
   #timesheetContainer > li.today .date.col em, #clientsExisting > li.today .date.col em, #jobsExisting > li.today .date.col em {
@@ -388,11 +385,14 @@ body#config aside nav button#config.btnNav {
     #timesheetContainer > li.month-start h4, #clientsExisting > li.month-start h4, #jobsExisting > li.month-start h4 {
       display: block;
       font-size: 1.2rem;
-      color: #797777;
-      background-color: white;
-      padding: 0.8rem;
+      color: #979595;
+      background-color: #f4f3f3;
+      text-align: center;
+      font-weight: bold;
+      padding: 2rem;
       margin-top: -0.8rem;
-      margin-bottom: 0.8rem; }
+      margin-bottom: 0.8rem;
+      border-bottom: solid 0.15rem #d4d2d2; }
     #timesheetContainer > li.month-start:first-child, #clientsExisting > li.month-start:first-child, #jobsExisting > li.month-start:first-child {
       margin-top: 0; }
   #timesheetContainer ul.day-data.col > li, #clientsExisting ul.day-data.col > li, #jobsExisting ul.day-data.col > li {
@@ -401,14 +401,14 @@ body#config aside nav button#config.btnNav {
     #timesheetContainer ul.day-data.col > li:last-of-type, #clientsExisting ul.day-data.col > li:last-of-type, #jobsExisting ul.day-data.col > li:last-of-type {
       margin-bottom: 0.3rem; }
   #timesheetContainer ul.day-data.col, #timesheetContainer ul.clients, #timesheetContainer ul.jobs, #clientsExisting ul.day-data.col, #clientsExisting ul.clients, #clientsExisting ul.jobs, #jobsExisting ul.day-data.col, #jobsExisting ul.clients, #jobsExisting ul.jobs {
-    padding-left: 15rem;
+    padding-left: 9rem;
     display: inline-block;
     float: right; }
     #timesheetContainer ul.day-data.col > li, #timesheetContainer ul.clients > li, #timesheetContainer ul.jobs > li, #clientsExisting ul.day-data.col > li, #clientsExisting ul.clients > li, #clientsExisting ul.jobs > li, #jobsExisting ul.day-data.col > li, #jobsExisting ul.clients > li, #jobsExisting ul.jobs > li {
       /* WORK ITEM */
       display: block;
       padding-left: 2rem;
-      padding-right: 2rem;
+      padding-right: 6rem;
       position: relative; }
       #timesheetContainer ul.day-data.col > li input.unitBig, #timesheetContainer ul.day-data.col > li input.unitSmall, #timesheetContainer ul.clients > li input.unitBig, #timesheetContainer ul.clients > li input.unitSmall, #timesheetContainer ul.jobs > li input.unitBig, #timesheetContainer ul.jobs > li input.unitSmall, #clientsExisting ul.day-data.col > li input.unitBig, #clientsExisting ul.day-data.col > li input.unitSmall, #clientsExisting ul.clients > li input.unitBig, #clientsExisting ul.clients > li input.unitSmall, #clientsExisting ul.jobs > li input.unitBig, #clientsExisting ul.jobs > li input.unitSmall, #jobsExisting ul.day-data.col > li input.unitBig, #jobsExisting ul.day-data.col > li input.unitSmall, #jobsExisting ul.clients > li input.unitBig, #jobsExisting ul.clients > li input.unitSmall, #jobsExisting ul.jobs > li input.unitBig, #jobsExisting ul.jobs > li input.unitSmall {
         display: inline-block;
@@ -567,7 +567,7 @@ body#config aside nav button#config.btnNav {
         margin-right: 2rem; }
       #timesheetContainer ul.day-data.col > li .removeItemBtn, #timesheetContainer ul.clients > li .removeItemBtn, #timesheetContainer ul.jobs > li .removeItemBtn, #clientsExisting ul.day-data.col > li .removeItemBtn, #clientsExisting ul.clients > li .removeItemBtn, #clientsExisting ul.jobs > li .removeItemBtn, #jobsExisting ul.day-data.col > li .removeItemBtn, #jobsExisting ul.clients > li .removeItemBtn, #jobsExisting ul.jobs > li .removeItemBtn {
         background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23cc6644' viewBox='0 0 32 32'%3E%3Ctitle%3Ecross%3C/title%3E%3Cpath d='M31.708 25.708c-0-0-0-0-0-0l-9.708-9.708 9.708-9.708c0-0 0-0 0-0 0.105-0.105 0.18-0.227 0.229-0.357 0.133-0.356 0.057-0.771-0.229-1.057l-4.586-4.586c-0.286-0.286-0.702-0.361-1.057-0.229-0.13 0.048-0.252 0.124-0.357 0.228 0 0-0 0-0 0l-9.708 9.708-9.708-9.708c-0-0-0-0-0-0-0.105-0.104-0.227-0.18-0.357-0.228-0.356-0.133-0.771-0.057-1.057 0.229l-4.586 4.586c-0.286 0.286-0.361 0.702-0.229 1.057 0.049 0.13 0.124 0.252 0.229 0.357 0 0 0 0 0 0l9.708 9.708-9.708 9.708c-0 0-0 0-0 0-0.104 0.105-0.18 0.227-0.229 0.357-0.133 0.355-0.057 0.771 0.229 1.057l4.586 4.586c0.286 0.286 0.702 0.361 1.057 0.229 0.13-0.049 0.252-0.124 0.357-0.229 0-0 0-0 0-0l9.708-9.708 9.708 9.708c0 0 0 0 0 0 0.105 0.105 0.227 0.18 0.357 0.229 0.356 0.133 0.771 0.057 1.057-0.229l4.586-4.586c0.286-0.286 0.362-0.702 0.229-1.057-0.049-0.13-0.124-0.252-0.229-0.357z'%3E%3C/path%3E%3C/svg%3E");
-        margin-right: -2rem;
+        margin-right: -4rem;
         color: #993322; }
       #timesheetContainer ul.day-data.col > li:not(:first-child) .addItemBtn, #timesheetContainer ul.clients > li:not(:first-child) .addItemBtn, #timesheetContainer ul.jobs > li:not(:first-child) .addItemBtn, #clientsExisting ul.day-data.col > li:not(:first-child) .addItemBtn, #clientsExisting ul.clients > li:not(:first-child) .addItemBtn, #clientsExisting ul.jobs > li:not(:first-child) .addItemBtn, #jobsExisting ul.day-data.col > li:not(:first-child) .addItemBtn, #jobsExisting ul.clients > li:not(:first-child) .addItemBtn, #jobsExisting ul.jobs > li:not(:first-child) .addItemBtn {
         visibility: hidden; }

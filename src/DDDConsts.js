@@ -28,6 +28,11 @@ uk.co.firmgently.DDDConsts = (function() {
 
     DATASTORE_CATEGORY_PREFIX: "_",
 
+    MAXLENGTH_INPUT_NAMES: 50,
+    MAXLENGTH_INPUT_NOTES: 1000,
+
+    DAYJUMP_TOPPOS_BUFFERPX: 40,
+
 		AUTOREPEAT_RATE: 500,
     RECALCULATETOTALS_DELAY: 1000,
     DAYSDRAWN_UPDATE_FREQ: 12, // lower number means more frequent updates on loading indicator
@@ -443,7 +448,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_FORM,
       id: "miniNavForm",
       parent: "main",
-      event_ar: [
+     /* event_ar: [
         {
           eventType: "submit",
           methodPathStr: "uk.co.firmgently.DontDillyDally.onFormSubmit",
@@ -453,7 +458,7 @@ uk.co.firmgently.DDDConsts = (function() {
           methodPathStr: "uk.co.firmgently.DontDillyDally.onFormClick",
           scopeID: "miniNavForm"
         }
-      ]
+      ]*/
     }, {
       type: CONST.GUITYPE_BTN,
       id: CONST.EL_ID_MONTHPREVBTN,
@@ -463,9 +468,9 @@ uk.co.firmgently.DDDConsts = (function() {
         {
           eventType: "mousedown",
           methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
-        }, {
-          eventType: "touchstart",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+        //}, {
+         // eventType: "touchstart",
+         // methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }
       ],
       parent: "miniNavForm"
@@ -482,9 +487,9 @@ uk.co.firmgently.DDDConsts = (function() {
         {
           eventType: "mousedown",
           methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
-        }, {
-          eventType: "touchstart",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+       // }, {
+        //  eventType: "touchstart",
+         // methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }
       ],
       parent: "miniNavForm"
@@ -497,9 +502,9 @@ uk.co.firmgently.DDDConsts = (function() {
         {
           eventType: "mousedown",
           methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
-        }, {
-          eventType: "touchstart",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+       // }, {
+         // eventType: "touchstart",
+         // methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }
       ],
       parent: "miniNavForm"
@@ -516,9 +521,9 @@ uk.co.firmgently.DDDConsts = (function() {
         {
           eventType: "mousedown",
           methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
-        }, {
-          eventType: "touchstart",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+    //    }, {
+      //    eventType: "touchstart",
+        //  methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
         }
       ],
       parent: "miniNavForm"

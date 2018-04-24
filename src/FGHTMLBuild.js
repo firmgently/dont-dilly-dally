@@ -244,7 +244,8 @@ uk.co.firmgently.FGHTMLBuild = (function() {
       for (prop in ob.options) {
         clientOrJob_ob = ob.options[prop];
         option_el = select_el.options[select_el.options.length] = new Option(clientOrJob_ob.name, clientOrJob_ob.class);
-        addClassname(option_el, clientOrJob_ob.class);
+        if (clientOrJob_ob.class) { addClassname(option_el, clientOrJob_ob.class); }
+        if (clientOrJob_ob.id) { addClassname(option_el, clientOrJob_ob.id); }
       }
     } else { // normal options
       for (prop in ob.options) {
