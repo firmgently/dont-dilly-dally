@@ -227,16 +227,19 @@ uk.co.firmgently.FGUtils = (function() {
 
   removeClassname = function(element, name) {
     if (element) {
-      element.className = element.className.replace(" " + name,"");
+     // element.className = element.className.replace(" " + name, "");
+      //element.className = element.className.replace(name, "");
+      element.className = element.className.replace(new RegExp(name, 'g'), "");
     }
   };
 
 
   addClassname = function(element, name) {
     if (element) {
-      name = " " + name;
-      element.className = element.className.replace(name,"");
-      element.className = element.className + name;
+      element.className = element.className.replace(new RegExp(name, 'g'), "");
+      //name = " " + name;
+      //element.className = element.className.replace(name,"");
+      element.className = element.className + " " + name;
     }
   };
 

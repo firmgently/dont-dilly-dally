@@ -77,17 +77,32 @@ uk.co.firmgently.DDDConsts = (function() {
     CLASS_CLIENTSELECT: "select-client",
     CLASS_JOBSELECT: "select-job",
 		CLASS_TODAY: "today",
+    CLASS_SPINNER: "spinner",
     CLASS_SPINNER_UNITBIG: "unitBig",
     CLASS_SPINNER_UNITSMALL: "unitSmall",
     CLASS_NOTESINPUT: "notes",
+    CLASS_ADDITEMBTN: "addItemBtn",
+    CLASS_REMOVEITEMBTN: "removeItemBtn",
     CLASS_NEGATIVE: "negative",
+    CLASS_MONEY: "money",
+    CLASS_HOURS: "hrs",
+    CLASS_MONEYTIMECHECKBOX: "isMoneyTaskChk",
     CLASS_HIDDEN: "hidden",
 		CLASS_ANIM_ATTRACT: "attract",
     CLASS_ANIM_WORKING: "working",
+    CLASS_WEEKSTART: "week-start",
+    CLASS_MONTHSTART: "month-start",
     CLASS_TOTALSWEEK: "totals-week",
+    CLASS_TOTALSCONTAINER: "totals-container",
+    CLASS_COLORPICKER: "color-picker",
     CLASS_TOTALSMONTH: "totals-month",
     CLASS_TOTALSYEAR: "totals-year",
     CLASS_SPACER_EXPAND_VERT: "expand-vert",
+    CLASS_TOTALSCONTAINER: "totals-container",
+    CLASS_TOTALINCOME: "total-income",
+    CLASS_TOTALSPEND: "total-spend",
+    CLASS_TOTALHRSWORKED: "total-hoursworked",
+    CLASS_TOTALPROFIT: "total-profit",
 
     TURNOVER_STR: "earned",
     PROFIT_STR: "profit",
@@ -133,6 +148,9 @@ uk.co.firmgently.DDDConsts = (function() {
     EL_ID_WEEKPREVBTN: "weekPrevBtn",
     EL_ID_MONTHNEXTBTN: "monthNextBtn",
     EL_ID_MONTHPREVBTN: "monthPrevBtn",
+    EL_ID_CLIENTSEXISTING: "clientsExisting",
+    EL_ID_JOBSEXISTING: "jobsExisting",
+    EL_ID_CONFIGFORM: "configForm",
 
     EL_ID_MAINCONTAINER: "main",
     EL_ID_TIMESHEETCONTAINER: "timesheetContainer",
@@ -256,7 +274,9 @@ uk.co.firmgently.DDDConsts = (function() {
     MINUTEINCREMENTS_15: "minuteIncrement15",
     MINUTEINCREMENTS_30: "minuteIncrement30",
 
-    TXT_STORAGE_UNSUPPORTED: "Sorry - storage is not supported on this device or browser"
+    TXT_STORAGE_UNSUPPORTED: "Sorry - storage is not supported on this device or browser",
+    TXT_LOADFILE_CONFIRM: "REPLACE\n all your data, clients, jobs and preferences\nwith file?",
+    TXT_DELETEDATA_CONFIRM: "Delete all your data, clients, jobs and preferences?"
   };
 
 
@@ -352,24 +372,24 @@ uk.co.firmgently.DDDConsts = (function() {
   CONST.GUIDATA_JOBSANDCLIENTS = [
     {
       type: CONST.GUITYPE_COL,
-      id: "clientsExisting",
+      id: CONST.EL_ID_CLIENTSEXISTING,
       class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
       parent: "main",
     }, {
       type: CONST.GUITYPE_COL,
-      id: "jobsExisting",
+      id: CONST.EL_ID_JOBSEXISTING,
       class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
       parent: "main",
     }, {
       type: CONST.GUITYPE_HEADING,
       heirarchy: 4,
       text: CONST.CLIENTS_STR,
-      parent: "clientsExisting"
+      parent: CONST.EL_ID_CLIENTSEXISTING
     }, {
       type: CONST.GUITYPE_HEADING,
       heirarchy: 4,
       text: CONST.JOBS_STR,
-      parent: "jobsExisting"
+      parent: CONST.EL_ID_JOBSEXISTING
     }, {
       type: CONST.GUITYPE_METHODCALL,
       methodPathStr: "uk.co.firmgently.DontDillyDally.drawJobsAndClients",
@@ -533,7 +553,7 @@ uk.co.firmgently.DDDConsts = (function() {
       label: "today",
       event_ar: [
         {
-          eventType: "click",
+          eventType: "mousedown",
           methodPathStr: "uk.co.firmgently.DontDillyDally.todayClick",
         }
       ],
@@ -554,7 +574,7 @@ uk.co.firmgently.DDDConsts = (function() {
   CONST.GUIDATA_CONFIG = [
     {
       type: CONST.GUITYPE_FORM,
-      id: "configForm",
+      id: CONST.EL_ID_CONFIGFORM,
       class: CONST.CLASS_FORMMAIN,
       title: "Set your preferences here",
       parent: "main",
@@ -563,18 +583,18 @@ uk.co.firmgently.DDDConsts = (function() {
         {
           eventType: "submit",
           methodPathStr: "uk.co.firmgently.DontDillyDally.onFormSubmit",
-          scopeID: "configForm"
+          scopeID: CONST.EL_ID_CONFIGFORM
         }, {
           eventType: "click",
           methodPathStr: "uk.co.firmgently.DontDillyDally.onFormClick",
-          scopeID: "configForm"
+          scopeID: CONST.EL_ID_CONFIGFORM
         }
       ]
     }, {
       type: CONST.GUITYPE_COL,
       id: "configCol1",
       class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
-      parent: "configForm"
+      parent: CONST.EL_ID_CONFIGFORM
     }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "dateFormat",
@@ -591,7 +611,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_COL,
       id: "configCol2",
       class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
-      parent: "configForm"
+      parent: CONST.EL_ID_CONFIGFORM
     }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "timespan",
@@ -608,7 +628,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_COL,
       id: "configCol3",
       class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
-      parent: "configForm"
+      parent: CONST.EL_ID_CONFIGFORM
     }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "totalsToShow",
@@ -625,7 +645,7 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_COL,
       id: "configCol4",
       class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
-      parent: "configForm"
+      parent: CONST.EL_ID_CONFIGFORM
     }, {
       type: CONST.GUITYPE_RADIOBTN,
       id: "minuteIncrements",

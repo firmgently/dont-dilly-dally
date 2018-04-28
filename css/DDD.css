@@ -402,6 +402,7 @@ body#config aside nav button#config.btnNav {
       margin-bottom: 0.3rem; }
   #timesheetContainer ul.day-data.col, #timesheetContainer ul.clients, #timesheetContainer ul.jobs, #clientsExisting ul.day-data.col, #clientsExisting ul.clients, #clientsExisting ul.jobs, #jobsExisting ul.day-data.col, #jobsExisting ul.clients, #jobsExisting ul.jobs {
     padding-left: 9rem;
+    width: initial;
     display: inline-block;
     float: right; }
     #timesheetContainer ul.day-data.col > li, #timesheetContainer ul.clients > li, #timesheetContainer ul.jobs > li, #clientsExisting ul.day-data.col > li, #clientsExisting ul.clients > li, #clientsExisting ul.jobs > li, #jobsExisting ul.day-data.col > li, #jobsExisting ul.clients > li, #jobsExisting ul.jobs > li {

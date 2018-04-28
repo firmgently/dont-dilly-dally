@@ -535,6 +535,7 @@ body#config aside nav button#config.btnNav {
   }
   ul.day-data.col, ul.clients, ul.jobs {
     padding-left: $date-width;
+    width: initial;
     //padding-left: $date-width + $extraLargePadding * 2;
     display: inline-block; float: right; 
 
@@ -695,7 +696,6 @@ body#config aside nav button#config.btnNav {
       &:focus-within,
       .spinner:hover {
         .spin-button-up, .spin-button-down {  @include animation('delayed-fade-up 0.3s 1 forwards'); }
-        //> li { background-color: red; }
         input[type="checkbox"].ios-switch {
           + div {
             &:before { content: color-SVG-icon($svgIconMoney, $hashlessMoneyIconBrightColor); }
