@@ -3,7 +3,7 @@ if &cp | set nocp | endif
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
-cd /storage/4951-1BEB/000-WORK/000-GIT/dont-dilly-dally
+cd ~/000-WORK/000-GIT/dont-dilly-dally
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
@@ -39,7 +39,7 @@ exe s:l
 normal! zt
 1
 normal! 0
-lcd /storage/4951-1BEB/000-WORK/000-GIT/dont-dilly-dally
+lcd ~/000-WORK/000-GIT/dont-dilly-dally
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

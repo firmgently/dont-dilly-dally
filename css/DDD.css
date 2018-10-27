@@ -78,367 +78,987 @@ table {
   box-sizing: border-box; }
 
 /* ===============================================
-Don't Dilly Dally
+		Don't Dilly Dally
 ================================================== */
+/* ===============================================
+		SASS functions (need to be defined before
+		they are reference in the rest of the file	
+================================================== */
+/* ===============================================
+		color definitions
+================================================== */
+/* ===============================================
+		size definitions
+================================================== */
+/* ===============================================
+		encoded SVG icon definitions
+================================================== */
+/*"*/
+/* ===============================================
+		SASS mixins
+================================================== */
+@-webkit-keyframes working {
+  0% {
+    color: red; }
+  70% {
+    color: red; }
+  100% {
+    color: white; } }
+@-moz-keyframes working {
+  0% {
+    color: red; }
+  70% {
+    color: red; }
+  100% {
+    color: white; } }
+@-o-keyframes working {
+  0% {
+    color: red; }
+  70% {
+    color: red; }
+  100% {
+    color: white; } }
+@keyframes working {
+  0% {
+    color: red; }
+  70% {
+    color: red; }
+  100% {
+    color: white; } }
+@-webkit-keyframes attract {
+  0% {
+    background-color: black; }
+  50% {
+    background-color: white; }
+  100% {
+    background-color: white; } }
+@-moz-keyframes attract {
+  0% {
+    background-color: black; }
+  50% {
+    background-color: white; }
+  100% {
+    background-color: white; } }
+@-o-keyframes attract {
+  0% {
+    background-color: black; }
+  50% {
+    background-color: white; }
+  100% {
+    background-color: white; } }
+@keyframes attract {
+  0% {
+    background-color: black; }
+  50% {
+    background-color: white; }
+  100% {
+    background-color: white; } }
+@-webkit-keyframes delayed-fade-up {
+  0% {
+    opacity: 0; }
+  66% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+@-moz-keyframes delayed-fade-up {
+  0% {
+    opacity: 0; }
+  66% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+@-o-keyframes delayed-fade-up {
+  0% {
+    opacity: 0; }
+  66% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+@keyframes delayed-fade-up {
+  0% {
+    opacity: 0; }
+  66% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+input.ios-switch:focus + div,
+input#file-chooser:focus + label,
+.spinner:focus-within,
 :focus {
+  outline: 0;
+  -webkit-box-shadow: 0px 0px 16px 8px white;
+  -moz-box-shadow: 0px 0px 16px 8px white;
+  box-shadow: 0px 0px 16px 8px white; }
+
+.working {
+  -webkit-animation: working 1s 1;
+  -moz-animation: working 1s 1;
+  -o-animation: working 1s 1;
+  animation: working 1s 1; }
+
+.attract {
+  -webkit-animation: attract .5s 1;
+  -moz-animation: attract .5s 1;
+  -o-animation: attract .5s 1;
+  animation: attract .5s 1; }
+
+.sheet {
+  -webkit-box-shadow: 0px 0px 30px -10px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 0px 30px -10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 30px -10px rgba(0, 0, 0, 0.3);
   background-color: white;
-  color: black; }
+  padding: 2rem;
+  margin: 0 2rem 2rem 0;
+  width: calc(50% - 2rem);
+  display: inline-block;
+  /* p { margin-bottom: $extraLargePadding; }*/ }
+
+.expand-vert {
+  display: inline-block;
+  height: 0; }
 
 body {
-  font-family: "FG_Medium", Tahoma, Arial, Helvetica;
-  background-color: #ddccaa; }
+  font-family: Tahoma, Arial, Helvetica;
+  background-color: #979595; }
+
+h1 {
+  font-weight: bold;
+  font-family: monospace;
+  color: #cec7c7; }
 
 aside {
   display: inline-block;
-  background-color: #776644; }
-  aside img {
-    width: 8vw;
-    margin: 1vw 1vw 0 1vw;
-    display: inline-block; }
+  background-color: #F2F0F0; }
   aside h1 {
-    display: inline;
-    font-size: 10vw;
-    color: #aa9977; }
+    width: 10vw;
+    text-align: center;
+    font-size: 2vw;
+    line-height: 1.2em;
+    text-transform: lowercase; }
+    aside h1:last-of-type {
+      margin-bottom: 2rem; }
+    aside h1 em {
+      color: #dad5d5; }
   aside nav {
-    position: relative;
+    position: absolute;
+    z-index: 3;
     display: inline-block; }
     aside nav button.btnNav {
-      padding: 0.1em;
-      margin: 0.3em 0.3em 0 0;
-      font-size: 1.15em;
-      vertical-align: bottom;
-      width: 28vw;
-      overflow: hidden;
-      -webkit-border-radius: 0.2em 0.2em 0 0;
-      -moz-border-radius: 0.2em 0.2em 0 0;
-      border-radius: 0.2em 0.2em 0 0;
-      color: #221100;
-      background-color: #887759;
-      border-color: #bfb399;
-      border-bottom: none;
-      text-overflow: ellipsis;
-      white-space: nowrap; }
+      margin-bottom: 0.3rem; }
       aside nav button.btnNav:hover, aside nav button.btnNav:focus {
-        color: #221100;
-        outline: 0; }
+        color: #978257;
+        background-color: #ffd5aa; }
+      aside nav button.btnNav#jobsClients {
+        background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Eprofile%3C/title%3E%3Cpath d='M27 0h-24c-1.65 0-3 1.35-3 3v26c0 1.65 1.35 3 3 3h24c1.65 0 3-1.35 3-3v-26c0-1.65-1.35-3-3-3zM26 28h-22v-24h22v24zM8 18h14v2h-14zM8 22h14v2h-14zM10 9c0-1.657 1.343-3 3-3s3 1.343 3 3c0 1.657-1.343 3-3 3s-3-1.343-3-3zM15 12h-4c-1.65 0-3 0.9-3 2v2h10v-2c0-1.1-1.35-2-3-2z'%3E%3C/path%3E%3C/svg%3E"); }
+      aside nav button.btnNav#timesheet {
+        background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Etable%3C/title%3E%3Cpath d='M0 6v22h32v-22h-32zM12 20v-4h8v4h-8zM20 22v4h-8v-4h8zM20 10v4h-8v-4h8zM10 10v4h-8v-4h8zM2 16h8v4h-8v-4zM22 16h8v4h-8v-4zM22 14v-4h8v4h-8zM2 22h8v4h-8v-4zM22 26v-4h8v4h-8z'%3E%3C/path%3E%3C/svg%3E"); }
+      aside nav button.btnNav#privacy {
+        background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Eeye-blocked%3C/title%3E%3Cpath d='M29.561 0.439c-0.586-0.586-1.535-0.586-2.121 0l-6.318 6.318c-1.623-0.492-3.342-0.757-5.122-0.757-6.979 0-13.028 4.064-16 10 1.285 2.566 3.145 4.782 5.407 6.472l-4.968 4.968c-0.586 0.586-0.586 1.535 0 2.121 0.293 0.293 0.677 0.439 1.061 0.439s0.768-0.146 1.061-0.439l27-27c0.586-0.586 0.586-1.536 0-2.121zM13 10c1.32 0 2.44 0.853 2.841 2.037l-3.804 3.804c-1.184-0.401-2.037-1.521-2.037-2.841 0-1.657 1.343-3 3-3zM3.441 16c1.197-1.891 2.79-3.498 4.67-4.697 0.122-0.078 0.246-0.154 0.371-0.228-0.311 0.854-0.482 1.776-0.482 2.737 0 1.715 0.54 3.304 1.459 4.607l-1.904 1.904c-1.639-1.151-3.038-2.621-4.114-4.323z'%3E%3C/path%3E%3Cpath d='M24 13.813c0-0.849-0.133-1.667-0.378-2.434l-10.056 10.056c0.768 0.245 1.586 0.378 2.435 0.378 4.418 0 8-3.582 8-8z'%3E%3C/path%3E%3Cpath d='M25.938 9.062l-2.168 2.168c0.040 0.025 0.079 0.049 0.118 0.074 1.88 1.199 3.473 2.805 4.67 4.697-1.197 1.891-2.79 3.498-4.67 4.697-2.362 1.507-5.090 2.303-7.889 2.303-1.208 0-2.403-0.149-3.561-0.439l-2.403 2.403c1.866 0.671 3.873 1.036 5.964 1.036 6.978 0 13.027-4.064 16-10-1.407-2.81-3.504-5.2-6.062-6.938z'%3E%3C/path%3E%3C/svg%3E"); }
+      aside nav button.btnNav#config {
+        background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Ecog%3C/title%3E%3Cpath d='M29.181 19.070c-1.679-2.908-0.669-6.634 2.255-8.328l-3.145-5.447c-0.898 0.527-1.943 0.829-3.058 0.829-3.361 0-6.085-2.742-6.085-6.125h-6.289c0.008 1.044-0.252 2.103-0.811 3.070-1.679 2.908-5.411 3.897-8.339 2.211l-3.144 5.447c0.905 0.515 1.689 1.268 2.246 2.234 1.676 2.903 0.672 6.623-2.241 8.319l3.145 5.447c0.895-0.522 1.935-0.82 3.044-0.82 3.35 0 6.067 2.725 6.084 6.092h6.289c-0.003-1.034 0.259-2.080 0.811-3.038 1.676-2.903 5.399-3.894 8.325-2.219l3.145-5.447c-0.899-0.515-1.678-1.266-2.232-2.226zM16 22.479c-3.578 0-6.479-2.901-6.479-6.479s2.901-6.479 6.479-6.479c3.578 0 6.479 2.901 6.479 6.479s-2.901 6.479-6.479 6.479z'%3E%3C/path%3E%3C/svg%3E"); }
 
 body#jobsClients aside nav button#jobsClients.btnNav,
-body#timesheets aside nav button#timesheets.btnNav,
+body#timesheet aside nav button#timesheet.btnNav,
+body#privacy aside nav button#privacy.btnNav,
 body#config aside nav button#config.btnNav {
-  font-size: 1.5em;
-  -webkit-border-radius: 0.3em 0.3em 0 0;
-  -moz-border-radius: 0.3em 0.3em 0 0;
-  border-radius: 0.3em 0.3em 0 0;
-  color: #221100;
-  background-color: #aa9977; }
+  color: #978257;
+  background-color: #ffd5aa; }
 
 .hidden {
   visibility: hidden; }
 
-#column-headings {
-  position: absolute;
-  bottom: 0; }
-  #column-headings li {
-    display: inline;
-    text-align: center;
-    background-color: orange;
-    margin: 0.2em; }
-  #column-headings li:nth-child(1) {
-    width: 8em; }
-  #column-headings li:nth-child(2) {
-    width: 2em; }
-  #column-headings li:nth-child(3) {
-    width: 6em; }
-  #column-headings li:nth-child(4) {
-    width: 6em; }
-  #column-headings li:nth-child(5) {
-    width: 10em; }
-  #column-headings li:nth-child(6) {
-    width: 2.5em; }
-  #column-headings li:nth-child(7) {
-    width: 10em; }
-
-body#jobsClients #column-headings, body#config #column-headings {
-  display: none; }
-
 #main {
   position: absolute;
-  z-index: 2;
+  z-index: 1;
   top: 0;
   bottom: 0;
   left: 10vw;
   right: 0;
   overflow: scroll;
-  background-color: #ddccaa; }
-
-#editClientCol, #editJobCol {
-  width: 50%;
-  display: inline-block;
-  padding: 0.6em; }
-
-#createNewClientBtn, #createNewJobBtn,
-#saveNewClientBtn, #saveNewJobBtn,
-#clientNameIn, #jobNameIn {
-  font-family: "FG_Bold", Tahoma, Arial, Helvetica; }
+  padding: 2rem;
+  background-color: #F2F0F0; }
+  #main h1, #main h2 {
+    padding: 0.8rem 0.6rem 0.8rem 2rem; }
+  #main h1 {
+    font-size: 1.75rem;
+    color: #662200; }
+  #main h2 {
+    font-size: 1.25rem;
+    color: #443322; }
 
 #sidebar-main {
   position: absolute;
   left: 0;
   right: 90vw;
   top: 0;
-  bottom: 0; }
-
-.sidebar-info {
-  background-color: #aa9977;
-  position: relative;
-  padding: 0.6em 0 0 0.6em; }
+  bottom: 0;
+  padding-top: 10vw;
+  background-image: url("data:image/svg+xml,%3Csvg version='1.2' baseProfile='tiny' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='323.4px' height='340.6px' viewBox='0 0 323.4 340.6' xml:space='preserve'%3E%3Cg id='tail'%3E%3C/g%3E%3Cg id='body'%3E%3C/g%3E%3Cg id='wings'%3E%3C/g%3E%3Cg id='breast_colour'%3E%3C/g%3E%3Cg id='breast'%3E%3C/g%3E%3Cg id='head'%3E%3C/g%3E%3Cg id='head_splash'%3E%3C/g%3E%3Cg id='Layer_11'%3E%3Cg id='Layer_9'%3E%3C/g%3E%3C/g%3E%3Cg id='BIRD'%3E%3Cg id='wing_1_'%3E%3Cpath fill-rule='evenodd' fill='%238C0000' d='M263.4,47.6c-15.3,64.8-39.5,86.7-72.5,65.7C173.2,78.3,197.4,56.4,263.4,47.6z'/%3E%3C/g%3E%3Cpath fill-rule='evenodd' fill='%23999999' d='M151.7,206.8l-60.1,36.9c-12.8,5.3-19.8,1.1-21-12.7l8.4-68L151.7,206.8z'/%3E%3Cpath fill-rule='evenodd' fill='%23C9946C' d='M148.8,85.2c26.1,0,48.4,6.9,66.9,20.8c18.5,13.9,27.7,30.6,27.7,50.2 c0,19.6-9.3,36.3-27.7,50.1C197.3,220.1,175,227,148.8,227c-26.1,0-48.5-6.9-67-20.8c-18.5-13.8-27.7-30.5-27.7-50.1 c0-19.6,9.2-36.3,27.7-50.2C100.4,92.1,122.7,85.2,148.8,85.2z'/%3E%3Cpath fill-rule='evenodd' fill='%23FFAA00' d='M152.2,87.2c21.3,0,39.4,5.6,54.5,16.9c15,11.3,22.6,24.9,22.6,40.8 c0,15.9-7.5,29.5-22.6,40.8c-15,11.3-33.2,16.9-54.5,16.9c-21.3,0-39.4-5.6-54.5-16.9c-15-11.3-22.6-24.9-22.6-40.8 c0-15.9,7.5-29.5,22.6-40.8C112.8,92.9,130.9,87.2,152.2,87.2z'/%3E%3Cg id='wing'%3E%3Cpath fill-rule='evenodd' fill='%238C0000' d='M76.2,143.3c-33.1,21-57.2-0.9-72.5-65.7C69.7,86.4,93.9,108.3,76.2,143.3z'/%3E%3C/g%3E%3Cpath fill-rule='evenodd' fill='%23EDD5C3' d='M123.4,174.4c7.5-13.3,19.2-23.7,35-31.1c15.9-7.5,31.4-9.9,46.4-7.2 c15,2.7,25.1,9.7,30.5,21c5.3,11.3,4.2,23.6-3.2,36.9c-7.5,13.3-19.2,23.7-35.1,31.2c-15.9,7.5-31.3,9.9-46.3,7.2 c-15-2.7-25.2-9.7-30.5-21C114.8,200,115.9,187.7,123.4,174.4z'/%3E%3Cpath fill-rule='evenodd' fill='%23FFE5D7' d='M129,166.5c7.8-11.6,19.4-21.1,34.7-28.3c15.4-7.2,30-10.1,44-8.7 c13.9,1.4,23.1,6.7,27.4,16c4.4,9.2,2.6,19.7-5.1,31.3s-19.4,21.1-34.7,28.3c-15.3,7.2-30,10.1-43.9,8.7 c-13.9-1.4-23.1-6.7-27.4-16C119.5,188.5,121.2,178.1,129,166.5z'/%3E%3Cpath fill-rule='evenodd' fill='%23C9946C' d='M200.7,153.8c-14.2,14.2-31.3,21.3-51.4,21.3c-20.1,0-37.2-7.1-51.4-21.3 c-14.2-14.2-21.3-31.3-21.3-51.4S83.7,65.2,97.9,51c14.2-14.2,31.3-21.3,51.4-21.3c20.1,0,37.2,7.1,51.4,21.3 c14.2,14.2,21.3,31.3,21.3,51.4S214.9,139.6,200.7,153.8z'/%3E%3Cimage width='1080' height='1920' xlink:href='7CD64199.jpg' transform='matrix%281 0 0 1 -7894 -7770.1099%29'%3E%3C/image%3E%3Cpath fill-rule='evenodd' fill='%23999999' d='M160.4,23.2c0.4,5.5-2.8,10.4-9.6,14.9c-6.9,4.4-15.4,7.1-25.5,7.9 c-10.1,0.8-18.9-0.5-26.4-3.8c-7.5-3.3-11.4-7.7-11.9-13.2s2.8-10.5,9.7-14.9c6.9-4.4,15.4-7,25.5-7.8c10.1-0.8,18.9,0.5,26.4,3.8 C156,13.3,159.9,17.7,160.4,23.2z'/%3E%3Cpath fill-rule='evenodd' fill='%238C0000' d='M207,116.7c-44.8,11.5-66,3.7-63.6-23.5C159.3,71,180.5,78.8,207,116.7z'/%3E%3Cg id='EYE_1_'%3E%3Ccircle fill-rule='evenodd' fill='%23FFE5D7' stroke='%23EDD5C3' stroke-width='2.0301' stroke-miterlimit='10' cx='121.6' cy='93' r='57.2'/%3E%3Cg%3E%3Ccircle fill-rule='evenodd' fill='%23999999' cx='121.6' cy='93' r='35.8'/%3E%3Ccircle fill='none' stroke='%23999999' stroke-width='26.3918' stroke-miterlimit='10' stroke-dasharray='16.0759,16.0759' cx='121.6' cy='93' r='35.8'/%3E%3C/g%3E%3Cpath fill-rule='evenodd' fill='%23FFAA00' d='M135.8,90.8c1.2,7.9-4.2,15.2-12.1,16.4c-7.9,1.2-15.2-4.2-16.4-12.1 c-1.2-7.9,4.2-15.2,12.1-16.4C127.3,77.6,134.6,83,135.8,90.8z'/%3E%3C/g%3E%3Cg id='EYE'%3E%3Ccircle fill-rule='evenodd' fill='%23FFE5D7' stroke='%23EDD5C3' stroke-miterlimit='10' cx='188.3' cy='68.1' r='28.2'/%3E%3Cg%3E%3Ccircle fill-rule='evenodd' fill='%23999999' cx='188.3' cy='68.1' r='17.6'/%3E%3Ccircle fill='none' stroke='%23999999' stroke-width='13' stroke-miterlimit='10' stroke-dasharray='7.9186,7.9186' cx='188.3' cy='68.1' r='17.6'/%3E%3C/g%3E%3Ccircle fill-rule='evenodd' fill='%23FFAA00' cx='188.3' cy='68.1' r='7.1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A");
+  background-size: 10vw;
+  background-position: 0.8rem 0.8rem;
+  background-repeat: no-repeat; }
 
 #loading-indicator {
-  position: absolute;
-  z-index: 2;
+  position: fixed;
+  z-index: 3;
   top: 0;
-  left: 0;
+  left: 10vw;
   bottom: 0;
   right: 0;
-  background-color: #cc6644;
+  padding: 20vh 0;
+  color: #ffeedd;
+  font-weight: bold;
+  text-transform: lowercase;
+  background-color: #cec7c7;
   text-align: center; }
-
-#timesheetContainer {
-  display: block; }
-  #timesheetContainer ul.day-data.col {
-    padding-left: 11.3em;
+  #loading-indicator span, #loading-indicator em {
+    position: absolute;
     display: inline-block;
-    float: right;
-    z-index: 1; }
-    #timesheetContainer ul.day-data.col li {
-      max-width: 42em;
+    width: 50%;
+    height: 3rem;
+    left: 25%;
+    top: 10%; }
+  #loading-indicator span {
+    background-color: #776644; }
+  #loading-indicator em {
+    z-index: 2;
+    background-color: #cc6644;
+    background-clip: content-box; }
+
+#timesheetContainer.sheet {
+  width: 100%; }
+
+#timesheetContainer, #clientsExisting, #jobsExisting {
+  z-index: 1;
+  display: block; }
+  #timesheetContainer > li .date.col, #clientsExisting > li .date.col, #jobsExisting > li .date.col {
+    font-family: monospace;
+    color: #797777;
+    font-size: 1.2rem;
+    font-weight: normal;
+    margin-right: -9.6rem;
+    width: initial;
+    margin-left: 0.6rem;
+    margin-top: 0.8rem; }
+    #timesheetContainer > li .date.col span, #clientsExisting > li .date.col span, #jobsExisting > li .date.col span {
+      /* used for 'TODAY' text etc */
       display: block;
-      margin-bottom: 0.3em;
-      position: relative; }
-    #timesheetContainer ul.day-data.col li .removeTaskBtn, #timesheetContainer ul.day-data.col li .addTaskBtn {
-      font-family: "ddd-icons";
-      font-size: 1.33em;
-      -webkit-border-radius: 1em 1em 1em 1em;
-      -moz-border-radius: 1em 1em 1em 1em;
-      border-radius: 1em 1em 1em 1em;
-      border: none;
-      height: 2rem;
-      width: 2rem;
-      margin-left: 0.6em;
-      cursor: pointer;
-      color: #ffeedd;
-      background-color: #aa9977;
-      position: absolute;
-      bottom: 0; }
-    #timesheetContainer ul.day-data.col li .addTaskBtn {
-      margin-left: -2rem; }
-    #timesheetContainer ul.day-data.col li .removeTaskBtn {
-      right: 1rem;
-      background-color: #993322; }
-    #timesheetContainer ul.day-data.col li:only-child .removeTaskBtn {
-      visibility: hidden; }
-    #timesheetContainer ul.day-data.col li:not(:last-child) .addTaskBtn {
-      visibility: hidden; }
-  #timesheetContainer li .date.col {
-    font-family: 'Lucida Console', 'Monaco', 'monospace', 'Courier';
-    font-size: 1.1em;
-    font-weight: bold;
-    width: 7.3em;
-    margin-right: -7.6em;
-    margin-left: 0.3em; }
-    #timesheetContainer li .date.col span {
-      display: block;
-      font-size: 0.8em;
+      font-size: 0.7rem;
       text-align: right;
       text-transform: uppercase;
-      margin-top: -0.5em;
-      margin-right: 0.5em;
+      /* margin-right: 2.6rem;*/
       color: #993322; }
-  #timesheetContainer li em {
-    background-color: #f3ede1;
-    padding: 0.6em;
-    top: 0;
-    margin-right: 0.3em;
-    position: relative;
-    display: inline-block;
+  #timesheetContainer > li em, #clientsExisting > li em, #jobsExisting > li em {
+    color: white;
+    background-color: #dad5d5;
+    padding: 0.8rem;
+    vertical-align: sub;
+    /* top: 0; */
+    margin-right: 0.8rem;
     font-weight: normal; }
-  #timesheetContainer li.day {
+  #timesheetContainer > li.day, #clientsExisting > li.day, #jobsExisting > li.day {
     display: block;
-    padding: 0.6em 0.1em;
-    color: #aa9977;
-    background-color: #ece2ce; }
-    #timesheetContainer li.day:hover, #timesheetContainer li.day:focus-within {
-      color: #44331e; }
-  #timesheetContainer li.odd {
-    background-color: #f3ede1; }
-    #timesheetContainer li.odd em {
-      background-color: #ece2ce; }
-    #timesheetContainer li.odd select {
-      background-color: #ece2ce; }
-  #timesheetContainer li.today .date.col {
-    margin-top: -0.5em; }
-    #timesheetContainer li.today .date.col em {
-      top: 0.5em; }
-  #timesheetContainer li.week-start {
-    margin-top: 0.2em; }
-  #timesheetContainer li.month-start {
-    border-style: solid;
-    border-top-width: 0.6em;
-    border-color: #ece2ce; }
+    text-align: right;
+    padding: 0.8rem 0.15rem;
+    color: #6c6a6a;
+    background-color: #f9f8f8; }
+    #timesheetContainer > li.day:hover, #timesheetContainer > li.day:focus-within, #clientsExisting > li.day:hover, #clientsExisting > li.day:focus-within, #jobsExisting > li.day:hover, #jobsExisting > li.day:focus-within {
+      color: #1f1e1e;
+      background-color: #fefefe; }
+  #timesheetContainer > li:nth-of-type(even), #clientsExisting > li:nth-of-type(even), #jobsExisting > li:nth-of-type(even) {
+    background-color: #fbfbfb;
+    color: #6c6a6a; }
+    #timesheetContainer > li:nth-of-type(even):hover, #timesheetContainer > li:nth-of-type(even):focus-within, #clientsExisting > li:nth-of-type(even):hover, #clientsExisting > li:nth-of-type(even):focus-within, #jobsExisting > li:nth-of-type(even):hover, #jobsExisting > li:nth-of-type(even):focus-within {
+      color: #1f1e1e;
+      background-color: #fefefe; }
+  #timesheetContainer > li.today .date.col, #timesheetContainer > li.week-start .date.col, #clientsExisting > li.today .date.col, #clientsExisting > li.week-start .date.col, #jobsExisting > li.today .date.col, #jobsExisting > li.week-start .date.col {
+    /* margin-top: -0.5rem;*/ }
+    #timesheetContainer > li.today .date.col em, #timesheetContainer > li.week-start .date.col em, #clientsExisting > li.today .date.col em, #clientsExisting > li.week-start .date.col em, #jobsExisting > li.today .date.col em, #jobsExisting > li.week-start .date.col em {
+      top: 0.5rem; }
+  #timesheetContainer > li.today .date.col em, #clientsExisting > li.today .date.col em, #jobsExisting > li.today .date.col em {
+    background-color: #cc6644;
+    color: #ffeedd; }
+  #timesheetContainer > li.week-start, #clientsExisting > li.week-start, #jobsExisting > li.week-start {
+    margin-top: 0.6rem; }
+  #timesheetContainer > li.month-start, #clientsExisting > li.month-start, #jobsExisting > li.month-start {
+    margin-top: 2rem; }
+    #timesheetContainer > li.month-start h4, #clientsExisting > li.month-start h4, #jobsExisting > li.month-start h4 {
+      display: block;
+      font-size: 1.2rem;
+      color: #979595;
+      background-color: #f4f3f3;
+      text-align: center;
+      font-weight: bold;
+      padding: 2rem;
+      margin-top: -0.8rem;
+      margin-bottom: 0.8rem;
+      /*  border-bottom: solid $tinyPadding $panelBgColorDimmed;*/ }
+    #timesheetContainer > li.month-start:first-child, #clientsExisting > li.month-start:first-child, #jobsExisting > li.month-start:first-child {
+      margin-top: 0; }
+  #timesheetContainer ul.day-data.col > li, #clientsExisting ul.day-data.col > li, #jobsExisting ul.day-data.col > li {
+    margin-bottom: 1.4rem;
+    white-space: nowrap; }
+    #timesheetContainer ul.day-data.col > li:last-of-type, #clientsExisting ul.day-data.col > li:last-of-type, #jobsExisting ul.day-data.col > li:last-of-type {
+      margin-bottom: 0.3rem; }
+  #timesheetContainer ul.day-data.col, #timesheetContainer ul.clients, #timesheetContainer ul.jobs, #clientsExisting ul.day-data.col, #clientsExisting ul.clients, #clientsExisting ul.jobs, #jobsExisting ul.day-data.col, #jobsExisting ul.clients, #jobsExisting ul.jobs {
+    padding-left: 9rem;
+    width: initial;
+    display: inline-block;
+    float: right; }
+    #timesheetContainer ul.day-data.col > li, #timesheetContainer ul.clients > li, #timesheetContainer ul.jobs > li, #clientsExisting ul.day-data.col > li, #clientsExisting ul.clients > li, #clientsExisting ul.jobs > li, #jobsExisting ul.day-data.col > li, #jobsExisting ul.clients > li, #jobsExisting ul.jobs > li {
+      /* WORK ITEM */
+      display: block;
+      padding-left: 2rem;
+      padding-right: 6rem;
+      position: relative; }
+      #timesheetContainer ul.day-data.col > li input.unitBig, #timesheetContainer ul.day-data.col > li input.unitSmall, #timesheetContainer ul.clients > li input.unitBig, #timesheetContainer ul.clients > li input.unitSmall, #timesheetContainer ul.jobs > li input.unitBig, #timesheetContainer ul.jobs > li input.unitSmall, #clientsExisting ul.day-data.col > li input.unitBig, #clientsExisting ul.day-data.col > li input.unitSmall, #clientsExisting ul.clients > li input.unitBig, #clientsExisting ul.clients > li input.unitSmall, #clientsExisting ul.jobs > li input.unitBig, #clientsExisting ul.jobs > li input.unitSmall, #jobsExisting ul.day-data.col > li input.unitBig, #jobsExisting ul.day-data.col > li input.unitSmall, #jobsExisting ul.clients > li input.unitBig, #jobsExisting ul.clients > li input.unitSmall, #jobsExisting ul.jobs > li input.unitBig, #jobsExisting ul.jobs > li input.unitSmall {
+        display: inline-block;
+        width: 3rem;
+        height: 2rem;
+        font-family: monospace;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: white;
+        text-align: left; }
+      #timesheetContainer ul.day-data.col > li input.unitBig, #timesheetContainer ul.clients > li input.unitBig, #timesheetContainer ul.jobs > li input.unitBig, #clientsExisting ul.day-data.col > li input.unitBig, #clientsExisting ul.clients > li input.unitBig, #clientsExisting ul.jobs > li input.unitBig, #jobsExisting ul.day-data.col > li input.unitBig, #jobsExisting ul.clients > li input.unitBig, #jobsExisting ul.jobs > li input.unitBig {
+        width: 5rem;
+        text-align: right; }
+      #timesheetContainer ul.day-data.col > li input.unitSmall, #timesheetContainer ul.clients > li input.unitSmall, #timesheetContainer ul.jobs > li input.unitSmall, #clientsExisting ul.day-data.col > li input.unitSmall, #clientsExisting ul.clients > li input.unitSmall, #clientsExisting ul.jobs > li input.unitSmall, #jobsExisting ul.day-data.col > li input.unitSmall, #jobsExisting ul.clients > li input.unitSmall, #jobsExisting ul.jobs > li input.unitSmall {
+        margin-right: 0.8rem; }
+      #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch {
+        position: absolute;
+        opacity: 0; }
+        #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch + div, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch + div, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch + div, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch + div {
+          text-align: left;
+          display: inline-block;
+          vertical-align: middle;
+          width: 4.5rem;
+          height: 2rem;
+          border-radius: 999px;
+          margin: 0 0.6rem 0;
+          padding: 0.3rem 0.5rem;
+          background: #9f9090;
+          background-image: linear-gradient(90deg, #778866 50%, transparent 50%);
+          background-size: 200% 100%;
+          background-position: 100% 0;
+          background-origin: border-box;
+          background-clip: border-box;
+          overflow: hidden;
+          cursor: pointer; }
+          #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:after {
+            font-size: 1rem; }
+          #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:before {
+            content: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23c6cdbf' viewBox='0 0 32 32'%3E%3Ctitle%3Ecredit-card%3C/title%3E%3Cpath d='M29 4h-26c-1.65 0-3 1.35-3 3v18c0 1.65 1.35 3 3 3h26c1.65 0 3-1.35 3-3v-18c0-1.65-1.35-3-3-3zM3 6h26c0.542 0 1 0.458 1 1v3h-28v-3c0-0.542 0.458-1 1-1zM29 26h-26c-0.542 0-1-0.458-1-1v-9h28v9c0 0.542-0.458 1-1 1zM4 20h2v4h-2zM8 20h2v4h-2zM12 20h2v4h-2z'%3E%3C/path%3E%3C/svg%3E");
+            float: left;
+            width: 1.3rem;
+            height: 1.3rem;
+            margin: 0rem 0rem 0rem 0rem;
+            border-radius: inherit;
+            background: #ffeedd;
+            color: #DFDDDD;
+            text-indent: -1.9rem; }
+          #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:after {
+            content: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23beb4b4' viewBox='0 0 32 32'%3E%3Ctitle%3Eclock%3C/title%3E%3Cpath d='M20.586 23.414l-6.586-6.586v-8.828h4v7.172l5.414 5.414zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 28c-6.627 0-12-5.373-12-12s5.373-12 12-12c6.627 0 12 5.373 12 12s-5.373 12-12 12z'%3E%3C/path%3E%3C/svg%3E");
+            margin-left: 0.8rem;
+            color: #DFDDDD; }
+          #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch + div:hover:before, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch + div:hover:before, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch + div:hover:before, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:hover:before, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch + div:hover:before, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:hover:before, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch + div:hover:before, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch + div:hover:before, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch + div:hover:before {
+            background-color: #ffd5aa; }
+        #timesheetContainer ul.day-data.col > li input[type="checkbox"].ios-switch:checked + div, #timesheetContainer ul.clients > li input[type="checkbox"].ios-switch:checked + div, #timesheetContainer ul.jobs > li input[type="checkbox"].ios-switch:checked + div, #clientsExisting ul.day-data.col > li input[type="checkbox"].ios-switch:checked + div, #clientsExisting ul.clients > li input[type="checkbox"].ios-switch:checked + div, #clientsExisting ul.jobs > li input[type="checkbox"].ios-switch:checked + div, #jobsExisting ul.day-data.col > li input[type="checkbox"].ios-switch:checked + div, #jobsExisting ul.clients > li input[type="checkbox"].ios-switch:checked + div, #jobsExisting ul.jobs > li input[type="checkbox"].ios-switch:checked + div {
+          padding-left: 2.7rem;
+          background-position: 0 0;
+          white-space: nowrap; }
+      #timesheetContainer ul.day-data.col > li input.notes, #timesheetContainer ul.clients > li input.notes, #timesheetContainer ul.jobs > li input.notes, #clientsExisting ul.day-data.col > li input.notes, #clientsExisting ul.clients > li input.notes, #clientsExisting ul.jobs > li input.notes, #jobsExisting ul.day-data.col > li input.notes, #jobsExisting ul.clients > li input.notes, #jobsExisting ul.jobs > li input.notes {
+        min-width: 16rem;
+        max-width: 50em;
+        border-radius: 0.6rem;
+        padding: 0.6rem 0.6rem 0.6rem 0.8rem;
+        margin-top: 0.3rem; }
+        #timesheetContainer ul.day-data.col > li input.notes::-webkit-input-placeholder, #timesheetContainer ul.clients > li input.notes::-webkit-input-placeholder, #timesheetContainer ul.jobs > li input.notes::-webkit-input-placeholder, #clientsExisting ul.day-data.col > li input.notes::-webkit-input-placeholder, #clientsExisting ul.clients > li input.notes::-webkit-input-placeholder, #clientsExisting ul.jobs > li input.notes::-webkit-input-placeholder, #jobsExisting ul.day-data.col > li input.notes::-webkit-input-placeholder, #jobsExisting ul.clients > li input.notes::-webkit-input-placeholder, #jobsExisting ul.jobs > li input.notes::-webkit-input-placeholder {
+          color: inherit;
+          opacity: 0;
+          font-style: italic; }
+        #timesheetContainer ul.day-data.col > li input.notes::-moz-placeholder, #timesheetContainer ul.clients > li input.notes::-moz-placeholder, #timesheetContainer ul.jobs > li input.notes::-moz-placeholder, #clientsExisting ul.day-data.col > li input.notes::-moz-placeholder, #clientsExisting ul.clients > li input.notes::-moz-placeholder, #clientsExisting ul.jobs > li input.notes::-moz-placeholder, #jobsExisting ul.day-data.col > li input.notes::-moz-placeholder, #jobsExisting ul.clients > li input.notes::-moz-placeholder, #jobsExisting ul.jobs > li input.notes::-moz-placeholder {
+          color: inherit;
+          opacity: 0;
+          font-style: italic; }
+        #timesheetContainer ul.day-data.col > li input.notes:-ms-input-placeholder, #timesheetContainer ul.clients > li input.notes:-ms-input-placeholder, #timesheetContainer ul.jobs > li input.notes:-ms-input-placeholder, #clientsExisting ul.day-data.col > li input.notes:-ms-input-placeholder, #clientsExisting ul.clients > li input.notes:-ms-input-placeholder, #clientsExisting ul.jobs > li input.notes:-ms-input-placeholder, #jobsExisting ul.day-data.col > li input.notes:-ms-input-placeholder, #jobsExisting ul.clients > li input.notes:-ms-input-placeholder, #jobsExisting ul.jobs > li input.notes:-ms-input-placeholder {
+          color: inherit;
+          opacity: 0;
+          font-style: italic; }
+        #timesheetContainer ul.day-data.col > li input.notes:-moz-placeholder, #timesheetContainer ul.clients > li input.notes:-moz-placeholder, #timesheetContainer ul.jobs > li input.notes:-moz-placeholder, #clientsExisting ul.day-data.col > li input.notes:-moz-placeholder, #clientsExisting ul.clients > li input.notes:-moz-placeholder, #clientsExisting ul.jobs > li input.notes:-moz-placeholder, #jobsExisting ul.day-data.col > li input.notes:-moz-placeholder, #jobsExisting ul.clients > li input.notes:-moz-placeholder, #jobsExisting ul.jobs > li input.notes:-moz-placeholder {
+          color: inherit;
+          opacity: 0;
+          font-style: italic; }
+      #timesheetContainer ul.day-data.col > li.money input.unitBig, #timesheetContainer ul.day-data.col > li.money input.unitSmall, #timesheetContainer ul.clients > li.money input.unitBig, #timesheetContainer ul.clients > li.money input.unitSmall, #timesheetContainer ul.jobs > li.money input.unitBig, #timesheetContainer ul.jobs > li.money input.unitSmall, #clientsExisting ul.day-data.col > li.money input.unitBig, #clientsExisting ul.day-data.col > li.money input.unitSmall, #clientsExisting ul.clients > li.money input.unitBig, #clientsExisting ul.clients > li.money input.unitSmall, #clientsExisting ul.jobs > li.money input.unitBig, #clientsExisting ul.jobs > li.money input.unitSmall, #jobsExisting ul.day-data.col > li.money input.unitBig, #jobsExisting ul.day-data.col > li.money input.unitSmall, #jobsExisting ul.clients > li.money input.unitBig, #jobsExisting ul.clients > li.money input.unitSmall, #jobsExisting ul.jobs > li.money input.unitBig, #jobsExisting ul.jobs > li.money input.unitSmall {
+        background-color: #778866;
+        background-size: 100%; }
+      #timesheetContainer ul.day-data.col > li.money input.notes, #timesheetContainer ul.clients > li.money input.notes, #timesheetContainer ul.jobs > li.money input.notes, #clientsExisting ul.day-data.col > li.money input.notes, #clientsExisting ul.clients > li.money input.notes, #clientsExisting ul.jobs > li.money input.notes, #jobsExisting ul.day-data.col > li.money input.notes, #jobsExisting ul.clients > li.money input.notes, #jobsExisting ul.jobs > li.money input.notes {
+        color: #776644;
+        background-color: #e0e3dc; }
+      #timesheetContainer ul.day-data.col > li.money .spin-button-up, #timesheetContainer ul.day-data.col > li.money .spin-button-down, #timesheetContainer ul.clients > li.money .spin-button-up, #timesheetContainer ul.clients > li.money .spin-button-down, #timesheetContainer ul.jobs > li.money .spin-button-up, #timesheetContainer ul.jobs > li.money .spin-button-down, #clientsExisting ul.day-data.col > li.money .spin-button-up, #clientsExisting ul.day-data.col > li.money .spin-button-down, #clientsExisting ul.clients > li.money .spin-button-up, #clientsExisting ul.clients > li.money .spin-button-down, #clientsExisting ul.jobs > li.money .spin-button-up, #clientsExisting ul.jobs > li.money .spin-button-down, #jobsExisting ul.day-data.col > li.money .spin-button-up, #jobsExisting ul.day-data.col > li.money .spin-button-down, #jobsExisting ul.clients > li.money .spin-button-up, #jobsExisting ul.clients > li.money .spin-button-down, #jobsExisting ul.jobs > li.money .spin-button-up, #jobsExisting ul.jobs > li.money .spin-button-down {
+        background-color: #778866; }
+      #timesheetContainer ul.day-data.col > li.money .spinner:before, #timesheetContainer ul.day-data.col > li.money .spinner:after, #timesheetContainer ul.clients > li.money .spinner:before, #timesheetContainer ul.clients > li.money .spinner:after, #timesheetContainer ul.jobs > li.money .spinner:before, #timesheetContainer ul.jobs > li.money .spinner:after, #clientsExisting ul.day-data.col > li.money .spinner:before, #clientsExisting ul.day-data.col > li.money .spinner:after, #clientsExisting ul.clients > li.money .spinner:before, #clientsExisting ul.clients > li.money .spinner:after, #clientsExisting ul.jobs > li.money .spinner:before, #clientsExisting ul.jobs > li.money .spinner:after, #jobsExisting ul.day-data.col > li.money .spinner:before, #jobsExisting ul.day-data.col > li.money .spinner:after, #jobsExisting ul.clients > li.money .spinner:before, #jobsExisting ul.clients > li.money .spinner:after, #jobsExisting ul.jobs > li.money .spinner:before, #jobsExisting ul.jobs > li.money .spinner:after {
+        font-weight: bold;
+        top: 0.4rem;
+        position: absolute;
+        color: #c6cdbf; }
+      #timesheetContainer ul.day-data.col > li.money .spinner:first-of-type:before, #timesheetContainer ul.clients > li.money .spinner:first-of-type:before, #timesheetContainer ul.jobs > li.money .spinner:first-of-type:before, #clientsExisting ul.day-data.col > li.money .spinner:first-of-type:before, #clientsExisting ul.clients > li.money .spinner:first-of-type:before, #clientsExisting ul.jobs > li.money .spinner:first-of-type:before, #jobsExisting ul.day-data.col > li.money .spinner:first-of-type:before, #jobsExisting ul.clients > li.money .spinner:first-of-type:before, #jobsExisting ul.jobs > li.money .spinner:first-of-type:before {
+        font-size: 0.9rem;
+        content: "£";
+        left: 0.4rem;
+        top: 0.6rem; }
+      #timesheetContainer ul.day-data.col > li.money .spinner:last-of-type:before, #timesheetContainer ul.clients > li.money .spinner:last-of-type:before, #timesheetContainer ul.jobs > li.money .spinner:last-of-type:before, #clientsExisting ul.day-data.col > li.money .spinner:last-of-type:before, #clientsExisting ul.clients > li.money .spinner:last-of-type:before, #clientsExisting ul.jobs > li.money .spinner:last-of-type:before, #jobsExisting ul.day-data.col > li.money .spinner:last-of-type:before, #jobsExisting ul.clients > li.money .spinner:last-of-type:before, #jobsExisting ul.jobs > li.money .spinner:last-of-type:before {
+        content: ".";
+        left: 0; }
+      #timesheetContainer ul.day-data.col > li.money.negative input.unitBig, #timesheetContainer ul.day-data.col > li.money.negative input.unitSmall, #timesheetContainer ul.clients > li.money.negative input.unitBig, #timesheetContainer ul.clients > li.money.negative input.unitSmall, #timesheetContainer ul.jobs > li.money.negative input.unitBig, #timesheetContainer ul.jobs > li.money.negative input.unitSmall, #clientsExisting ul.day-data.col > li.money.negative input.unitBig, #clientsExisting ul.day-data.col > li.money.negative input.unitSmall, #clientsExisting ul.clients > li.money.negative input.unitBig, #clientsExisting ul.clients > li.money.negative input.unitSmall, #clientsExisting ul.jobs > li.money.negative input.unitBig, #clientsExisting ul.jobs > li.money.negative input.unitSmall, #jobsExisting ul.day-data.col > li.money.negative input.unitBig, #jobsExisting ul.day-data.col > li.money.negative input.unitSmall, #jobsExisting ul.clients > li.money.negative input.unitBig, #jobsExisting ul.clients > li.money.negative input.unitSmall, #jobsExisting ul.jobs > li.money.negative input.unitBig, #jobsExisting ul.jobs > li.money.negative input.unitSmall {
+        background-color: #cc6644; }
+      #timesheetContainer ul.day-data.col > li.money.negative input.notes, #timesheetContainer ul.clients > li.money.negative input.notes, #timesheetContainer ul.jobs > li.money.negative input.notes, #clientsExisting ul.day-data.col > li.money.negative input.notes, #clientsExisting ul.clients > li.money.negative input.notes, #clientsExisting ul.jobs > li.money.negative input.notes, #jobsExisting ul.day-data.col > li.money.negative input.notes, #jobsExisting ul.clients > li.money.negative input.notes, #jobsExisting ul.jobs > li.money.negative input.notes {
+        background-color: #f6e4de; }
+      #timesheetContainer ul.day-data.col > li.money.negative input[type="checkbox"].ios-switch + div, #timesheetContainer ul.clients > li.money.negative input[type="checkbox"].ios-switch + div, #timesheetContainer ul.jobs > li.money.negative input[type="checkbox"].ios-switch + div, #clientsExisting ul.day-data.col > li.money.negative input[type="checkbox"].ios-switch + div, #clientsExisting ul.clients > li.money.negative input[type="checkbox"].ios-switch + div, #clientsExisting ul.jobs > li.money.negative input[type="checkbox"].ios-switch + div, #jobsExisting ul.day-data.col > li.money.negative input[type="checkbox"].ios-switch + div, #jobsExisting ul.clients > li.money.negative input[type="checkbox"].ios-switch + div, #jobsExisting ul.jobs > li.money.negative input[type="checkbox"].ios-switch + div {
+        background-image: linear-gradient(90deg, #cc6644 50%, transparent 50%); }
+      #timesheetContainer ul.day-data.col > li.money.negative .spin-button-up, #timesheetContainer ul.day-data.col > li.money.negative .spin-button-down, #timesheetContainer ul.clients > li.money.negative .spin-button-up, #timesheetContainer ul.clients > li.money.negative .spin-button-down, #timesheetContainer ul.jobs > li.money.negative .spin-button-up, #timesheetContainer ul.jobs > li.money.negative .spin-button-down, #clientsExisting ul.day-data.col > li.money.negative .spin-button-up, #clientsExisting ul.day-data.col > li.money.negative .spin-button-down, #clientsExisting ul.clients > li.money.negative .spin-button-up, #clientsExisting ul.clients > li.money.negative .spin-button-down, #clientsExisting ul.jobs > li.money.negative .spin-button-up, #clientsExisting ul.jobs > li.money.negative .spin-button-down, #jobsExisting ul.day-data.col > li.money.negative .spin-button-up, #jobsExisting ul.day-data.col > li.money.negative .spin-button-down, #jobsExisting ul.clients > li.money.negative .spin-button-up, #jobsExisting ul.clients > li.money.negative .spin-button-down, #jobsExisting ul.jobs > li.money.negative .spin-button-up, #jobsExisting ul.jobs > li.money.negative .spin-button-down {
+        background-color: #cc6644; }
+      #timesheetContainer ul.day-data.col > li.money.negative input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.clients > li.money.negative input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.jobs > li.money.negative input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.day-data.col > li.money.negative input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.clients > li.money.negative input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.jobs > li.money.negative input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.day-data.col > li.money.negative input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.clients > li.money.negative input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.jobs > li.money.negative input[type="checkbox"].ios-switch + div:before {
+        content: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23edc9be' viewBox='0 0 32 32'%3E%3Ctitle%3Ecredit-card%3C/title%3E%3Cpath d='M29 4h-26c-1.65 0-3 1.35-3 3v18c0 1.65 1.35 3 3 3h26c1.65 0 3-1.35 3-3v-18c0-1.65-1.35-3-3-3zM3 6h26c0.542 0 1 0.458 1 1v3h-28v-3c0-0.542 0.458-1 1-1zM29 26h-26c-0.542 0-1-0.458-1-1v-9h28v9c0 0.542-0.458 1-1 1zM4 20h2v4h-2zM8 20h2v4h-2zM12 20h2v4h-2z'%3E%3C/path%3E%3C/svg%3E"); }
+      #timesheetContainer ul.day-data.col > li.money.negative .spinner:before, #timesheetContainer ul.day-data.col > li.money.negative .spinner:after, #timesheetContainer ul.clients > li.money.negative .spinner:before, #timesheetContainer ul.clients > li.money.negative .spinner:after, #timesheetContainer ul.jobs > li.money.negative .spinner:before, #timesheetContainer ul.jobs > li.money.negative .spinner:after, #clientsExisting ul.day-data.col > li.money.negative .spinner:before, #clientsExisting ul.day-data.col > li.money.negative .spinner:after, #clientsExisting ul.clients > li.money.negative .spinner:before, #clientsExisting ul.clients > li.money.negative .spinner:after, #clientsExisting ul.jobs > li.money.negative .spinner:before, #clientsExisting ul.jobs > li.money.negative .spinner:after, #jobsExisting ul.day-data.col > li.money.negative .spinner:before, #jobsExisting ul.day-data.col > li.money.negative .spinner:after, #jobsExisting ul.clients > li.money.negative .spinner:before, #jobsExisting ul.clients > li.money.negative .spinner:after, #jobsExisting ul.jobs > li.money.negative .spinner:before, #jobsExisting ul.jobs > li.money.negative .spinner:after {
+        color: #edc9be; }
+      #timesheetContainer ul.day-data.col > li.hrs input.unitBig, #timesheetContainer ul.day-data.col > li.hrs input.unitSmall, #timesheetContainer ul.clients > li.hrs input.unitBig, #timesheetContainer ul.clients > li.hrs input.unitSmall, #timesheetContainer ul.jobs > li.hrs input.unitBig, #timesheetContainer ul.jobs > li.hrs input.unitSmall, #clientsExisting ul.day-data.col > li.hrs input.unitBig, #clientsExisting ul.day-data.col > li.hrs input.unitSmall, #clientsExisting ul.clients > li.hrs input.unitBig, #clientsExisting ul.clients > li.hrs input.unitSmall, #clientsExisting ul.jobs > li.hrs input.unitBig, #clientsExisting ul.jobs > li.hrs input.unitSmall, #jobsExisting ul.day-data.col > li.hrs input.unitBig, #jobsExisting ul.day-data.col > li.hrs input.unitSmall, #jobsExisting ul.clients > li.hrs input.unitBig, #jobsExisting ul.clients > li.hrs input.unitSmall, #jobsExisting ul.jobs > li.hrs input.unitBig, #jobsExisting ul.jobs > li.hrs input.unitSmall {
+        background-color: #9f9090; }
+      #timesheetContainer ul.day-data.col > li.hrs input.notes, #timesheetContainer ul.clients > li.hrs input.notes, #timesheetContainer ul.jobs > li.hrs input.notes, #clientsExisting ul.day-data.col > li.hrs input.notes, #clientsExisting ul.clients > li.hrs input.notes, #clientsExisting ul.jobs > li.hrs input.notes, #jobsExisting ul.day-data.col > li.hrs input.notes, #jobsExisting ul.clients > li.hrs input.notes, #jobsExisting ul.jobs > li.hrs input.notes {
+        color: #797777;
+        background-color: #d3cccc; }
+      #timesheetContainer ul.day-data.col > li.hrs .spinner:before, #timesheetContainer ul.day-data.col > li.hrs .spinner:after, #timesheetContainer ul.clients > li.hrs .spinner:before, #timesheetContainer ul.clients > li.hrs .spinner:after, #timesheetContainer ul.jobs > li.hrs .spinner:before, #timesheetContainer ul.jobs > li.hrs .spinner:after, #clientsExisting ul.day-data.col > li.hrs .spinner:before, #clientsExisting ul.day-data.col > li.hrs .spinner:after, #clientsExisting ul.clients > li.hrs .spinner:before, #clientsExisting ul.clients > li.hrs .spinner:after, #clientsExisting ul.jobs > li.hrs .spinner:before, #clientsExisting ul.jobs > li.hrs .spinner:after, #jobsExisting ul.day-data.col > li.hrs .spinner:before, #jobsExisting ul.day-data.col > li.hrs .spinner:after, #jobsExisting ul.clients > li.hrs .spinner:before, #jobsExisting ul.clients > li.hrs .spinner:after, #jobsExisting ul.jobs > li.hrs .spinner:before, #jobsExisting ul.jobs > li.hrs .spinner:after {
+        font-weight: bold;
+        top: 0.3rem;
+        position: absolute;
+        color: #beb4b4; }
+      #timesheetContainer ul.day-data.col > li.hrs .spinner:first-of-type:before, #timesheetContainer ul.clients > li.hrs .spinner:first-of-type:before, #timesheetContainer ul.jobs > li.hrs .spinner:first-of-type:before, #clientsExisting ul.day-data.col > li.hrs .spinner:first-of-type:before, #clientsExisting ul.clients > li.hrs .spinner:first-of-type:before, #clientsExisting ul.jobs > li.hrs .spinner:first-of-type:before, #jobsExisting ul.day-data.col > li.hrs .spinner:first-of-type:before, #jobsExisting ul.clients > li.hrs .spinner:first-of-type:before, #jobsExisting ul.jobs > li.hrs .spinner:first-of-type:before {
+        font-size: 0.9rem;
+        content: "hrs";
+        left: 0.5rem;
+        top: 0.55rem; }
+      #timesheetContainer ul.day-data.col > li.hrs .spinner:last-of-type:before, #timesheetContainer ul.clients > li.hrs .spinner:last-of-type:before, #timesheetContainer ul.jobs > li.hrs .spinner:last-of-type:before, #clientsExisting ul.day-data.col > li.hrs .spinner:last-of-type:before, #clientsExisting ul.clients > li.hrs .spinner:last-of-type:before, #clientsExisting ul.jobs > li.hrs .spinner:last-of-type:before, #jobsExisting ul.day-data.col > li.hrs .spinner:last-of-type:before, #jobsExisting ul.clients > li.hrs .spinner:last-of-type:before, #jobsExisting ul.jobs > li.hrs .spinner:last-of-type:before {
+        content: ":";
+        left: 0rem; }
+      #timesheetContainer ul.day-data.col > li select.select-job:after, #timesheetContainer ul.clients > li select.select-job:after, #timesheetContainer ul.jobs > li select.select-job:after, #clientsExisting ul.day-data.col > li select.select-job:after, #clientsExisting ul.clients > li select.select-job:after, #clientsExisting ul.jobs > li select.select-job:after, #jobsExisting ul.day-data.col > li select.select-job:after, #jobsExisting ul.clients > li select.select-job:after, #jobsExisting ul.jobs > li select.select-job:after {
+        content: "";
+        clear: both; }
+      #timesheetContainer ul.day-data.col > li .removeItemBtn, #timesheetContainer ul.day-data.col > li .addItemBtn, #timesheetContainer ul.clients > li .removeItemBtn, #timesheetContainer ul.clients > li .addItemBtn, #timesheetContainer ul.jobs > li .removeItemBtn, #timesheetContainer ul.jobs > li .addItemBtn, #clientsExisting ul.day-data.col > li .removeItemBtn, #clientsExisting ul.day-data.col > li .addItemBtn, #clientsExisting ul.clients > li .removeItemBtn, #clientsExisting ul.clients > li .addItemBtn, #clientsExisting ul.jobs > li .removeItemBtn, #clientsExisting ul.jobs > li .addItemBtn, #jobsExisting ul.day-data.col > li .removeItemBtn, #jobsExisting ul.day-data.col > li .addItemBtn, #jobsExisting ul.clients > li .removeItemBtn, #jobsExisting ul.clients > li .addItemBtn, #jobsExisting ul.jobs > li .removeItemBtn, #jobsExisting ul.jobs > li .addItemBtn {
+        border-radius: 1rem;
+        border: none;
+        background-size: 1.2rem;
+        background-repeat: no-repeat;
+        background-position: center;
+        text-indent: -999999em;
+        height: 2rem;
+        width: 2rem;
+        margin-left: 2rem;
+        padding: 0.4rem 0.5rem 0.5rem 0.5rem;
+        cursor: pointer;
+        color: #776644;
+        background-color: #ffeedd;
+        /*	position: absolute; */
+        bottom: 0; }
+        #timesheetContainer ul.day-data.col > li .removeItemBtn:hover, #timesheetContainer ul.day-data.col > li .removeItemBtn:focus, #timesheetContainer ul.day-data.col > li .addItemBtn:hover, #timesheetContainer ul.day-data.col > li .addItemBtn:focus, #timesheetContainer ul.clients > li .removeItemBtn:hover, #timesheetContainer ul.clients > li .removeItemBtn:focus, #timesheetContainer ul.clients > li .addItemBtn:hover, #timesheetContainer ul.clients > li .addItemBtn:focus, #timesheetContainer ul.jobs > li .removeItemBtn:hover, #timesheetContainer ul.jobs > li .removeItemBtn:focus, #timesheetContainer ul.jobs > li .addItemBtn:hover, #timesheetContainer ul.jobs > li .addItemBtn:focus, #clientsExisting ul.day-data.col > li .removeItemBtn:hover, #clientsExisting ul.day-data.col > li .removeItemBtn:focus, #clientsExisting ul.day-data.col > li .addItemBtn:hover, #clientsExisting ul.day-data.col > li .addItemBtn:focus, #clientsExisting ul.clients > li .removeItemBtn:hover, #clientsExisting ul.clients > li .removeItemBtn:focus, #clientsExisting ul.clients > li .addItemBtn:hover, #clientsExisting ul.clients > li .addItemBtn:focus, #clientsExisting ul.jobs > li .removeItemBtn:hover, #clientsExisting ul.jobs > li .removeItemBtn:focus, #clientsExisting ul.jobs > li .addItemBtn:hover, #clientsExisting ul.jobs > li .addItemBtn:focus, #jobsExisting ul.day-data.col > li .removeItemBtn:hover, #jobsExisting ul.day-data.col > li .removeItemBtn:focus, #jobsExisting ul.day-data.col > li .addItemBtn:hover, #jobsExisting ul.day-data.col > li .addItemBtn:focus, #jobsExisting ul.clients > li .removeItemBtn:hover, #jobsExisting ul.clients > li .removeItemBtn:focus, #jobsExisting ul.clients > li .addItemBtn:hover, #jobsExisting ul.clients > li .addItemBtn:focus, #jobsExisting ul.jobs > li .removeItemBtn:hover, #jobsExisting ul.jobs > li .removeItemBtn:focus, #jobsExisting ul.jobs > li .addItemBtn:hover, #jobsExisting ul.jobs > li .addItemBtn:focus {
+          color: #978257;
+          background-color: #ffd5aa; }
+      #timesheetContainer ul.day-data.col > li .addItemBtn, #timesheetContainer ul.clients > li .addItemBtn, #timesheetContainer ul.jobs > li .addItemBtn, #clientsExisting ul.day-data.col > li .addItemBtn, #clientsExisting ul.clients > li .addItemBtn, #clientsExisting ul.jobs > li .addItemBtn, #jobsExisting ul.day-data.col > li .addItemBtn, #jobsExisting ul.clients > li .addItemBtn, #jobsExisting ul.jobs > li .addItemBtn {
+        background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Eplus%3C/title%3E%3Cpath d='M31 12h-11v-11c0-0.552-0.448-1-1-1h-6c-0.552 0-1 0.448-1 1v11h-11c-0.552 0-1 0.448-1 1v6c0 0.552 0.448 1 1 1h11v11c0 0.552 0.448 1 1 1h6c0.552 0 1-0.448 1-1v-11h11c0.552 0 1-0.448 1-1v-6c0-0.552-0.448-1-1-1z'%3E%3C/path%3E%3C/svg%3E%0A");
+        margin-left: -4rem;
+        margin-right: 2rem; }
+      #timesheetContainer ul.day-data.col > li .removeItemBtn, #timesheetContainer ul.clients > li .removeItemBtn, #timesheetContainer ul.jobs > li .removeItemBtn, #clientsExisting ul.day-data.col > li .removeItemBtn, #clientsExisting ul.clients > li .removeItemBtn, #clientsExisting ul.jobs > li .removeItemBtn, #jobsExisting ul.day-data.col > li .removeItemBtn, #jobsExisting ul.clients > li .removeItemBtn, #jobsExisting ul.jobs > li .removeItemBtn {
+        background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23cc6644' viewBox='0 0 32 32'%3E%3Ctitle%3Ecross%3C/title%3E%3Cpath d='M31.708 25.708c-0-0-0-0-0-0l-9.708-9.708 9.708-9.708c0-0 0-0 0-0 0.105-0.105 0.18-0.227 0.229-0.357 0.133-0.356 0.057-0.771-0.229-1.057l-4.586-4.586c-0.286-0.286-0.702-0.361-1.057-0.229-0.13 0.048-0.252 0.124-0.357 0.228 0 0-0 0-0 0l-9.708 9.708-9.708-9.708c-0-0-0-0-0-0-0.105-0.104-0.227-0.18-0.357-0.228-0.356-0.133-0.771-0.057-1.057 0.229l-4.586 4.586c-0.286 0.286-0.361 0.702-0.229 1.057 0.049 0.13 0.124 0.252 0.229 0.357 0 0 0 0 0 0l9.708 9.708-9.708 9.708c-0 0-0 0-0 0-0.104 0.105-0.18 0.227-0.229 0.357-0.133 0.355-0.057 0.771 0.229 1.057l4.586 4.586c0.286 0.286 0.702 0.361 1.057 0.229 0.13-0.049 0.252-0.124 0.357-0.229 0-0 0-0 0-0l9.708-9.708 9.708 9.708c0 0 0 0 0 0 0.105 0.105 0.227 0.18 0.357 0.229 0.356 0.133 0.771 0.057 1.057-0.229l4.586-4.586c0.286-0.286 0.362-0.702 0.229-1.057-0.049-0.13-0.124-0.252-0.229-0.357z'%3E%3C/path%3E%3C/svg%3E");
+        margin-right: -4rem;
+        color: #993322; }
+      #timesheetContainer ul.day-data.col > li:not(:first-child) .addItemBtn, #timesheetContainer ul.clients > li:not(:first-child) .addItemBtn, #timesheetContainer ul.jobs > li:not(:first-child) .addItemBtn, #clientsExisting ul.day-data.col > li:not(:first-child) .addItemBtn, #clientsExisting ul.clients > li:not(:first-child) .addItemBtn, #clientsExisting ul.jobs > li:not(:first-child) .addItemBtn, #jobsExisting ul.day-data.col > li:not(:first-child) .addItemBtn, #jobsExisting ul.clients > li:not(:first-child) .addItemBtn, #jobsExisting ul.jobs > li:not(:first-child) .addItemBtn {
+        visibility: hidden; }
+      #timesheetContainer ul.day-data.col > li:focus-within .spin-button-up, #timesheetContainer ul.day-data.col > li:focus-within .spin-button-down,
+      #timesheetContainer ul.day-data.col > li .spinner:hover .spin-button-up,
+      #timesheetContainer ul.day-data.col > li .spinner:hover .spin-button-down, #timesheetContainer ul.clients > li:focus-within .spin-button-up, #timesheetContainer ul.clients > li:focus-within .spin-button-down,
+      #timesheetContainer ul.clients > li .spinner:hover .spin-button-up,
+      #timesheetContainer ul.clients > li .spinner:hover .spin-button-down, #timesheetContainer ul.jobs > li:focus-within .spin-button-up, #timesheetContainer ul.jobs > li:focus-within .spin-button-down,
+      #timesheetContainer ul.jobs > li .spinner:hover .spin-button-up,
+      #timesheetContainer ul.jobs > li .spinner:hover .spin-button-down, #clientsExisting ul.day-data.col > li:focus-within .spin-button-up, #clientsExisting ul.day-data.col > li:focus-within .spin-button-down,
+      #clientsExisting ul.day-data.col > li .spinner:hover .spin-button-up,
+      #clientsExisting ul.day-data.col > li .spinner:hover .spin-button-down, #clientsExisting ul.clients > li:focus-within .spin-button-up, #clientsExisting ul.clients > li:focus-within .spin-button-down,
+      #clientsExisting ul.clients > li .spinner:hover .spin-button-up,
+      #clientsExisting ul.clients > li .spinner:hover .spin-button-down, #clientsExisting ul.jobs > li:focus-within .spin-button-up, #clientsExisting ul.jobs > li:focus-within .spin-button-down,
+      #clientsExisting ul.jobs > li .spinner:hover .spin-button-up,
+      #clientsExisting ul.jobs > li .spinner:hover .spin-button-down, #jobsExisting ul.day-data.col > li:focus-within .spin-button-up, #jobsExisting ul.day-data.col > li:focus-within .spin-button-down,
+      #jobsExisting ul.day-data.col > li .spinner:hover .spin-button-up,
+      #jobsExisting ul.day-data.col > li .spinner:hover .spin-button-down, #jobsExisting ul.clients > li:focus-within .spin-button-up, #jobsExisting ul.clients > li:focus-within .spin-button-down,
+      #jobsExisting ul.clients > li .spinner:hover .spin-button-up,
+      #jobsExisting ul.clients > li .spinner:hover .spin-button-down, #jobsExisting ul.jobs > li:focus-within .spin-button-up, #jobsExisting ul.jobs > li:focus-within .spin-button-down,
+      #jobsExisting ul.jobs > li .spinner:hover .spin-button-up,
+      #jobsExisting ul.jobs > li .spinner:hover .spin-button-down {
+        -webkit-animation: delayed-fade-up 0.3s 1 forwards;
+        -moz-animation: delayed-fade-up 0.3s 1 forwards;
+        -o-animation: delayed-fade-up 0.3s 1 forwards;
+        animation: delayed-fade-up 0.3s 1 forwards; }
+      #timesheetContainer ul.day-data.col > li:focus-within input[type="checkbox"].ios-switch + div:before,
+      #timesheetContainer ul.day-data.col > li .spinner:hover input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.clients > li:focus-within input[type="checkbox"].ios-switch + div:before,
+      #timesheetContainer ul.clients > li .spinner:hover input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.jobs > li:focus-within input[type="checkbox"].ios-switch + div:before,
+      #timesheetContainer ul.jobs > li .spinner:hover input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.day-data.col > li:focus-within input[type="checkbox"].ios-switch + div:before,
+      #clientsExisting ul.day-data.col > li .spinner:hover input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.clients > li:focus-within input[type="checkbox"].ios-switch + div:before,
+      #clientsExisting ul.clients > li .spinner:hover input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.jobs > li:focus-within input[type="checkbox"].ios-switch + div:before,
+      #clientsExisting ul.jobs > li .spinner:hover input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.day-data.col > li:focus-within input[type="checkbox"].ios-switch + div:before,
+      #jobsExisting ul.day-data.col > li .spinner:hover input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.clients > li:focus-within input[type="checkbox"].ios-switch + div:before,
+      #jobsExisting ul.clients > li .spinner:hover input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.jobs > li:focus-within input[type="checkbox"].ios-switch + div:before,
+      #jobsExisting ul.jobs > li .spinner:hover input[type="checkbox"].ios-switch + div:before {
+        content: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23c6ff8d' viewBox='0 0 32 32'%3E%3Ctitle%3Ecredit-card%3C/title%3E%3Cpath d='M29 4h-26c-1.65 0-3 1.35-3 3v18c0 1.65 1.35 3 3 3h26c1.65 0 3-1.35 3-3v-18c0-1.65-1.35-3-3-3zM3 6h26c0.542 0 1 0.458 1 1v3h-28v-3c0-0.542 0.458-1 1-1zM29 26h-26c-0.542 0-1-0.458-1-1v-9h28v9c0 0.542-0.458 1-1 1zM4 20h2v4h-2zM8 20h2v4h-2zM12 20h2v4h-2z'%3E%3C/path%3E%3C/svg%3E"); }
+      #timesheetContainer ul.day-data.col > li:focus-within input[type="checkbox"].ios-switch + div:after,
+      #timesheetContainer ul.day-data.col > li .spinner:hover input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.clients > li:focus-within input[type="checkbox"].ios-switch + div:after,
+      #timesheetContainer ul.clients > li .spinner:hover input[type="checkbox"].ios-switch + div:after, #timesheetContainer ul.jobs > li:focus-within input[type="checkbox"].ios-switch + div:after,
+      #timesheetContainer ul.jobs > li .spinner:hover input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.day-data.col > li:focus-within input[type="checkbox"].ios-switch + div:after,
+      #clientsExisting ul.day-data.col > li .spinner:hover input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.clients > li:focus-within input[type="checkbox"].ios-switch + div:after,
+      #clientsExisting ul.clients > li .spinner:hover input[type="checkbox"].ios-switch + div:after, #clientsExisting ul.jobs > li:focus-within input[type="checkbox"].ios-switch + div:after,
+      #clientsExisting ul.jobs > li .spinner:hover input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.day-data.col > li:focus-within input[type="checkbox"].ios-switch + div:after,
+      #jobsExisting ul.day-data.col > li .spinner:hover input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.clients > li:focus-within input[type="checkbox"].ios-switch + div:after,
+      #jobsExisting ul.clients > li .spinner:hover input[type="checkbox"].ios-switch + div:after, #jobsExisting ul.jobs > li:focus-within input[type="checkbox"].ios-switch + div:after,
+      #jobsExisting ul.jobs > li .spinner:hover input[type="checkbox"].ios-switch + div:after {
+        content: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23white' viewBox='0 0 32 32'%3E%3Ctitle%3Eclock%3C/title%3E%3Cpath d='M20.586 23.414l-6.586-6.586v-8.828h4v7.172l5.414 5.414zM16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 28c-6.627 0-12-5.373-12-12s5.373-12 12-12c6.627 0 12 5.373 12 12s-5.373 12-12 12z'%3E%3C/path%3E%3C/svg%3E"); }
+      #timesheetContainer ul.day-data.col > li:focus-within input.notes,
+      #timesheetContainer ul.day-data.col > li .spinner:hover input.notes, #timesheetContainer ul.clients > li:focus-within input.notes,
+      #timesheetContainer ul.clients > li .spinner:hover input.notes, #timesheetContainer ul.jobs > li:focus-within input.notes,
+      #timesheetContainer ul.jobs > li .spinner:hover input.notes, #clientsExisting ul.day-data.col > li:focus-within input.notes,
+      #clientsExisting ul.day-data.col > li .spinner:hover input.notes, #clientsExisting ul.clients > li:focus-within input.notes,
+      #clientsExisting ul.clients > li .spinner:hover input.notes, #clientsExisting ul.jobs > li:focus-within input.notes,
+      #clientsExisting ul.jobs > li .spinner:hover input.notes, #jobsExisting ul.day-data.col > li:focus-within input.notes,
+      #jobsExisting ul.day-data.col > li .spinner:hover input.notes, #jobsExisting ul.clients > li:focus-within input.notes,
+      #jobsExisting ul.clients > li .spinner:hover input.notes, #jobsExisting ul.jobs > li:focus-within input.notes,
+      #jobsExisting ul.jobs > li .spinner:hover input.notes {
+        color: white; }
+        #timesheetContainer ul.day-data.col > li:focus-within input.notes::-webkit-input-placeholder,
+        #timesheetContainer ul.day-data.col > li .spinner:hover input.notes::-webkit-input-placeholder, #timesheetContainer ul.clients > li:focus-within input.notes::-webkit-input-placeholder,
+        #timesheetContainer ul.clients > li .spinner:hover input.notes::-webkit-input-placeholder, #timesheetContainer ul.jobs > li:focus-within input.notes::-webkit-input-placeholder,
+        #timesheetContainer ul.jobs > li .spinner:hover input.notes::-webkit-input-placeholder, #clientsExisting ul.day-data.col > li:focus-within input.notes::-webkit-input-placeholder,
+        #clientsExisting ul.day-data.col > li .spinner:hover input.notes::-webkit-input-placeholder, #clientsExisting ul.clients > li:focus-within input.notes::-webkit-input-placeholder,
+        #clientsExisting ul.clients > li .spinner:hover input.notes::-webkit-input-placeholder, #clientsExisting ul.jobs > li:focus-within input.notes::-webkit-input-placeholder,
+        #clientsExisting ul.jobs > li .spinner:hover input.notes::-webkit-input-placeholder, #jobsExisting ul.day-data.col > li:focus-within input.notes::-webkit-input-placeholder,
+        #jobsExisting ul.day-data.col > li .spinner:hover input.notes::-webkit-input-placeholder, #jobsExisting ul.clients > li:focus-within input.notes::-webkit-input-placeholder,
+        #jobsExisting ul.clients > li .spinner:hover input.notes::-webkit-input-placeholder, #jobsExisting ul.jobs > li:focus-within input.notes::-webkit-input-placeholder,
+        #jobsExisting ul.jobs > li .spinner:hover input.notes::-webkit-input-placeholder {
+          opacity: 1; }
+        #timesheetContainer ul.day-data.col > li:focus-within input.notes::-moz-placeholder,
+        #timesheetContainer ul.day-data.col > li .spinner:hover input.notes::-moz-placeholder, #timesheetContainer ul.clients > li:focus-within input.notes::-moz-placeholder,
+        #timesheetContainer ul.clients > li .spinner:hover input.notes::-moz-placeholder, #timesheetContainer ul.jobs > li:focus-within input.notes::-moz-placeholder,
+        #timesheetContainer ul.jobs > li .spinner:hover input.notes::-moz-placeholder, #clientsExisting ul.day-data.col > li:focus-within input.notes::-moz-placeholder,
+        #clientsExisting ul.day-data.col > li .spinner:hover input.notes::-moz-placeholder, #clientsExisting ul.clients > li:focus-within input.notes::-moz-placeholder,
+        #clientsExisting ul.clients > li .spinner:hover input.notes::-moz-placeholder, #clientsExisting ul.jobs > li:focus-within input.notes::-moz-placeholder,
+        #clientsExisting ul.jobs > li .spinner:hover input.notes::-moz-placeholder, #jobsExisting ul.day-data.col > li:focus-within input.notes::-moz-placeholder,
+        #jobsExisting ul.day-data.col > li .spinner:hover input.notes::-moz-placeholder, #jobsExisting ul.clients > li:focus-within input.notes::-moz-placeholder,
+        #jobsExisting ul.clients > li .spinner:hover input.notes::-moz-placeholder, #jobsExisting ul.jobs > li:focus-within input.notes::-moz-placeholder,
+        #jobsExisting ul.jobs > li .spinner:hover input.notes::-moz-placeholder {
+          opacity: 1; }
+        #timesheetContainer ul.day-data.col > li:focus-within input.notes:-ms-input-placeholder,
+        #timesheetContainer ul.day-data.col > li .spinner:hover input.notes:-ms-input-placeholder, #timesheetContainer ul.clients > li:focus-within input.notes:-ms-input-placeholder,
+        #timesheetContainer ul.clients > li .spinner:hover input.notes:-ms-input-placeholder, #timesheetContainer ul.jobs > li:focus-within input.notes:-ms-input-placeholder,
+        #timesheetContainer ul.jobs > li .spinner:hover input.notes:-ms-input-placeholder, #clientsExisting ul.day-data.col > li:focus-within input.notes:-ms-input-placeholder,
+        #clientsExisting ul.day-data.col > li .spinner:hover input.notes:-ms-input-placeholder, #clientsExisting ul.clients > li:focus-within input.notes:-ms-input-placeholder,
+        #clientsExisting ul.clients > li .spinner:hover input.notes:-ms-input-placeholder, #clientsExisting ul.jobs > li:focus-within input.notes:-ms-input-placeholder,
+        #clientsExisting ul.jobs > li .spinner:hover input.notes:-ms-input-placeholder, #jobsExisting ul.day-data.col > li:focus-within input.notes:-ms-input-placeholder,
+        #jobsExisting ul.day-data.col > li .spinner:hover input.notes:-ms-input-placeholder, #jobsExisting ul.clients > li:focus-within input.notes:-ms-input-placeholder,
+        #jobsExisting ul.clients > li .spinner:hover input.notes:-ms-input-placeholder, #jobsExisting ul.jobs > li:focus-within input.notes:-ms-input-placeholder,
+        #jobsExisting ul.jobs > li .spinner:hover input.notes:-ms-input-placeholder {
+          opacity: 1; }
+        #timesheetContainer ul.day-data.col > li:focus-within input.notes:-moz-placeholder,
+        #timesheetContainer ul.day-data.col > li .spinner:hover input.notes:-moz-placeholder, #timesheetContainer ul.clients > li:focus-within input.notes:-moz-placeholder,
+        #timesheetContainer ul.clients > li .spinner:hover input.notes:-moz-placeholder, #timesheetContainer ul.jobs > li:focus-within input.notes:-moz-placeholder,
+        #timesheetContainer ul.jobs > li .spinner:hover input.notes:-moz-placeholder, #clientsExisting ul.day-data.col > li:focus-within input.notes:-moz-placeholder,
+        #clientsExisting ul.day-data.col > li .spinner:hover input.notes:-moz-placeholder, #clientsExisting ul.clients > li:focus-within input.notes:-moz-placeholder,
+        #clientsExisting ul.clients > li .spinner:hover input.notes:-moz-placeholder, #clientsExisting ul.jobs > li:focus-within input.notes:-moz-placeholder,
+        #clientsExisting ul.jobs > li .spinner:hover input.notes:-moz-placeholder, #jobsExisting ul.day-data.col > li:focus-within input.notes:-moz-placeholder,
+        #jobsExisting ul.day-data.col > li .spinner:hover input.notes:-moz-placeholder, #jobsExisting ul.clients > li:focus-within input.notes:-moz-placeholder,
+        #jobsExisting ul.clients > li .spinner:hover input.notes:-moz-placeholder, #jobsExisting ul.jobs > li:focus-within input.notes:-moz-placeholder,
+        #jobsExisting ul.jobs > li .spinner:hover input.notes:-moz-placeholder {
+          opacity: 1; }
+      #timesheetContainer ul.day-data.col > li:focus-within.hrs .notes,
+      #timesheetContainer ul.day-data.col > li .spinner:hover.hrs .notes, #timesheetContainer ul.clients > li:focus-within.hrs .notes,
+      #timesheetContainer ul.clients > li .spinner:hover.hrs .notes, #timesheetContainer ul.jobs > li:focus-within.hrs .notes,
+      #timesheetContainer ul.jobs > li .spinner:hover.hrs .notes, #clientsExisting ul.day-data.col > li:focus-within.hrs .notes,
+      #clientsExisting ul.day-data.col > li .spinner:hover.hrs .notes, #clientsExisting ul.clients > li:focus-within.hrs .notes,
+      #clientsExisting ul.clients > li .spinner:hover.hrs .notes, #clientsExisting ul.jobs > li:focus-within.hrs .notes,
+      #clientsExisting ul.jobs > li .spinner:hover.hrs .notes, #jobsExisting ul.day-data.col > li:focus-within.hrs .notes,
+      #jobsExisting ul.day-data.col > li .spinner:hover.hrs .notes, #jobsExisting ul.clients > li:focus-within.hrs .notes,
+      #jobsExisting ul.clients > li .spinner:hover.hrs .notes, #jobsExisting ul.jobs > li:focus-within.hrs .notes,
+      #jobsExisting ul.jobs > li .spinner:hover.hrs .notes {
+        background-color: #9f9090; }
+      #timesheetContainer ul.day-data.col > li:focus-within.hrs .spinner:before, #timesheetContainer ul.day-data.col > li:focus-within.hrs .spinner:after,
+      #timesheetContainer ul.day-data.col > li .spinner:hover.hrs .spinner:before,
+      #timesheetContainer ul.day-data.col > li .spinner:hover.hrs .spinner:after, #timesheetContainer ul.clients > li:focus-within.hrs .spinner:before, #timesheetContainer ul.clients > li:focus-within.hrs .spinner:after,
+      #timesheetContainer ul.clients > li .spinner:hover.hrs .spinner:before,
+      #timesheetContainer ul.clients > li .spinner:hover.hrs .spinner:after, #timesheetContainer ul.jobs > li:focus-within.hrs .spinner:before, #timesheetContainer ul.jobs > li:focus-within.hrs .spinner:after,
+      #timesheetContainer ul.jobs > li .spinner:hover.hrs .spinner:before,
+      #timesheetContainer ul.jobs > li .spinner:hover.hrs .spinner:after, #clientsExisting ul.day-data.col > li:focus-within.hrs .spinner:before, #clientsExisting ul.day-data.col > li:focus-within.hrs .spinner:after,
+      #clientsExisting ul.day-data.col > li .spinner:hover.hrs .spinner:before,
+      #clientsExisting ul.day-data.col > li .spinner:hover.hrs .spinner:after, #clientsExisting ul.clients > li:focus-within.hrs .spinner:before, #clientsExisting ul.clients > li:focus-within.hrs .spinner:after,
+      #clientsExisting ul.clients > li .spinner:hover.hrs .spinner:before,
+      #clientsExisting ul.clients > li .spinner:hover.hrs .spinner:after, #clientsExisting ul.jobs > li:focus-within.hrs .spinner:before, #clientsExisting ul.jobs > li:focus-within.hrs .spinner:after,
+      #clientsExisting ul.jobs > li .spinner:hover.hrs .spinner:before,
+      #clientsExisting ul.jobs > li .spinner:hover.hrs .spinner:after, #jobsExisting ul.day-data.col > li:focus-within.hrs .spinner:before, #jobsExisting ul.day-data.col > li:focus-within.hrs .spinner:after,
+      #jobsExisting ul.day-data.col > li .spinner:hover.hrs .spinner:before,
+      #jobsExisting ul.day-data.col > li .spinner:hover.hrs .spinner:after, #jobsExisting ul.clients > li:focus-within.hrs .spinner:before, #jobsExisting ul.clients > li:focus-within.hrs .spinner:after,
+      #jobsExisting ul.clients > li .spinner:hover.hrs .spinner:before,
+      #jobsExisting ul.clients > li .spinner:hover.hrs .spinner:after, #jobsExisting ul.jobs > li:focus-within.hrs .spinner:before, #jobsExisting ul.jobs > li:focus-within.hrs .spinner:after,
+      #jobsExisting ul.jobs > li .spinner:hover.hrs .spinner:before,
+      #jobsExisting ul.jobs > li .spinner:hover.hrs .spinner:after {
+        color: white; }
+      #timesheetContainer ul.day-data.col > li:focus-within.money .notes,
+      #timesheetContainer ul.day-data.col > li .spinner:hover.money .notes, #timesheetContainer ul.clients > li:focus-within.money .notes,
+      #timesheetContainer ul.clients > li .spinner:hover.money .notes, #timesheetContainer ul.jobs > li:focus-within.money .notes,
+      #timesheetContainer ul.jobs > li .spinner:hover.money .notes, #clientsExisting ul.day-data.col > li:focus-within.money .notes,
+      #clientsExisting ul.day-data.col > li .spinner:hover.money .notes, #clientsExisting ul.clients > li:focus-within.money .notes,
+      #clientsExisting ul.clients > li .spinner:hover.money .notes, #clientsExisting ul.jobs > li:focus-within.money .notes,
+      #clientsExisting ul.jobs > li .spinner:hover.money .notes, #jobsExisting ul.day-data.col > li:focus-within.money .notes,
+      #jobsExisting ul.day-data.col > li .spinner:hover.money .notes, #jobsExisting ul.clients > li:focus-within.money .notes,
+      #jobsExisting ul.clients > li .spinner:hover.money .notes, #jobsExisting ul.jobs > li:focus-within.money .notes,
+      #jobsExisting ul.jobs > li .spinner:hover.money .notes {
+        background-color: #778866; }
+      #timesheetContainer ul.day-data.col > li:focus-within.money .spinner:before, #timesheetContainer ul.day-data.col > li:focus-within.money .spinner:after,
+      #timesheetContainer ul.day-data.col > li .spinner:hover.money .spinner:before,
+      #timesheetContainer ul.day-data.col > li .spinner:hover.money .spinner:after, #timesheetContainer ul.clients > li:focus-within.money .spinner:before, #timesheetContainer ul.clients > li:focus-within.money .spinner:after,
+      #timesheetContainer ul.clients > li .spinner:hover.money .spinner:before,
+      #timesheetContainer ul.clients > li .spinner:hover.money .spinner:after, #timesheetContainer ul.jobs > li:focus-within.money .spinner:before, #timesheetContainer ul.jobs > li:focus-within.money .spinner:after,
+      #timesheetContainer ul.jobs > li .spinner:hover.money .spinner:before,
+      #timesheetContainer ul.jobs > li .spinner:hover.money .spinner:after, #clientsExisting ul.day-data.col > li:focus-within.money .spinner:before, #clientsExisting ul.day-data.col > li:focus-within.money .spinner:after,
+      #clientsExisting ul.day-data.col > li .spinner:hover.money .spinner:before,
+      #clientsExisting ul.day-data.col > li .spinner:hover.money .spinner:after, #clientsExisting ul.clients > li:focus-within.money .spinner:before, #clientsExisting ul.clients > li:focus-within.money .spinner:after,
+      #clientsExisting ul.clients > li .spinner:hover.money .spinner:before,
+      #clientsExisting ul.clients > li .spinner:hover.money .spinner:after, #clientsExisting ul.jobs > li:focus-within.money .spinner:before, #clientsExisting ul.jobs > li:focus-within.money .spinner:after,
+      #clientsExisting ul.jobs > li .spinner:hover.money .spinner:before,
+      #clientsExisting ul.jobs > li .spinner:hover.money .spinner:after, #jobsExisting ul.day-data.col > li:focus-within.money .spinner:before, #jobsExisting ul.day-data.col > li:focus-within.money .spinner:after,
+      #jobsExisting ul.day-data.col > li .spinner:hover.money .spinner:before,
+      #jobsExisting ul.day-data.col > li .spinner:hover.money .spinner:after, #jobsExisting ul.clients > li:focus-within.money .spinner:before, #jobsExisting ul.clients > li:focus-within.money .spinner:after,
+      #jobsExisting ul.clients > li .spinner:hover.money .spinner:before,
+      #jobsExisting ul.clients > li .spinner:hover.money .spinner:after, #jobsExisting ul.jobs > li:focus-within.money .spinner:before, #jobsExisting ul.jobs > li:focus-within.money .spinner:after,
+      #jobsExisting ul.jobs > li .spinner:hover.money .spinner:before,
+      #jobsExisting ul.jobs > li .spinner:hover.money .spinner:after {
+        color: #c6ff8d; }
+      #timesheetContainer ul.day-data.col > li:focus-within.money.negative .notes,
+      #timesheetContainer ul.day-data.col > li .spinner:hover.money.negative .notes, #timesheetContainer ul.clients > li:focus-within.money.negative .notes,
+      #timesheetContainer ul.clients > li .spinner:hover.money.negative .notes, #timesheetContainer ul.jobs > li:focus-within.money.negative .notes,
+      #timesheetContainer ul.jobs > li .spinner:hover.money.negative .notes, #clientsExisting ul.day-data.col > li:focus-within.money.negative .notes,
+      #clientsExisting ul.day-data.col > li .spinner:hover.money.negative .notes, #clientsExisting ul.clients > li:focus-within.money.negative .notes,
+      #clientsExisting ul.clients > li .spinner:hover.money.negative .notes, #clientsExisting ul.jobs > li:focus-within.money.negative .notes,
+      #clientsExisting ul.jobs > li .spinner:hover.money.negative .notes, #jobsExisting ul.day-data.col > li:focus-within.money.negative .notes,
+      #jobsExisting ul.day-data.col > li .spinner:hover.money.negative .notes, #jobsExisting ul.clients > li:focus-within.money.negative .notes,
+      #jobsExisting ul.clients > li .spinner:hover.money.negative .notes, #jobsExisting ul.jobs > li:focus-within.money.negative .notes,
+      #jobsExisting ul.jobs > li .spinner:hover.money.negative .notes {
+        background-color: #cc6644; }
+      #timesheetContainer ul.day-data.col > li:focus-within.money.negative .spinner:before, #timesheetContainer ul.day-data.col > li:focus-within.money.negative .spinner:after,
+      #timesheetContainer ul.day-data.col > li .spinner:hover.money.negative .spinner:before,
+      #timesheetContainer ul.day-data.col > li .spinner:hover.money.negative .spinner:after, #timesheetContainer ul.clients > li:focus-within.money.negative .spinner:before, #timesheetContainer ul.clients > li:focus-within.money.negative .spinner:after,
+      #timesheetContainer ul.clients > li .spinner:hover.money.negative .spinner:before,
+      #timesheetContainer ul.clients > li .spinner:hover.money.negative .spinner:after, #timesheetContainer ul.jobs > li:focus-within.money.negative .spinner:before, #timesheetContainer ul.jobs > li:focus-within.money.negative .spinner:after,
+      #timesheetContainer ul.jobs > li .spinner:hover.money.negative .spinner:before,
+      #timesheetContainer ul.jobs > li .spinner:hover.money.negative .spinner:after, #clientsExisting ul.day-data.col > li:focus-within.money.negative .spinner:before, #clientsExisting ul.day-data.col > li:focus-within.money.negative .spinner:after,
+      #clientsExisting ul.day-data.col > li .spinner:hover.money.negative .spinner:before,
+      #clientsExisting ul.day-data.col > li .spinner:hover.money.negative .spinner:after, #clientsExisting ul.clients > li:focus-within.money.negative .spinner:before, #clientsExisting ul.clients > li:focus-within.money.negative .spinner:after,
+      #clientsExisting ul.clients > li .spinner:hover.money.negative .spinner:before,
+      #clientsExisting ul.clients > li .spinner:hover.money.negative .spinner:after, #clientsExisting ul.jobs > li:focus-within.money.negative .spinner:before, #clientsExisting ul.jobs > li:focus-within.money.negative .spinner:after,
+      #clientsExisting ul.jobs > li .spinner:hover.money.negative .spinner:before,
+      #clientsExisting ul.jobs > li .spinner:hover.money.negative .spinner:after, #jobsExisting ul.day-data.col > li:focus-within.money.negative .spinner:before, #jobsExisting ul.day-data.col > li:focus-within.money.negative .spinner:after,
+      #jobsExisting ul.day-data.col > li .spinner:hover.money.negative .spinner:before,
+      #jobsExisting ul.day-data.col > li .spinner:hover.money.negative .spinner:after, #jobsExisting ul.clients > li:focus-within.money.negative .spinner:before, #jobsExisting ul.clients > li:focus-within.money.negative .spinner:after,
+      #jobsExisting ul.clients > li .spinner:hover.money.negative .spinner:before,
+      #jobsExisting ul.clients > li .spinner:hover.money.negative .spinner:after, #jobsExisting ul.jobs > li:focus-within.money.negative .spinner:before, #jobsExisting ul.jobs > li:focus-within.money.negative .spinner:after,
+      #jobsExisting ul.jobs > li .spinner:hover.money.negative .spinner:before,
+      #jobsExisting ul.jobs > li .spinner:hover.money.negative .spinner:after {
+        color: #ffbfac; }
+      #timesheetContainer ul.day-data.col > li:focus-within.money.negative input[type="checkbox"].ios-switch + div:before,
+      #timesheetContainer ul.day-data.col > li .spinner:hover.money.negative input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.clients > li:focus-within.money.negative input[type="checkbox"].ios-switch + div:before,
+      #timesheetContainer ul.clients > li .spinner:hover.money.negative input[type="checkbox"].ios-switch + div:before, #timesheetContainer ul.jobs > li:focus-within.money.negative input[type="checkbox"].ios-switch + div:before,
+      #timesheetContainer ul.jobs > li .spinner:hover.money.negative input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.day-data.col > li:focus-within.money.negative input[type="checkbox"].ios-switch + div:before,
+      #clientsExisting ul.day-data.col > li .spinner:hover.money.negative input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.clients > li:focus-within.money.negative input[type="checkbox"].ios-switch + div:before,
+      #clientsExisting ul.clients > li .spinner:hover.money.negative input[type="checkbox"].ios-switch + div:before, #clientsExisting ul.jobs > li:focus-within.money.negative input[type="checkbox"].ios-switch + div:before,
+      #clientsExisting ul.jobs > li .spinner:hover.money.negative input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.day-data.col > li:focus-within.money.negative input[type="checkbox"].ios-switch + div:before,
+      #jobsExisting ul.day-data.col > li .spinner:hover.money.negative input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.clients > li:focus-within.money.negative input[type="checkbox"].ios-switch + div:before,
+      #jobsExisting ul.clients > li .spinner:hover.money.negative input[type="checkbox"].ios-switch + div:before, #jobsExisting ul.jobs > li:focus-within.money.negative input[type="checkbox"].ios-switch + div:before,
+      #jobsExisting ul.jobs > li .spinner:hover.money.negative input[type="checkbox"].ios-switch + div:before {
+        content: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='%23ffbfac' viewBox='0 0 32 32'%3E%3Ctitle%3Ecredit-card%3C/title%3E%3Cpath d='M29 4h-26c-1.65 0-3 1.35-3 3v18c0 1.65 1.35 3 3 3h26c1.65 0 3-1.35 3-3v-18c0-1.65-1.35-3-3-3zM3 6h26c0.542 0 1 0.458 1 1v3h-28v-3c0-0.542 0.458-1 1-1zM29 26h-26c-0.542 0-1-0.458-1-1v-9h28v9c0 0.542-0.458 1-1 1zM4 20h2v4h-2zM8 20h2v4h-2zM12 20h2v4h-2z'%3E%3C/path%3E%3C/svg%3E"); }
+  #timesheetContainer > li.totals-week, #timesheetContainer > li.totals-month, #timesheetContainer > li.totals-year,
+  #timesheetContainer > li.totals-week:hover, #timesheetContainer > li.totals-month:hover, #timesheetContainer > li.totals-year:hover, #clientsExisting > li.totals-week, #clientsExisting > li.totals-month, #clientsExisting > li.totals-year,
+  #clientsExisting > li.totals-week:hover, #clientsExisting > li.totals-month:hover, #clientsExisting > li.totals-year:hover, #jobsExisting > li.totals-week, #jobsExisting > li.totals-month, #jobsExisting > li.totals-year,
+  #jobsExisting > li.totals-week:hover, #jobsExisting > li.totals-month:hover, #jobsExisting > li.totals-year:hover {
+    padding: 2rem 0.8rem 2rem 1.6rem;
+    background-color: white;
+    position: relative;
+    overflow: auto; }
+    #timesheetContainer > li.totals-week h4, #timesheetContainer > li.totals-week table, #timesheetContainer > li.totals-month h4, #timesheetContainer > li.totals-month table, #timesheetContainer > li.totals-year h4, #timesheetContainer > li.totals-year table,
+    #timesheetContainer > li.totals-week:hover h4,
+    #timesheetContainer > li.totals-week:hover table, #timesheetContainer > li.totals-month:hover h4, #timesheetContainer > li.totals-month:hover table, #timesheetContainer > li.totals-year:hover h4, #timesheetContainer > li.totals-year:hover table, #clientsExisting > li.totals-week h4, #clientsExisting > li.totals-week table, #clientsExisting > li.totals-month h4, #clientsExisting > li.totals-month table, #clientsExisting > li.totals-year h4, #clientsExisting > li.totals-year table,
+    #clientsExisting > li.totals-week:hover h4,
+    #clientsExisting > li.totals-week:hover table, #clientsExisting > li.totals-month:hover h4, #clientsExisting > li.totals-month:hover table, #clientsExisting > li.totals-year:hover h4, #clientsExisting > li.totals-year:hover table, #jobsExisting > li.totals-week h4, #jobsExisting > li.totals-week table, #jobsExisting > li.totals-month h4, #jobsExisting > li.totals-month table, #jobsExisting > li.totals-year h4, #jobsExisting > li.totals-year table,
+    #jobsExisting > li.totals-week:hover h4,
+    #jobsExisting > li.totals-week:hover table, #jobsExisting > li.totals-month:hover h4, #jobsExisting > li.totals-month:hover table, #jobsExisting > li.totals-year:hover h4, #jobsExisting > li.totals-year:hover table {
+      float: left;
+      display: inline-block; }
+    #timesheetContainer > li.totals-week table > tr > td, #timesheetContainer > li.totals-month table > tr > td, #timesheetContainer > li.totals-year table > tr > td,
+    #timesheetContainer > li.totals-week:hover table > tr > td, #timesheetContainer > li.totals-month:hover table > tr > td, #timesheetContainer > li.totals-year:hover table > tr > td, #clientsExisting > li.totals-week table > tr > td, #clientsExisting > li.totals-month table > tr > td, #clientsExisting > li.totals-year table > tr > td,
+    #clientsExisting > li.totals-week:hover table > tr > td, #clientsExisting > li.totals-month:hover table > tr > td, #clientsExisting > li.totals-year:hover table > tr > td, #jobsExisting > li.totals-week table > tr > td, #jobsExisting > li.totals-month table > tr > td, #jobsExisting > li.totals-year table > tr > td,
+    #jobsExisting > li.totals-week:hover table > tr > td, #jobsExisting > li.totals-month:hover table > tr > td, #jobsExisting > li.totals-year:hover table > tr > td {
+      padding-bottom: 0.6rem; }
+    #timesheetContainer > li.totals-week table > tr > td:nth-of-type(odd), #timesheetContainer > li.totals-month table > tr > td:nth-of-type(odd), #timesheetContainer > li.totals-year table > tr > td:nth-of-type(odd),
+    #timesheetContainer > li.totals-week:hover table > tr > td:nth-of-type(odd), #timesheetContainer > li.totals-month:hover table > tr > td:nth-of-type(odd), #timesheetContainer > li.totals-year:hover table > tr > td:nth-of-type(odd), #clientsExisting > li.totals-week table > tr > td:nth-of-type(odd), #clientsExisting > li.totals-month table > tr > td:nth-of-type(odd), #clientsExisting > li.totals-year table > tr > td:nth-of-type(odd),
+    #clientsExisting > li.totals-week:hover table > tr > td:nth-of-type(odd), #clientsExisting > li.totals-month:hover table > tr > td:nth-of-type(odd), #clientsExisting > li.totals-year:hover table > tr > td:nth-of-type(odd), #jobsExisting > li.totals-week table > tr > td:nth-of-type(odd), #jobsExisting > li.totals-month table > tr > td:nth-of-type(odd), #jobsExisting > li.totals-year table > tr > td:nth-of-type(odd),
+    #jobsExisting > li.totals-week:hover table > tr > td:nth-of-type(odd), #jobsExisting > li.totals-month:hover table > tr > td:nth-of-type(odd), #jobsExisting > li.totals-year:hover table > tr > td:nth-of-type(odd) {
+      text-align: right;
+      color: #d4d2d2;
+      width: 10rem;
+      padding-right: 0.6rem; }
+    #timesheetContainer > li.totals-week table > tr > td:nth-of-type(even), #timesheetContainer > li.totals-month table > tr > td:nth-of-type(even), #timesheetContainer > li.totals-year table > tr > td:nth-of-type(even),
+    #timesheetContainer > li.totals-week:hover table > tr > td:nth-of-type(even), #timesheetContainer > li.totals-month:hover table > tr > td:nth-of-type(even), #timesheetContainer > li.totals-year:hover table > tr > td:nth-of-type(even), #clientsExisting > li.totals-week table > tr > td:nth-of-type(even), #clientsExisting > li.totals-month table > tr > td:nth-of-type(even), #clientsExisting > li.totals-year table > tr > td:nth-of-type(even),
+    #clientsExisting > li.totals-week:hover table > tr > td:nth-of-type(even), #clientsExisting > li.totals-month:hover table > tr > td:nth-of-type(even), #clientsExisting > li.totals-year:hover table > tr > td:nth-of-type(even), #jobsExisting > li.totals-week table > tr > td:nth-of-type(even), #jobsExisting > li.totals-month table > tr > td:nth-of-type(even), #jobsExisting > li.totals-year table > tr > td:nth-of-type(even),
+    #jobsExisting > li.totals-week:hover table > tr > td:nth-of-type(even), #jobsExisting > li.totals-month:hover table > tr > td:nth-of-type(even), #jobsExisting > li.totals-year:hover table > tr > td:nth-of-type(even) {
+      font-family: monospace;
+      font-size: 1.2rem; }
+    #timesheetContainer > li.totals-week h4, #timesheetContainer > li.totals-month h4, #timesheetContainer > li.totals-year h4,
+    #timesheetContainer > li.totals-week:hover h4, #timesheetContainer > li.totals-month:hover h4, #timesheetContainer > li.totals-year:hover h4, #clientsExisting > li.totals-week h4, #clientsExisting > li.totals-month h4, #clientsExisting > li.totals-year h4,
+    #clientsExisting > li.totals-week:hover h4, #clientsExisting > li.totals-month:hover h4, #clientsExisting > li.totals-year:hover h4, #jobsExisting > li.totals-week h4, #jobsExisting > li.totals-month h4, #jobsExisting > li.totals-year h4,
+    #jobsExisting > li.totals-week:hover h4, #jobsExisting > li.totals-month:hover h4, #jobsExisting > li.totals-year:hover h4 {
+      color: #979595;
+      font-style: italic;
+      width: 27rem;
+      text-align: right; }
+  #timesheetContainer > li.totals-week, #timesheetContainer > li.totals-week:hover, #clientsExisting > li.totals-week, #clientsExisting > li.totals-week:hover, #jobsExisting > li.totals-week, #jobsExisting > li.totals-week:hover {
+    border-bottom: dotted 0.3rem #f4f3f3;
+    border-right: dotted 0.3rem #f4f3f3; }
+  #timesheetContainer > li.totals-month, #timesheetContainer > li.totals-month:hover, #clientsExisting > li.totals-month, #clientsExisting > li.totals-month:hover, #jobsExisting > li.totals-month, #jobsExisting > li.totals-month:hover {
+    border-bottom: dashed 0.3rem #f4f3f3;
+    border-right: dashed 0.3rem #f4f3f3;
+    margin-bottom: 0.8rem; }
+  #timesheetContainer > li.totals-year, #timesheetContainer > li.totals-year:hover, #clientsExisting > li.totals-year, #clientsExisting > li.totals-year:hover, #jobsExisting > li.totals-year, #jobsExisting > li.totals-year:hover {
+    border: dotted 0.3rem #f4f3f3; }
+
+#clientsExisting ul.clients, #clientsExisting ul.jobs, #jobsExisting ul.clients, #jobsExisting ul.jobs {
+  float: none;
+  padding-left: 4rem; }
+  #clientsExisting ul.clients > li input, #clientsExisting ul.jobs > li input, #jobsExisting ul.clients > li input, #jobsExisting ul.jobs > li input {
+    border-radius: 0.6rem;
+    font-weight: bold;
+    height: 2rem;
+    vertical-align: top; }
+  #clientsExisting ul.clients > li .removeItemBtn, #clientsExisting ul.jobs > li .removeItemBtn, #jobsExisting ul.clients > li .removeItemBtn, #jobsExisting ul.jobs > li .removeItemBtn {
+    right: auto; }
+  #clientsExisting ul.clients > li input, #clientsExisting ul.clients > li label, #clientsExisting ul.jobs > li input, #clientsExisting ul.jobs > li label, #jobsExisting ul.clients > li input, #jobsExisting ul.clients > li label, #jobsExisting ul.jobs > li input, #jobsExisting ul.jobs > li label {
+    border: solid 0.15rem #F2F0F0; }
 
 /* FORMS */
 select, input, button {
   border: none;
-  padding: 0.2em 0.2em 0.2em 0.3em; }
+  padding: 0 0.3rem 0 0.8rem; }
 
 select {
-  font-family: "FG_Bold", Tahoma, Arial, Helvetica;
+  font-family: Tahoma, Arial, Helvetica;
+  font-style: italic;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   background-color: #ffeedd;
-  color: #776644; }
+  color: #776644;
+  cursor: pointer;
+  height: 2rem;
+  width: 10rem;
+  border-radius: 0.6rem; }
+  select:hover, select:focus {
+    color: #978257;
+    background-color: #ffd5aa; }
   select:first-of-type {
-    margin-right: 0.6em; }
+    margin-right: 0.8rem; }
 
 #configForm input[type=radio] {
-  display: block; }
+  float: right;
+  clear: both; }
+#configForm label {
+  float: right; }
 
-:root input[type="checkbox"] {
-  /* :root here acting as a filter for older browsers */
-  position: absolute;
-  opacity: 0; }
-
-:root input[type="checkbox"].ios-switch + div {
+/* Spinners */
+.spinner {
   display: inline-block;
-  vertical-align: middle;
-  width: 3.5em;
-  height: 1.52em;
-  border-radius: 999px;
-  margin: -0.18em 0.5em 0 .5em;
-  padding: 0.1em 0.3em;
-  background: #aa9977;
-  background-image: linear-gradient(90deg, #778866 50%, transparent 50%);
-  background-size: 200% 100%;
-  background-position: 100% 0;
-  background-origin: border-box;
-  background-clip: border-box;
+  position: relative;
+  vertical-align: middle; }
+  .spinner .spin-button-up, .spinner .spin-button-down {
+    cursor: pointer;
+    position: absolute;
+    display: inline-block;
+    opacity: 0;
+    width: 70%;
+    height: 0.5rem;
+    padding: 0.2rem 0.3rem 0.7rem 0.3rem;
+    background-color: #9f9090;
+    color: #ffeedd;
+    text-align: center;
+    font-size: 0.5rem; }
+    .spinner .spin-button-up:hover, .spinner .spin-button-up:focus, .spinner .spin-button-down:hover, .spinner .spin-button-down:focus {
+      color: #ffd5aa; }
+    .spinner .spin-button-up:after, .spinner .spin-button-down:after {
+      content: '';
+      position: absolute;
+      left: -0.2rem;
+      right: -0.2rem; }
+  .spinner .spin-button-up {
+    top: -0.5rem;
+    border-radius: 0.4rem 0.4rem 0 0; }
+    .spinner .spin-button-up:after {
+      top: -0.2rem;
+      bottom: 0; }
+  .spinner .spin-button-down {
+    bottom: -0.5rem;
+    border-radius: 0 0 0.4rem 0.4rem; }
+    .spinner .spin-button-down:after {
+      top: 0;
+      bottom: -0.2rem; }
+  .spinner input.unitBig {
+    border-radius: 0.6rem 0 0 0.6rem; }
+    .spinner input.unitBig + .spin-button-up {
+      right: 0%; }
+      .spinner input.unitBig + .spin-button-up + .spin-button-down {
+        right: 0%; }
+  .spinner input.unitSmall {
+    border-radius: 0 0.6rem 0.6rem 0; }
+    .spinner input.unitSmall + .spin-button-up {
+      left: 7%; }
+      .spinner input.unitSmall + .spin-button-up + .spin-button-down {
+        left: 7%; }
+
+/* Extraneous UI buttons */
+#miniNavForm {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 2; }
+  #miniNavForm p {
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: inline;
+    margin: 0 0.8rem; }
+  #miniNavForm button:nth-of-type(2),
+  #miniNavForm button:nth-of-type(4) {
+    margin-right: 2rem;
+    margin-left: 0.3rem;
+    background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Earrow-down%3C/title%3E%3Cpath d='M16 31l15-15h-9v-16h-12v16h-9z'%3E%3C/path%3E%3C/svg%3E"); }
+  #miniNavForm button:last-of-type {
+    background-size: 1.2rem;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-position: 0.6rem;
+    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0%29 --%3E%3Csvg version='1.2' baseProfile='tiny' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='64px' height='64px' viewBox='0 0 32 32' xml:space='preserve'%3E%3Cg%3E%3Cpath fill-rule='evenodd' d='M16.3,0c0.1,0,0.3,0,0.4,0.1c1.2,0.3,2.1,1.3,2.2,2.5c0.1,0.8-0.2,1.6-0.6,2.3 c-0.5,0.8-1.1,1.7-1.7,2.5C16.4,7.6,16.2,7.8,16,8c-0.1-0.2-0.2-0.3-0.3-0.4c-0.5-0.8-1.1-1.5-1.6-2.3c-0.4-0.6-0.7-1.1-0.8-1.8 C13,2.2,13.6,1,14.6,0.4c0.3-0.2,0.7-0.3,1-0.3c0,0,0.1,0,0.1,0C15.9,0,16.1,0,16.3,0z'/%3E%3Cpath fill-rule='evenodd' d='M-0.5,15.9c0.1-0.7,0.6-1.1,1.1-1.5c0.8-0.5,1.6-0.8,2.5-1.1c1.3-0.4,2.6-0.7,3.9-0.9 c1-0.2,2-0.3,3-0.4c0.5-0.1,0.9-0.1,1.4-0.1c0.2,0,0.3,0.1,0.3,0.2c0,0.1-0.1,0.2-0.3,0.2c-1.3,0.2-2.7,0.4-4,0.7 c-1.2,0.3-2.3,0.6-3.3,1.2c-0.4,0.2-0.7,0.4-1.1,0.7c-0.3,0.3-0.5,0.5-0.6,0.9c-0.1,0.3,0,0.6,0.2,0.9c0.2,0.3,0.4,0.5,0.7,0.7 c0.6,0.5,1.4,0.8,2.1,1c1.2,0.4,2.4,0.7,3.7,0.9c0.8,0.1,1.5,0.2,2.3,0.3c0.1,0,0.2,0,0.2,0.1c0,0,0.1,0.1,0,0.2 c0,0.1-0.1,0.1-0.2,0.1c-0.2,0-0.4,0-0.7,0C9.9,20,9,19.9,8.2,19.8c-2-0.3-4-0.7-5.9-1.4c-0.7-0.3-1.4-0.6-1.9-1.1 c-0.4-0.3-0.7-0.7-0.7-1.2C-0.5,16.1-0.5,16-0.5,15.9z'/%3E%3Cpath fill-rule='evenodd' d='M32.5,16.2c-0.1,0.7-0.6,1.1-1.2,1.5c-0.8,0.5-1.6,0.8-2.4,1.1c-1.3,0.4-2.6,0.7-3.9,0.9 c-1,0.2-2,0.3-3,0.4c-0.5,0.1-0.9,0.1-1.4,0.1c-0.1,0-0.1,0-0.2,0c-0.1,0-0.1-0.1-0.1-0.2c0-0.1,0.1-0.2,0.1-0.2 c0.1,0,0.3-0.1,0.4-0.1c1-0.1,2.1-0.3,3.1-0.5c1.3-0.3,2.5-0.6,3.7-1.2c0.4-0.2,0.8-0.5,1.2-0.8c0.3-0.3,0.5-0.6,0.6-1 c0.1-0.3,0-0.6-0.2-0.9c-0.2-0.3-0.4-0.5-0.7-0.7c-0.6-0.5-1.4-0.8-2.1-1c-1.2-0.4-2.4-0.7-3.7-0.9c-0.8-0.1-1.5-0.2-2.3-0.3 c-0.1,0-0.2,0-0.2-0.1c0,0-0.1-0.1,0-0.2c0-0.1,0.1-0.1,0.2-0.1c0.2,0,0.4,0,0.7,0c0.9,0.1,1.8,0.2,2.7,0.3c2,0.3,3.9,0.6,5.8,1.4 c0.7,0.3,1.4,0.6,2,1.1c0.3,0.2,0.5,0.5,0.7,0.8c0.1,0.1,0.1,0.3,0.2,0.5C32.5,16,32.5,16.1,32.5,16.2z'/%3E%3Cpath fill-rule='evenodd' d='M16,24c0.2,0.3,0.5,0.6,0.7,0.9c0.5,0.7,1,1.5,1.5,2.2c0.4,0.6,0.6,1.2,0.6,1.9c0.1,1.6-1,2.8-2.5,3 c-1,0.1-1.8-0.2-2.5-1c-0.5-0.6-0.7-1.4-0.6-2.2c0.1-0.8,0.4-1.4,0.8-2.1C14.7,25.9,15.3,25,16,24C16,24.1,16,24.1,16,24z'/%3E%3Cpath fill-rule='evenodd' d='M12.4,13.7c0.2,0,0.3,0.1,0.3,0.2c0,0.1-0.1,0.2-0.2,0.2c-0.7,0.2-1.4,0.3-2,0.6 c-0.3,0.1-0.5,0.3-0.8,0.5c-0.1,0.1-0.2,0.2-0.3,0.4c-0.2,0.3-0.2,0.7,0,1c0.1,0.2,0.3,0.3,0.5,0.5c0.5,0.3,1.1,0.6,1.7,0.7 c0.3,0.1,0.6,0.2,0.9,0.2c0.2,0,0.2,0.1,0.2,0.2c0,0.1-0.1,0.2-0.3,0.2c-0.4,0-0.9-0.1-1.3-0.2c-0.9-0.1-1.8-0.3-2.6-0.6 c-0.5-0.2-1-0.3-1.4-0.6c-0.2-0.1-0.4-0.3-0.5-0.4c-0.3-0.4-0.3-0.8,0-1.1c0.2-0.2,0.4-0.3,0.6-0.5c0.6-0.4,1.2-0.6,1.8-0.7 c0.9-0.2,1.8-0.4,2.8-0.5C11.9,13.7,12.2,13.7,12.4,13.7z'/%3E%3Cpath fill-rule='evenodd' d='M25.7,16.1c0,0.2-0.1,0.4-0.2,0.5c-0.2,0.2-0.4,0.4-0.6,0.5c-0.6,0.4-1.2,0.6-1.9,0.7 c-0.9,0.2-1.8,0.4-2.7,0.5c-0.2,0-0.4,0-0.6,0.1c-0.1,0-0.1,0-0.2,0c-0.1,0-0.2-0.1-0.2-0.2c0-0.1,0.1-0.2,0.2-0.2 c0.2,0,0.4-0.1,0.5-0.1c0.6-0.2,1.2-0.3,1.7-0.6c0.3-0.1,0.6-0.3,0.8-0.5c0.4-0.4,0.4-0.9,0-1.3c-0.3-0.3-0.8-0.6-1.2-0.7 c-0.6-0.2-1.1-0.4-1.7-0.5c-0.2-0.1-0.3-0.1-0.2-0.3c0-0.1,0.1-0.2,0.3-0.2c1,0.1,2.1,0.2,3.1,0.5c0.7,0.2,1.3,0.4,1.9,0.7 c0.3,0.1,0.5,0.3,0.7,0.5C25.6,15.5,25.7,15.8,25.7,16.1z'/%3E%3Cpath fill-rule='evenodd' d='M14.7,16c0-0.7,0.6-1.3,1.3-1.3c0.7,0,1.3,0.6,1.3,1.3c0,0.7-0.6,1.3-1.3,1.3 C15.3,17.4,14.7,16.8,14.7,16z'/%3E%3Cpath fill-rule='evenodd' d='M16,9.2c0.3,0.5,0.7,1,1,1.5c0.2,0.3,0.2,0.7,0.1,1.1c-0.1,0.5-0.6,0.8-1.1,0.8c-0.5,0-0.9-0.4-1-0.9 c-0.1-0.3-0.1-0.7,0.1-1C15.4,10.3,15.7,9.8,16,9.2z'/%3E%3Cpath fill-rule='evenodd' d='M16,22.8c-0.1-0.2-0.3-0.4-0.4-0.6c-0.2-0.2-0.3-0.5-0.5-0.7c-0.2-0.4-0.3-0.8-0.2-1.2 c0.1-0.5,0.6-0.9,1.1-0.8c0.5,0,0.9,0.4,1,1c0.1,0.3,0,0.6-0.2,0.9C16.7,21.8,16.3,22.3,16,22.8z'/%3E%3C/g%3E%3C/svg%3E%0A"); }
+  #miniNavForm #monthNextBtn, #miniNavForm #weekNextBtn, #miniNavForm #monthPrevBtn, #miniNavForm #weekPrevBtn {
+    background-size: 1.2rem;
+    background-repeat: no-repeat;
+    background-position: center;
+    text-indent: -999999em;
+    width: 2rem;
+    height: 2rem; }
+  #miniNavForm #monthNextBtn, #miniNavForm #weekNextBtn {
+    background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Earrow-down%3C/title%3E%3Cpath d='M16 31l15-15h-9v-16h-12v16h-9z'%3E%3C/path%3E%3C/svg%3E"); }
+  #miniNavForm #monthPrevBtn, #miniNavForm #weekPrevBtn {
+    background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Earrow-up%3C/title%3E%3Cpath d='M16 1l-15 15h9v16h12v-16h9z'%3E%3C/path%3E%3C/svg%3E"); }
+
+.file-buttons {
+  position: absolute;
+  bottom: 0;
+  display: inline-block; }
+
+#file-chooser {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
   overflow: hidden;
-  transition-duration: .2s;
-  transition-property: padding, width, background-position, text-indent;
-  font-size: 130%;
-  /* change this and see how they adjust! */
-  font-family: "ddd-icons";
+  position: absolute;
+  z-index: 2; }
+
+#file-save, #clear-data {
+  margin-top: 0.3rem;
+  background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Edownload3%3C/title%3E%3Cpath d='M23 14l-8 8-8-8h5v-12h6v12zM15 22h-15v8h30v-8h-15zM28 26h-4v-2h4v2z'%3E%3C/path%3E%3C/svg%3E"); }
+
+nav button.btnNav,
+#miniNavForm button,
+#file-save, #clear-data,
+#file-chooser + label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: left;
+  line-height: 0.9rem;
+  color: #776644;
+  background-color: #ffeedd;
+  display: inline-block;
+  padding: 0.6rem 0.6rem 0.6rem 2.4rem;
   cursor: pointer; }
 
-:root input[type="checkbox"].ios-switch:checked + div {
-  padding-left: 1.8em;
-  background-position: 0 0; }
+nav button.btnNav,
+#file-save, #clear-data,
+#file-chooser + label {
+  width: 100%;
+  background-size: 1.2rem;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-position: 0.6rem; }
 
-:root input[type="checkbox"].ios-switch + div:before {
-  content: '\e801';
-  float: left;
-  width: 0.825em;
-  height: 0.825em;
-  margin: 0.06em -0.3em 0em 0.09em;
-  border-radius: inherit;
-  background: #ffeedd;
-  color: #221100;
-  text-indent: -1.3em; }
+#clear-data {
+  background-image: url("data:image/svg+xml,%3C!-- Generated by IcoMoon.io --%3E%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctitle%3Efire%3C/title%3E%3Cpath d='M10.031 32c-2.133-4.438-0.997-6.981 0.642-9.376 1.795-2.624 2.258-5.221 2.258-5.221s1.411 1.834 0.847 4.703c2.493-2.775 2.963-7.196 2.587-8.889 5.635 3.938 8.043 12.464 4.798 18.783 17.262-9.767 4.294-24.38 2.036-26.027 0.753 1.646 0.895 4.433-0.625 5.785-2.573-9.759-8.937-11.759-8.937-11.759 0.753 5.033-2.728 10.536-6.084 14.648-0.118-2.007-0.243-3.392-1.298-5.312-0.237 3.646-3.023 6.617-3.777 10.27-1.022 4.946 0.765 8.568 7.555 12.394z'%3E%3C/path%3E%3C/svg%3E%0A"); }
 
-/*:root input[type="checkbox"].ios-switch:active + div:before {
-  background-color: $ddd-orange;
-}*/
-/*
-:root input[type="checkbox"].ios-switch:focus + div {
-  box-shadow: 0 .1em .1em rgba(0,0,0,.2) inset,
-  0 .45em 0 .1em rgba(0,0,0,.05) inset,
-  0 0 .4em 1px rgba(255,255,255,.5);
-}
-*/
-:root input[type="checkbox"].ios-switch + div:before,
-:root input[type="checkbox"].ios-switch + div:after {
-  font-size: 140%; }
+#file-chooser + label {
+  background-image: url("data:image/svg+xml,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' width='32' height='32' fill='%23776644' viewBox='0 0 32 32'%3E%3Ctitle%3Eupload3%3C/title%3E%3Cpath d='M15 22h-15v8h30v-8h-15zM28 26h-4v-2h4v2zM7 10l8-8 8 8h-5v10h-6v-10z'%3E%3C/path%3E%3C/svg%3E"); }
 
-:root input[type="checkbox"].ios-switch + div:after {
-  content: '\e800';
-  float: left;
-  text-indent: .5em;
-  color: #443322; }
-
-input.unitBig, input.unitSmall {
-  display: inline-block;
-  width: 3em;
-  font-size: 1.25em;
-  font-weight: bold;
-  text-align: center;
-  -webkit-border-radius: 0.3em 0.3em 0.3em 0.3em;
-  -moz-border-radius: 0.3em 0.3em 0.3em 0.3em;
-  border-radius: 0.3em 0.3em 0.3em 0.3em; }
-  input.unitBig.money, input.unitSmall.money {
-    background-color: #778866;
-    color: #221100;
-    /*    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='1.25em' width='3em'><text x='2' y='13' fill='#ffeedd' font-size='1em' font-family='arial'>£</text></svg>");*/
-    background-size: 100%; }
-    input.unitBig.money.negative, input.unitSmall.money.negative {
-      background-color: #cc6644; }
-  input.unitBig.hrs, input.unitSmall.hrs {
-    background-color: #aa9977;
-    color: #443322; }
-
-input.unitSmall {
-  /*text-align: left;*/
-  margin-right: 0.6em; }
-
-input.notes {
-  margin-left: 0.6em;
-  padding: 0.3em 0.3em 0.3em 0.6em; }
-  input.notes.money {
-    color: #221100;
-    background-color: #b7c1ac; }
-  input.notes.job {
-    color: #443322;
-    background-color: #dbd4c5; }
-  input.notes::-webkit-input-placeholder {
-    /* Chrome/Opera/Safari */
-    color: inherit;
-    opacity: 1;
-    font-style: italic; }
-  input.notes::-moz-placeholder {
-    /* Firefox 19+ */
-    color: inherit;
-    opacity: 1;
-    font-style: italic; }
-  input.notes:-ms-input-placeholder {
-    /* IE 10+ */
-    color: inherit;
-    opacity: 1;
-    font-style: italic; }
-  input.notes:-moz-placeholder {
-    /* Firefox 18- */
-    color: inherit;
-    opacity: 1;
-    font-style: italic; }
+#miniNavForm button:focus:hover, #miniNavForm button:focus:focus,
+#miniNavForm button:hover:hover,
+#miniNavForm button:hover:focus,
+#clear-data:focus:hover,
+#clear-data:focus:focus, #file-save:focus:hover, #file-save:focus:focus,
+#clear-data:hover:hover,
+#clear-data:hover:focus, #file-save:hover:hover, #file-save:hover:focus,
+#file-chooser:focus + label:hover,
+#file-chooser:focus + label:focus,
+#file-chooser + label:hover:hover,
+#file-chooser + label:hover:focus {
+  color: #978257;
+  background-color: #ffd5aa; }
 
 /* COLOR PICKER */
-.color-picker {
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  background-color: #efefef; }
+#color-picker-canvas {
+  position: absolute;
+  z-index: 2;
+  display: none;
+  border-radius: 0.6rem; }
 
-/* TEXT */
-@font-face {
-  font-family: 'ddd-icons';
-  src: url("/fonts/ddd-icons.eot?48170321");
-  src: url("/fonts/ddd-icons.eot?48170321#iefix") format("embedded-opentype"), url("/fonts/ddd-icons.woff2?48170321") format("woff2"), url("/fonts/ddd-icons.woff?48170321") format("woff"), url("/fonts/ddd-icons.ttf?48170321") format("truetype"), url("/fonts/ddd-icons.svg?48170321#ddd-icons") format("svg");
-  font-weight: normal;
-  font-style: normal; }
-@font-face {
-  font-family: 'FG_Bold';
-  src: url("/fonts/NotoSans-Bold-webfont.eot?") format("eot"), url("/fonts/NotoSans-Bold-webfont.woff2") format("woff2"), url("/fonts/NotoSans-Bold-webfont.woff") format("woff"), url("/fonts/NotoSans-Bold-webfont.ttf") format("truetype"); }
-@font-face {
-  font-family: 'FG_Medium';
-  src: url("/fonts/NotoSans-Regular-webfont.eot?") format("eot"), url("/fonts/NotoSans-Regular-webfont.woff2") format("woff2"), url("/fonts/NotoSans-Regular-webfont.woff") format("woff"), url("/fonts/NotoSans-Regular-webfont.ttf") format("truetype"); }
+.color-picker {
+  display: none; }
+  .color-picker.fg + label {
+    margin-left: 0.5rem; }
+  .color-picker.bg + label {
+    margin-left: 1rem; }
+  .color-picker + label {
+    padding: 0;
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.6rem;
+    cursor: pointer; }
+
+/* Define mobile styles */
+/* max-width 640px, mobile-only styles, use when QAing mobile issues */
+@media only screen and (min-width: 40.063em) {
+  #timesheetContainer > li > ul.day-data.col br:nth-of-type(2) {
+    display: none; } }
+/* min-width 641px, medium screens */
+/* min-width 641px and max-width 1024px, use when QAing tablet-only issues */
+@media only screen and (min-width: 64.063em) {
+  #timesheetContainer > li > ul.day-data.col br:nth-of-type(1) {
+    display: none; }
+
+  #timesheetContainer > li > ul.day-data.col br:nth-of-type(2) {
+    display: initial; }
+
+  #timesheetContainer > li > ul.day-data.col br:nth-of-type(3) {
+    display: none; } }
+/* min-width 1025px, large screens */
+/* min-width 1025px and max-width 1440px, use when QAing large screen-only issues */
+@media only screen and (min-width: 90.063em) {
+  #timesheetContainer > li > ul.day-data.col br:nth-of-type(2) {
+    display: none; } }
+/* min-width 1441px, xlarge screens */
+/* min-width 1441px and max-width 1920px, use when QAing xlarge screen-only issues */
+/* min-width 1921px, xxlarge screens */
 
 /*# sourceMappingURL=DDD.css.map */

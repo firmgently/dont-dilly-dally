@@ -1,32 +1,51 @@
 <!doctype html>
 <html lang="en">
-<head>
-	<meta charset="utf-8">
-	<title>Don't Dilly Dally</title>
-	<link rel="icon" type="image/ico" href="favicon.ico">
-	<link rel="stylesheet" href="css/DDD.css">
-</head>
-<body>
+  <head>
+    <meta charset="utf-8">
+    <title>Don't Dilly Dally</title>
+    <link rel="stylesheet" href="css/DDD.css">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/icons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/images/icons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/icons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/icons/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+  </head>
+  <body>
 
-	<aside id="sidebar-main" class="row">
-    <img src="/images/DDD-logo.png">
-    <h1>Don't Dilly Dally</h1>
-		<nav id="nav-main" class="row"></nav>
-		<section class="sidebar-info">
-			<p id="intro"></p>
-			<p id="loading-indicator">LOADING</p>
-		<section>
+    <aside id="sidebar-main" class="row">
+      <h1>Don<em>'</em>t</h1>
+      <h1>Dilly</h1>
+      <h1>Dally</h1>
+      <nav id="nav-main" class="row"></nav>
 
-		<label for="file-chooser">Import a file</label>
-    <input type="file" id="file-chooser" name="file-chooser" />
+      <div class="file-buttons">
+        <button id="clear-data" type="button">clear data</button>
+        <input type="file" id="file-chooser" name="file-chooser" />
+        <label for="file-chooser">import from file</label>
 
-		<button id="file-save" type="button">Save to file</button>
+        <button id="file-save" type="button">export to file</button>
+      </div>
 
+    </aside>
 
-	</aside>
+    <aside id="loading-indicator" class="hidden">
+      <p></p><span></span><em></em>
+    </aside>
 
-	<section id="main" class="row"></section>
+    <section id="main" class="row"></section>
 
-	<script src="js/FGDontDillyDally.js"></script>
-</body>
+    <script src="js/FGDontDillyDally.js"></script>
+  </body>
 </html>

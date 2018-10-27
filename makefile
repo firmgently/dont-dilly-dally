@@ -14,6 +14,7 @@ css = 			${srcdir}DDD.scss
 
 js/FGDontDillyDally.js: ${modules}
 	cat > $@ $^
+	minify js/FGDontDillyDally.js -o js/FGDontDillyDally.js.min
 
 css/DDD.css: ${css}
 	sass $< $@

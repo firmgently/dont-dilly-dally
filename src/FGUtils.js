@@ -15,11 +15,14 @@ uk.co.firmgently.FGUtils = (function() {
   var
   addCSSRule, getIEVersion, isTouchDevice,
   registerEventHandler, unregisterEventHandler, stopPropagation,
-  hexOpacityToRGBA, getRandomHexColor, createElementWithId,
-  removeClassname, addClassname, getStyle,
+  hexOpacityToRGBA, rgbToHex, getRandomHexColor, getRandomContrastingHexColor,
+  hexToRGB_ar, getBrightnessFromRGBAr, floatToArray,
+  createElementWithId,
+  removeClassname, addClassname, getStyle, padString,
   treatAsUTC, daysBetween, getFormattedDate,
   getFunctionFromString, getGUID, changeSelectByOption, manualEvent,
-  logMsg;
+  updateSelectOptionList, getNewStylesheet,
+  makeLocal, isEmpty, logMsg;
 
 
   /* -------------------------------------------------------------------------------
@@ -88,11 +91,32 @@ uk.co.firmgently.FGUtils = (function() {
 
       return ret;
   };
+  
+
+  // https://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php
+  Date.prototype.getWeekNumber = function(){
+    var yearStart,
+      d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate())),
+      dayNum = d.getUTCDay() || 7;
+
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+
+    return Math.ceil((((d - yearStart) / 86400000) + 1)/7)
+  };
 
 
   /* -------------------------------------------------------------------------------
     general helpers
   ---------------------------------------------------------------------------------- */
+
+  makeLocal = function(toClass, fromClass) {
+    var key;
+    for (key in fromClass) {
+      toClass[key] = fromClass[key];
+    }
+  };
+
 
   // prevent bubbling/propagation/default events (image drag and drop etc)
   // also when showing another image on click we don't want the event to bubble
@@ -128,6 +152,10 @@ uk.co.firmgently.FGUtils = (function() {
     }
   };
 
+  rgbToHex = function(r, g, b) {
+    return ((r << 16) | (g << 8) | b).toString(16);
+  };
+
 
   hexOpacityToRGBA = function(hexColour, opacity) {
     var r, g, b;
@@ -135,6 +163,28 @@ uk.co.firmgently.FGUtils = (function() {
     g = parseInt(hexColour.substring(2,4), 16);
     b = parseInt(hexColour.substring(4,6), 16);
     return "rgba(" + r + ", " + g + ", " + b + ", " + opacity + ")";
+  };
+
+
+  hexToRGB_ar = function(hex) {
+    var bigint;
+
+    // trim leading hash
+    if (hex.substr(0, 1) === "#") { hex = hex.substr(1); }
+      
+    bigint = parseInt(hex, 16);
+
+    return [
+      (bigint >> 16) & 255,
+      (bigint >> 8) & 255,
+      bigint & 255,
+    ];
+  };
+
+
+  getBrightnessFromRGBAr = function(ar) {
+    //return ((299 * ar[0]) + (587 * ar[1]) + (114 * ar[2])) / 1000;
+    return (ar[0]+ar[0]+ar[2]+ar[1]+ar[1]+ar[1])/6;
   };
 
 
@@ -151,6 +201,22 @@ uk.co.firmgently.FGUtils = (function() {
     return hexString;
   };
 
+  
+  getRandomContrastingHexColor = function(hexColor, minContrast) {
+    var brightness1, brightness2, c1RGB_ar, hexContrasting,
+        c2RGB_ar = hexToRGB_ar(hexColor),
+        brightness2 = getBrightnessFromRGBAr(c2RGB_ar);
+    do {
+      hexContrasting = getRandomHexColor();
+      c1RGB_ar = hexToRGB_ar(hexContrasting);
+      brightness1 = getBrightnessFromRGBAr(c1RGB_ar);
+      logMsg("brightness1: " + brightness1);
+      logMsg((brightness1 + 0.05) / brightness2 + 0.05);
+    } while (Math.abs(brightness1 - brightness2) < minContrast);
+
+    return hexContrasting;
+  };
+
 
   createElementWithId = function(elType, id) {
     var el = document.createElement(elType);
@@ -160,33 +226,67 @@ uk.co.firmgently.FGUtils = (function() {
 
 
   removeClassname = function(element, name) {
-    element.className = element.className.replace(" " + name,"");
+    if (element) {
+     // element.className = element.className.replace(" " + name, "");
+      //element.className = element.className.replace(name, "");
+      element.className = element.className.replace(new RegExp(name, 'g'), "");
+    }
   };
 
 
   addClassname = function(element, name) {
-    name = " " + name;
-    element.className = element.className.replace(name,"");
-    element.className = element.className + name;
+    if (element) {
+      element.className = element.className.replace(new RegExp(name, 'g'), "");
+      //name = " " + name;
+      //element.className = element.className.replace(name,"");
+      element.className = element.className + " " + name;
+    }
   };
 
 
-  addCSSRule = function(selector, property, newValue) {
-    var
-    i, curStyleSheet,
-    totalStyleSheets = document.styleSheets.length,
-    newStyle = property + ": " + newValue;
+  addCSSRule = function(selector, property, newValue, customSheet) {
+    var i, curStyleSheet,
+        totalStyleSheets = document.styleSheets.length,
+        newStyle = property + ": " + newValue;
 
-    for (i = 0; i < totalStyleSheets; i++) {
-      curStyleSheet = document.styleSheets[i];
+    if (customSheet) {
       try {
-        curStyleSheet.insertRule(selector + " {" + newStyle + "}", curStyleSheet.cssRules.length);
+        customSheet.insertRule(selector + " {" + newStyle + "}", customSheet.cssRules.length);
       } catch(err1) {
         try {
-          curStyleSheet.addRule(selector, newStyle);
+          customSheet.addRule(selector, newStyle);
         } catch(err2) {}
       }
+    } else {
+      for (i = 0; i < totalStyleSheets; i++) {
+        curStyleSheet = document.styleSheets[i];
+        try {
+          curStyleSheet.insertRule(selector + " {" + newStyle + "}", curStyleSheet.cssRules.length);
+        } catch(err1) {
+          try {
+            curStyleSheet.addRule(selector, newStyle);
+          } catch(err2) {}
+        }
+      }
     }
+  };
+
+
+  getNewStylesheet = function() {
+    var style = document.createElement("style");
+    style.appendChild(document.createTextNode("")); // needed for webkit
+    document.head.appendChild(style);
+    return style.sheet;
+  };
+
+
+  padString = function(str, pad) {
+    var return_str = str;
+    if (str.length < pad.length) {
+      return_str = pad.substr(0, (pad.length - str.length)) + str;
+    }
+   ///logMsg(pad + " || " + str + " --> " + return_str);
+    return return_str;
   };
 
 
@@ -231,6 +331,24 @@ uk.co.firmgently.FGUtils = (function() {
 
   logMsg = function(msg) {
     console.log(msg);
+  };
+
+  
+  isEmpty = function(obj) {
+    var prop;
+    for(prop in obj) {
+      if(obj.hasOwnProperty(prop)) { return false; }
+    }
+    return JSON.stringify(obj) === JSON.stringify({});
+  };
+
+
+  floatToArray = function(float) {
+    var numStr = "" + float;
+    if (numStr.indexOf(".") === -1) {
+      numStr += ".00";
+    }
+    return numStr.split(".");
   };
 
 
@@ -306,6 +424,19 @@ uk.co.firmgently.FGUtils = (function() {
 	};
 
 
+  updateSelectOptionList = function(el, optionsData) {
+    var option, option_el;
+
+    while (el.options.length) {
+      el.options.remove(el.options.length -1);
+    }
+    for (option in optionsData) {
+      option_el = el.options[el.options.length] = new Option(optionsData[option].name, optionsData[option].class);
+      addClassname(option_el, optionsData[option].class);
+    }
+  };
+
+
 	changeSelectByOption = function(el, option) {
 		var i, options = el.options;
 		for (i = 0; i < options.length; i++) {
@@ -336,6 +467,7 @@ uk.co.firmgently.FGUtils = (function() {
                 PUBLIC
     ---------------------------------------------------------
     */
+    makeLocal: makeLocal,
     registerEventHandler: registerEventHandler,
     unregisterEventHandler: unregisterEventHandler,
     stopPropagation: stopPropagation,
@@ -343,17 +475,26 @@ uk.co.firmgently.FGUtils = (function() {
     addClassname: addClassname,
     addCSSRule: addCSSRule,
     hexOpacityToRGBA: hexOpacityToRGBA,
+    rgbToHex: rgbToHex,
     getRandomHexColor: getRandomHexColor,
+    getRandomContrastingHexColor: getRandomContrastingHexColor,
+    getBrightnessFromRGBAr: getBrightnessFromRGBAr,
+    hexToRGB_ar: hexToRGB_ar,
     createElementWithId: createElementWithId,
     getFunctionFromString: getFunctionFromString,
     getFormattedDate: getFormattedDate,
     treatAsUTC: treatAsUTC,
+    padString: padString,
     daysBetween: daysBetween,
+    floatToArray: floatToArray,
     logMsg: logMsg,
+    isEmpty: isEmpty,
+    getNewStylesheet: getNewStylesheet,
     getIEVersion: getIEVersion,
     getStyle: getStyle,
     isTouchDevice: isTouchDevice,
 		changeSelectByOption: changeSelectByOption,
+		updateSelectOptionList: updateSelectOptionList,
 		manualEvent: manualEvent,
 		getGUID: getGUID
   };

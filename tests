@@ -1,0 +1,10 @@
+clear localStorage - are defaults loaded correctly?
+add new client
+add new job
+remove client - is warning given if client is used in timesheets?
+remove job - is warning given if job is used in timesheets?
+add task
+add money item
+make money item negative
+change preferences - do they take effect?
+

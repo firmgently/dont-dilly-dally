@@ -23,18 +23,40 @@ uk.co.firmgently.DDDConsts = (function() {
 	var CONST = {
     APP_ID: "FGDDD",
     SAVE_FILENAME: "DontDillyDally-export",
+    COLORPICKER_CHANGEEVENT_ID: "colorpickerchange",
+    COLORPICKER_CONFIRMEVENT_ID: "colorpickerconfirm",
 
-    PAGETYPE_TIMESHEETS: " > timesheets",
-    PAGETYPE_CONFIG: " > preferences",
-    PAGETYPE_JOBSANDCLIENTS: " > jobsAndClients",
+    DATASTORE_CATEGORY_PREFIX: "_",
 
-    BODYID_TIMESHEETS: "timesheets",
+    MAXLENGTH_INPUT_NAMES: 50,
+    MAXLENGTH_INPUT_NOTES: 1000,
+
+    DAYJUMP_TOPPOS_BUFFERPX: 40,
+
+		AUTOREPEAT_RATE: 500,
+    RECALCULATETOTALS_DELAY: 1000,
+    DAYSDRAWN_UPDATE_FREQ: 12, // lower number means more frequent updates on loading indicator
+    LOADER_CSSWIDTH_SCALE: 2, // eg. 2 if 'full' width should be 50% (100/2)
+
+    PAGETYPE_TIMESHEETS: "timesheet",
+    PAGETYPE_CONFIG: "preferences",
+    PAGETYPE_JOBSANDCLIENTS: "jobs-and-clients",
+    PAGETYPE_PRIVACY: "privacy",
+    BODYID_TIMESHEETS: "timesheet",
     BODYID_CONFIG: "config",
     BODYID_JOBSANDCLIENTS: "jobsClients",
+    BODYID_PRIVACY: "privacy",
 
+    MONTH_NAMES: [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ],
+
+    GUITYPE_PARA: "GUITypePara",
     GUITYPE_COL: "GUITypeCol",
     GUITYPE_ROW: "GUITypeRow",
     GUITYPE_BTN: "GUITypeBtn",
+    GUITYPE_HEADING: "GUITypeHeading",
     GUITYPE_COLORPICKER: "GUITypeColorPicker",
     GUITYPE_RADIOBTN: "GUITypeRadioBtn",
     GUITYPE_TEXTINPUT: "GUITypeTextInput",
@@ -43,13 +65,50 @@ uk.co.firmgently.DDDConsts = (function() {
     GUITYPE_SECTION: "GUITypeSection",
     GUITYPE_METHODCALL: "GUITypeMethodCall",
     GUITYPE_UL: "GUITypeUL",
+    GUITYPE_HELP: "GUITypeHelp",
+    GUITYPE_SPACER: "GUITypeSpacer",
 
+    CLASS_SHEET: "sheet",
     CLASS_BTNNAV: "btnNav",
+    CLASS_BTNMININAV: "btnMiniNav",
     CLASS_FORMMAIN: "formMain",
     CLASS_COL: "col",
     CLASS_ROW: "row",
     CLASS_CLIENTSELECT: "select-client",
     CLASS_JOBSELECT: "select-job",
+		CLASS_TODAY: "today",
+    CLASS_SPINNER: "spinner",
+    CLASS_SPINNER_UNITBIG: "unitBig",
+    CLASS_SPINNER_UNITSMALL: "unitSmall",
+    CLASS_NOTESINPUT: "notes",
+    CLASS_ADDITEMBTN: "addItemBtn",
+    CLASS_REMOVEITEMBTN: "removeItemBtn",
+    CLASS_NEGATIVE: "negative",
+    CLASS_MONEY: "money",
+    CLASS_HOURS: "hrs",
+    CLASS_MONEYTIMECHECKBOX: "isMoneyTaskChk",
+    CLASS_HIDDEN: "hidden",
+		CLASS_ANIM_ATTRACT: "attract",
+    CLASS_ANIM_WORKING: "working",
+    CLASS_WEEKSTART: "week-start",
+    CLASS_MONTHSTART: "month-start",
+    CLASS_TOTALSWEEK: "totals-week",
+    CLASS_TOTALSCONTAINER: "totals-container",
+    CLASS_COLORPICKER: "color-picker",
+    CLASS_TOTALSMONTH: "totals-month",
+    CLASS_TOTALSYEAR: "totals-year",
+    CLASS_SPACER_EXPAND_VERT: "expand-vert",
+    CLASS_TOTALSCONTAINER: "totals-container",
+    CLASS_TOTALINCOME: "total-income",
+    CLASS_TOTALSPEND: "total-spend",
+    CLASS_TOTALHRSWORKED: "total-hoursworked",
+    CLASS_TOTALPROFIT: "total-profit",
+
+    TURNOVER_STR: "earned",
+    PROFIT_STR: "profit",
+    EXPENDITURE_STR: "spent",
+    INCOME_STR: "earned",
+    HOURSWORKED_STR: "hours",
 
     TOTAL_STR: "Total",
     DAY_STR: "day",
@@ -61,13 +120,23 @@ uk.co.firmgently.DDDConsts = (function() {
     PREFS_STR: "prefs",
     CLIENTSTOTAL_STR: "clientsTotal",
     JOBSTOTAL_STR: "jobsTotal",
-    TODAY_STR: "today",
-    
+    CLIENTSORJOBS_USED: "used",
     CLIENT_SELECT_PLACEHOLDER: "select client",
     JOB_SELECT_PLACEHOLDER: "select job",
-    JOBNOTES_PLACEHOLDER: "job notes",
-    MONEYNOTES_PLACEHOLDER: "money notes",
-    
+    JOBNOTES_PLACEHOLDER: "enter job notes",
+    MONEYNOTES_PLACEHOLDER: "enter money notes",
+    SEPARATOR_CASH: ".",
+    SEPARATOR_TIME: ":",
+    TODAY_STR: "today",
+    WEEK_ENDING_STR: "w/e ",
+
+		LABEL_MONTHPREV: "previous month",
+		LABEL_MONTHNEXT: "next month",
+		LABEL_WEEKPREV: "previous week",
+		LABEL_WEEKNEXT: "next week",
+		LABEL_ADDITEM: "add item",
+		LABEL_REMOVEITEM: "remove item",
+
     EL_ID_COLHEADING: "column-headings",
     EL_ID_JOBNAMEIN: "jobNameIn",
     EL_ID_CLIENTNAMEIN: "clientNameIn",
@@ -75,8 +144,18 @@ uk.co.firmgently.DDDConsts = (function() {
     EL_ID_JOBSAVEBTN: "saveNewJobBtn",
     EL_ID_SELECTCLIENT: "selectClient",
     EL_ID_SELECTJOB: "selectJob",
-    TIMESHEETCONTAINER_ID: "timesheetContainer",
-    LOADINGINDICATOR_ID: "loading-indicator",
+    EL_ID_WEEKNEXTBTN: "weekNextBtn",
+    EL_ID_WEEKPREVBTN: "weekPrevBtn",
+    EL_ID_MONTHNEXTBTN: "monthNextBtn",
+    EL_ID_MONTHPREVBTN: "monthPrevBtn",
+    EL_ID_CLIENTSEXISTING: "clientsExisting",
+    EL_ID_JOBSEXISTING: "jobsExisting",
+    EL_ID_CONFIGFORM: "configForm",
+
+    EL_ID_MAINCONTAINER: "main",
+    EL_ID_TIMESHEETCONTAINER: "timesheetContainer",
+    EL_ID_LOADINGINDICATOR: "loading-indicator",
+
 
     CLIENT_FG_COLPICK: "clientFGPicker",
     CLIENT_BG_COLPICK: "clientBGPicker",
@@ -88,10 +167,10 @@ uk.co.firmgently.DDDConsts = (function() {
 
     ITEMTYPE_TIME: "TIME",
     ITEMTYPE_MONEY: "CASH",
-    
-    SEPARATOR_CASH: ".",
-    SEPARATOR_TIME: ":",
 
+    PADSTR_DOUBLEDIGIT: "00",
+    PADSTR_LONGSPACEDNUM: "    ",
+    
     DATAINDICES: {
       itemType:			0,
       numberValue: 	1,
@@ -105,48 +184,76 @@ uk.co.firmgently.DDDConsts = (function() {
 
     PAGEDATA_JOBSANDCLIENTS: {
       pageTitle: "Jobs and Clients",
-      intro: "Add, delete or edit jobs and clients."
+      intro: "Add jobs or clients with [+], remove with [x]. | Tap names to edit them. | Tap squares to edit colours."
     },
     PAGEDATA_TIMESHEETS: {
-      pageTitle: "Timesheets",
-      intro: "Keep track of where you spend your time. Also record payments in and expenses paid out."
+      pageTitle: "Timesheet",
+      intro: "Add items with [+], remove with [x]. | An item is about either time or money, tap [-o] to swap."
     },
     PAGEDATA_CONFIG: {
-      pageTitle: "Preferences",
+      pageTitle: "Settings",
       intro: "Show and hide things and customise settings."
     },
+    PAGEDATA_PRIVACY: {
+      pageTitle: "Privacy",
+      intro: "Info about data you create with this application."
+    },
 
-    DATETYPE_YYMMDD: {
+    /*DATETYPE_YYMMDD: {
+      id: "yymmdd",
       label: "yy/mm/dd"
     },
     DATETYPE_DDMMYY: {
+      id: "ddmmyy",
       label: "dd/mm/yy"
     },
     DATETYPE_MMDDYY: {
+      id: "mmddyy",
       label: "mm/dd/yy"
+    },*/
+
+    DATETYPES: {
+      yymmdd: {
+        id: "yymmdd",
+        label: "yy/mm/dd"
+      },
+      ddmmyy: {
+        id: "ddmmyy",
+        label: "dd/mm/yy"
+      },
+      mmddyy: {
+        id: "mmddyy",
+        label: "mm/dd/yy"
+      },
     },
 
-    JOB_DEFAULT_1: {
-      name: "Purchasing",
-      color: "#000",
-      bgcolor: "#0ff"
-    },
-    JOB_DEFAULT_2: {
-      name: "Administration",
-      color: "#0f0",
-      bgcolor: "#123"
-    },
+    JOB_DEFAULTS: [
+      {
+        name: "Purchasing",
+        color: "#000",
+        bgcolor: "#0ff"
+      }, {
+        name: "Administration",
+        color: "#0f0",
+        bgcolor: "#123"
+      }, {
+        name: "Design",
+        color: "#0ff",
+        bgcolor: "#111"
+      }
+    ],
 
-    CLIENT_DEFAULT_1: {
-      name: "Will @ ACME CO",
-      color: "#fff",
-      bgcolor: "#f00"
-    },
-    CLIENT_DEFAULT_2: {
-      name: "Diamond Jules",
-      color: "#435",
-      bgcolor: "#89a"
-    },
+    CLIENT_DEFAULTS: [
+      {
+        name: "ACME CO",
+        color: "#fff",
+        bgcolor: "#f00"
+      }, {
+        name: "General Corp.",
+        color: "#435",
+        bgcolor: "#89a"
+      }
+    ],
 
     // these string values have to match those used in the GUIDATA_CONFIG options
     TIMESPAN_WEEK: "timespanWeek",
@@ -167,7 +274,9 @@ uk.co.firmgently.DDDConsts = (function() {
     MINUTEINCREMENTS_15: "minuteIncrement15",
     MINUTEINCREMENTS_30: "minuteIncrement30",
 
-    TXT_STORAGE_UNSUPPORTED: "Sorry - storage is not supported on this device or browser"
+    TXT_STORAGE_UNSUPPORTED: "Sorry - storage is not supported on this device or browser",
+    TXT_LOADFILE_CONFIRM: "REPLACE\n all your data, clients, jobs and preferences\nwith file?",
+    TXT_DELETEDATA_CONFIRM: "Delete all your data, clients, jobs and preferences?"
   };
 
 
@@ -180,8 +289,35 @@ uk.co.firmgently.DDDConsts = (function() {
   CONST.MINUTEINCREMENTS_DEFAULT = CONST.MINUTEINCREMENTS_15;
   CONST.SHOWTOTALS_DEFAULT = CONST.SHOWTOTALS_BOTH;
   CONST.TIMESPAN_DEFAULT = CONST.TIMESPAN_MONTH;
-  CONST.DATETYPE_DEFAULT = CONST.DATETYPE_DDMMYY;
+  CONST.DATETYPE_DEFAULT = "ddmmyy";
   CONST.PAGETYPE_DEFAULT = CONST.PAGETYPE_TIMESHEETS;
+  CONST.NUMFIELD_DATA_TIME_BIG = {
+    min: 0,  
+    max: 23, 
+    step: 1,  
+    wrapNum: true,
+    pad: CONST.PADSTR_DOUBLEDIGIT
+  };
+  CONST.NUMFIELD_DATA_TIME_SMALL = {
+    min: 0,  
+    max: 59, 
+    step: 1, 
+    wrapNum: true,
+    pad: CONST.PADSTR_DOUBLEDIGIT
+  };
+  CONST.NUMFIELD_DATA_MONEY_BIG = {
+    min: -999999999,
+    max: 999999999,
+    step: 1, 
+    pad: CONST.PADSTR_LONGSPACEDNUM
+  };
+  CONST.NUMFIELD_DATA_MONEY_SMALL = {
+    min: 0,
+    max: 99,
+    step: 1,
+    wrapNum: true,
+    pad: CONST.PADSTR_DOUBLEDIGIT
+  };
 
 
 
@@ -192,143 +328,72 @@ uk.co.firmgently.DDDConsts = (function() {
     until the object has been defined)
 	--------------------------------------------------------------------------- */
 
+  CONST.GUIDATA_PRIVACY = [
+    {
+      type: CONST.GUITYPE_ROW,
+      id: "privacyInfo",
+      class: CONST.CLASS_ROW,
+      parent: "main",
+      text: "Basic information"
+    }, {
+      type: CONST.GUITYPE_UL,
+      id: "privacyMainPoints",
+      class: CONST.CLASS_ROW,
+      parent: "main",
+      ar: [
+        "All data you create and your preference settings are saved in your browser, nothing is sent across the internet or stored on any servers.",
+        "It is expected that you'll save (export) and load (import) files in the same way as you'd use traditional office software.",
+        "When you export your data to a file, it will be saved on your device in a plain text format.",
+        "If you want to share data between devices you can manually move an exported file or save it to your choice of cloud storage.",
+        "You can wipe your data at any time by using the 'wipe data' button or clearing your browser cache."
+      ]
+    }, {
+      type: CONST.GUITYPE_ROW,
+      id: "privacyTechInfo",
+      class: CONST.CLASS_ROW,
+      parent: "main",
+      text: "Technical information"
+    }, {
+      type: CONST.GUITYPE_UL,
+      id: "privacyTechPoints",
+      class: CONST.CLASS_ROW,
+      parent: "main",
+      ar: [
+        "Data is stored using the localStorage API. It is stored as plain, unencrypted text in JSON format.",
+        "You can view currently stored data by using the developer tools built into eg. desktop versions of Firefox or Chrome.",
+        "If you clear your browser cache, depending on your settings localStorage may be cleared in which case you'll lose any unsaved data.",
+        "CSS/JS has been minified but not obfuscated - you can read it in developer tools. It will be easier if you prettify it first.",
+        "No 3rd-party scripts are loaded on this site. No tracking or advertising is carried out."
+      ]
+    }
+  ];
+
+
   CONST.GUIDATA_JOBSANDCLIENTS = [
     {
       type: CONST.GUITYPE_COL,
-      id: "editClientCol",
-      class: CONST.CLASS_COL,
+      id: CONST.EL_ID_CLIENTSEXISTING,
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
       parent: "main",
-    }, {
-      type: CONST.GUITYPE_FORM,
-      id: "createClientForm",
-      class: CONST.CLASS_FORMMAIN,
-      title: "Fill in client details",
-      parent: "editClientCol",
-      el_ar: [
-        {
-          type: CONST.GUITYPE_ROW,
-          id: "clientNewRow",
-          class: CONST.CLASS_ROW,
-          parent: "createClientForm",
-        }, {
-          type: CONST.GUITYPE_ROW,
-          id: "clientsExistingRow",
-          class: CONST.CLASS_ROW,
-          parent: "createClientForm",
-        }, {
-          type: CONST.GUITYPE_BTN,
-          label: "Create new",
-          id: "createNewClientBtn",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.newClientCreate",
-          args: [],
-          scopeID: "createClientForm",
-          parent: "clientNewRow"
-        }, {
-          type: CONST.GUITYPE_TEXTINPUT,
-          id: CONST.EL_ID_CLIENTNAMEIN,
-          label: "Client name",
-          parent: "clientNewRow",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.onClientTyped",
-          args: [],
-          scopeID: "createClientForm",
-          attributes: { "type": "text" }
-        }, {
-          type: CONST.GUITYPE_BTN,
-          label: "Save",
-          id: CONST.EL_ID_CLIENTSAVEBTN,
-          methodPathStr: "uk.co.firmgently.DontDillyDally.newClientFormSave",
-          args: [],
-          scopeID: "createClientForm",
-          parent: "clientNewRow",
-          disabled: true
-        }, {
-          type: CONST.GUITYPE_COLORPICKER,
-          id: CONST.CLIENT_FG_COLPICK,
-          class: "color-picker",
-          parent: "clientsExistingRow"
-        }, {
-          type: CONST.GUITYPE_COLORPICKER,
-          id: CONST.CLIENT_BG_COLPICK,
-          class: "color-picker",
-          parent: "clientsExistingRow"
-        }, {
-          type: CONST.GUITYPE_SELECT,
-          label: "Existing clients",
-          args: [],
-          scopeID: "createClientForm",
-          parent: "clientsExistingRow",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected",
-          id: CONST.EL_ID_SELECTCLIENT,
-          contentType: CONST.CONTENTTYPE_CLIENTS
-        }
-      ]
     }, {
       type: CONST.GUITYPE_COL,
-      id: "editJobCol",
-      class: CONST.CLASS_COL,
+      id: CONST.EL_ID_JOBSEXISTING,
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
       parent: "main",
     }, {
-      type: CONST.GUITYPE_FORM,
-      id: "createJobForm",
-      class: CONST.CLASS_FORMMAIN,
-      title: "Fill in job details",
-      parent: "editJobCol",
-      hidden: false,
-      el_ar: [
-        {
-          type: CONST.GUITYPE_ROW,
-          id: "jobNewRow",
-          class: CONST.CLASS_ROW,
-          parent: "createJobForm",
-        }, {
-          type: CONST.GUITYPE_ROW,
-          id: "jobsExistingRow",
-          class: CONST.CLASS_ROW,
-          parent: "createJobForm",
-        }, {
-          type: CONST.GUITYPE_BTN,
-          label: "Create new",
-          id: "createNewJobBtn",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.newJobCreate",
-          scopeID: "createJobForm",
-          args: [],
-          parent: "jobNewRow"
-        }, {
-          type: CONST.GUITYPE_TEXTINPUT,
-          id: CONST.EL_ID_JOBNAMEIN,
-          label: "Job name",
-          parent: "jobNewRow",
-          attributes: { "type": "text" }
-        }, {
-          type: CONST.GUITYPE_BTN,
-          label: "Save",
-          id: CONST.EL_ID_JOBSAVEBTN,
-          methodPathStr: "uk.co.firmgently.DontDillyDally.newJobFormSave",
-          scopeID: "createJobForm",
-          args: [],
-          parent: "jobNewRow",
-          disabled: true
-        }, {
-          type: CONST.GUITYPE_COLORPICKER,
-          id: CONST.JOB_FG_COLPICK,
-          class: "color-picker",
-          parent: "jobsExistingRow"
-        }, {
-          type: CONST.GUITYPE_COLORPICKER,
-          id: CONST.JOB_BG_COLPICK,
-          class: "color-picker",
-          parent: "jobsExistingRow"
-        }, {
-          type: CONST.GUITYPE_SELECT,
-          label: "Existing jobs",
-          args: [],
-          scopeID: "createJobForm",
-          parent: "jobsExistingRow",
-          methodPathStr: "uk.co.firmgently.DontDillyDally.updateSelected",
-          id: "selectJob",
-          contentType: CONST.CONTENTTYPE_JOBS
-        }
-      ]
+      type: CONST.GUITYPE_HEADING,
+      heirarchy: 4,
+      text: CONST.CLIENTS_STR,
+      parent: CONST.EL_ID_CLIENTSEXISTING
+    }, {
+      type: CONST.GUITYPE_HEADING,
+      heirarchy: 4,
+      text: CONST.JOBS_STR,
+      parent: CONST.EL_ID_JOBSEXISTING
+    }, {
+      type: CONST.GUITYPE_METHODCALL,
+      methodPathStr: "uk.co.firmgently.DontDillyDally.drawJobsAndClients",
+      scopeID: "main"
     }
   ];
 
@@ -338,28 +403,61 @@ uk.co.firmgently.DDDConsts = (function() {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_TIMESHEETS,
-      label: "Timesheets",
-      methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      args: [CONST.PAGETYPE_TIMESHEETS],
-      scopeID: "main",
+      label: "Timesheet",
+      event_ar: [
+        {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+          args: [CONST.PAGETYPE_TIMESHEETS],
+          scopeID: "main"
+        }
+      ],
       parent: "nav-main"
     }, {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_JOBSANDCLIENTS,
       label: "Jobs & Clients",
-      methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      args: [CONST.PAGETYPE_JOBSANDCLIENTS],
-      scopeID: "main",
+      event_ar: [
+        {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+          args: [CONST.PAGETYPE_JOBSANDCLIENTS],
+          scopeID: "main"
+        }
+      ],
+      parent: "nav-main"
+    }, {
+      type: CONST.GUITYPE_SPACER,
+      class: CONST.CLASS_SPACER_EXPAND_VERT,
       parent: "nav-main"
     }, {
       type: CONST.GUITYPE_BTN,
       class: CONST.CLASS_BTNNAV,
       id: CONST.BODYID_CONFIG,
-      label: "Preferences",
-      methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
-      args: [CONST.PAGETYPE_CONFIG],
-      scopeID: "main",
+      label: "Settings",
+      event_ar: [
+        {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+          args: [CONST.PAGETYPE_CONFIG],
+          scopeID: "main"
+        }
+      ],
+      parent: "nav-main"
+    }, {
+      type: CONST.GUITYPE_BTN,
+      class: CONST.CLASS_BTNNAV,
+      id: CONST.BODYID_PRIVACY,
+      label: "Privacy",
+      event_ar: [
+        {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.navClick",
+          args: [CONST.PAGETYPE_PRIVACY],
+          scopeID: "main"
+        }
+      ],
       parent: "nav-main"
     }
   ];
@@ -367,12 +465,107 @@ uk.co.firmgently.DDDConsts = (function() {
 
   CONST.GUIDATA_TIMESHEETS = [
     {
+      type: CONST.GUITYPE_FORM,
+      id: "miniNavForm",
+      parent: "main",
+     /* event_ar: [
+        {
+          eventType: "submit",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.onFormSubmit",
+          scopeID: "miniNavForm"
+        }, {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.onFormClick",
+          scopeID: "miniNavForm"
+        }
+      ]*/
+    }, {
+      type: CONST.GUITYPE_BTN,
+      id: CONST.EL_ID_MONTHPREVBTN,
+      class: CONST.CLASS_BTNMININAV,
+      label: CONST.LABEL_MONTHPREV,
+      event_ar: [
+        {
+          eventType: "mousedown",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+        //}, {
+         // eventType: "touchstart",
+         // methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+        }
+      ],
+      parent: "miniNavForm"
+    },  {
+      type: CONST.GUITYPE_PARA,
+      text: "month",
+      parent: "miniNavForm"
+    }, {
+      type: CONST.GUITYPE_BTN,
+      id: CONST.EL_ID_MONTHNEXTBTN,
+      class: CONST.CLASS_BTNMININAV,
+      label: CONST.LABEL_MONTHNEXT,
+      event_ar: [
+        {
+          eventType: "mousedown",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+       // }, {
+        //  eventType: "touchstart",
+         // methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+        }
+      ],
+      parent: "miniNavForm"
+    }, {
+      type: CONST.GUITYPE_BTN,
+      id: CONST.EL_ID_WEEKPREVBTN,
+      class: CONST.CLASS_BTNMININAV,
+      label: CONST.LABEL_WEEKPREV,
+      event_ar: [
+        {
+          eventType: "mousedown",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+       // }, {
+         // eventType: "touchstart",
+         // methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+        }
+      ],
+      parent: "miniNavForm"
+    }, {
+      type: CONST.GUITYPE_PARA,
+      text: "week",
+      parent: "miniNavForm"
+    }, {
+      type: CONST.GUITYPE_BTN,
+      id: CONST.EL_ID_WEEKNEXTBTN,
+      class: CONST.CLASS_BTNMININAV,
+      label: CONST.LABEL_WEEKNEXT,
+      event_ar: [
+        {
+          eventType: "mousedown",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+    //    }, {
+      //    eventType: "touchstart",
+        //  methodPathStr: "uk.co.firmgently.DontDillyDally.dayJump",
+        }
+      ],
+      parent: "miniNavForm"
+    }, {
+      type: CONST.GUITYPE_BTN,
+      class: CONST.CLASS_BTNMININAV,
+      label: "today",
+      event_ar: [
+        {
+          eventType: "mousedown",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.todayClick",
+        }
+      ],
+      parent: "miniNavForm"
+    }, {
       type: CONST.GUITYPE_UL,
-      id: CONST.TIMESHEETCONTAINER_ID,
+      id: CONST.EL_ID_TIMESHEETCONTAINER,
+      class: CONST.CLASS_SHEET,
       parent: "main"
     }, {
       type: CONST.GUITYPE_METHODCALL,
-      methodPathStr: "uk.co.firmgently.DontDillyDally.drawTimesheets",
+      methodPathStr: "uk.co.firmgently.DontDillyDally.drawTimesheet",
       scopeID: "main"
     }
   ];
@@ -381,59 +574,91 @@ uk.co.firmgently.DDDConsts = (function() {
   CONST.GUIDATA_CONFIG = [
     {
       type: CONST.GUITYPE_FORM,
-      id: "configForm",
+      id: CONST.EL_ID_CONFIGFORM,
       class: CONST.CLASS_FORMMAIN,
       title: "Set your preferences here",
       parent: "main",
       hidden: false,
-      el_ar: [
-         {
-           type: CONST.GUITYPE_RADIOBTN,
-           id: "dateFormat",
-           label: "Format used to show dates",
-           parent: "configForm",
-           options: {
-             DATETYPE_DDMMYY: "dd/mm/yy",
-             DATETYPE_MMDDYY: "mm/dd/yy",
-             DATETYPE_YYMMDD: "yy/mm/dd"
-           },
-           disabled: true
-         }, {
-           type: CONST.GUITYPE_RADIOBTN,
-           id: "timespan",
-           label: "Choose how many days you want to show on the timesheet page",
-           parent: "configForm",
-           options: {
-             timespanWeek: "A week",
-             timespanMonth: "A month",
-             timespanYear: "A year"
-           },
-           disabled: true
-         }, {
-           type: CONST.GUITYPE_RADIOBTN,
-           id: "totalsToShow",
-           label: "Choose which totals you want totted up and displayed",
-           parent: "configForm",
-           options: {
-             showTotalsWeek: "Show weekly totals",
-             showTotalsMonth: "Show monthly totals",
-             showTotalsWeekAndMonth: "Show both weekly and monthly totals"
-           },
-           disabled: true
-         }, {
-           type: CONST.GUITYPE_RADIOBTN,
-           id: "minuteIncrements",
-           label: "The shortest length of a time entry",
-           parent: "configForm",
-           options: {
-             minuteIncrement1: "1 minute",
-             minuteIncrement15: "15 minutes",
-             minuteIncrement30: "30 minutes"
-           },
-           disabled: true
-         }
+      event_ar: [
+        {
+          eventType: "submit",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.onFormSubmit",
+          scopeID: CONST.EL_ID_CONFIGFORM
+        }, {
+          eventType: "click",
+          methodPathStr: "uk.co.firmgently.DontDillyDally.onFormClick",
+          scopeID: CONST.EL_ID_CONFIGFORM
+        }
       ]
-    },
+    }, {
+      type: CONST.GUITYPE_COL,
+      id: "configCol1",
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
+      parent: CONST.EL_ID_CONFIGFORM
+    }, {
+      type: CONST.GUITYPE_RADIOBTN,
+      id: "dateFormat",
+      label: "How dates look:",
+      swapLabelPos: true,
+      parent: "configCol1",
+      options: {
+        ddmmyy: "dd/mm/yy",
+        mmddyy: "mm/dd/yy",
+        yymmdd: "yy/mm/dd"
+      },
+      disabled: true
+    }, {
+      type: CONST.GUITYPE_COL,
+      id: "configCol2",
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
+      parent: CONST.EL_ID_CONFIGFORM
+    }, {
+      type: CONST.GUITYPE_RADIOBTN,
+      id: "timespan",
+      label: "The timesheet shows:",
+      swapLabelPos: true,
+      parent: "configCol2",
+      options: {
+        timespanWeek: "A week",
+        timespanMonth: "A month",
+        timespanYear: "A year"
+      },
+      disabled: true
+    }, {
+      type: CONST.GUITYPE_COL,
+      id: "configCol3",
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
+      parent: CONST.EL_ID_CONFIGFORM
+    }, {
+      type: CONST.GUITYPE_RADIOBTN,
+      id: "totalsToShow",
+      label: "When calculating totals:",
+      swapLabelPos: true,
+      parent: "configCol3",
+      options: {
+        showTotalsWeek: "Show weekly totals",
+        showTotalsMonth: "Show monthly totals",
+        showTotalsWeekAndMonth: "Show both weekly and monthly totals"
+      },
+      disabled: true
+    }, {
+      type: CONST.GUITYPE_COL,
+      id: "configCol4",
+      class: CONST.CLASS_COL + " " + CONST.CLASS_SHEET,
+      parent: CONST.EL_ID_CONFIGFORM
+    }, {
+      type: CONST.GUITYPE_RADIOBTN,
+      id: "minuteIncrements",
+      label: "Smallest time that can be entered is:",
+      swapLabelPos: true,
+      parent: "configCol4",
+      options: {
+        minuteIncrement1: "1 minute",
+        minuteIncrement15: "15 minutes",
+        minuteIncrement30: "30 minutes"
+      },
+      disabled: true
+    }
   ];
 
 
