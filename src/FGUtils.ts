@@ -4,14 +4,6 @@
   Mark Mayes 2016
 ---------------------------------------------------------
 */
-// create namespace: uk.co.firmgently
-var uk = (uk !== undefined) ? uk : {};
-uk.co = (uk.co !== undefined) ? uk.co : {};
-uk.co.firmgently = (uk.co.firmgently !== undefined) ? uk.co.firmgently : {};
-//
-uk.co.firmgently.FGUtils = (function() {
-  "use strict";
-
   var
   addCSSRule, getIEVersion, isTouchDevice,
   registerEventHandler, unregisterEventHandler, stopPropagation,
@@ -28,6 +20,23 @@ uk.co.firmgently.FGUtils = (function() {
   /* -------------------------------------------------------------------------------
     extend some global objects
   ---------------------------------------------------------------------------------- */
+
+
+  interface String {
+    isEmpty():boolean;
+  }
+
+
+  interface Date {
+    monthDays():number;
+    isLeapYear():boolean;
+    getDOY():number;
+    getShortISO():string;
+    getWeekDay():string;
+    getWeekNumber():number;
+  }
+
+
 
   String.prototype.isEmpty = function() {
     return (!this || /^\s*$/.test(this));
@@ -82,7 +91,7 @@ uk.co.firmgently.FGUtils = (function() {
 		return this.toISOString().substring(0, 10)
 	};
 
-  Date.prototype.getWeekDay = function(length) {
+Date.prototype.getWeekDay = function(length):string {
       var ret,
           weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -390,7 +399,7 @@ uk.co.firmgently.FGUtils = (function() {
     // window.alert("onmsgesturechange in window: " + ('onmsgesturechange' in window) );
     // return 'ontouchstart' in window || 'onmsgesturechange' in window;
 
-     return (('ontouchstart' in window) || (navigator.MaxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
+     return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
   };
 
 
@@ -498,5 +507,3 @@ uk.co.firmgently.FGUtils = (function() {
 		manualEvent: manualEvent,
 		getGUID: getGUID
   };
-
-}());

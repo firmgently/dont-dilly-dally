@@ -1,0 +1,4 @@
+requirejs(
+	["DontDillyDally"],
+	function(DontDillyDally) {}
+);

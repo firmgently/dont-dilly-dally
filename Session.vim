@@ -3,26 +3,32 @@ if &cp | set nocp | endif
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
-cd ~/000-WORK/000-GIT/dont-dilly-dally
+silent tabonly
+cd /mnt/media_rw/C245-1801/000-WORK/000-GIT/dont-dilly-dally
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +495 src/DDDConsts.js
+badd +1 src/DDDConsts.js
 badd +235 src/DDD.scss
 badd +93 src/FGUtils.js
 badd +28 src/FGHTMLBuild.js
-badd +475 src/DontDillyDally.js
+badd +1 src/DontDillyDally.js
 badd +14 index.htm
+badd +1 src/
+badd +3 src/main.js
 argglobal
 silent! argdel *
-argadd src/
-edit src/DontDillyDally.js
+$argadd src/
+edit src/DDDConsts.js
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
 wincmd t
-set winheight=1 winwidth=1
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -33,19 +39,19 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 35) / 71)
+let s:l = 1 - ((0 * winheight(0) + 28) / 56)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 1
 normal! 0
-lcd ~/000-WORK/000-GIT/dont-dilly-dally
 tabnext 1
-if exists('s:wipebuf')
+if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif
 unlet! s:wipebuf
 set winheight=1 winwidth=20 shortmess=filnxtToO
+set winminheight=1 winminwidth=1
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if file_readable(s:sx)
   exe "source " . fnameescape(s:sx)

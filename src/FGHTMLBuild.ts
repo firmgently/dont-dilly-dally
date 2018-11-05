@@ -5,14 +5,7 @@
   Mark Mayes 2016
 ---------------------------------------------------------
 */
-// create namespace: uk.co.firmgently
-var uk = (uk !== undefined) ? uk : {};
-uk.co = (uk.co !== undefined) ? uk.co : {};
-uk.co.firmgently = (uk.co.firmgently !== undefined) ? uk.co.firmgently : {};
-//
-uk.co.firmgently.FGHTMLBuild = (function() {
-	"use strict";
-
+import C from "./DDDConsts";
 	var
 	SPINNER_REPEAT_RATE = 250, SPINNER_REPEAT_ACCEL = 1.04,
   SPINNER_CLASSNAME = "spinner", SPINNER_UPBTN_CLASSNAME = "spin-button-up", SPINNER_DOWNBTN_CLASSNAME = "spin-button-down",
@@ -236,10 +229,10 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 		}
 
     if (ob.contentType) { // clients / jobs options get treated differently to normal options
-      if (ob.contentType === CONTENTTYPE_CLIENTS) {
-				addClassname(select_el, CLASS_CLIENTSELECT);
-      } else if (ob.contentType === CONTENTTYPE_JOBS) {
-				addClassname(select_el, CLASS_JOBSELECT);
+      if (ob.contentType === C.CONTENTTYPE_CLIENTS) {
+				addClassname(select_el, C.CLASS_CLIENTSELECT);
+      } else if (ob.contentType === C.CONTENTTYPE_JOBS) {
+				addClassname(select_el, C.CLASS_JOBSELECT);
       }
       for (prop in ob.options) {
         clientOrJob_ob = ob.options[prop];
@@ -352,7 +345,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
 			UL_el = document.createElement("ul");
 		}
 
-    addClassname(UL_el, CLASS_ROW);
+    addClassname(UL_el, C.CLASS_ROW);
     if (ob.class) { addClassname(UL_el, ob.class); }
 
 		if (ob.ar) {
@@ -374,20 +367,20 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     parent_el = (typeof ob.parent == "string") ? document.getElementById(ob.parent) : ob.parent;
 
     switch (ob.type) {
-      case GUITYPE_COL:
-      case GUITYPE_ROW:
+      case C.GUITYPE_COL:
+      case C.GUITYPE_ROW:
         elType = "span";
         break;
-      case GUITYPE_PARA:
+      case C.GUITYPE_PARA:
         elType = "p";
         break;
-      case GUITYPE_SECTION:
+      case C.GUITYPE_SECTION:
         elType = "section";
         break;
-      case GUITYPE_HEADING:
+      case C.GUITYPE_HEADING:
         elType = "h" + ob.heirarchy;
         break;
-      case GUITYPE_SPACER:
+      case C.GUITYPE_SPACER:
         elType = "hr";
         break;
       default:
@@ -501,7 +494,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     if (pixelData[3] > 0) { activeAreaClicked = true; }
     
     if (activeAreaClicked) {
-      manualEvent(colorPickerSelectedCurrent.parentNode, COLORPICKER_CONFIRMEVENT_ID);
+      manualEvent(colorPickerSelectedCurrent.parentNode, C.COLORPICKER_CONFIRMEVENT_ID);
       colorPickerClose();
     } else {
       // HACK event is registered on document.body, so initial click was
@@ -518,7 +511,7 @@ uk.co.firmgently.FGHTMLBuild = (function() {
   onColorPickerCanvasMoveOver = function(event) {
     var pixelData = colorPickerCanvas.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data;
     colorPickerSelectedCurrent.style.backgroundColor = "#" + rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
-    manualEvent(colorPickerSelectedCurrent.parentNode, COLORPICKER_CHANGEEVENT_ID);
+    manualEvent(colorPickerSelectedCurrent.parentNode, C.COLORPICKER_CHANGEEVENT_ID);
     if (pixelData[3] > 0) {
       colorPickerCanvas.style.cursor = "crosshair";
     } else {
@@ -580,4 +573,3 @@ uk.co.firmgently.FGHTMLBuild = (function() {
     createHelpItemFromOb: createHelpItemFromOb
 	};
 
-}());
